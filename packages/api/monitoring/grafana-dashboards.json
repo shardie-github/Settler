@@ -1,0 +1,217 @@
+{
+  "dashboard": {
+    "title": "Settler Multi-Tenant Platform",
+    "tags": ["settler", "multi-tenant"],
+    "timezone": "browser",
+    "panels": [
+      {
+        "title": "HTTP Request Rate (RED Method)",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "rate(http_requests_total[5m])",
+            "legendFormat": "{{method}} {{route}} - {{status_code}}"
+          }
+        ],
+        "yaxes": [
+          {
+            "format": "reqps",
+            "label": "Requests/sec"
+          }
+        ]
+      },
+      {
+        "title": "HTTP Request Duration (RED Method)",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m]))",
+            "legendFormat": "p95 - {{method}} {{route}}"
+          },
+          {
+            "expr": "histogram_quantile(0.99, rate(http_request_duration_seconds_bucket[5m]))",
+            "legendFormat": "p99 - {{method}} {{route}}"
+          }
+        ],
+        "yaxes": [
+          {
+            "format": "s",
+            "label": "Duration"
+          }
+        ]
+      },
+      {
+        "title": "HTTP Error Rate (RED Method)",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "rate(http_request_errors_total[5m])",
+            "legendFormat": "{{error_type}} - {{route}}"
+          }
+        ],
+        "yaxes": [
+          {
+            "format": "reqps",
+            "label": "Errors/sec"
+          }
+        ]
+      },
+      {
+        "title": "Tenant Quota Usage",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "tenant_quota_usage",
+            "legendFormat": "{{tenant_id}} - {{quota_type}}"
+          }
+        ],
+        "yaxes": [
+          {
+            "format": "short",
+            "label": "Usage"
+          }
+        ]
+      },
+      {
+        "title": "Tenant Quota Limits",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "tenant_quota_limit",
+            "legendFormat": "{{tenant_id}} - {{quota_type}}"
+          }
+        ],
+        "yaxes": [
+          {
+            "format": "short",
+            "label": "Limit"
+          }
+        ]
+      },
+      {
+        "title": "Rate Limit Hits",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "rate(tenant_rate_limit_hits_total[5m])",
+            "legendFormat": "{{tenant_id}} - {{tier}}"
+          }
+        ],
+        "yaxes": [
+          {
+            "format": "reqps",
+            "label": "Rate Limit Hits/sec"
+          }
+        ]
+      },
+      {
+        "title": "Noisy Neighbor Detection",
+        "type": "table",
+        "targets": [
+          {
+            "expr": "tenant_resource_usage_seconds",
+            "format": "table",
+            "instant": true
+          }
+        ],
+        "columns": [
+          {
+            "text": "Tenant ID",
+            "value": "tenant_id"
+          },
+          {
+            "text": "Tier",
+            "value": "tier"
+          },
+          {
+            "text": "Resource Type",
+            "value": "resource_type"
+          },
+          {
+            "text": "Usage (seconds)",
+            "value": "Value"
+          }
+        ]
+      },
+      {
+        "title": "Concurrent Requests per Tenant",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "tenant_concurrent_requests",
+            "legendFormat": "{{tenant_id}} - {{tier}}"
+          }
+        ],
+        "yaxes": [
+          {
+            "format": "short",
+            "label": "Concurrent Requests"
+          }
+        ]
+      },
+      {
+        "title": "Queue Depth by Priority",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "queue_depth",
+            "legendFormat": "{{queue_name}} - {{priority}}"
+          }
+        ],
+        "yaxes": [
+          {
+            "format": "short",
+            "label": "Jobs"
+          }
+        ]
+      },
+      {
+        "title": "Reconciliation Success Rate",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "rate(reconciliations_total{status=\"success\"}[5m]) / rate(reconciliations_total[5m])",
+            "legendFormat": "Success Rate"
+          }
+        ],
+        "yaxes": [
+          {
+            "format": "percentunit",
+            "label": "Success Rate"
+          }
+        ]
+      },
+      {
+        "title": "Database Connection Pool",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "active_connections",
+            "legendFormat": "Active Connections"
+          }
+        ],
+        "yaxes": [
+          {
+            "format": "short",
+            "label": "Connections"
+          }
+        ]
+      },
+      {
+        "title": "Tenant Distribution by Tier",
+        "type": "piechart",
+        "targets": [
+          {
+            "expr": "count by (tier) (tenant_quota_usage)",
+            "legendFormat": "{{tier}}"
+          }
+        ]
+      }
+    ],
+    "refresh": "10s",
+    "time": {
+      "from": "now-1h",
+      "to": "now"
+    }
+  }
+}

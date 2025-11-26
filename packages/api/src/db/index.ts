@@ -55,10 +55,33 @@ export async function transaction<T>(
 
 // Initialize database schema
 export async function initDatabase(): Promise<void> {
+  // Run multi-tenancy migration first
+  const fs = require('fs');
+  const path = require('path');
+  const migrationPath = path.join(__dirname, 'migrations', 'multi-tenancy.sql');
+  if (fs.existsSync(migrationPath)) {
+    const migrationSQL = fs.readFileSync(migrationPath, 'utf8');
+    // Split by semicolon and execute each statement
+    const statements = migrationSQL.split(';').filter((s: string) => s.trim().length > 0);
+    for (const statement of statements) {
+      if (statement.trim()) {
+        try {
+          await query(statement);
+        } catch (error: any) {
+          // Ignore "already exists" errors
+          if (!error.message.includes('already exists') && !error.message.includes('duplicate')) {
+            console.warn('Migration warning:', error.message);
+          }
+        }
+      }
+    }
+  }
+
   await query(`
     CREATE TABLE IF NOT EXISTS users (
       id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-      email VARCHAR(255) UNIQUE NOT NULL,
+      tenant_id UUID REFERENCES tenants(id) ON DELETE CASCADE,
+      email VARCHAR(255) NOT NULL,
       password_hash VARCHAR(255) NOT NULL,
       name VARCHAR(255),
       role VARCHAR(50) DEFAULT 'developer',
@@ -67,7 +90,8 @@ export async function initDatabase(): Promise<void> {
       deleted_at TIMESTAMP,
       deletion_scheduled_at TIMESTAMP,
       created_at TIMESTAMP DEFAULT NOW(),
-      updated_at TIMESTAMP DEFAULT NOW()
+      updated_at TIMESTAMP DEFAULT NOW(),
+      UNIQUE(tenant_id, email)
     );
 
     CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
