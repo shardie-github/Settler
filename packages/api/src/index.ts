@@ -21,10 +21,12 @@ import { config } from "./config";
 import { logInfo, logError } from "./utils/logger";
 import { v4 as uuidv4 } from "uuid";
 import { startDataRetentionJob } from "./jobs/data-retention";
+import { startMaterializedViewRefreshJob } from "./jobs/materialized-view-refresh";
 import { processPendingWebhooks } from "./utils/webhook-queue";
 import { versionMiddleware } from "./middleware/versioning";
 import { v1Router } from "./routes/v1";
 import { v2Router } from "./routes/v2";
+import { reconciliationSummaryRouter } from "./routes/reconciliation-summary";
 import { SecretsManager, REQUIRED_SECRETS } from "./infrastructure/security/SecretsManager";
 import { initializeTracing } from "./infrastructure/observability/tracing";
 import { compressionMiddleware, brotliCompressionMiddleware } from "./middleware/compression";
@@ -165,6 +167,9 @@ app.use("/api/v2/auth", authRouter);
 app.use("/api/v1", authMiddleware, v1Router);
 app.use("/api/v2", authMiddleware, v2Router);
 
+// Optimized reconciliation summary endpoint
+app.use("/api/v1/reconciliations", authMiddleware, reconciliationSummaryRouter);
+
 // Sentry error handler (before custom error handler)
 app.use(sentryErrorHandler());
 
@@ -187,6 +192,7 @@ async function startServer() {
     
     // Start background jobs
     startDataRetentionJob();
+    startMaterializedViewRefreshJob();
     
     // Process pending webhooks every minute
     const webhookInterval = setInterval(() => {

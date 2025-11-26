@@ -1,0 +1,143 @@
+{
+  "dashboard": {
+    "title": "Settler Reconciliation Metrics",
+    "tags": ["settler", "reconciliation", "metrics"],
+    "timezone": "browser",
+    "schemaVersion": 27,
+    "version": 1,
+    "refresh": "30s",
+    "panels": [
+      {
+        "id": 1,
+        "title": "Reconciliation Rate",
+        "type": "graph",
+        "gridPos": { "h": 8, "w": 12, "x": 0, "y": 0 },
+        "targets": [
+          {
+            "expr": "rate(reconciliations_started_total[5m])",
+            "legendFormat": "Started"
+          },
+          {
+            "expr": "rate(reconciliations_completed_total[5m])",
+            "legendFormat": "Completed"
+          }
+        ],
+        "yaxes": [
+          { "format": "short", "label": "Reconciliations/sec" },
+          { "format": "short" }
+        ]
+      },
+      {
+        "id": 2,
+        "title": "Match Accuracy",
+        "type": "graph",
+        "gridPos": { "h": 8, "w": 12, "x": 12, "y": 0 },
+        "targets": [
+          {
+            "expr": "avg(reconciliation_match_accuracy)",
+            "legendFormat": "Average Accuracy"
+          },
+          {
+            "expr": "min(reconciliation_match_accuracy)",
+            "legendFormat": "Min Accuracy"
+          },
+          {
+            "expr": "max(reconciliation_match_accuracy)",
+            "legendFormat": "Max Accuracy"
+          }
+        ],
+        "yaxes": [
+          { "format": "percent", "label": "Accuracy" },
+          { "format": "short" }
+        ]
+      },
+      {
+        "id": 3,
+        "title": "Matched vs Unmatched",
+        "type": "piechart",
+        "gridPos": { "h": 8, "w": 12, "x": 0, "y": 8 },
+        "targets": [
+          {
+            "expr": "sum(reconciliation_matched_total)",
+            "legendFormat": "Matched"
+          },
+          {
+            "expr": "sum(reconciliation_unmatched_total)",
+            "legendFormat": "Unmatched"
+          }
+        ]
+      },
+      {
+        "id": 4,
+        "title": "Reconciliation Duration",
+        "type": "graph",
+        "gridPos": { "h": 8, "w": 12, "x": 12, "y": 8 },
+        "targets": [
+          {
+            "expr": "histogram_quantile(0.50, rate(reconciliation_duration_seconds_bucket[5m]))",
+            "legendFormat": "p50"
+          },
+          {
+            "expr": "histogram_quantile(0.95, rate(reconciliation_duration_seconds_bucket[5m]))",
+            "legendFormat": "p95"
+          },
+          {
+            "expr": "histogram_quantile(0.99, rate(reconciliation_duration_seconds_bucket[5m]))",
+            "legendFormat": "p99"
+          }
+        ],
+        "yaxes": [
+          { "format": "s", "label": "Duration" },
+          { "format": "short" }
+        ]
+      },
+      {
+        "id": 5,
+        "title": "Jobs by Status",
+        "type": "stat",
+        "gridPos": { "h": 4, "w": 6, "x": 0, "y": 16 },
+        "targets": [
+          {
+            "expr": "sum(jobs_total{status=\"active\"})",
+            "legendFormat": "Active"
+          }
+        ]
+      },
+      {
+        "id": 6,
+        "title": "Failed Reconciliations",
+        "type": "stat",
+        "gridPos": { "h": 4, "w": 6, "x": 6, "y": 16 },
+        "targets": [
+          {
+            "expr": "sum(reconciliations_failed_total)",
+            "legendFormat": "Failed"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "thresholds": {
+              "steps": [
+                { "value": 0, "color": "green" },
+                { "value": 10, "color": "yellow" },
+                { "value": 50, "color": "red" }
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": 7,
+        "title": "Total Reconciliations",
+        "type": "stat",
+        "gridPos": { "h": 4, "w": 6, "x": 12, "y": 16 },
+        "targets": [
+          {
+            "expr": "sum(reconciliations_completed_total)",
+            "legendFormat": "Total"
+          }
+        ]
+      }
+    ]
+  }
+}
