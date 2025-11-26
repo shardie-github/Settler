@@ -4,7 +4,7 @@ import { validateRequest } from "../middleware/validation";
 import { AuthRequest } from "../middleware/auth";
 import { requirePermission, requireResourceOwnership } from "../middleware/authorization";
 import { query, transaction } from "../db";
-import { encrypt, decrypt } from "../utils/encryption";
+import { encrypt, decrypt } from "../infrastructure/security/encryption";
 import { logInfo, logError } from "../utils/logger";
 import { Mutex } from "async-mutex";
 
