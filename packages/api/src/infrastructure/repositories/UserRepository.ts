@@ -42,17 +42,19 @@ export class UserRepository implements IUserRepository {
       // Update
       await query(
         `UPDATE users SET
-          email = $1,
-          password_hash = $2,
-          name = $3,
-          role = $4,
-          data_residency_region = $5,
-          data_retention_days = $6,
-          deleted_at = $7,
-          deletion_scheduled_at = $8,
+          tenant_id = $1,
+          email = $2,
+          password_hash = $3,
+          name = $4,
+          role = $5,
+          data_residency_region = $6,
+          data_retention_days = $7,
+          deleted_at = $8,
+          deletion_scheduled_at = $9,
           updated_at = NOW()
-        WHERE id = $9`,
+        WHERE id = $10`,
         [
+          props.tenantId,
           props.email,
           props.passwordHash,
           props.name,
@@ -68,12 +70,13 @@ export class UserRepository implements IUserRepository {
       // Insert
       await query(
         `INSERT INTO users (
-          id, email, password_hash, name, role,
+          id, tenant_id, email, password_hash, name, role,
           data_residency_region, data_retention_days,
           deleted_at, deletion_scheduled_at, created_at, updated_at
-        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, NOW(), NOW())`,
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, NOW(), NOW())`,
         [
           props.id,
+          props.tenantId,
           props.email,
           props.passwordHash,
           props.name,
@@ -113,6 +116,7 @@ export class UserRepository implements IUserRepository {
   private mapRowToProps(row: any): ReturnType<typeof User.fromPersistence> extends User ? Parameters<typeof User.fromPersistence>[0] : never {
     return {
       id: row.id,
+      tenantId: row.tenant_id,
       email: row.email,
       passwordHash: row.password_hash,
       name: row.name,
@@ -132,6 +136,7 @@ export class UserRepository implements IUserRepository {
 // Type helper for UserProps
 type UserProps = {
   id: string;
+  tenantId: string;
   email: string;
   passwordHash: string;
   name?: string;

@@ -12,6 +12,7 @@ export enum UserRole {
 
 export interface UserProps {
   id: string;
+  tenantId: string; // Multi-tenancy: user belongs to a tenant
   email: string;
   passwordHash: string;
   name?: string;
@@ -42,6 +43,10 @@ export class User {
 
   get id(): string {
     return this.props.id;
+  }
+
+  get tenantId(): string {
+    return this.props.tenantId;
   }
 
   get email(): string {
