@@ -1,7 +1,7 @@
 {
-  "name": "@reconcilify/adapters",
+  "name": "@settler/adapters",
   "version": "1.0.0",
-  "description": "Reconcilify Adapters - Platform adapters for reconciliation",
+  "description": "Settler Adapters - Platform adapters for reconciliation",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {

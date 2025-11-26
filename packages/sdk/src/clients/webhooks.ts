@@ -1,8 +1,8 @@
-import { ReconcilifyClient } from "../client";
+import { SettlerClient } from "../client";
 import { Webhook, CreateWebhookRequest, ApiResponse, ListResponse } from "../types";
 
 export class WebhooksClient {
-  constructor(private readonly client: ReconcilifyClient) {}
+  constructor(private readonly client: SettlerClient) {}
 
   async create(request: CreateWebhookRequest): Promise<ApiResponse<Webhook>> {
     return this.client.request<ApiResponse<Webhook>>(

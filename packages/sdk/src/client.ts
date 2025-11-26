@@ -3,13 +3,13 @@ import { ReportsClient } from "./clients/reports";
 import { WebhooksClient } from "./clients/webhooks";
 import { AdaptersClient } from "./clients/adapters";
 
-export interface ReconcilifyConfig {
+export interface SettlerConfig {
   apiKey: string;
   baseUrl?: string;
   timeout?: number;
 }
 
-export class ReconcilifyClient {
+export class SettlerClient {
   public readonly jobs: JobsClient;
   public readonly reports: ReportsClient;
   public readonly webhooks: WebhooksClient;
@@ -19,9 +19,9 @@ export class ReconcilifyClient {
   private readonly baseUrl: string;
   private readonly timeout: number;
 
-  constructor(config: ReconcilifyConfig) {
+  constructor(config: SettlerConfig) {
     this.apiKey = config.apiKey;
-    this.baseUrl = config.baseUrl || "https://api.reconcilify.io";
+    this.baseUrl = config.baseUrl || "https://api.settler.io";
     this.timeout = config.timeout || 30000;
 
     // Initialize clients

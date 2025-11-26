@@ -1,6 +1,6 @@
 import { Command } from "commander";
 import chalk from "chalk";
-import Reconcilify from "@reconcilify/sdk";
+import Settler from "@settler/sdk";
 
 const reportsCommand = new Command("reports");
 
@@ -15,13 +15,13 @@ reportsCommand
   .option("-e, --end <date>", "End date (YYYY-MM-DD)")
   .action(async (jobId, options) => {
     try {
-      const apiKey = process.env.RECONCILIFY_API_KEY || options.parent.apiKey;
+      const apiKey = process.env.SETTLER_API_KEY || options.parent.apiKey;
       if (!apiKey) {
         console.error(chalk.red("Error: API key required"));
         process.exit(1);
       }
 
-      const client = new Reconcilify({
+      const client = new Settler({
         apiKey,
         baseUrl: options.parent.baseUrl,
       });

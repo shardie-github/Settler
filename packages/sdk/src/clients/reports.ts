@@ -1,4 +1,4 @@
-import { ReconcilifyClient } from "../client";
+import { SettlerClient } from "../client";
 import { ReconciliationReport, ApiResponse, ListResponse } from "../types";
 
 export interface GetReportOptions {
@@ -8,7 +8,7 @@ export interface GetReportOptions {
 }
 
 export class ReportsClient {
-  constructor(private readonly client: ReconcilifyClient) {}
+  constructor(private readonly client: SettlerClient) {}
 
   async get(jobId: string, options: GetReportOptions = {}): Promise<ApiResponse<ReconciliationReport>> {
     const query: Record<string, string> = {};

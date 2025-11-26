@@ -80,7 +80,7 @@ router.get("/:id", async (req: Request, res: Response) => {
         required: ["apiKey"],
         optional: [],
       },
-      documentation: `https://docs.reconcilify.io/adapters/${id}`,
+      documentation: `https://docs.settler.io/adapters/${id}`,
     };
 
     res.json({ data: adapter });

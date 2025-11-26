@@ -1,21 +1,21 @@
-# @reconcilify/sdk
+# @settler/sdk
 
-TypeScript SDK for the Reconcilify API.
+TypeScript SDK for the Settler API.
 
 ## Installation
 
 ```bash
-npm install @reconcilify/sdk
+npm install @settler/sdk
 ```
 
 ## Usage
 
 ```typescript
-import Reconcilify from "@reconcilify/sdk";
+import Settler from "@settler/sdk";
 
-const client = new Reconcilify({
-  apiKey: "rk_your_api_key_here",
-  baseUrl: "https://api.reconcilify.io", // Optional, defaults to production
+const client = new Settler({
+  apiKey: "sk_your_api_key_here",
+  baseUrl: "https://api.settler.io", // Optional, defaults to production
 });
 
 // Create a reconciliation job
@@ -56,4 +56,4 @@ console.log(report.data.summary);
 
 ## API Reference
 
-See [docs.reconcilify.io](https://docs.reconcilify.io) for complete API documentation.
+See [docs.settler.io](https://docs.settler.io) for complete API documentation.

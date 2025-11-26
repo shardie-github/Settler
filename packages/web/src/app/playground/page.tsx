@@ -4,10 +4,10 @@ import { useState } from "react";
 
 export default function Playground() {
   const [apiKey, setApiKey] = useState("");
-  const [code, setCode] = useState(`import Reconcilify from "@reconcilify/sdk";
+  const [code, setCode] = useState(`import Settler from "@settler/sdk";
 
-const client = new Reconcilify({
-  apiKey: "${apiKey || "rk_your_api_key"}",
+const client = new Settler({
+  apiKey: "${apiKey || "sk_your_api_key"}",
 });
 
 // Create a reconciliation job
@@ -43,7 +43,7 @@ console.log("Report:", report.data.summary);`);
   return (
     <div className="min-h-screen p-8">
       <div className="max-w-6xl mx-auto">
-        <h1 className="text-3xl font-bold mb-6">Reconcilify Playground</h1>
+        <h1 className="text-3xl font-bold mb-6">Settler Playground</h1>
 
         <div className="mb-4">
           <label className="block text-sm font-medium mb-2">
@@ -54,9 +54,9 @@ console.log("Report:", report.data.summary);`);
             value={apiKey}
             onChange={(e) => {
               setApiKey(e.target.value);
-              setCode(code.replace(/rk_your_api_key/g, e.target.value || "rk_your_api_key"));
+              setCode(code.replace(/sk_your_api_key/g, e.target.value || "sk_your_api_key"));
             }}
-            placeholder="rk_your_api_key"
+            placeholder="sk_your_api_key"
             className="w-full p-2 border rounded"
           />
         </div>

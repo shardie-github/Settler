@@ -16,9 +16,9 @@
     "incremental": true,
     "baseUrl": ".",
     "paths": {
-      "@reconcilify/sdk": ["./packages/sdk/src"],
-      "@reconcilify/api": ["./packages/api/src"],
-      "@reconcilify/adapters": ["./packages/adapters/src"]
+      "@settler/sdk": ["./packages/sdk/src"],
+      "@settler/api": ["./packages/api/src"],
+      "@settler/adapters": ["./packages/adapters/src"]
     }
   },
   "exclude": ["node_modules", "dist", "build", ".next"]

@@ -1,6 +1,6 @@
 import { Command } from "commander";
 import chalk from "chalk";
-import Reconcilify from "@reconcilify/sdk";
+import Settler from "@settler/sdk";
 
 const jobsCommand = new Command("jobs");
 
@@ -13,13 +13,13 @@ jobsCommand
   .description("List all reconciliation jobs")
   .action(async (options) => {
     try {
-      const apiKey = process.env.RECONCILIFY_API_KEY || options.parent.apiKey;
+      const apiKey = process.env.SETTLER_API_KEY || options.parent.apiKey;
       if (!apiKey) {
-        console.error(chalk.red("Error: API key required. Set RECONCILIFY_API_KEY or use --api-key"));
+        console.error(chalk.red("Error: API key required. Set SETTLER_API_KEY or use --api-key"));
         process.exit(1);
       }
 
-      const client = new Reconcilify({
+      const client = new Settler({
         apiKey,
         baseUrl: options.parent.baseUrl,
       });
@@ -53,7 +53,7 @@ jobsCommand
   .option("-t, --target <adapter>", "Target adapter")
   .action(async (options) => {
     try {
-      const apiKey = process.env.RECONCILIFY_API_KEY || options.parent.parent.apiKey;
+      const apiKey = process.env.SETTLER_API_KEY || options.parent.parent.apiKey;
       if (!apiKey) {
         console.error(chalk.red("Error: API key required"));
         process.exit(1);
@@ -63,7 +63,7 @@ jobsCommand
       console.log(chalk.yellow("Creating job..."));
       console.log(chalk.gray("Note: Use the web UI or API for full configuration"));
       
-      const client = new Reconcilify({
+      const client = new Settler({
         apiKey,
         baseUrl: options.parent.parent.baseUrl,
       });
@@ -100,13 +100,13 @@ jobsCommand
   .description("Run a reconciliation job")
   .action(async (id, options) => {
     try {
-      const apiKey = process.env.RECONCILIFY_API_KEY || options.parent.apiKey;
+      const apiKey = process.env.SETTLER_API_KEY || options.parent.apiKey;
       if (!apiKey) {
         console.error(chalk.red("Error: API key required"));
         process.exit(1);
       }
 
-      const client = new Reconcilify({
+      const client = new Settler({
         apiKey,
         baseUrl: options.parent.baseUrl,
       });

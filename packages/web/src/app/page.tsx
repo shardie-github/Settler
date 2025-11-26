@@ -4,7 +4,7 @@ export default function Home() {
   return (
     <main className="min-h-screen p-8">
       <div className="max-w-4xl mx-auto">
-        <h1 className="text-4xl font-bold mb-4">Reconcilify</h1>
+        <h1 className="text-4xl font-bold mb-4">Settler</h1>
         <p className="text-xl text-gray-600 mb-8">
           Reconciliation-as-a-Service API
         </p>
@@ -34,12 +34,12 @@ export default function Home() {
         <div className="mt-8 p-6 bg-gray-50 rounded-lg">
           <h2 className="text-xl font-semibold mb-4">Quick Start</h2>
           <pre className="bg-gray-800 text-green-400 p-4 rounded overflow-x-auto">
-            <code>{`npm install @reconcilify/sdk
+            <code>{`npm install @settler/sdk
 
-import Reconcilify from "@reconcilify/sdk";
+import Settler from "@settler/sdk";
 
-const client = new Reconcilify({
-  apiKey: "rk_your_api_key",
+const client = new Settler({
+  apiKey: "sk_your_api_key",
 });
 
 const job = await client.jobs.create({

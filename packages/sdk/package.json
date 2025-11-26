@@ -1,7 +1,7 @@
 {
-  "name": "@reconcilify/sdk",
+  "name": "@settler/sdk",
   "version": "1.0.0",
-  "description": "Reconcilify SDK - TypeScript SDK for reconciliation API",
+  "description": "Settler SDK - TypeScript SDK for reconciliation API",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "exports": {
@@ -36,7 +36,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/reconcilify/reconcilify.git",
+    "url": "https://github.com/settler/settler.git",
     "directory": "packages/sdk"
   },
   "license": "MIT"

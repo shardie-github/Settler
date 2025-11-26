@@ -6,7 +6,7 @@ router.get("/", (req: Request, res: Response) => {
   res.json({
     status: "ok",
     timestamp: new Date().toISOString(),
-    service: "reconcilify-api",
+    service: "settler-api",
     version: "1.0.0",
   });
 });

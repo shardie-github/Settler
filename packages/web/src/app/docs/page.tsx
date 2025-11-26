@@ -8,7 +8,7 @@ export default function Docs() {
           <section>
             <h2 className="text-2xl font-semibold mb-4">Getting Started</h2>
             <p className="text-gray-600 mb-4">
-              Reconcilify is a Reconciliation-as-a-Service API that automates
+              Settler is a Reconciliation-as-a-Service API that automates
               financial and event data reconciliation across fragmented SaaS and
               e-commerce ecosystems.
             </p>
@@ -17,7 +17,7 @@ export default function Docs() {
           <section>
             <h2 className="text-2xl font-semibold mb-4">Installation</h2>
             <pre className="bg-gray-100 p-4 rounded overflow-x-auto">
-              <code>npm install @reconcilify/sdk</code>
+              <code>npm install @settler/sdk</code>
             </pre>
           </section>
 

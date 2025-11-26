@@ -1,6 +1,6 @@
 import { test, expect } from "@playwright/test";
 
-test.describe("Reconcilify API", () => {
+test.describe("Settler API", () => {
   test("health check endpoint", async ({ request }) => {
     const response = await request.get("http://localhost:3000/health");
     expect(response.ok()).toBeTruthy();

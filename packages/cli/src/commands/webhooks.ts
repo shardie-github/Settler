@@ -1,6 +1,6 @@
 import { Command } from "commander";
 import chalk from "chalk";
-import Reconcilify from "@reconcilify/sdk";
+import Settler from "@settler/sdk";
 
 const webhooksCommand = new Command("webhooks");
 
@@ -13,13 +13,13 @@ webhooksCommand
   .description("List all webhooks")
   .action(async (options) => {
     try {
-      const apiKey = process.env.RECONCILIFY_API_KEY || options.parent.apiKey;
+      const apiKey = process.env.SETTLER_API_KEY || options.parent.apiKey;
       if (!apiKey) {
         console.error(chalk.red("Error: API key required"));
         process.exit(1);
       }
 
-      const client = new Reconcilify({
+      const client = new Settler({
         apiKey,
         baseUrl: options.parent.baseUrl,
       });

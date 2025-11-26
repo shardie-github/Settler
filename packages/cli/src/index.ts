@@ -10,13 +10,13 @@ import { adaptersCommand } from "./commands/adapters";
 const program = new Command();
 
 program
-  .name("reconcilify")
-  .description("CLI tool for Reconcilify API")
+  .name("settler")
+  .description("CLI tool for Settler API")
   .version("1.0.0");
 
 program
   .option("-k, --api-key <key>", "API key")
-  .option("-u, --base-url <url>", "Base URL", "https://api.reconcilify.io");
+  .option("-u, --base-url <url>", "Base URL", "https://api.settler.io");
 
 // Add command groups
 program.addCommand(jobsCommand);

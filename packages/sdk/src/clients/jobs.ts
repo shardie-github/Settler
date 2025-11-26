@@ -1,4 +1,4 @@
-import { ReconcilifyClient } from "../client";
+import { SettlerClient } from "../client";
 import {
   ReconciliationJob,
   CreateJobRequest,
@@ -7,7 +7,7 @@ import {
 } from "../types";
 
 export class JobsClient {
-  constructor(private readonly client: ReconcilifyClient) {}
+  constructor(private readonly client: SettlerClient) {}
 
   async create(request: CreateJobRequest): Promise<ApiResponse<ReconciliationJob>> {
     return this.client.request<ApiResponse<ReconciliationJob>>(

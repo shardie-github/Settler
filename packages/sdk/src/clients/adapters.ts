@@ -1,8 +1,8 @@
-import { ReconcilifyClient } from "../client";
+import { SettlerClient } from "../client";
 import { Adapter, ApiResponse, ListResponse } from "../types";
 
 export class AdaptersClient {
-  constructor(private readonly client: ReconcilifyClient) {}
+  constructor(private readonly client: SettlerClient) {}
 
   async list(): Promise<ListResponse<Adapter>> {
     return this.client.request<ListResponse<Adapter>>(

@@ -56,7 +56,7 @@ app.use((req: Request, res: Response) => {
 // Start server
 if (require.main === module) {
   app.listen(PORT, () => {
-    console.log(`🚀 Reconcilify API server running on port ${PORT}`);
+    console.log(`🚀 Settler API server running on port ${PORT}`);
     console.log(`📚 API docs: http://localhost:${PORT}/api/v1/docs`);
   });
 }

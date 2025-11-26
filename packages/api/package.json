@@ -1,7 +1,7 @@
 {
-  "name": "@reconcilify/api",
+  "name": "@settler/api",
   "version": "1.0.0",
-  "description": "Reconcilify API Server - Serverless reconciliation service",
+  "description": "Settler API Server - Serverless reconciliation service",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
@@ -16,8 +16,8 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
-    "@reconcilify/adapters": "workspace:*",
-    "@reconcilify/sdk": "workspace:*",
+    "@settler/adapters": "workspace:*",
+    "@settler/sdk": "workspace:*",
     "express": "^4.18.2",
     "cors": "^2.8.5",
     "helmet": "^7.1.0",
