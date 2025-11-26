@@ -1,160 +1,109 @@
 /**
- * Reconciliation Summary Endpoint
- * Optimized endpoint for fetching reconciliation summaries with caching
+ * Reconciliation Summary Route
+ * Optimized endpoint using materialized views and caching
  */
 
 import { Router, Request, Response } from 'express';
-import { query } from '../db';
-import { cacheKey, get, set } from '../utils/cache';
-import { setCacheHeaders, cachePresets } from '../middleware/cache-headers';
-import { etagMiddleware } from '../middleware/etag';
-import { traceDatabase, traceBusiness } from '../infrastructure/observability/tracing';
-import { httpRequestDuration } from '../infrastructure/observability/metrics';
+import { z } from 'zod';
+import { validateRequest } from '../middleware/validation';
 import { AuthRequest } from '../middleware/auth';
+import { requirePermission } from '../middleware/authorization';
+import { apiGatewayCache, cacheConfigs } from '../middleware/api-gateway-cache';
+import { cacheInvalidation } from '../middleware/api-gateway-cache';
+import { getReconciliationSummary, getJobPerformance, getMatchAccuracy } from '../infrastructure/query-optimization';
+import { sendSuccess, sendError } from '../utils/api-response';
+import { logError } from '../utils/logger';
 
 const router = Router();
 
-// Apply ETag middleware for cache validation
-router.use(etagMiddleware);
+const getSummarySchema = z.object({
+  params: z.object({
+    jobId: z.string().uuid(),
+  }),
+  query: z.object({
+    start: z.string().datetime().optional(),
+    end: z.string().datetime().optional(),
+    useView: z.string().transform((val) => val === 'true').optional(),
+    refreshView: z.string().transform((val) => val === 'true').optional(),
+  }),
+});
 
-/**
- * GET /api/v1/reconciliations/:jobId/summary
- * Get reconciliation summary for a job with caching
- */
+// Get reconciliation summary (cached, uses materialized view)
 router.get(
-  '/:jobId/summary',
+  '/:jobId',
+  requirePermission('reports', 'read'),
+  apiGatewayCache(cacheConfigs.reconciliationSummary()),
+  validateRequest(getSummarySchema),
   async (req: AuthRequest, res: Response) => {
-    const startTime = Date.now();
-    const { jobId } = req.params;
-    const tenantId = req.tenantId || req.userId; // Fallback if tenantId not set
-
     try {
-      // Check cache first
-      const cacheKeyStr = cacheKey('reconciliation_summary', tenantId, jobId);
-      const cached = await get<any>(cacheKeyStr);
+      const { jobId } = req.params;
+      const { start, end, useView = true, refreshView = false } = req.query;
 
-      if (cached) {
-        // Set cache headers
-        setCacheHeaders(res, cachePresets.short());
-        res.setHeader('X-Cache', 'HIT');
-        
-        // Record metrics
-        const duration = (Date.now() - startTime) / 1000;
-        httpRequestDuration.observe(
-          { method: 'GET', route: '/reconciliations/:jobId/summary', status_code: 200, tenant_id: tenantId },
-          duration
-        );
+      const dateRange = start && end
+        ? { start: new Date(start as string), end: new Date(end as string) }
+        : undefined;
 
-        return res.json({ data: cached });
-      }
-
-      // Fetch from database with optimized query
-      const summary = await traceDatabase(
-        'select_reconciliation_summary',
-        `
-          SELECT 
-            e.id as execution_id,
-            e.job_id,
-            e.status,
-            e.started_at,
-            e.completed_at,
-            EXTRACT(EPOCH FROM (e.completed_at - e.started_at)) * 1000 as duration_ms,
-            e.summary->>'total_source_records' as total_source_records,
-            e.summary->>'total_target_records' as total_target_records,
-            e.summary->>'matched_count' as matched_count,
-            e.summary->>'unmatched_source_count' as unmatched_source_count,
-            e.summary->>'unmatched_target_count' as unmatched_target_count,
-            e.summary->>'errors_count' as errors_count,
-            e.summary->>'accuracy_percentage' as accuracy_percentage,
-            COUNT(DISTINCT m.id) as match_count,
-            COUNT(DISTINCT u.id) as unmatched_count
-          FROM executions e
-          LEFT JOIN matches m ON e.id = m.execution_id
-          LEFT JOIN unmatched u ON e.id = u.execution_id
-          WHERE e.job_id = $1 AND e.tenant_id = $2
-          GROUP BY e.id, e.job_id, e.status, e.started_at, e.completed_at, e.summary
-          ORDER BY e.started_at DESC
-          LIMIT 1
-        `,
-        async () => {
-          return await query(
-            `
-              SELECT 
-                e.id as execution_id,
-                e.job_id,
-                e.status,
-                e.started_at,
-                e.completed_at,
-                EXTRACT(EPOCH FROM (e.completed_at - e.started_at)) * 1000 as duration_ms,
-                e.summary->>'total_source_records' as total_source_records,
-                e.summary->>'total_target_records' as total_target_records,
-                e.summary->>'matched_count' as matched_count,
-                e.summary->>'unmatched_source_count' as unmatched_source_count,
-                e.summary->>'unmatched_target_count' as unmatched_target_count,
-                e.summary->>'errors_count' as errors_count,
-                e.summary->>'accuracy_percentage' as accuracy_percentage,
-                COUNT(DISTINCT m.id) as match_count,
-                COUNT(DISTINCT u.id) as unmatched_count
-              FROM executions e
-              LEFT JOIN matches m ON e.id = m.execution_id
-              LEFT JOIN unmatched u ON e.id = u.execution_id
-              WHERE e.job_id = $1 AND e.tenant_id = $2
-              GROUP BY e.id, e.job_id, e.status, e.started_at, e.completed_at, e.summary
-              ORDER BY e.started_at DESC
-              LIMIT 1
-            `,
-            [jobId, tenantId]
-          );
-        },
-        tenantId
-      );
-
-      if (summary.length === 0) {
-        return res.status(404).json({ error: 'Reconciliation summary not found' });
-      }
-
-      const result = {
-        executionId: summary[0].execution_id,
-        jobId: summary[0].job_id,
-        status: summary[0].status,
-        startedAt: summary[0].started_at,
-        completedAt: summary[0].completed_at,
-        durationMs: summary[0].duration_ms ? parseInt(summary[0].duration_ms, 10) : null,
-        totalSourceRecords: summary[0].total_source_records ? parseInt(summary[0].total_source_records, 10) : 0,
-        totalTargetRecords: summary[0].total_target_records ? parseInt(summary[0].total_target_records, 10) : 0,
-        matchedCount: summary[0].matched_count ? parseInt(summary[0].matched_count, 10) : 0,
-        unmatchedSourceCount: summary[0].unmatched_source_count ? parseInt(summary[0].unmatched_source_count, 10) : 0,
-        unmatchedTargetCount: summary[0].unmatched_target_count ? parseInt(summary[0].unmatched_target_count, 10) : 0,
-        errorsCount: summary[0].errors_count ? parseInt(summary[0].errors_count, 10) : 0,
-        accuracyPercentage: summary[0].accuracy_percentage ? parseFloat(summary[0].accuracy_percentage) : null,
-      };
-
-      // Cache for 60 seconds (short cache for frequently changing data)
-      await set(cacheKeyStr, result, 60);
-
-      // Set cache headers
-      setCacheHeaders(res, cachePresets.short());
-      res.setHeader('X-Cache', 'MISS');
-
-      // Record metrics
-      const duration = (Date.now() - startTime) / 1000;
-      httpRequestDuration.observe(
-        { method: 'GET', route: '/reconciliations/:jobId/summary', status_code: 200, tenant_id: tenantId },
-        duration
-      );
-
-      res.json({ data: result });
-    } catch (error: any) {
-      const duration = (Date.now() - startTime) / 1000;
-      httpRequestDuration.observe(
-        { method: 'GET', route: '/reconciliations/:jobId/summary', status_code: 500, tenant_id: tenantId },
-        duration
-      );
-
-      res.status(500).json({
-        error: 'Internal Server Error',
-        message: 'Failed to fetch reconciliation summary',
+      const summary = await getReconciliationSummary(jobId, dateRange, {
+        useMaterializedView: useView as boolean,
+        refreshView: refreshView as boolean,
+        cache: true,
+        cacheTtl: 60,
       });
+
+      sendSuccess(res, summary, 'Reconciliation summary retrieved successfully');
+    } catch (error: any) {
+      logError('Failed to get reconciliation summary', error, { jobId: req.params.jobId });
+      sendError(res, 'Internal Server Error', error.message || 'Failed to get reconciliation summary', 500);
+    }
+  }
+);
+
+// Get job performance metrics
+router.get(
+  '/:jobId/performance',
+  requirePermission('reports', 'read'),
+  apiGatewayCache({ ttl: 300, includeUserId: true }),
+  async (req: AuthRequest, res: Response) => {
+    try {
+      const { jobId } = req.params;
+      const performance = await getJobPerformance(jobId, {
+        useMaterializedView: true,
+        cache: true,
+      });
+
+      if (!performance) {
+        return sendError(res, 'Not Found', 'Job performance data not found', 404);
+      }
+
+      sendSuccess(res, performance, 'Job performance retrieved successfully');
+    } catch (error: any) {
+      logError('Failed to get job performance', error, { jobId: req.params.jobId });
+      sendError(res, 'Internal Server Error', error.message || 'Failed to get job performance', 500);
+    }
+  }
+);
+
+// Get match accuracy
+router.get(
+  '/:jobId/accuracy',
+  requirePermission('reports', 'read'),
+  apiGatewayCache({ ttl: 300, includeUserId: true }),
+  async (req: AuthRequest, res: Response) => {
+    try {
+      const { jobId } = req.params;
+      const accuracy = await getMatchAccuracy(jobId, {
+        useMaterializedView: true,
+        cache: true,
+      });
+
+      if (!accuracy) {
+        return sendError(res, 'Not Found', 'Match accuracy data not found', 404);
+      }
+
+      sendSuccess(res, accuracy, 'Match accuracy retrieved successfully');
+    } catch (error: any) {
+      logError('Failed to get match accuracy', error, { jobId: req.params.jobId });
+      sendError(res, 'Internal Server Error', error.message || 'Failed to get match accuracy', 500);
     }
   }
 );
