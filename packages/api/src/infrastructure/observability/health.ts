@@ -5,7 +5,7 @@
 
 import { query } from '../../db';
 import { logError } from '../../utils/logger';
-import { createClient } from 'redis';
+import { getRedisClient } from '../../utils/cache';
 import { config } from '../../config';
 
 export interface HealthCheck {
@@ -26,17 +26,9 @@ export interface HealthStatus {
 }
 
 export class HealthCheckService {
-  private redisClient: ReturnType<typeof createClient> | null = null;
-
-  constructor() {
-    // Initialize Redis client if URL is provided
-    const redisUrl = config.redis.url;
-    if (redisUrl) {
-      this.redisClient = createClient({ url: redisUrl });
-      this.redisClient.on('error', (err) => {
-        logError('Redis client error', err);
-      });
-    }
+  private getRedisClient() {
+    // Use the shared Redis client from cache utility
+    return getRedisClient();
   }
 
   async checkDatabase(): Promise<HealthCheck> {
@@ -59,7 +51,8 @@ export class HealthCheckService {
   }
 
   async checkRedis(): Promise<HealthCheck> {
-    if (!this.redisClient) {
+    const redisClient = this.getRedisClient();
+    if (!redisClient) {
       return {
         status: 'degraded',
         error: 'Redis not configured',
@@ -69,10 +62,7 @@ export class HealthCheckService {
 
     const start = Date.now();
     try {
-      if (!this.redisClient.isOpen) {
-        await this.redisClient.connect();
-      }
-      await this.redisClient.ping();
+      await redisClient.ping();
       const latency = Date.now() - start;
       return {
         status: 'healthy',
@@ -89,9 +79,10 @@ export class HealthCheckService {
   }
 
   async checkAll(): Promise<HealthStatus> {
+    const redisClient = this.getRedisClient();
     const [database, redis] = await Promise.all([
       this.checkDatabase(),
-      this.redisClient ? this.checkRedis() : Promise.resolve<HealthCheck>({
+      redisClient ? this.checkRedis() : Promise.resolve<HealthCheck>({
         status: 'degraded',
         error: 'Redis not configured',
         timestamp: new Date().toISOString(),

@@ -1,0 +1,146 @@
+/**
+ * Sentry Error Tracking Integration
+ * Captures and reports errors to Sentry
+ */
+
+import * as Sentry from '@sentry/node';
+import { ProfilingIntegration } from '@sentry/profiling-node';
+import { Request, Response, NextFunction } from 'express';
+import { validatedConfig } from '../config/validation';
+import { AuthRequest } from './auth';
+
+let sentryInitialized = false;
+
+/**
+ * Initialize Sentry
+ */
+export function initializeSentry(): void {
+  if (sentryInitialized) {
+    return;
+  }
+
+  if (!validatedConfig.sentry.dsn) {
+    console.log('Sentry DSN not configured, skipping Sentry initialization');
+    return;
+  }
+
+  Sentry.init({
+    dsn: validatedConfig.sentry.dsn,
+    environment: validatedConfig.sentry.environment,
+    tracesSampleRate: validatedConfig.sentry.tracesSampleRate,
+    profilesSampleRate: validatedConfig.sentry.environment === 'production' ? 0.1 : 1.0,
+    integrations: [
+      new ProfilingIntegration(),
+      new Sentry.Integrations.Http({ tracing: true }),
+      new Sentry.Integrations.Express({ app: undefined }),
+    ],
+    beforeSend(event, hint) {
+      // Don't send events in development unless explicitly enabled
+      if (validatedConfig.nodeEnv === 'development' && !process.env.SENTRY_ENABLE_DEV) {
+        return null;
+      }
+      return event;
+    },
+  });
+
+  sentryInitialized = true;
+  console.log('Sentry initialized');
+}
+
+/**
+ * Sentry request handler middleware
+ * Must be added before other middleware
+ */
+export function sentryRequestHandler() {
+  if (!sentryInitialized) {
+    return (req: Request, res: Response, next: NextFunction) => next();
+  }
+  
+  return Sentry.Handlers.requestHandler({
+    user: ['id', 'email'],
+    ip: true,
+  });
+}
+
+/**
+ * Sentry tracing handler middleware
+ * Adds performance tracing
+ */
+export function sentryTracingHandler() {
+  if (!sentryInitialized) {
+    return (req: Request, res: Response, next: NextFunction) => next();
+  }
+  
+  return Sentry.Handlers.tracingHandler();
+}
+
+/**
+ * Sentry error handler middleware
+ * Must be added before error handler
+ */
+export function sentryErrorHandler() {
+  if (!sentryInitialized) {
+    return (err: Error, req: Request, res: Response, next: NextFunction) => next(err);
+  }
+  
+  return Sentry.Handlers.errorHandler({
+    shouldHandleError(error) {
+      // Don't report 4xx errors (client errors)
+      if ((error as any).statusCode && (error as any).statusCode < 500) {
+        return false;
+      }
+      return true;
+    },
+  });
+}
+
+/**
+ * Set user context for Sentry
+ */
+export function setSentryUser(req: AuthRequest): void {
+  if (!sentryInitialized || !req.userId) {
+    return;
+  }
+
+  Sentry.setUser({
+    id: req.userId,
+    email: req.email,
+    ip_address: req.ip,
+  });
+}
+
+/**
+ * Capture exception to Sentry
+ */
+export function captureException(error: Error, context?: Record<string, any>): void {
+  if (!sentryInitialized) {
+    return;
+  }
+
+  Sentry.withScope((scope) => {
+    if (context) {
+      Object.entries(context).forEach(([key, value]) => {
+        scope.setContext(key, value);
+      });
+    }
+    Sentry.captureException(error);
+  });
+}
+
+/**
+ * Capture message to Sentry
+ */
+export function captureMessage(message: string, level: Sentry.SeverityLevel = 'info', context?: Record<string, any>): void {
+  if (!sentryInitialized) {
+    return;
+  }
+
+  Sentry.withScope((scope) => {
+    if (context) {
+      Object.entries(context).forEach(([key, value]) => {
+        scope.setContext(key, value);
+      });
+    }
+    Sentry.captureMessage(message, level);
+  });
+}

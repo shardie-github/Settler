@@ -17,7 +17,7 @@ const memoryCache = new Map<string, CacheEntry<any>>();
 // Redis client (lazy initialization)
 let redisClient: Redis | null = null;
 
-function getRedisClient(): Redis | null {
+export function getRedisClient(): Redis | null {
   if (redisClient) {
     return redisClient;
   }

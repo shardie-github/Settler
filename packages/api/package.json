@@ -45,7 +45,9 @@
     "compression": "^1.7.4",
     "envalid": "^8.0.0",
     "isomorphic-dompurify": "^2.9.0",
-    "dns": "^0.2.2"
+    "dns": "^0.2.2",
+    "@sentry/node": "^7.91.0",
+    "@sentry/profiling-node": "^7.91.0"
   },
   "devDependencies": {
     "@types/express": "^4.17.21",
