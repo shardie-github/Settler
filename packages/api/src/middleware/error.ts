@@ -1,4 +1,6 @@
 import { Request, Response, NextFunction } from "express";
+import { logError } from "../utils/logger";
+import { AuthRequest } from "./auth";
 
 export const errorHandler = (
   err: Error,
@@ -6,15 +8,29 @@ export const errorHandler = (
   res: Response,
   next: NextFunction
 ): void => {
-  console.error("Error:", err);
+  // Log error with context
+  logError('Request error', err, {
+    method: req.method,
+    path: req.path,
+    ip: req.ip,
+    traceId: (req as AuthRequest).traceId,
+    userId: (req as AuthRequest).userId,
+  });
 
   // Default error response
   const statusCode = (err as any).statusCode || 500;
   const message = err.message || "Internal Server Error";
 
-  res.status(statusCode).json({
+  // Never expose stack traces in production
+  const response: any = {
     error: err.name || "Internal Server Error",
     message,
-    ...(process.env.NODE_ENV === "development" && { stack: err.stack }),
-  });
+  };
+
+  // Only include stack in development
+  if (process.env.NODE_ENV === "development") {
+    response.stack = err.stack;
+  }
+
+  res.status(statusCode).json(response);
 };

@@ -2,6 +2,9 @@ import { Router, Request, Response } from "express";
 import { z } from "zod";
 import { validateRequest } from "../middleware/validation";
 import { AuthRequest } from "../middleware/auth";
+import { requirePermission, requireResourceOwnership } from "../middleware/authorization";
+import { query } from "../db";
+import { logInfo, logError } from "../utils/logger";
 
 const router = Router();
 
@@ -13,71 +16,179 @@ const getReportSchema = z.object({
     startDate: z.string().optional(),
     endDate: z.string().optional(),
     format: z.enum(["json", "csv"]).optional(),
+    page: z.string().regex(/^\d+$/).transform(Number).optional().default("1"),
+    limit: z.string().regex(/^\d+$/).transform(Number).optional().default("100"),
   }),
 });
 
-// Get reconciliation report
+const paginationSchema = z.object({
+  query: z.object({
+    page: z.string().regex(/^\d+$/).transform(Number).optional().default("1"),
+    limit: z.string().regex(/^\d+$/).transform(Number).optional().default("100"),
+  }),
+});
+
+// Get reconciliation report with pagination
 router.get(
   "/:jobId",
+  requirePermission("reports", "read"),
   validateRequest(getReportSchema),
   async (req: AuthRequest, res: Response) => {
     try {
       const { jobId } = req.params;
-      const { startDate, endDate, format = "json" } = req.query;
+      const userId = req.userId!;
+      const { startDate, endDate, format = "json", page, limit } = req.query;
 
-      // In production, generate report from database
-      const report = {
-        jobId,
-        dateRange: {
-          start: startDate || new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
-          end: endDate || new Date().toISOString(),
-        },
-        summary: {
-          matched: 145,
-          unmatched: 3,
-          errors: 1,
-          accuracy: 98.7,
-          totalTransactions: 149,
-        },
-        matches: [
-          {
-            id: "match_1",
-            sourceId: "order_123",
-            targetId: "payment_456",
-            amount: 99.99,
-            currency: "USD",
-            matchedAt: new Date().toISOString(),
-            confidence: 1.0,
-          },
-        ],
-        unmatched: [
-          {
-            id: "unmatch_1",
-            sourceId: "order_789",
-            amount: 49.99,
-            currency: "USD",
-            reason: "No matching payment found",
-          },
-        ],
-        errors: [
-          {
-            id: "error_1",
-            message: "Webhook timeout",
-            occurredAt: new Date().toISOString(),
-          },
-        ],
-        generatedAt: new Date().toISOString(),
+      // Check job ownership
+      const jobs = await query<{ user_id: string }>(
+        `SELECT user_id FROM jobs WHERE id = $1`,
+        [jobId]
+      );
+
+      if (jobs.length === 0) {
+        return res.status(404).json({ error: "Job not found" });
+      }
+
+      if (jobs[0].user_id !== userId) {
+        return res.status(403).json({
+          error: "Forbidden",
+          message: "You do not have access to this job",
+        });
+      }
+
+      const dateStart = startDate || new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
+      const dateEnd = endDate || new Date().toISOString();
+
+      // Get execution summary
+      const executions = await query<{
+        id: string;
+        summary: any;
+        completed_at: Date;
+      }>(
+        `SELECT id, summary, completed_at
+         FROM executions
+         WHERE job_id = $1 AND completed_at BETWEEN $2 AND $3
+         ORDER BY completed_at DESC
+         LIMIT 1`,
+        [jobId, dateStart, dateEnd]
+      );
+
+      if (executions.length === 0) {
+        return res.status(404).json({ error: "No reports found for this job" });
+      }
+
+      const execution = executions[0];
+      const executionId = execution.id;
+
+      // Get matches with pagination (fix N+1 query)
+      const offset = (page - 1) * limit;
+      const [matches, unmatched, errors, totalMatches] = await Promise.all([
+        query<{
+          id: string;
+          source_id: string;
+          target_id: string;
+          amount: number;
+          currency: string;
+          confidence: number;
+          matched_at: Date;
+        }>(
+          `SELECT id, source_id, target_id, amount, currency, confidence, matched_at
+           FROM matches
+           WHERE execution_id = $1
+           ORDER BY matched_at DESC
+           LIMIT $2 OFFSET $3`,
+          [executionId, limit, offset]
+        ),
+        query<{
+          id: string;
+          source_id: string;
+          target_id: string;
+          amount: number;
+          currency: string;
+          reason: string;
+        }>(
+          `SELECT id, source_id, target_id, amount, currency, reason
+           FROM unmatched
+           WHERE execution_id = $1
+           ORDER BY created_at DESC
+           LIMIT $2 OFFSET $3`,
+          [executionId, limit, offset]
+        ),
+        query<{ id: string; error: string }>(
+          `SELECT id, error FROM executions WHERE id = $1 AND error IS NOT NULL`,
+          [executionId]
+        ),
+        query<{ count: string }>(
+          `SELECT COUNT(*) as count FROM matches WHERE execution_id = $1`,
+          [executionId]
+        ),
+      ]);
+
+      const total = parseInt(totalMatches[0].count);
+      const summary = execution.summary || {
+        matched: matches.length,
+        unmatched: unmatched.length,
+        errors: errors.length,
+        accuracy: matches.length / (matches.length + unmatched.length) * 100,
+        totalTransactions: matches.length + unmatched.length,
       };
 
       if (format === "csv") {
-        // In production, convert to CSV
         res.setHeader("Content-Type", "text/csv");
         res.setHeader("Content-Disposition", `attachment; filename="report-${jobId}.csv"`);
-        res.send("id,sourceId,targetId,amount,currency,status\nmatch_1,order_123,payment_456,99.99,USD,matched\n");
+        
+        let csv = "id,sourceId,targetId,amount,currency,status\n";
+        matches.forEach(m => {
+          csv += `${m.id},${m.source_id},${m.target_id},${m.amount},${m.currency},matched\n`;
+        });
+        unmatched.forEach(u => {
+          csv += `${u.id},${u.source_id || ''},${u.target_id || ''},${u.amount || ''},${u.currency || ''},unmatched\n`;
+        });
+        
+        res.send(csv);
       } else {
-        res.json({ data: report });
+        res.json({
+          data: {
+            jobId,
+            executionId,
+            dateRange: {
+              start: dateStart,
+              end: dateEnd,
+            },
+            summary,
+            matches: matches.map(m => ({
+              id: m.id,
+              sourceId: m.source_id,
+              targetId: m.target_id,
+              amount: m.amount,
+              currency: m.currency,
+              matchedAt: m.matched_at.toISOString(),
+              confidence: m.confidence,
+            })),
+            unmatched: unmatched.map(u => ({
+              id: u.id,
+              sourceId: u.source_id,
+              targetId: u.target_id,
+              amount: u.amount,
+              currency: u.currency,
+              reason: u.reason,
+            })),
+            errors: errors.map(e => ({
+              id: e.id,
+              message: e.error,
+            })),
+            pagination: {
+              page,
+              limit,
+              total,
+              totalPages: Math.ceil(total / limit),
+            },
+            generatedAt: new Date().toISOString(),
+          },
+        });
       }
-    } catch (error) {
+    } catch (error: any) {
+      logError('Failed to generate report', error, { userId: req.userId, jobId: req.params.jobId });
       res.status(500).json({
         error: "Internal Server Error",
         message: "Failed to generate report",
@@ -86,35 +197,66 @@ router.get(
   }
 );
 
-// Get report history
-router.get("/", async (req: AuthRequest, res: Response) => {
-  try {
-    const userId = req.userId || "anonymous";
-    
-    // In production, fetch from database
-    const reports = [
-      {
-        id: "report_1",
-        jobId: "job_123",
-        summary: {
-          matched: 145,
-          unmatched: 3,
-          accuracy: 98.7,
-        },
-        generatedAt: new Date().toISOString(),
-      },
-    ];
+// Get report history with pagination
+router.get(
+  "/",
+  requirePermission("reports", "read"),
+  validateRequest(paginationSchema),
+  async (req: AuthRequest, res: Response) => {
+    try {
+      const userId = req.userId!;
+      const page = parseInt(req.query.page as string) || 1;
+      const limit = Math.min(parseInt(req.query.limit as string) || 100, 1000);
+      const offset = (page - 1) * limit;
 
-    res.json({
-      data: reports,
-      count: reports.length,
-    });
-  } catch (error) {
-    res.status(500).json({
-      error: "Internal Server Error",
-      message: "Failed to fetch reports",
-    });
+      const [reports, totalResult] = await Promise.all([
+        query<{
+          id: string;
+          job_id: string;
+          summary: any;
+          generated_at: Date;
+        }>(
+          `SELECT r.id, r.job_id, r.summary, r.generated_at
+           FROM reports r
+           JOIN jobs j ON r.job_id = j.id
+           WHERE j.user_id = $1
+           ORDER BY r.generated_at DESC
+           LIMIT $2 OFFSET $3`,
+          [userId, limit, offset]
+        ),
+        query<{ count: string }>(
+          `SELECT COUNT(*) as count
+           FROM reports r
+           JOIN jobs j ON r.job_id = j.id
+           WHERE j.user_id = $1`,
+          [userId]
+        ),
+      ]);
+
+      const total = parseInt(totalResult[0].count);
+
+      res.json({
+        data: reports.map(r => ({
+          id: r.id,
+          jobId: r.job_id,
+          summary: r.summary,
+          generatedAt: r.generated_at.toISOString(),
+        })),
+        pagination: {
+          page,
+          limit,
+          total,
+          totalPages: Math.ceil(total / limit),
+        },
+      });
+    } catch (error: any) {
+      logError('Failed to fetch reports', error, { userId: req.userId });
+      res.status(500).json({
+        error: "Internal Server Error",
+        message: "Failed to fetch reports",
+      });
+    }
   }
-});
+);
 
 export { router as reportsRouter };
