@@ -1,0 +1,235 @@
+import { Router, Request, Response } from "express";
+import { z } from "zod";
+import jwt from "jsonwebtoken";
+import { validateRequest } from "../middleware/validation";
+import { AuthRequest } from "../middleware/auth";
+import { query } from "../db";
+import { hashPassword, verifyPassword, generateApiKey, hashApiKey } from "../utils/hash";
+import { logInfo, logError } from "../utils/logger";
+import { config } from "../config";
+import { requirePermission } from "../middleware/authorization";
+
+const router = Router();
+
+const loginSchema = z.object({
+  body: z.object({
+    email: z.string().email(),
+    password: z.string().min(1),
+  }),
+});
+
+const refreshTokenSchema = z.object({
+  body: z.object({
+    refreshToken: z.string().min(1),
+  }),
+});
+
+const createApiKeySchema = z.object({
+  body: z.object({
+    name: z.string().min(1).max(255),
+    scopes: z.array(z.string()).optional(),
+    rateLimit: z.number().int().min(1).max(10000).optional(),
+    expiresAt: z.string().datetime().optional(),
+  }),
+});
+
+// Login and get access + refresh tokens
+router.post(
+  "/login",
+  validateRequest(loginSchema),
+  async (req: Request, res: Response) => {
+    try {
+      const { email, password } = req.body;
+
+      const users = await query<{
+        id: string;
+        password_hash: string;
+        role: string;
+      }>(
+        `SELECT id, password_hash, role FROM users WHERE email = $1 AND deleted_at IS NULL`,
+        [email]
+      );
+
+      if (users.length === 0) {
+        return res.status(401).json({ error: "Invalid credentials" });
+      }
+
+      const user = users[0];
+      const isValid = await verifyPassword(password, user.password_hash);
+
+      if (!isValid) {
+        return res.status(401).json({ error: "Invalid credentials" });
+      }
+
+      // Generate access token (15 minutes)
+      const accessToken = jwt.sign(
+        { userId: user.id, type: 'access' },
+        config.jwt.secret!,
+        {
+          expiresIn: config.jwt.accessTokenExpiry,
+          issuer: 'settler-api',
+          audience: 'settler-client',
+        }
+      );
+
+      // Generate refresh token (7 days)
+      const refreshToken = jwt.sign(
+        { userId: user.id, type: 'refresh' },
+        config.jwt.refreshSecret!,
+        {
+          expiresIn: config.jwt.refreshTokenExpiry,
+          issuer: 'settler-api',
+          audience: 'settler-client',
+        }
+      );
+
+      // Log audit event
+      await query(
+        `INSERT INTO audit_logs (event, user_id, metadata)
+         VALUES ($1, $2, $3)`,
+        [
+          'user_login',
+          user.id,
+          JSON.stringify({ ip: req.ip }),
+        ]
+      );
+
+      logInfo('User logged in', { userId: user.id });
+
+      res.json({
+        data: {
+          accessToken,
+          refreshToken,
+          expiresIn: 900, // 15 minutes in seconds
+          user: {
+            id: user.id,
+            email,
+            role: user.role,
+          },
+        },
+      });
+    } catch (error: any) {
+      logError('Login failed', error);
+      res.status(500).json({
+        error: "Internal Server Error",
+        message: "Failed to login",
+      });
+    }
+  }
+);
+
+// Refresh access token
+router.post(
+  "/refresh",
+  validateRequest(refreshTokenSchema),
+  async (req: Request, res: Response) => {
+    try {
+      const { refreshToken } = req.body;
+
+      try {
+        const decoded = jwt.verify(refreshToken, config.jwt.refreshSecret!, {
+          issuer: 'settler-api',
+          audience: 'settler-client',
+        }) as { userId: string; type?: string };
+
+        if (decoded.type !== 'refresh') {
+          return res.status(401).json({ error: "Invalid token type" });
+        }
+
+        // Generate new access token
+        const accessToken = jwt.sign(
+          { userId: decoded.userId, type: 'access' },
+          config.jwt.secret!,
+          {
+            expiresIn: config.jwt.accessTokenExpiry,
+            issuer: 'settler-api',
+            audience: 'settler-client',
+          }
+        );
+
+        res.json({
+          data: {
+            accessToken,
+            expiresIn: 900,
+          },
+        });
+      } catch (error: any) {
+        if (error.name === 'TokenExpiredError') {
+          return res.status(401).json({ error: "Refresh token expired" });
+        }
+        throw error;
+      }
+    } catch (error: any) {
+      logError('Token refresh failed', error);
+      res.status(401).json({
+        error: "Invalid Token",
+        message: "Failed to refresh token",
+      });
+    }
+  }
+);
+
+// Create API key
+router.post(
+  "/api-keys",
+  requirePermission("api_keys", "create"),
+  validateRequest(createApiKeySchema),
+  async (req: AuthRequest, res: Response) => {
+    try {
+      const { name, scopes, rateLimit, expiresAt } = req.body;
+      const userId = req.userId!;
+
+      const { key, prefix } = generateApiKey();
+      const keyHash = await hashApiKey(key);
+
+      const result = await query<{ id: string }>(
+        `INSERT INTO api_keys (user_id, key_prefix, key_hash, name, scopes, rate_limit, expires_at)
+         VALUES ($1, $2, $3, $4, $5, $6, $7)
+         RETURNING id`,
+        [
+          userId,
+          prefix,
+          keyHash,
+          name,
+          scopes || ['jobs:read', 'jobs:write', 'reports:read'],
+          rateLimit || 1000,
+          expiresAt ? new Date(expiresAt) : null,
+        ]
+      );
+
+      // Log audit event
+      await query(
+        `INSERT INTO audit_logs (event, user_id, metadata)
+         VALUES ($1, $2, $3)`,
+        [
+          'api_key_created',
+          userId,
+          JSON.stringify({ apiKeyId: result[0].id, name }),
+        ]
+      );
+
+      logInfo('API key created', { userId, apiKeyId: result[0].id });
+
+      // Return key only once (never again)
+      res.status(201).json({
+        data: {
+          id: result[0].id,
+          key, // Only returned on creation
+          name,
+          scopes: scopes || ['jobs:read', 'jobs:write', 'reports:read'],
+          rateLimit: rateLimit || 1000,
+          createdAt: new Date().toISOString(),
+        },
+        message: "API key created. Store it securely - it will not be shown again.",
+      });
+    } catch (error: any) {
+      logError('Failed to create API key', error, { userId: req.userId });
+      res.status(500).json({
+        error: "Internal Server Error",
+        message: "Failed to create API key",
+      });
+    }
+  }
+);
+
+export { router as authRouter };
