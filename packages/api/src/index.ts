@@ -12,6 +12,7 @@ import { webhooksRouter } from "./routes/webhooks";
 import { adaptersRouter } from "./routes/adapters";
 import { healthRouter } from "./routes/health";
 import { metricsRouter } from "./routes/metrics";
+import { openApiRouter } from "./routes/openapi";
 import { usersRouter } from "./routes/users";
 import { authRouter } from "./routes/auth";
 import { rateLimitMiddleware } from "./utils/rate-limiter";
@@ -29,9 +30,19 @@ import { initializeTracing } from "./infrastructure/observability/tracing";
 import { compressionMiddleware, brotliCompressionMiddleware } from "./middleware/compression";
 import { etagMiddleware } from "./middleware/etag";
 import { observabilityMiddleware } from "./middleware/observability";
+import { setupSignalHandlers, registerShutdownHandler } from "./utils/graceful-shutdown";
+import { requestTimeoutMiddleware, getRequestTimeout } from "./middleware/request-timeout";
+import { initializeSentry, sentryRequestHandler, sentryTracingHandler, sentryErrorHandler } from "./middleware/sentry";
 
 const app: Express = express();
 const PORT = config.port;
+
+// Initialize Sentry before other middleware
+initializeSentry();
+
+// Sentry request and tracing handlers (must be first)
+app.use(sentryRequestHandler());
+app.use(sentryTracingHandler());
 
 // Security middleware
 app.use(helmet({
@@ -56,6 +67,14 @@ app.use(brotliCompressionMiddleware);
 
 // Observability middleware (tracing, metrics, logging)
 app.use(observabilityMiddleware);
+
+// Request timeout middleware (must be before routes)
+if (config.features.enableRequestTimeout) {
+  app.use((req: Request, res: Response, next: NextFunction) => {
+    const timeout = getRequestTimeout(req.path, req.method);
+    return requestTimeoutMiddleware(timeout)(req, res, next);
+  });
+}
 
 // Trace ID middleware
 app.use((req: Request, res: Response, next: NextFunction) => {
@@ -124,6 +143,9 @@ app.use("/health", healthRouter);
 // Metrics endpoint (no auth required, but should be protected in production)
 app.use("/metrics", metricsRouter);
 
+// API Documentation (no auth required)
+app.use("/api/v1", openApiRouter);
+
 // API versioning middleware
 app.use("/api", versionMiddleware);
 
@@ -142,6 +164,9 @@ app.use("/api/v2/auth", authRouter);
 // Versioned API routes
 app.use("/api/v1", authMiddleware, v1Router);
 app.use("/api/v2", authMiddleware, v2Router);
+
+// Sentry error handler (before custom error handler)
+app.use(sentryErrorHandler());
 
 // Error handling
 app.use(errorHandler);
@@ -164,15 +189,31 @@ async function startServer() {
     startDataRetentionJob();
     
     // Process pending webhooks every minute
-    setInterval(() => {
+    const webhookInterval = setInterval(() => {
       processPendingWebhooks().catch(error => {
         logError('Failed to process pending webhooks', error);
       });
     }, 60000);
     
-    app.listen(PORT, () => {
+    // Register webhook interval cleanup
+    registerShutdownHandler(async () => {
+      clearInterval(webhookInterval);
+      logInfo('Webhook processing stopped');
+    });
+    
+    const server = app.listen(PORT, () => {
       logInfo(`Settler API server running on port ${PORT}`, { port: PORT });
     });
+    
+    // Setup graceful shutdown handlers
+    setupSignalHandlers(server, {
+      timeout: 30000, // 30 seconds
+      onShutdown: async () => {
+        logInfo('Custom shutdown tasks completed');
+      },
+    });
+    
+    return server;
   } catch (error) {
     console.error('Failed to start server:', error);
     process.exit(1);

@@ -8,12 +8,15 @@ export const pool = new Pool({
   database: config.database.name,
   user: config.database.user,
   password: config.database.password,
-  max: 20, // Maximum pool size
-  min: 5, // Minimum pool size
+  max: config.database.poolMax,
+  min: config.database.poolMin,
   idleTimeoutMillis: 30000,
-  connectionTimeoutMillis: 2000,
-  statement_timeout: 30000,
-  query_timeout: 30000,
+  connectionTimeoutMillis: config.database.connectionTimeout,
+  statement_timeout: config.database.statementTimeout,
+  query_timeout: config.database.statementTimeout,
+  ssl: config.database.ssl ? {
+    rejectUnauthorized: config.nodeEnv === 'production',
+  } : false,
 });
 
 pool.on('error', (err) => {
