@@ -1,5 +1,6 @@
 {
   "version": 2,
+  "buildCommand": "npm run typecheck && npm run build",
   "rewrites": [
     {
       "source": "/(.*)",
