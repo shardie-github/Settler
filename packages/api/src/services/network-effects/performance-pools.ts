@@ -119,7 +119,7 @@ export class PerformanceTuningPools extends EventEmitter {
   /**
    * Get recommended rules for a use case
    */
-  getRecommendedRules(adapter: string, useCase: string): Array<{
+  getRecommendedRules(adapter: string, _useCase: string): Array<{
     ruleType: string;
     confidence: number;
     expectedAccuracy: number;
@@ -189,11 +189,14 @@ export class PerformanceTuningPools extends EventEmitter {
       .map(([key, stats]) => {
         const [adapter, ruleType] = key.split(':');
         return {
-          adapter,
-          ruleType,
+          adapter: adapter ?? '',
+          ruleType: ruleType ?? '',
           avgAccuracy: stats.accuracy / stats.count,
         };
       })
+      .filter((item): item is { adapter: string; ruleType: string; avgAccuracy: number } => 
+        item.adapter !== '' && item.ruleType !== ''
+      )
       .sort((a, b) => b.avgAccuracy - a.avgAccuracy)
       .slice(0, 10);
 

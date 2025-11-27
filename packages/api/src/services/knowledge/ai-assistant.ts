@@ -81,7 +81,7 @@ For "${query.question}", I recommend reviewing our decision logs and documentati
   /**
    * Generate related questions
    */
-  private generateRelatedQuestions(question: string): string[] {
+  private generateRelatedQuestions(_question: string): string[] {
     // Mock related questions
     // In production, would use LLM to generate related questions
     return [
@@ -110,7 +110,9 @@ For "${query.question}", I recommend reviewing our decision logs and documentati
     
     for (const key of this.knowledgeBase.keys()) {
       const type = key.split(':')[0];
-      byType[type] = (byType[type] || 0) + 1;
+      if (type) {
+        byType[type] = (byType[type] || 0) + 1;
+      }
     }
 
     return {

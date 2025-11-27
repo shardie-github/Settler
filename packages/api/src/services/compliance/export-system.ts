@@ -230,8 +230,8 @@ export class ComplianceExportSystem extends EventEmitter {
    */
   private async generateDownloadUrl(
     exportId: string,
-    data: Record<string, unknown>,
-    format: ComplianceExport['format']
+    _data: Record<string, unknown>,
+    _format: ComplianceExport['format']
   ): Promise<string> {
     // TODO: Upload to S3/R2 and generate signed URL
     // For now, return mock URL
