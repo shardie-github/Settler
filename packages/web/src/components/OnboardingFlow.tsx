@@ -15,8 +15,8 @@ export default function OnboardingFlow({ apiKey, onComplete }: OnboardingFlowPro
     name: "",
     sourceAdapter: "shopify",
     targetAdapter: "stripe",
-    sourceConfig: {} as Record<string, any>,
-    targetConfig: {} as Record<string, any>,
+    sourceConfig: {} as Record<string, string>,
+    targetConfig: {} as Record<string, string>,
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -53,8 +53,9 @@ export default function OnboardingFlow({ apiKey, onComplete }: OnboardingFlowPro
       });
 
       onComplete();
-    } catch (err: any) {
-      setError(err.message || "Failed to create job");
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "Failed to create job";
+      setError(message);
     } finally {
       setLoading(false);
     }

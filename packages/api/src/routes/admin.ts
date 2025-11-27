@@ -3,8 +3,9 @@
  * Admin/debug endpoints for inspecting sagas and events
  */
 
-import { Router } from 'express';
+import { Router, Request, Response } from 'express';
 import { AdminService } from '../application/admin/AdminService';
+import { handleRouteError } from '../utils/error-handler';
 
 export function createAdminRouter(adminService: AdminService): Router {
   const router = Router();
@@ -18,8 +19,8 @@ export function createAdminRouter(adminService: AdminService): Router {
         return res.status(404).json({ error: 'Saga not found' });
       }
       res.json(status);
-    } catch (error: any) {
-      res.status(500).json({ error: error.message });
+    } catch (error: unknown) {
+      handleRouteError(res, error, 'Failed to get saga status', 500);
     }
   });
 
@@ -32,8 +33,8 @@ export function createAdminRouter(adminService: AdminService): Router {
         aggregateType
       );
       res.json(events);
-    } catch (error: any) {
-      res.status(500).json({ error: error.message });
+    } catch (error: unknown) {
+      handleRouteError(res, error, 'Failed to get saga status', 500);
     }
   });
 
@@ -43,8 +44,8 @@ export function createAdminRouter(adminService: AdminService): Router {
       const { correlationId } = req.params;
       const events = await adminService.listEventsByCorrelationId(correlationId);
       res.json(events);
-    } catch (error: any) {
-      res.status(500).json({ error: error.message });
+    } catch (error: unknown) {
+      handleRouteError(res, error, 'Failed to get saga status', 500);
     }
   });
 
@@ -54,8 +55,8 @@ export function createAdminRouter(adminService: AdminService): Router {
       const { sagaType, sagaId } = req.params;
       await adminService.resumeSaga(sagaId, sagaType);
       res.json({ message: 'Saga resumed' });
-    } catch (error: any) {
-      res.status(500).json({ error: error.message });
+    } catch (error: unknown) {
+      handleRouteError(res, error, 'Failed to get saga status', 500);
     }
   });
 
@@ -65,8 +66,8 @@ export function createAdminRouter(adminService: AdminService): Router {
       const { sagaType, sagaId } = req.params;
       await adminService.retrySaga(sagaId, sagaType);
       res.json({ message: 'Saga retry initiated' });
-    } catch (error: any) {
-      res.status(500).json({ error: error.message });
+    } catch (error: unknown) {
+      handleRouteError(res, error, 'Failed to get saga status', 500);
     }
   });
 
@@ -76,8 +77,8 @@ export function createAdminRouter(adminService: AdminService): Router {
       const { sagaType, sagaId } = req.params;
       await adminService.cancelSaga(sagaId, sagaType);
       res.json({ message: 'Saga cancelled' });
-    } catch (error: any) {
-      res.status(500).json({ error: error.message });
+    } catch (error: unknown) {
+      handleRouteError(res, error, 'Failed to get saga status', 500);
     }
   });
 
@@ -91,8 +92,8 @@ export function createAdminRouter(adminService: AdminService): Router {
         limit
       );
       res.json(entries);
-    } catch (error: any) {
-      res.status(500).json({ error: error.message });
+    } catch (error: unknown) {
+      handleRouteError(res, error, 'Failed to get saga status', 500);
     }
   });
 
@@ -103,8 +104,8 @@ export function createAdminRouter(adminService: AdminService): Router {
       const { notes } = req.body;
       await adminService.resolveDeadLetterEntry(id, notes);
       res.json({ message: 'Entry resolved' });
-    } catch (error: any) {
-      res.status(500).json({ error: error.message });
+    } catch (error: unknown) {
+      handleRouteError(res, error, 'Failed to get saga status', 500);
     }
   });
 
@@ -117,8 +118,8 @@ export function createAdminRouter(adminService: AdminService): Router {
         events
       );
       res.json(result);
-    } catch (error: any) {
-      res.status(500).json({ error: error.message });
+    } catch (error: unknown) {
+      handleRouteError(res, error, 'Failed to get saga status', 500);
     }
   });
 

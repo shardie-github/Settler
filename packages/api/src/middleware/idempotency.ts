@@ -18,7 +18,7 @@ export function idempotencyMiddleware() {
     const idempotencyKey = (req.headers['idempotency-key'] as string) || uuidv4();
     
     // Check if we've seen this request
-    const cached = await query<{ response: any; created_at: Date }>(
+    const cached = await query<{ response: { statusCode?: number; data: unknown }; created_at: Date }>(
       `SELECT response, created_at
        FROM idempotency_keys
        WHERE user_id = $1 AND key = $2 AND expires_at > NOW()`,
@@ -37,10 +37,10 @@ export function idempotencyMiddleware() {
     const originalStatus = res.status.bind(res);
 
     let statusCode = 200;
-    let responseData: any;
+    let responseData: unknown;
 
     // Override json to capture response
-    res.json = function(data: any) {
+    res.json = function(data: unknown) {
       responseData = data;
       return originalJson(data);
     };
@@ -53,7 +53,7 @@ export function idempotencyMiddleware() {
     // Call next middleware
     await new Promise<void>((resolve) => {
       const originalEnd = res.end.bind(res);
-      res.end = function(...args: any[]) {
+      res.end = function(...args: unknown[]) {
         // Cache successful responses (2xx)
         if (statusCode >= 200 && statusCode < 300) {
           query(

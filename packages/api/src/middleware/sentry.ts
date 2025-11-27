@@ -86,7 +86,8 @@ export function sentryErrorHandler() {
   return Sentry.Handlers.errorHandler({
     shouldHandleError(error) {
       // Don't report 4xx errors (client errors)
-      if ((error as any).statusCode && (error as any).statusCode < 500) {
+      const apiError = error as { statusCode?: number };
+      if (apiError.statusCode && apiError.statusCode < 500) {
         return false;
       }
       return true;
@@ -112,7 +113,7 @@ export function setSentryUser(req: AuthRequest): void {
 /**
  * Capture exception to Sentry
  */
-export function captureException(error: Error, context?: Record<string, any>): void {
+export function captureException(error: Error, context?: Record<string, unknown>): void {
   if (!sentryInitialized) {
     return;
   }
@@ -130,7 +131,7 @@ export function captureException(error: Error, context?: Record<string, any>): v
 /**
  * Capture message to Sentry
  */
-export function captureMessage(message: string, level: Sentry.SeverityLevel = 'info', context?: Record<string, any>): void {
+export function captureMessage(message: string, level: Sentry.SeverityLevel = 'info', context?: Record<string, unknown>): void {
   if (!sentryInitialized) {
     return;
   }

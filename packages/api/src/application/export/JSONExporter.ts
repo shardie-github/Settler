@@ -94,7 +94,24 @@ export class JSONExporter {
         delete settlement.raw_payload;
       }
 
-      const matchEntry: any = {
+      const matchEntry: {
+        match: {
+          id: string;
+          tenantId: string;
+          executionId: string;
+          jobId: string;
+          transactionId: string;
+          settlementId: string;
+          matchType: string;
+          confidenceScore: number;
+          matchingRules: unknown;
+          matchedAt: string;
+          createdAt: string;
+        };
+        transaction: Transaction;
+        settlement: Settlement;
+        fees?: Fee[];
+      } = {
         match: {
           id: match.id,
           tenantId: match.tenantId,
@@ -120,11 +137,11 @@ export class JSONExporter {
         );
 
         matchEntry.fees = fees.map(fee => {
-          const feeObj: any = { ...fee };
-          if (!includeRawPayloads) {
-            delete feeObj.raw_payload;
+          const feeObj: Partial<Fee> = { ...fee };
+          if (!includeRawPayloads && 'rawPayload' in feeObj) {
+            delete feeObj.rawPayload;
           }
-          return feeObj;
+          return feeObj as Fee;
         });
         result.summary.totalFees += fees.length;
       }
@@ -146,11 +163,11 @@ export class JSONExporter {
       );
 
       result.unmatched = unmatched.map(tx => {
-        const txObj: any = { ...tx };
-        if (!includeRawPayloads) {
-          delete txObj.raw_payload;
+        const txObj: Partial<Transaction> = { ...tx };
+        if (!includeRawPayloads && 'rawPayload' in txObj) {
+          delete txObj.rawPayload;
         }
-        return txObj;
+        return txObj as Transaction;
       });
 
       result.summary.totalUnmatched = unmatched.length;

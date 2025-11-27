@@ -89,8 +89,9 @@ export function observabilityEnhancedMiddleware(
 
     // Track reconciliation endpoints
     if (req.path.includes('/reconciliations') && req.method === 'POST') {
-      const jobId = (req.body as any)?.job_id || 'unknown';
-      const adapter = (req.body as any)?.source?.adapter || 'unknown';
+      const body = req.body as { job_id?: string; source?: { adapter?: string } };
+      const jobId = body?.job_id || 'unknown';
+      const adapter = body?.source?.adapter || 'unknown';
       trackReconciliationStart(jobId, adapter);
     }
   });

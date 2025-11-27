@@ -10,7 +10,13 @@ import { Container } from '../infrastructure/di/Container';
 
 export interface TenantRequest extends AuthRequest {
   tenantId?: string;
-  tenant?: any;
+  tenant?: {
+    id: string;
+    name: string;
+    slug: string;
+    status: string;
+    tier: string;
+  };
 }
 
 /**

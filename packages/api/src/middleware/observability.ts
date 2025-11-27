@@ -39,17 +39,17 @@ export function observabilityMiddleware(
   const originalJson = res.json;
   const originalEnd = res.end;
 
-  res.send = function (body: any) {
+  res.send = function (body: unknown) {
     recordMetrics();
     return originalSend.call(this, body);
   };
 
-  res.json = function (body: any) {
+  res.json = function (body: unknown) {
     recordMetrics();
     return originalJson.call(this, body);
   };
 
-  res.end = function (chunk?: any, encoding?: any) {
+  res.end = function (chunk?: unknown, encoding?: BufferEncoding) {
     recordMetrics();
     return originalEnd.call(this, chunk, encoding);
   };

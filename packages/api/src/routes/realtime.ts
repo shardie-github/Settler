@@ -7,6 +7,7 @@ import { Router, Request, Response } from 'express';
 import { query } from '../db';
 import { AuthRequest } from '../middleware/auth';
 import { logInfo, logError } from '../utils/logger';
+import { handleRouteError } from '../utils/error-handler';
 
 const router = Router();
 
@@ -90,9 +91,10 @@ router.get(
 
           res.write(`data: ${JSON.stringify(update)}\n\n`);
         }
-      } catch (error: any) {
+      } catch (error: unknown) {
         logError('SSE polling error', error, { connectionId, jobId });
-        res.write(`event: error\ndata: ${JSON.stringify({ error: 'Polling failed' })}\n\n`);
+        const message = error instanceof Error ? error.message : 'Polling failed';
+        res.write(`event: error\ndata: ${JSON.stringify({ error: message })}\n\n`);
       }
     }, 2000);
 
@@ -121,7 +123,7 @@ router.get(
 /**
  * Broadcast update to all connections for a job
  */
-export function broadcastJobUpdate(jobId: string, tenantId: string, update: any) {
+export function broadcastJobUpdate(jobId: string, tenantId: string, update: Record<string, unknown>) {
   const connections = Array.from(sseConnections.entries()).filter(
     ([id]) => id.includes(jobId) && id.includes(tenantId)
   );

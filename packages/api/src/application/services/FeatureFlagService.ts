@@ -14,7 +14,7 @@ export interface FeatureFlag {
   rolloutPercentage: number; // 0-100 for A/B testing
   tenantId?: string;
   userId?: string;
-  conditions: Record<string, any>;
+  conditions: Record<string, unknown>;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -22,8 +22,8 @@ export interface FeatureFlag {
 export interface FeatureFlagChange {
   featureFlagId: string;
   changedBy?: string;
-  oldValue: any;
-  newValue: any;
+  oldValue: unknown;
+  newValue: unknown;
   reason?: string;
 }
 
@@ -84,7 +84,7 @@ export class FeatureFlagService {
       FROM feature_flags
       WHERE name = $1 AND deleted_at IS NULL
     `;
-    const params: any[] = [flagName];
+    const params: (string | null)[] = [flagName];
 
     if (userId && tenantId) {
       sql += ` AND ((tenant_id = $2 AND user_id = $3) OR (tenant_id = $2 AND user_id IS NULL) OR (tenant_id IS NULL AND user_id IS NULL))`;
@@ -113,7 +113,7 @@ export class FeatureFlagService {
       userId?: string;
       rolloutPercentage?: number;
       description?: string;
-      conditions?: Record<string, any>;
+      conditions?: Record<string, unknown>;
       changedBy?: string;
       reason?: string;
     }
