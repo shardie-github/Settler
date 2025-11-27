@@ -18,8 +18,8 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
-    "@settler/adapters": "workspace:*",
-    "@settler/sdk": "workspace:*",
+    "@settler/adapters": "*",
+    "@settler/sdk": "*",
     "express": "^4.18.2",
     "cors": "^2.8.5",
     "helmet": "^7.1.0",
