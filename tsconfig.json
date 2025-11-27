@@ -18,6 +18,7 @@
     "paths": {
       "@settler/sdk": ["./packages/sdk/src"],
       "@settler/api": ["./packages/api/src"],
+      "@settler/api/*": ["./packages/api/src/*"],
       "@settler/adapters": ["./packages/adapters/src"]
     }
   },
