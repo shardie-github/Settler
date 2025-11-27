@@ -33,12 +33,22 @@ interface PreviewResult {
   recommendations: string[];
 }
 
+interface ImpactAnalysis {
+  estimatedMatchRate: number;
+  estimatedAccuracy: number;
+  performanceImpact?: {
+    executionTime?: string;
+    complexity?: string;
+  };
+  recommendations?: string[];
+}
+
 export function RulesEditor({ jobId }: { jobId?: string }) {
   const [rules, setRules] = useState<MatchingRule[]>([]);
   const [templates, setTemplates] = useState<RuleTemplate[]>([]);
   const [_selectedTemplate, setSelectedTemplate] = useState<string | null>(null);
   const [previewResult, setPreviewResult] = useState<PreviewResult | null>(null);
-  const [impactAnalysis, setImpactAnalysis] = useState<any>(null);
+  const [impactAnalysis, setImpactAnalysis] = useState<ImpactAnalysis | null>(null);
   const [aiSuggestions, setAiSuggestions] = useState<MatchingRule[]>([]);
 
   useEffect(() => {
@@ -338,7 +348,7 @@ export function RulesEditor({ jobId }: { jobId?: string }) {
                   <div className="mt-4">
                     <h4 className="font-semibold mb-2">Recommendations</h4>
                     <ul className="list-disc list-inside space-y-1">
-                      {impactAnalysis.recommendations.map((r: string, i: number) => (
+                      {impactAnalysis.recommendations.map((r, i) => (
                         <li key={i} className="text-sm">{r}</li>
                       ))}
                     </ul>
@@ -394,9 +404,9 @@ export function RulesEditor({ jobId }: { jobId?: string }) {
                       <div key={index} className="flex items-center gap-2 p-2 border rounded">
                         <Badge>{rule.type}</Badge>
                         <span className="font-mono text-sm">{rule.field}</span>
-                        {rule.tolerance && <span className="text-xs text-muted-foreground">±{rule.tolerance}</span>}
+                        {rule.tolerance?.amount && <span className="text-xs text-muted-foreground">±{rule.tolerance.amount}</span>}
+                        {rule.tolerance?.days && <span className="text-xs text-muted-foreground">±{rule.tolerance.days}d</span>}
                         {rule.threshold && <span className="text-xs text-muted-foreground">≥{rule.threshold}</span>}
-                        {rule.days && <span className="text-xs text-muted-foreground">±{rule.days}d</span>}
                         <Button
                           size="sm"
                           variant="outline"
