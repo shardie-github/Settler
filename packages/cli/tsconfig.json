@@ -6,12 +6,10 @@
     "skipLibCheck": true
   },
   "include": ["src/**/*"],
-  ["src/**/*"],
-  "exclude": ["node_modules", "dist", "**/*.test.ts", "../sdk/src/**/*"],
+  "exclude": ["node_modules", "dist", "**/*.test.ts"],
   "references": [
     {
-      "path": "../sdk",
-      "prepend": false
+      "path": "../sdk"
     }
   ]
 }
