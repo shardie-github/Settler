@@ -55,6 +55,8 @@ import { requestTimeoutMiddleware, getRequestTimeout } from "./middleware/reques
 import { initializeSentry, sentryRequestHandler, sentryTracingHandler, sentryErrorHandler } from "./middleware/sentry";
 import { profilingMiddleware } from "./infrastructure/observability/profiling";
 import { setCsrfToken, csrfProtection, getCsrfToken } from "./middleware/csrf";
+import { sanitizeInput, sanitizeUrlParams } from "./middleware/input-sanitization";
+import { validateStartup } from "./utils/startup-validation";
 import cookieParser from "cookie-parser";
 
 const app: Express = express();
@@ -164,6 +166,10 @@ app.use(express.urlencoded({ extended: true, limit: "1mb" }));
 
 // Initialize tracing
 initializeTracing();
+
+// Input sanitization middleware (defense-in-depth)
+app.use(sanitizeInput);
+app.use(sanitizeUrlParams);
 
 // Validate secrets at startup (production and preview)
 if (config.nodeEnv === 'production' || config.nodeEnv === 'preview') {
@@ -297,6 +303,17 @@ app.use((req: Request, res: Response) => {
 // Initialize database on startup
 async function startServer() {
   try {
+    // Run startup validations
+    const validation = await validateStartup();
+    if (!validation.passed) {
+      logError('Startup validation failed', undefined, { validation });
+      if (config.nodeEnv === 'production') {
+        process.exit(1);
+      } else {
+        logWarn('Continuing despite validation failures (non-production mode)');
+      }
+    }
+
     await initDatabase();
     logInfo('Database initialized');
     

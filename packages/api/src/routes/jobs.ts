@@ -126,12 +126,7 @@ router.post(
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : "Failed to create reconciliation job";
       logError('Failed to create job', error, { userId: req.userId });
-      sendError(
-        res,
-        "Internal Server Error",
-        message,
-        500
-      );
+      sendError(res, 500, 'INTERNAL_ERROR', message, undefined, req.traceId);
     }
   }
 );
@@ -211,7 +206,7 @@ router.get(
 
       const job = await jobService.getJob(id, userId);
       if (!job) {
-        return sendError(res, "Not Found", "Job not found", 404);
+        return sendError(res, 404, 'NOT_FOUND', 'Job not found', undefined, req.traceId);
       }
 
       sendSuccess(res, job);
@@ -357,7 +352,7 @@ router.delete(
 
       const deleted = await jobService.deleteJob(id, userId);
       if (!deleted) {
-        return sendError(res, "Not Found", "Job not found", 404);
+        return sendError(res, 404, 'NOT_FOUND', 'Job not found', undefined, req.traceId);
       }
 
       sendNoContent(res);
