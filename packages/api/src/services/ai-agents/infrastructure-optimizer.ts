@@ -9,7 +9,7 @@
  */
 
 import { BaseAgent } from './orchestrator';
-import { prometheusClient } from '../../infrastructure/observability/metrics';
+import { register } from '../../infrastructure/observability/metrics';
 
 export interface OptimizationOpportunity {
   id: string;

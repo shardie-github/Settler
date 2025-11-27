@@ -7,7 +7,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { AuthRequest } from './auth';
 import { get, set, del, cacheKey } from '../utils/cache';
-import { generateCacheKey } from '../utils/cache-invalidation';
 import { logInfo, logDebug } from '../utils/logger';
 
 export interface CacheConfig {
