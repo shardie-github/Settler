@@ -1,10 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { SettlerClient } from "@settler/sdk";
 
 interface AuditTrailProps {
-  client: SettlerClient;
   apiKey: string;
   jobId?: string;
 }
@@ -17,7 +15,7 @@ interface AuditLog {
   metadata?: Record<string, unknown>;
 }
 
-export default function AuditTrail({ client, apiKey, jobId }: AuditTrailProps) {
+export default function AuditTrail({ apiKey, jobId }: AuditTrailProps) {
   const [logs, setLogs] = useState<AuditLog[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<string>("all");
