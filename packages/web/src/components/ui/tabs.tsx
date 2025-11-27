@@ -15,7 +15,9 @@ export interface TabsProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 const Tabs = React.forwardRef<HTMLDivElement, TabsProps>(
-  ({ className, value, onValueChange, defaultValue, children, ...props }, ref) => {
+  ({ className, value: valueProp, onValueChange: onValueChangeProp, defaultValue, children, ...props }, ref) => {
+    const value = valueProp;
+    const onValueChange = onValueChangeProp;
     const [internalValue, setInternalValue] = React.useState(defaultValue || '');
     const currentValue = value !== undefined ? value : internalValue;
     const handleValueChange = (newValue: string) => {
@@ -57,7 +59,8 @@ export interface TabsTriggerProps extends React.ButtonHTMLAttributes<HTMLButtonE
 }
 
 const TabsTrigger = React.forwardRef<HTMLButtonElement, TabsTriggerProps>(
-  ({ className, value, children, ...props }, ref) => {
+  ({ className, value: valueProp, children, ...props }, ref) => {
+    const value = valueProp;
     const context = React.useContext(TabsContext);
     const isActive = context.value === value;
 
@@ -85,7 +88,8 @@ export interface TabsContentProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 const TabsContent = React.forwardRef<HTMLDivElement, TabsContentProps>(
-  ({ className, value, children, ...props }, ref) => {
+  ({ className, value: valueProp, children, ...props }, ref) => {
+    const value = valueProp;
     const context = React.useContext(TabsContext);
     if (context.value !== value) {
       return null;
