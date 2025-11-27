@@ -4,7 +4,7 @@
 **Version:** 1.0  
 **Date:** 2026  
 **Status:** Vision & Architecture Document  
-**Author:** Scott Hardie, Founder & CEO (scotytrmhardie@gmail.com | [LinkedIn](https://linkedin.com/in/scottrmhardie))
+**Author:** Scott Hardie, Founder & CEO (scottrmhardie@gmail.com | [LinkedIn](https://linkedin.com/in/scottrmhardie))
 
 ---
 

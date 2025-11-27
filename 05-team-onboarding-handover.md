@@ -3,7 +3,7 @@
 **Complete onboarding guide: CONTRIBUTING.md, new engineer checklist, ownership matrix, and tribal knowledge documentation**
 
 **Founder & CEO:** Scott Hardie  
-Email: scotytrmhardie@gmail.com  
+Email: scottrmhardie@gmail.com  
 LinkedIn: [linkedin.com/in/scottrmhardie](https://linkedin.com/in/scottrmhardie)
 
 ---
