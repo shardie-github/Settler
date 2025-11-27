@@ -5,7 +5,7 @@ export class StripeAdapter implements Adapter {
   version = "1.0.0";
 
   async fetch(options: FetchOptions): Promise<NormalizedData[]> {
-    const { dateRange, config } = options;
+    const { config } = options;
     const apiKey = config.apiKey as string;
 
     if (!apiKey) {
@@ -42,15 +42,20 @@ export class StripeAdapter implements Adapter {
       metadata?: Record<string, unknown>;
     };
 
-    return {
+    const normalized: NormalizedData = {
       id: charge.id,
       amount: charge.amount / 100, // Convert cents to dollars
       currency: charge.currency.toUpperCase(),
       date: new Date(charge.created * 1000),
       metadata: charge.metadata || {},
       sourceId: charge.id,
-      referenceId: charge.metadata?.order_id as string | undefined,
     };
+
+    if (charge.metadata?.order_id) {
+      normalized.referenceId = charge.metadata.order_id as string;
+    }
+
+    return normalized;
   }
 
   validate(data: NormalizedData): ValidationResult {
@@ -69,9 +74,14 @@ export class StripeAdapter implements Adapter {
       errors.push("Date is required");
     }
 
-    return {
+    const result: ValidationResult = {
       valid: errors.length === 0,
-      errors: errors.length > 0 ? errors : undefined,
     };
+
+    if (errors.length > 0) {
+      result.errors = errors;
+    }
+
+    return result;
   }
 }

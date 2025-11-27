@@ -2,6 +2,10 @@
 
 **Complete onboarding guide: CONTRIBUTING.md, new engineer checklist, ownership matrix, and tribal knowledge documentation**
 
+**Founder & CEO:** Scott Hardie  
+Email: scotytrmhardie@gmail.com  
+LinkedIn: [linkedin.com/in/scottrmhardie](https://linkedin.com/in/scottrmhardie)
+
 ---
 
 ## Table of Contents
@@ -528,23 +532,23 @@ export async function createJob(config: JobConfig): Promise<Job> {
 
 | Area | Primary Owner | Secondary Owner | Escalation |
 |------|---------------|-----------------|------------|
-| **API Server** | [Name] | [Name] | CTO |
+| **API Server** | [Name] | [Name] | Scott Hardie (CEO) |
 | **SDK** | [Name] | [Name] | Engineering Lead |
 | **Web UI** | [Name] | [Name] | Engineering Lead |
 | **Adapters** | [Name] | [Name] | Engineering Lead |
-| **Database** | [Name] | [Name] | CTO |
-| **Infrastructure** | [Name] | [Name] | CTO |
-| **Security** | [Name] | [Name] | CTO |
+| **Database** | [Name] | [Name] | Scott Hardie (CEO) |
+| **Infrastructure** | [Name] | [Name] | Scott Hardie (CEO) |
+| **Security** | [Name] | [Name] | Scott Hardie (CEO) |
 | **Documentation** | [Name] | [Name] | Product Lead |
 
 ### Documentation Ownership
 
 | Document | Owner | Last Updated | Review Frequency |
 |----------|-------|--------------|------------------|
-| **README.md** | Engineering Lead | [Date] | Quarterly |
+| **README.md** | Engineering Lead | [Date] | [Date] | Quarterly |
 | **CONTRIBUTING.md** | Engineering Lead | [Date] | Quarterly |
 | **API Docs** | API Team | [Date] | Monthly |
-| **Architecture Docs** | CTO | [Date] | Quarterly |
+| **Architecture Docs** | Scott Hardie (CEO) | [Date] | Quarterly |
 | **Runbooks** | SRE Team | [Date] | Monthly |
 
 ### Support Contacts
