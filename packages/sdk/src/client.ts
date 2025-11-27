@@ -179,7 +179,7 @@ export class SettlerClient {
         }
       );
 
-      return response.data;
+      return response.data as T;
     };
 
     // Apply deduplication if enabled

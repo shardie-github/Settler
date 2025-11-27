@@ -40,13 +40,14 @@ export const handlers = [
   }),
 
   http.post(`${API_BASE}/api/v1/jobs`, async ({ request }) => {
-    const body = await request.json();
+    const body = await request.json() as Record<string, unknown> | null | undefined;
+    const bodyObj: Record<string, unknown> = body && typeof body === 'object' && !Array.isArray(body) && body !== null ? body : {};
     return HttpResponse.json(
       {
         data: {
           id: 'job_new',
           userId: 'user_123',
-          ...body,
+          ...bodyObj,
           status: 'active',
           createdAt: '2026-01-15T10:00:00Z',
           updatedAt: '2026-01-15T10:00:00Z',
@@ -139,13 +140,14 @@ export const handlers = [
   }),
 
   http.post(`${API_BASE}/api/v1/webhooks`, async ({ request }) => {
-    const body = await request.json();
+    const body = await request.json() as Record<string, unknown> | null | undefined;
+    const bodyObj: Record<string, unknown> = body && typeof body === 'object' && !Array.isArray(body) && body !== null ? body : {};
     return HttpResponse.json(
       {
         data: {
           id: 'wh_new',
           userId: 'user_123',
-          ...body,
+          ...bodyObj,
           secret: 'whsec_abc123',
           status: 'active',
           createdAt: '2026-01-15T10:00:00Z',
