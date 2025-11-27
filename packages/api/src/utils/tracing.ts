@@ -3,7 +3,6 @@
 
 import { v4 as uuidv4 } from 'uuid';
 import { AuthRequest } from '../middleware/auth';
-import { config } from '../config';
 
 export interface TraceContext {
   traceId: string;

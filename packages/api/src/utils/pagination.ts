@@ -112,36 +112,54 @@ export function createCursorPaginationResponse<T extends { created_at: Date | st
 
     if (direction === 'next') {
       // For next page, use last item as cursor
-      if (hasMore) {
+      if (hasMore && lastItem) {
         nextCursor = encodeCursor(lastItem.created_at, lastItem.id);
       }
       // For previous page, use first item as cursor (reversed)
-      prevCursor = encodeCursor(firstItem.created_at, firstItem.id);
+      if (firstItem) {
+        prevCursor = encodeCursor(firstItem.created_at, firstItem.id);
+      }
     } else {
       // For prev page, use first item as cursor
-      if (hasMore) {
+      if (hasMore && firstItem) {
         prevCursor = encodeCursor(firstItem.created_at, firstItem.id);
       }
       // For next page, use last item as cursor (reversed)
-      nextCursor = encodeCursor(lastItem.created_at, lastItem.id);
+      if (lastItem) {
+        nextCursor = encodeCursor(lastItem.created_at, lastItem.id);
+      }
     }
   }
 
-  return {
+  const result: CursorPaginationResult<T> = {
     items: paginatedItems,
-    nextCursor,
-    prevCursor,
     hasMore,
   };
+
+  if (nextCursor !== undefined) {
+    result.nextCursor = nextCursor;
+  }
+  if (prevCursor !== undefined) {
+    result.prevCursor = prevCursor;
+  }
+
+  return result;
 }
 
 /**
  * Parse pagination params from query string
  */
 export function parseCursorPaginationParams(req: { query: Record<string, string | undefined> }): CursorPaginationParams {
-  return {
-    cursor: req.query.cursor,
-    limit: req.query.limit ? parseInt(req.query.limit, 10) : undefined,
-    direction: (req.query.direction as 'next' | 'prev') || 'next',
+  const params: CursorPaginationParams = {
+    direction: req.query.direction === 'prev' ? 'prev' : 'next',
   };
+
+  if (req.query.cursor) {
+    params.cursor = req.query.cursor;
+  }
+  if (req.query.limit) {
+    params.limit = parseInt(req.query.limit, 10);
+  }
+
+  return params;
 }

@@ -21,12 +21,20 @@ export abstract class ApiError extends Error {
     message: string;
     details?: unknown;
   } {
-    return {
+    const result: {
+      error: string;
+      errorCode: string;
+      message: string;
+      details?: unknown;
+    } = {
       error: this.name,
       errorCode: this.errorCode,
       message: this.message,
-      ...(this.details && { details: this.details }),
     };
+    if (this.details !== undefined) {
+      result.details = this.details;
+    }
+    return result;
   }
 }
 
@@ -37,7 +45,9 @@ export class ValidationError extends ApiError {
 
   constructor(message: string, field?: string, details?: unknown) {
     super(message, details);
-    this.field = field;
+    if (field !== undefined) {
+      this.field = field;
+    }
   }
 }
 
@@ -59,8 +69,12 @@ export class NotFoundError extends ApiError {
 
   constructor(message: string, resourceType?: string, resourceId?: string, details?: unknown) {
     super(message, details);
-    this.resourceType = resourceType;
-    this.resourceId = resourceId;
+    if (resourceType !== undefined) {
+      this.resourceType = resourceType;
+    }
+    if (resourceId !== undefined) {
+      this.resourceId = resourceId;
+    }
   }
 }
 
