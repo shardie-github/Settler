@@ -19,10 +19,12 @@ const jobService = new JobRouteService();
 const jobMutexes = new Map<string, Mutex>();
 
 function getJobMutex(jobId: string): Mutex {
-  if (!jobMutexes.has(jobId)) {
-    jobMutexes.set(jobId, new Mutex());
+  let mutex = jobMutexes.get(jobId);
+  if (!mutex) {
+    mutex = new Mutex();
+    jobMutexes.set(jobId, mutex);
   }
-  return jobMutexes.get(jobId)!;
+  return mutex;
 }
 
 // Validation schemas with input sanitization

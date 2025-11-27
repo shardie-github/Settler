@@ -9,17 +9,23 @@ export function sanitizeHtml(str: string): string {
     .replace(/\//g, '&#x2F;');
 }
 
-export function sanitizeReportData(data: any): any {
+/**
+ * Recursively sanitize report data to prevent XSS attacks
+ * 
+ * @param data - Data to sanitize (string, array, object, or primitive)
+ * @returns Sanitized data with HTML entities escaped
+ */
+export function sanitizeReportData(data: unknown): unknown {
   if (typeof data === 'string') {
     return sanitizeHtml(data);
   }
 
   if (Array.isArray(data)) {
-    return data.map(item => sanitizeReportData(item));
+    return data.map((item) => sanitizeReportData(item));
   }
 
   if (data && typeof data === 'object') {
-    const sanitized: any = {};
+    const sanitized: Record<string, unknown> = {};
     for (const [key, value] of Object.entries(data)) {
       sanitized[key] = sanitizeReportData(value);
     }

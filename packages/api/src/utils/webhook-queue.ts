@@ -3,11 +3,23 @@ import { generateWebhookSignature } from "./webhook-signature";
 import { logInfo, logError, logWarn } from "./logger";
 import { config } from "../config";
 
+/**
+ * Webhook payload structure
+ */
+export interface WebhookPayload {
+  event: string;
+  data: Record<string, unknown>;
+  timestamp: string;
+  jobId?: string;
+  executionId?: string;
+  [key: string]: unknown; // Allow additional properties
+}
+
 interface WebhookDelivery {
   id: string;
   webhookId: string;
   url: string;
-  payload: any;
+  payload: WebhookPayload;
   secret: string;
 }
 
