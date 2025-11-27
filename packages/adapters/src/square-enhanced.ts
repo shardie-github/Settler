@@ -5,7 +5,7 @@
  * as specified in the Product & Technical Specification.
  */
 
-import { EnhancedAdapter, AdapterConfig, DateRange, NormalizedEvent, WebhookVerificationResult } from './enhanced-base';
+import { EnhancedAdapter, AdapterConfig, DateRange, NormalizedEvent } from './enhanced-base';
 import { Transaction, Settlement, Fee, RefundDispute, TransactionType, TransactionStatus, SettlementStatus, RefundDisputeType, RefundDisputeStatus } from '@settler/types';
 import crypto from 'crypto';
 
@@ -111,7 +111,7 @@ export class SquareEnhancedAdapter implements EnhancedAdapter {
   /**
    * Poll transactions from Square API
    */
-  async pollTransactions(config: AdapterConfig, dateRange: DateRange): Promise<Transaction[]> {
+  async pollTransactions(config: AdapterConfig, _dateRange: DateRange): Promise<Transaction[]> {
     const accessToken = config.accessToken;
     
     if (!accessToken) {
@@ -138,7 +138,7 @@ export class SquareEnhancedAdapter implements EnhancedAdapter {
   /**
    * Poll settlements from Square API
    */
-  async pollSettlements(config: AdapterConfig, dateRange: DateRange): Promise<Settlement[]> {
+  async pollSettlements(config: AdapterConfig, _dateRange: DateRange): Promise<Settlement[]> {
     const accessToken = config.accessToken;
     
     if (!accessToken) {
@@ -198,7 +198,7 @@ export class SquareEnhancedAdapter implements EnhancedAdapter {
   normalizeTransaction(raw: Record<string, any>, tenantId: string): Transaction {
     const payment = raw.payment || raw;
     
-    return {
+    const transaction: Transaction = {
       id: this.generateId(),
       tenantId,
       paymentId: payment.order_id || payment.reference_id,
@@ -209,15 +209,20 @@ export class SquareEnhancedAdapter implements EnhancedAdapter {
         value: parseFloat(payment.total_money?.amount || payment.amount_money?.amount || '0') / 100,
         currency: (payment.total_money?.currency || payment.amount_money?.currency || 'USD').toUpperCase(),
       },
-      netAmount: payment.processing_fee_money ? {
-        value: (parseFloat(payment.total_money?.amount || '0') - parseFloat(payment.processing_fee_money.amount || '0')) / 100,
-        currency: (payment.total_money?.currency || 'USD').toUpperCase(),
-      } : undefined,
       status: this.mapTransactionStatus(payment),
       rawPayload: payment,
       created_at: new Date(payment.created_at || Date.now()),
       updatedAt: new Date(payment.updated_at || Date.now()),
     };
+
+    if (payment.processing_fee_money) {
+      transaction.netAmount = {
+        value: (parseFloat(payment.total_money?.amount || '0') - parseFloat(payment.processing_fee_money.amount || '0')) / 100,
+        currency: (payment.total_money?.currency || 'USD').toUpperCase(),
+      };
+    }
+
+    return transaction;
   }
 
   /**
@@ -272,7 +277,7 @@ export class SquareEnhancedAdapter implements EnhancedAdapter {
   /**
    * Handle API version changes
    */
-  handleVersionChange(oldVersion: string, newVersion: string): void {
+  handleVersionChange(_oldVersion: string, newVersion: string): void {
     if (!this.supportedVersions.includes(newVersion)) {
       console.warn(`Square API version ${newVersion} is not officially supported. Supported versions: ${this.supportedVersions.join(', ')}`);
     }

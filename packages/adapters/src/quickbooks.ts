@@ -5,7 +5,7 @@ export class QuickBooksAdapter implements Adapter {
   version = "1.0.0";
 
   async fetch(options: FetchOptions): Promise<NormalizedData[]> {
-    const { dateRange, config } = options;
+    const { config } = options;
     const clientId = config.clientId as string;
     const clientSecret = config.clientSecret as string;
 
@@ -37,7 +37,7 @@ export class QuickBooksAdapter implements Adapter {
       DocNumber?: string;
     };
 
-    return {
+    const normalized: NormalizedData = {
       id: transaction.Id,
       amount: Math.abs(transaction.Amount),
       currency: transaction.CurrencyRef?.value || "USD",
@@ -46,8 +46,13 @@ export class QuickBooksAdapter implements Adapter {
         doc_number: transaction.DocNumber,
       },
       sourceId: transaction.Id,
-      referenceId: transaction.DocNumber,
     };
+
+    if (transaction.DocNumber) {
+      normalized.referenceId = transaction.DocNumber;
+    }
+
+    return normalized;
   }
 
   validate(data: NormalizedData): ValidationResult {
@@ -60,9 +65,14 @@ export class QuickBooksAdapter implements Adapter {
       errors.push("Amount is required");
     }
 
-    return {
+    const result: ValidationResult = {
       valid: errors.length === 0,
-      errors: errors.length > 0 ? errors : undefined,
     };
+
+    if (errors.length > 0) {
+      result.errors = errors;
+    }
+
+    return result;
   }
 }

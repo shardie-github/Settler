@@ -5,9 +5,8 @@
  * as specified in the Product & Technical Specification.
  */
 
-import { EnhancedAdapter, AdapterConfig, DateRange, NormalizedEvent, WebhookVerificationResult } from './enhanced-base';
+import { EnhancedAdapter, AdapterConfig, DateRange, NormalizedEvent } from './enhanced-base';
 import { Transaction, Settlement, Fee, RefundDispute, TransactionType, TransactionStatus, SettlementStatus, RefundDisputeType, RefundDisputeStatus } from '@settler/types';
-import crypto from 'crypto';
 
 export class PayPalEnhancedAdapter implements EnhancedAdapter {
   name = 'paypal';
@@ -17,7 +16,7 @@ export class PayPalEnhancedAdapter implements EnhancedAdapter {
   /**
    * Verify webhook signature
    */
-  verifyWebhook(payload: string | Buffer, signature: string, secret: string): boolean {
+  verifyWebhook(payload: string | Buffer, _signature: string, _secret: string): boolean {
     try {
       // PayPal webhook signature verification
       // PayPal uses a certificate-based signature verification
@@ -99,7 +98,7 @@ export class PayPalEnhancedAdapter implements EnhancedAdapter {
   /**
    * Poll transactions from PayPal API
    */
-  async pollTransactions(config: AdapterConfig, dateRange: DateRange): Promise<Transaction[]> {
+  async pollTransactions(config: AdapterConfig, _dateRange: DateRange): Promise<Transaction[]> {
     const clientId = config.clientId;
     const clientSecret = config.clientSecret;
     
@@ -124,7 +123,7 @@ export class PayPalEnhancedAdapter implements EnhancedAdapter {
   /**
    * Poll settlements from PayPal API
    */
-  async pollSettlements(config: AdapterConfig, dateRange: DateRange): Promise<Settlement[]> {
+  async pollSettlements(config: AdapterConfig, _dateRange: DateRange): Promise<Settlement[]> {
     const clientId = config.clientId;
     const clientSecret = config.clientSecret;
     
@@ -201,7 +200,7 @@ export class PayPalEnhancedAdapter implements EnhancedAdapter {
   normalizeTransaction(raw: Record<string, any>, tenantId: string): Transaction {
     const payment = raw.payment || raw;
     
-    return {
+    const transaction: Transaction = {
       id: this.generateId(),
       tenantId,
       paymentId: payment.invoice_id || payment.custom_id,
@@ -212,15 +211,20 @@ export class PayPalEnhancedAdapter implements EnhancedAdapter {
         value: parseFloat(payment.amount?.value || payment.amount || '0'),
         currency: (payment.amount?.currency || payment.currency || 'USD').toUpperCase(),
       },
-      netAmount: payment.transaction_fee ? {
-        value: parseFloat(payment.amount?.value || payment.amount || '0') - parseFloat(payment.transaction_fee.value || '0'),
-        currency: (payment.amount?.currency || payment.currency || 'USD').toUpperCase(),
-      } : undefined,
       status: this.mapTransactionStatus(payment),
       rawPayload: payment,
       created_at: new Date(payment.create_time || payment.created_time || Date.now()),
       updatedAt: new Date(payment.update_time || payment.updated_time || Date.now()),
     };
+
+    if (payment.transaction_fee) {
+      transaction.netAmount = {
+        value: parseFloat(payment.amount?.value || payment.amount || '0') - parseFloat(payment.transaction_fee.value || '0'),
+        currency: (payment.amount?.currency || payment.currency || 'USD').toUpperCase(),
+      };
+    }
+
+    return transaction;
   }
 
   /**
@@ -275,7 +279,7 @@ export class PayPalEnhancedAdapter implements EnhancedAdapter {
   /**
    * Handle API version changes
    */
-  handleVersionChange(oldVersion: string, newVersion: string): void {
+  handleVersionChange(_oldVersion: string, newVersion: string): void {
     if (!this.supportedVersions.includes(newVersion)) {
       console.warn(`PayPal API version ${newVersion} is not officially supported. Supported versions: ${this.supportedVersions.join(', ')}`);
     }

@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 
 import { Command } from "commander";
-import chalk from "chalk";
 import { jobsCommand } from "./commands/jobs";
 import { reportsCommand } from "./commands/reports";
 import { webhooksCommand } from "./commands/webhooks";

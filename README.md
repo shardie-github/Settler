@@ -249,6 +249,16 @@ The API is designed to be serverless-ready. Deploy to:
 - Cloudflare Workers
 - Google Cloud Functions
 
+## About the Founder
+
+**Scott Hardie** - Founder & CEO  
+Email: scottrmhardie@gmail.com  
+LinkedIn: [linkedin.com/in/scottrmhardie](https://linkedin.com/in/scottrmhardie)
+
+Scott brings extensive experience in building and scaling technology companies, with deep expertise in financial technology, API development, and developer tools. His background includes leadership roles in fintech startups, where he's focused on solving complex integration challenges and building developer-first products.
+
+---
+
 ## Support & Next Steps
 
 ### For Non-Technical Founders/Investors
@@ -289,3 +299,4 @@ For questions or support:
 - **Documentation:** [docs.settler.io](https://docs.settler.io)
 - **Issues:** [GitHub Issues](https://github.com/settler/settler/issues)
 - **Email:** support@settler.io
+- **Founder:** scottrmhardie@gmail.com

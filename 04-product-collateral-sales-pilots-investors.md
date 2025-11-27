@@ -2,6 +2,10 @@
 
 **Complete sales starter pack: intro deck, one-pager, enterprise pilot plan, and security FAQ**
 
+**Founder & CEO:** Scott Hardie  
+Email: scottrmhardie@gmail.com  
+LinkedIn: [linkedin.com/in/scottrmhardie](https://linkedin.com/in/scottrmhardie)
+
 ---
 
 ## Table of Contents

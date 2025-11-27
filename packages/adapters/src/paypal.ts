@@ -5,7 +5,7 @@ export class PayPalAdapter implements Adapter {
   version = "1.0.0";
 
   async fetch(options: FetchOptions): Promise<NormalizedData[]> {
-    const { dateRange, config } = options;
+    const { config } = options;
     const clientId = config.clientId as string;
     const clientSecret = config.clientSecret as string;
 
@@ -36,7 +36,7 @@ export class PayPalAdapter implements Adapter {
       custom?: string;
     };
 
-    return {
+    const normalized: NormalizedData = {
       id: payment.id,
       amount: parseFloat(payment.amount.total),
       currency: payment.amount.currency.toUpperCase(),
@@ -45,8 +45,13 @@ export class PayPalAdapter implements Adapter {
         custom: payment.custom,
       },
       sourceId: payment.id,
-      referenceId: payment.custom,
     };
+
+    if (payment.custom) {
+      normalized.referenceId = payment.custom;
+    }
+
+    return normalized;
   }
 
   validate(data: NormalizedData): ValidationResult {
@@ -59,9 +64,14 @@ export class PayPalAdapter implements Adapter {
       errors.push("Amount must be greater than 0");
     }
 
-    return {
+    const result: ValidationResult = {
       valid: errors.length === 0,
-      errors: errors.length > 0 ? errors : undefined,
     };
+
+    if (errors.length > 0) {
+      result.errors = errors;
+    }
+
+    return result;
   }
 }

@@ -5,7 +5,7 @@
  * as specified in the Product & Technical Specification.
  */
 
-import { EnhancedAdapter, AdapterConfig, DateRange, NormalizedEvent, WebhookVerificationResult } from './enhanced-base';
+import { EnhancedAdapter, AdapterConfig, DateRange, NormalizedEvent } from './enhanced-base';
 import { Transaction, Settlement, Fee, RefundDispute, TransactionType, TransactionStatus, SettlementStatus, RefundDisputeType, RefundDisputeStatus } from '@settler/types';
 import crypto from 'crypto';
 
@@ -104,7 +104,7 @@ export class StripeEnhancedAdapter implements EnhancedAdapter {
   /**
    * Poll transactions from Stripe API
    */
-  async pollTransactions(config: AdapterConfig, dateRange: DateRange): Promise<Transaction[]> {
+  async pollTransactions(config: AdapterConfig, _dateRange: DateRange): Promise<Transaction[]> {
     const apiKey = config.apiKey;
     if (!apiKey) {
       throw new Error('Stripe API key is required');
@@ -127,7 +127,7 @@ export class StripeEnhancedAdapter implements EnhancedAdapter {
   /**
    * Poll settlements from Stripe API
    */
-  async pollSettlements(config: AdapterConfig, dateRange: DateRange): Promise<Settlement[]> {
+  async pollSettlements(config: AdapterConfig, _dateRange: DateRange): Promise<Settlement[]> {
     const apiKey = config.apiKey;
     if (!apiKey) {
       throw new Error('Stripe API key is required');
@@ -184,7 +184,7 @@ export class StripeEnhancedAdapter implements EnhancedAdapter {
   normalizeTransaction(raw: Record<string, any>, tenantId: string): Transaction {
     const charge = raw.charge || raw;
     
-    return {
+    const transaction: Transaction = {
       id: this.generateId(),
       tenantId,
       paymentId: charge.metadata?.payment_id,
@@ -195,15 +195,20 @@ export class StripeEnhancedAdapter implements EnhancedAdapter {
         value: charge.amount / 100, // Convert cents to dollars
         currency: charge.currency.toUpperCase(),
       },
-      netAmount: charge.balance_transaction ? {
-        value: (charge.amount - charge.balance_transaction.fee) / 100,
-        currency: charge.currency.toUpperCase(),
-      } : undefined,
       status: this.mapTransactionStatus(charge),
       rawPayload: charge,
       created_at: new Date(charge.created * 1000),
       updatedAt: new Date(charge.updated || charge.created * 1000),
     };
+
+    if (charge.balance_transaction) {
+      transaction.netAmount = {
+        value: (charge.amount - charge.balance_transaction.fee) / 100,
+        currency: charge.currency.toUpperCase(),
+      };
+    }
+
+    return transaction;
   }
 
   /**
@@ -258,7 +263,7 @@ export class StripeEnhancedAdapter implements EnhancedAdapter {
   /**
    * Handle API version changes
    */
-  handleVersionChange(oldVersion: string, newVersion: string): void {
+  handleVersionChange(_oldVersion: string, newVersion: string): void {
     if (!this.supportedVersions.includes(newVersion)) {
       console.warn(`Stripe API version ${newVersion} is not officially supported. Supported versions: ${this.supportedVersions.join(', ')}`);
     }

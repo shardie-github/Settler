@@ -5,7 +5,7 @@ export class ShopifyAdapter implements Adapter {
   version = "1.0.0";
 
   async fetch(options: FetchOptions): Promise<NormalizedData[]> {
-    const { dateRange, config } = options;
+    const { config } = options;
     const apiKey = config.apiKey as string;
     const shopDomain = config.shopDomain as string;
 
@@ -42,7 +42,7 @@ export class ShopifyAdapter implements Adapter {
       email?: string;
     };
 
-    return {
+    const normalized: NormalizedData = {
       id: order.id.toString(),
       amount: parseFloat(order.total_price),
       currency: order.currency.toUpperCase(),
@@ -52,8 +52,13 @@ export class ShopifyAdapter implements Adapter {
         customer_email: order.email,
       },
       sourceId: order.id.toString(),
-      referenceId: order.name,
     };
+
+    if (order.name) {
+      normalized.referenceId = order.name;
+    }
+
+    return normalized;
   }
 
   validate(data: NormalizedData): ValidationResult {
@@ -69,9 +74,14 @@ export class ShopifyAdapter implements Adapter {
       errors.push("Currency is required");
     }
 
-    return {
+    const result: ValidationResult = {
       valid: errors.length === 0,
-      errors: errors.length > 0 ? errors : undefined,
     };
+
+    if (errors.length > 0) {
+      result.errors = errors;
+    }
+
+    return result;
   }
 }
