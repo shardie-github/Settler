@@ -1,4 +1,11 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
+# Run typecheck before lint-staged to catch TypeScript errors early
+echo "🔍 Running TypeScript typecheck..."
+npm run typecheck || {
+  echo "❌ TypeScript errors found. Please fix them before committing."
+  exit 1
+}
+
 npx lint-staged
