@@ -1,0 +1,65 @@
+npm warn config optional Use `--omit=optional` to exclude optional dependencies, or
+npm warn config `--include=optional` to include them.
+npm warn config
+npm warn config       Default value does install optional deps unless otherwise omitted.
+
+> @settler/web@1.0.0 typecheck
+> tsc --noEmit
+
+src/components/ExceptionQueue.tsx(8,58): error TS2307: Cannot find module '@/components/ui/card' or its corresponding type declarations.
+src/components/ExceptionQueue.tsx(9,24): error TS2307: Cannot find module '@/components/ui/button' or its corresponding type declarations.
+src/components/ExceptionQueue.tsx(10,23): error TS2307: Cannot find module '@/components/ui/input' or its corresponding type declarations.
+src/components/ExceptionQueue.tsx(11,23): error TS2307: Cannot find module '@/components/ui/badge' or its corresponding type declarations.
+src/components/ExceptionQueue.tsx(12,79): error TS2307: Cannot find module '@/components/ui/select' or its corresponding type declarations.
+src/components/ExceptionQueue.tsx(13,26): error TS2307: Cannot find module '@/components/ui/checkbox' or its corresponding type declarations.
+src/components/ExceptionQueue.tsx(14,67): error TS2307: Cannot find module '@/lib/lucide-react' or its corresponding type declarations.
+src/components/Playground.tsx(8,58): error TS2307: Cannot find module '@/components/ui/card' or its corresponding type declarations.
+src/components/Playground.tsx(9,24): error TS2307: Cannot find module '@/components/ui/button' or its corresponding type declarations.
+src/components/Playground.tsx(10,58): error TS2307: Cannot find module '@/components/ui/tabs' or its corresponding type declarations.
+src/components/Playground.tsx(11,23): error TS2307: Cannot find module '@/components/ui/badge' or its corresponding type declarations.
+src/components/Playground.tsx(12,41): error TS6133: 'XCircle' is declared but its value is never read.
+src/components/Playground.tsx(12,71): error TS2307: Cannot find module '@/lib/lucide-react' or its corresponding type declarations.
+src/components/Playground.tsx(13,27): error TS2307: Cannot find module '@/components/ui/code-block' or its corresponding type declarations.
+src/components/RulesEditor.tsx(8,58): error TS2307: Cannot find module '@/components/ui/card' or its corresponding type declarations.
+src/components/RulesEditor.tsx(9,24): error TS2307: Cannot find module '@/components/ui/button' or its corresponding type declarations.
+src/components/RulesEditor.tsx(10,23): error TS2307: Cannot find module '@/components/ui/input' or its corresponding type declarations.
+src/components/RulesEditor.tsx(11,23): error TS2307: Cannot find module '@/components/ui/label' or its corresponding type declarations.
+src/components/RulesEditor.tsx(12,79): error TS2307: Cannot find module '@/components/ui/select' or its corresponding type declarations.
+src/components/RulesEditor.tsx(13,23): error TS2307: Cannot find module '@/components/ui/badge' or its corresponding type declarations.
+src/components/RulesEditor.tsx(14,58): error TS2307: Cannot find module '@/components/ui/tabs' or its corresponding type declarations.
+src/components/RulesEditor.tsx(15,71): error TS2307: Cannot find module '@/lib/lucide-react' or its corresponding type declarations.
+src/components/RulesEditor.tsx(97,5): error TS2375: Type '{ field?: string; type?: "exact" | "fuzzy" | "range"; tolerance?: { amount?: number; days?: number; }; threshold?: number; }' is not assignable to type 'MatchingRule' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Property 'field' is optional in type '{ field?: string; type?: "range" | "exact" | "fuzzy"; tolerance?: { amount?: number; days?: number; }; threshold?: number; }' but required in type 'MatchingRule'.
+src/components/RulesEditor.tsx(190,38): error TS7006: Parameter 'e' implicitly has an 'any' type.
+src/components/RulesEditor.tsx(217,40): error TS7006: Parameter 'e' implicitly has an 'any' type.
+src/components/RulesEditor.tsx(219,49): error TS2379: Argument of type '{ tolerance: { amount: number; } | undefined; }' is not assignable to parameter of type 'Partial<MatchingRule>' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'tolerance' are incompatible.
+    Type '{ amount: number; } | undefined' is not assignable to type '{ amount?: number; days?: number; }'.
+      Type 'undefined' is not assignable to type '{ amount?: number; days?: number; }'.
+src/components/RulesEditor.tsx(236,40): error TS7006: Parameter 'e' implicitly has an 'any' type.
+src/components/RulesEditor.tsx(238,49): error TS2379: Argument of type '{ threshold: number | undefined; }' is not assignable to parameter of type 'Partial<MatchingRule>' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'threshold' are incompatible.
+    Type 'number | undefined' is not assignable to type 'number'.
+      Type 'undefined' is not assignable to type 'number'.
+src/components/RulesEditor.tsx(252,40): error TS7006: Parameter 'e' implicitly has an 'any' type.
+src/components/RulesEditor.tsx(254,49): error TS2379: Argument of type '{ tolerance: { days: number; } | undefined; }' is not assignable to parameter of type 'Partial<MatchingRule>' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'tolerance' are incompatible.
+    Type '{ days: number; } | undefined' is not assignable to type '{ amount?: number; days?: number; }'.
+      Type 'undefined' is not assignable to type '{ amount?: number; days?: number; }'.
+src/components/RulesEditor.tsx(347,18): error TS18048: 'impactAnalysis.recommendations.length' is possibly 'undefined'.
+src/components/RulesEditor.tsx(351,24): error TS18048: 'impactAnalysis.recommendations' is possibly 'undefined'.
+src/components/ui/badge.tsx(3,51): error TS6133: 'variant' is declared but its value is never read.
+src/components/ui/button.tsx(9,3): error TS6133: 'variant' is declared but its value is never read.
+src/components/ui/button.tsx(10,3): error TS6133: 'size' is declared but its value is never read.
+src/components/ui/code-block.tsx(7,20): error TS2307: Cannot find module '@/lib/utils' or its corresponding type declarations.
+src/components/ui/tabs.tsx(3,34): error TS6133: 'value' is declared but its value is never read.
+src/components/ui/tabs.tsx(3,41): error TS6133: 'onValueChange' is declared but its value is never read.
+src/components/ui/tabs.tsx(11,41): error TS6133: 'value' is declared but its value is never read.
+src/components/ui/tabs.tsx(15,41): error TS6133: 'value' is declared but its value is never read.
+npm error Lifecycle script `typecheck` failed with error:
+npm error code 2
+npm error path /workspace/packages/web
+npm error workspace @settler/web@1.0.0
+npm error location /workspace/packages/web
+npm error command failed
+npm error command sh -c tsc --noEmit

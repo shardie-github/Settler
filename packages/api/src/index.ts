@@ -35,7 +35,7 @@ import { testModeMiddleware, validateTestMode } from "./middleware/test-mode";
 import { rateLimitMiddleware } from "./utils/rate-limiter";
 import { initDatabase } from "./db";
 import { config } from "./config";
-import { logInfo, logError } from "./utils/logger";
+import { logInfo, logError, logWarn } from "./utils/logger";
 import { v4 as uuidv4 } from "uuid";
 import { startDataRetentionJob } from "./jobs/data-retention";
 import { startMaterializedViewRefreshJob } from "./jobs/materialized-view-refresh";
