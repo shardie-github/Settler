@@ -7,7 +7,7 @@
 
 import { EnhancedAdapter } from '@settler/adapters/enhanced-base';
 import { NormalizedEvent } from '@settler/adapters/enhanced-base';
-import { Transaction, Settlement } from '@settler/types';
+import { Transaction, Settlement, RefundDispute } from '@settler/types';
 import { query } from '../../db';
 import { StripeEnhancedAdapter } from '@settler/adapters/stripe-enhanced';
 import { PayPalEnhancedAdapter } from '@settler/adapters/paypal-enhanced';
@@ -226,7 +226,7 @@ export class WebhookIngestionService {
   /**
    * Store refund/dispute
    */
-  private async storeRefundDispute(refundDispute: Record<string, unknown>, tenantId: string): Promise<void> {
+  private async storeRefundDispute(refundDispute: RefundDispute, tenantId: string): Promise<void> {
     await query(
       `INSERT INTO refunds_and_disputes (
         id, tenant_id, transaction_id, type,

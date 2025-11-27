@@ -7,7 +7,7 @@ import { query, transaction } from "../db";
 import { hashPassword, verifyPassword } from "../utils/hash";
 import { logInfo, logError } from "../utils/logger";
 import { handleRouteError } from "../utils/error-handler";
-import { Role } from "../middleware/authorization";
+import { UserRole } from "../domain/entities/User";
 
 const router = Router();
 

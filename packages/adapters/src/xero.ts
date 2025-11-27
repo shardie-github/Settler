@@ -3,7 +3,7 @@
  * E6: Xero integration for accounting reconciliation
  */
 
-import { BaseAdapter, CanonicalTransaction } from "./base";
+import { Adapter, NormalizedData, FetchOptions, ValidationResult } from "./base";
 
 export interface XeroConfig {
   clientId: string;
@@ -13,22 +13,23 @@ export interface XeroConfig {
   refreshToken?: string;
 }
 
-export class XeroAdapter extends BaseAdapter {
+export class XeroAdapter implements Adapter {
+  name = "xero";
+  version = "1.0.0";
   private config: XeroConfig;
   private baseUrl = "https://api.xero.com/api.xro/2.0";
 
   constructor(config: XeroConfig) {
-    super();
     this.config = config;
   }
 
-  async fetchTransactions(dateRange?: { start: Date; end: Date }): Promise<CanonicalTransaction[]> {
+  async fetch(options: FetchOptions): Promise<NormalizedData[]> {
     // Get access token (refresh if needed)
     const accessToken = await this.getAccessToken();
 
     // Fetch transactions from Xero
-    const startDate = dateRange?.start.toISOString().split('T')[0] || new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
-    const endDate = dateRange?.end.toISOString().split('T')[0] || new Date().toISOString().split('T')[0];
+    const startDate = options.dateRange.start.toISOString().split('T')[0];
+    const endDate = options.dateRange.end.toISOString().split('T')[0];
 
     const response = await fetch(
       `${this.baseUrl}/BankTransactions?where=Date>=DateTime(${startDate})&where=Date<=DateTime(${endDate})`,
@@ -44,13 +45,13 @@ export class XeroAdapter extends BaseAdapter {
       throw new Error(`Xero API error: ${response.status} ${response.statusText}`);
     }
 
-    const data = await response.json();
+    const data = await response.json() as { BankTransactions?: unknown[] };
     const transactions = data.BankTransactions || [];
 
     return transactions.map((tx: unknown) => this.normalize(tx));
   }
 
-  normalize(transaction: unknown): CanonicalTransaction {
+  normalize(transaction: unknown): NormalizedData {
     const tx = transaction as {
       BankTransactionID: string;
       Date: string;
@@ -65,12 +66,40 @@ export class XeroAdapter extends BaseAdapter {
       amount: Math.abs(tx.Total),
       currency: tx.CurrencyCode,
       date: new Date(tx.Date),
-      description: tx.LineItems?.[0]?.Description || "Xero Transaction",
       metadata: {
+        description: tx.LineItems?.[0]?.Description || "Xero Transaction",
         contact: tx.Contact?.Name,
         lineItems: tx.LineItems,
       },
+      sourceId: tx.BankTransactionID,
     };
+  }
+
+  validate(data: NormalizedData): ValidationResult {
+    const errors: string[] = [];
+
+    if (!data.id) {
+      errors.push("Transaction ID is required");
+    }
+    if (!data.amount || data.amount <= 0) {
+      errors.push("Valid amount is required");
+    }
+    if (!data.currency) {
+      errors.push("Currency is required");
+    }
+    if (!data.date || !(data.date instanceof Date)) {
+      errors.push("Valid date is required");
+    }
+
+    const result: ValidationResult = {
+      valid: errors.length === 0,
+    };
+
+    if (errors.length > 0) {
+      result.errors = errors;
+    }
+
+    return result;
   }
 
   private async getAccessToken(): Promise<string> {
@@ -106,26 +135,33 @@ export class XeroAdapter extends BaseAdapter {
       throw new Error(`Failed to refresh Xero token: ${response.status}`);
     }
 
-    const data = await response.json();
+    const data = await response.json() as { access_token: string; refresh_token: string };
     return {
       accessToken: data.access_token,
       refreshToken: data.refresh_token,
     };
   }
 
-  async syncTransaction(transaction: CanonicalTransaction): Promise<void> {
+  async syncTransaction(transaction: NormalizedData): Promise<void> {
     const accessToken = await this.getAccessToken();
 
     // Create bank transaction in Xero
+    const description = typeof transaction.metadata?.description === 'string' 
+      ? transaction.metadata.description 
+      : "Settler Transaction";
+    const contact = typeof transaction.metadata?.contact === 'string'
+      ? transaction.metadata.contact
+      : "Settler";
+
     const xeroTransaction = {
       Type: transaction.amount > 0 ? "RECEIVE" : "SPEND",
       Contact: {
-        Name: transaction.metadata?.contact || "Settler",
+        Name: contact,
       },
       Date: transaction.date.toISOString().split('T')[0],
       LineItems: [
         {
-          Description: transaction.description,
+          Description: description,
           LineAmount: transaction.amount,
           AccountCode: "200", // Default account code
         },
