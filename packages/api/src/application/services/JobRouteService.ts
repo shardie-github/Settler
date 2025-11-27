@@ -169,7 +169,7 @@ export class JobRouteService {
         config: redactedTargetConfig,
       },
       rules: JSON.parse(job.rules),
-      schedule: job.schedule || undefined,
+      schedule: job.schedule,
       status: job.status,
       createdAt: job.created_at.toISOString(),
     };

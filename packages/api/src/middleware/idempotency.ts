@@ -25,11 +25,14 @@ export function idempotencyMiddleware() {
       [req.userId, idempotencyKey]
     );
 
-    if (cached.length > 0 && cached[0]) {
-      // Return cached response
-      const cachedResponse = cached[0].response;
-      res.status(cachedResponse.statusCode || 200).json(cachedResponse.data);
-      return;
+    if (cached.length > 0) {
+      const cachedItem = cached[0];
+      if (cachedItem) {
+        // Return cached response
+        const cachedResponse = cachedItem.response;
+        res.status(cachedResponse.statusCode || 200).json(cachedResponse.data);
+        return;
+      }
     }
 
     // Store original json method

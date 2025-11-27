@@ -61,7 +61,7 @@ export const errorHandler = (
   };
 
   // Include traceId if present
-  if (authReq.traceId) {
+  if (authReq.traceId !== undefined) {
     response.traceId = authReq.traceId;
   }
 
