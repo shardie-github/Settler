@@ -36,7 +36,7 @@ export class PayPalEnhancedAdapter implements EnhancedAdapter {
   /**
    * Normalize webhook payload to canonical format
    */
-  normalizeWebhook(payload: Record<string, any>, tenantId: string>, tenantId: string): NormalizedEvent[] {
+  normalizeWebhook(payload: Record<string, any>, tenantId: string): NormalizedEvent[] {
     const events: NormalizedEvent[] = [];
     const eventType = payload.event_type || payload.eventType;
     const resource = payload.resource || payload;
@@ -281,49 +281,49 @@ export class PayPalEnhancedAdapter implements EnhancedAdapter {
     }
   }
 
-    /**
-     * Map PayPal transaction type to canonical type
-     */
-    private mapTransactionType(payment: any): TransactionType {
-      if (payment.state === 'refunded') return 'refund';
-      if (payment.state === 'denied' || payment.state === 'failed') return 'chargeback';
-      if (payment.state === 'completed' || payment.state === 'approved') return 'capture';
-      return 'authorization';
-    }
+  /**
+   * Map PayPal transaction type to canonical type
+   */
+  private mapTransactionType(payment: any): TransactionType {
+    if (payment.state === 'refunded') return 'refund';
+    if (payment.state === 'denied' || payment.state === 'failed') return 'chargeback';
+    if (payment.state === 'completed' || payment.state === 'approved') return 'capture';
+    return 'authorization';
+  }
 
-    /**
-     * Map PayPal status to canonical status
-     */
-    private mapTransactionStatus(payment: any): TransactionStatus {
-      if (payment.state === 'refunded') return 'refunded';
-      if (payment.state === 'denied' || payment.state === 'failed') return 'failed';
-      if (payment.state === 'completed' || payment.state === 'approved') return 'succeeded';
-      return 'pending';
-    }
+  /**
+   * Map PayPal status to canonical status
+   */
+  private mapTransactionStatus(payment: any): TransactionStatus {
+    if (payment.state === 'refunded') return 'refunded';
+    if (payment.state === 'denied' || payment.state === 'failed') return 'failed';
+    if (payment.state === 'completed' || payment.state === 'approved') return 'succeeded';
+    return 'pending';
+  }
 
-    /**
-     * Map PayPal payout status to canonical status
-     */
-    private mapSettlementStatus(payout: any): SettlementStatus {
-      if (payout.payout_status === 'SUCCESS' || payout.status === 'COMPLETED') return 'completed';
-      if (payout.payout_status === 'FAILED' || payout.status === 'FAILED') return 'failed';
-      return 'pending';
-    }
+  /**
+   * Map PayPal payout status to canonical status
+   */
+  private mapSettlementStatus(payout: any): SettlementStatus {
+    if (payout.payout_status === 'SUCCESS' || payout.status === 'COMPLETED') return 'completed';
+    if (payout.payout_status === 'FAILED' || payout.status === 'FAILED') return 'failed';
+    return 'pending';
+  }
 
-    /**
-     * Map PayPal refund/dispute status to canonical status
-     */
-    private mapRefundDisputeStatus(raw: any): RefundDisputeStatus {
-      if (raw.state === 'completed' || raw.status === 'COMPLETED') return 'completed';
-      if (raw.state === 'failed' || raw.status === 'FAILED') return 'lost';
-      if (raw.state === 'cancelled' || raw.status === 'CANCELLED') return 'reversed';
-      return 'pending';
-    }
+  /**
+   * Map PayPal refund/dispute status to canonical status
+   */
+  private mapRefundDisputeStatus(raw: any): RefundDisputeStatus {
+    if (raw.state === 'completed' || raw.status === 'COMPLETED') return 'completed';
+    if (raw.state === 'failed' || raw.status === 'FAILED') return 'lost';
+    if (raw.state === 'cancelled' || raw.status === 'CANCELLED') return 'reversed';
+    return 'pending';
+  }
 
-    /**
-     * Generate ID
-     */
-    private generateId(): string {
-      return `paypal_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-    }
+  /**
+   * Generate ID
+   */
+  private generateId(): string {
+    return `paypal_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+  }
   }
