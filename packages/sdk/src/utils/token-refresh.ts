@@ -60,6 +60,10 @@ export class TokenManager {
       }
     }
 
+    if (!this.tokenInfo) {
+      throw new Error("Token is not available");
+    }
+
     return this.tokenInfo.token;
   }
 

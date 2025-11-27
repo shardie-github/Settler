@@ -68,7 +68,7 @@ export async function withRetry<T>(
 
       // Check if we should retry this error
       const shouldRetry =
-        retryConfig.shouldRetry(lastError, attempt) &&
+        (lastError instanceof SettlerError && retryConfig.shouldRetry(lastError, attempt)) &&
         (lastError instanceof NetworkError ||
           (lastError instanceof RateLimitError && retryConfig.retryOnRateLimit) ||
           (lastError instanceof SettlerError && lastError.statusCode && lastError.statusCode >= 500));
