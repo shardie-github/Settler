@@ -8,6 +8,7 @@ import { Router, Request, Response } from 'express';
 import { agentOrchestrator } from '../../services/ai-agents/orchestrator';
 import { InfrastructureOptimizerAgent } from '../../services/ai-agents/infrastructure-optimizer';
 import { AnomalyDetectorAgent } from '../../services/ai-agents/anomaly-detector';
+import { handleRouteError } from '../../utils/error-handler';
 
 const router = Router();
 
@@ -32,11 +33,8 @@ router.get('/', async (req: Request, res: Response) => {
       data: agents,
       count: agents.length,
     });
-  } catch (error: any) {
-    res.status(500).json({
-      error: 'Failed to list agents',
-      message: error.message,
-    });
+  } catch (error: unknown) {
+    handleRouteError(res, error, 'Failed to list agents', 500);
   }
 });
 
@@ -66,11 +64,8 @@ router.get('/:agentId', async (req: Request, res: Response) => {
         status,
       },
     });
-  } catch (error: any) {
-    res.status(500).json({
-      error: 'Failed to get agent',
-      message: error.message,
-    });
+  } catch (error: unknown) {
+    handleRouteError(res, error, 'Failed to get agent', 500);
   }
 });
 
@@ -92,11 +87,8 @@ router.post('/:agentId/execute', async (req: Request, res: Response) => {
     res.json({
       data: response,
     });
-  } catch (error: any) {
-    res.status(400).json({
-      error: 'Failed to execute agent action',
-      message: error.message,
-    });
+  } catch (error: unknown) {
+    handleRouteError(res, error, 'Failed to execute agent action', 400);
   }
 });
 
@@ -125,11 +117,8 @@ router.post('/:agentId/enable', async (req: Request, res: Response) => {
       },
       message: 'Agent enabled successfully',
     });
-  } catch (error: any) {
-    res.status(400).json({
-      error: 'Failed to enable agent',
-      message: error.message,
-    });
+  } catch (error: unknown) {
+    handleRouteError(res, error, 'Failed to enable agent', 400);
   }
 });
 
@@ -158,11 +147,8 @@ router.post('/:agentId/disable', async (req: Request, res: Response) => {
       },
       message: 'Agent disabled successfully',
     });
-  } catch (error: any) {
-    res.status(400).json({
-      error: 'Failed to disable agent',
-      message: error.message,
-    });
+  } catch (error: unknown) {
+    handleRouteError(res, error, 'Failed to disable agent', 400);
   }
 });
 
@@ -176,11 +162,8 @@ router.get('/stats', async (req: Request, res: Response) => {
     res.json({
       data: stats,
     });
-  } catch (error: any) {
-    res.status(500).json({
-      error: 'Failed to get stats',
-      message: error.message,
-    });
+  } catch (error: unknown) {
+    handleRouteError(res, error, 'Failed to get stats', 500);
   }
 });
 

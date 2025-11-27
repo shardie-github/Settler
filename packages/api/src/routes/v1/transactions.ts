@@ -11,6 +11,7 @@ import { AuthRequest } from '../../middleware/auth';
 import { requirePermission } from '../../middleware/authorization';
 import { query } from '../../db';
 import { sendSuccess, sendError, sendPaginated } from '../../utils/api-response';
+import { handleRouteError } from '../../utils/error-handler';
 
 const router = Router();
 
@@ -49,7 +50,7 @@ router.get(
       const offset = (page - 1) * limit;
 
       let whereClause = 'tenant_id = $1';
-      const params: any[] = [tenantId];
+      const params: (string | number)[] = [tenantId];
       let paramIndex = 2;
 
       if (provider) {
@@ -120,8 +121,8 @@ router.get(
       );
 
       sendPaginated(res, transactions, total, page, limit);
-    } catch (error: any) {
-      sendError(res, 'Internal Server Error', error.message || 'Failed to fetch transactions', 500);
+    } catch (error: unknown) {
+      handleRouteError(res, error, 'Failed to fetch transactions', 500);
     }
   }
 );
@@ -165,8 +166,8 @@ router.get(
       }
 
       sendSuccess(res, transactions[0]);
-    } catch (error: any) {
-      sendError(res, 'Internal Server Error', error.message || 'Failed to fetch transaction', 500);
+    } catch (error: unknown) {
+      handleRouteError(res, error, 'Failed to fetch transaction', 500);
     }
   }
 );

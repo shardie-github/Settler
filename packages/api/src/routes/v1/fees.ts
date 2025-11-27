@@ -11,6 +11,7 @@ import { AuthRequest } from '../../middleware/auth';
 import { requirePermission } from '../../middleware/authorization';
 import { query } from '../../db';
 import { sendSuccess, sendError, sendPaginated } from '../../utils/api-response';
+import { handleRouteError } from '../../utils/error-handler';
 
 const router = Router();
 
@@ -51,7 +52,7 @@ router.get(
       const offset = (page - 1) * limit;
 
       let whereClause = 'tenant_id = $1';
-      const params: any[] = [tenantId];
+      const params: (string | number)[] = [tenantId];
       let paramIndex = 2;
 
       if (transactionId) {
@@ -113,8 +114,8 @@ router.get(
       );
 
       sendPaginated(res, fees, total, page, limit);
-    } catch (error: any) {
-      sendError(res, 'Internal Server Error', error.message || 'Failed to fetch fees', 500);
+    } catch (error: unknown) {
+      handleRouteError(res, error, 'Failed to fetch fees', 500);
     }
   }
 );
@@ -133,7 +134,7 @@ router.get(
       const tenantId = req.tenantId!;
 
       let whereClause = 't.tenant_id = $1';
-      const params: any[] = [tenantId];
+      const params: (string | number)[] = [tenantId];
       let paramIndex = 2;
 
       if (transactionId) {
@@ -180,8 +181,8 @@ router.get(
       );
 
       sendSuccess(res, result);
-    } catch (error: any) {
-      sendError(res, 'Internal Server Error', error.message || 'Failed to calculate effective rate', 500);
+    } catch (error: unknown) {
+      handleRouteError(res, error, 'Failed to calculate effective rate', 500);
     }
   }
 );

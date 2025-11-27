@@ -34,7 +34,7 @@ export function etagMiddleware(
   const originalJson = res.json;
 
   // Override res.send
-  res.send = function (body: any) {
+  res.send = function (body: unknown) {
     const bodyString = typeof body === 'string' ? body : JSON.stringify(body);
     const etag = generateETag(bodyString);
 
@@ -53,7 +53,7 @@ export function etagMiddleware(
   };
 
   // Override res.json
-  res.json = function (body: any) {
+  res.json = function (body: unknown) {
     const bodyString = JSON.stringify(body);
     const etag = generateETag(bodyString);
 
@@ -74,6 +74,6 @@ export function etagMiddleware(
 /**
  * Generate ETag from data object (for manual ETag generation)
  */
-export function generateETagFromData(data: any): string {
+export function generateETagFromData(data: unknown): string {
   return generateETag(JSON.stringify(data));
 }

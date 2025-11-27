@@ -11,6 +11,7 @@ import { AuthRequest } from '../../middleware/auth';
 import { requirePermission } from '../../middleware/authorization';
 import { FXService } from '../../application/currency/FXService';
 import { sendSuccess, sendError } from '../../utils/api-response';
+import { handleRouteError } from '../../utils/error-handler';
 
 const router = Router();
 const fxService = new FXService();
@@ -60,8 +61,8 @@ router.post(
       }
 
       sendSuccess(res, { original: amount, converted });
-    } catch (error: any) {
-      sendError(res, 'Internal Server Error', error.message || 'Failed to convert currency', 500);
+    } catch (error: unknown) {
+      handleRouteError(res, error, 'Failed to convert currency', 500);
     }
   }
 );
@@ -96,8 +97,8 @@ router.get(
         rate,
         date: date || new Date().toISOString(),
       });
-    } catch (error: any) {
-      sendError(res, 'Internal Server Error', error.message || 'Failed to get FX rate', 500);
+    } catch (error: unknown) {
+      handleRouteError(res, error, 'Failed to get FX rate', 500);
     }
   }
 );
@@ -114,8 +115,8 @@ router.get(
       const tenantId = req.tenantId!;
       const baseCurrency = await fxService.getBaseCurrency(tenantId);
       sendSuccess(res, { baseCurrency });
-    } catch (error: any) {
-      sendError(res, 'Internal Server Error', error.message || 'Failed to get base currency', 500);
+    } catch (error: unknown) {
+      handleRouteError(res, error, 'Failed to get base currency', 500);
     }
   }
 );
@@ -133,8 +134,8 @@ router.get(
       const date = req.query.date ? new Date(req.query.date as string) : undefined;
       const rates = await fxService.getFXRates(tenantId, date);
       sendSuccess(res, { rates });
-    } catch (error: any) {
-      sendError(res, 'Internal Server Error', error.message || 'Failed to get FX rates', 500);
+    } catch (error: unknown) {
+      handleRouteError(res, error, 'Failed to get FX rates', 500);
     }
   }
 );

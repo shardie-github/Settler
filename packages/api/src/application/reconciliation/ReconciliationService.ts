@@ -43,7 +43,7 @@ export class ReconciliationService {
     this.sagaOrchestrator.registerSaga(shopifyStripeSaga.createDefinition());
 
     // Subscribe to reconciliation started events to trigger saga
-    eventBus.subscribe('reconciliation.started', async (event: any) => {
+    eventBus.subscribe('reconciliation.started', async (event: { reconciliationId: string; jobId: string; correlationId: string }) => {
       const reconciliationId = event.reconciliationId;
       const jobId = event.jobId;
       const correlationId = event.correlationId;

@@ -7,6 +7,8 @@
 import { Router, Request, Response } from 'express';
 import { crossCustomerIntelligence } from '../../services/network-effects/cross-customer-intelligence';
 import { performanceTuningPools } from '../../services/network-effects/performance-pools';
+import { handleRouteError } from '../../utils/error-handler';
+import { AuthRequest } from '../../middleware/auth';
 
 const router = Router();
 
@@ -16,7 +18,7 @@ const router = Router();
  */
 router.post('/intelligence/opt-in', async (req: Request, res: Response) => {
   try {
-    const customerId = (req as any).user?.id || req.body.customerId;
+    const customerId = (req as AuthRequest).userId || req.body.customerId;
     
     if (!customerId) {
       return res.status(400).json({
@@ -33,11 +35,8 @@ router.post('/intelligence/opt-in', async (req: Request, res: Response) => {
       },
       message: 'Successfully opted in to cross-customer intelligence',
     });
-  } catch (error: any) {
-    res.status(400).json({
-      error: 'Failed to opt in',
-      message: error.message,
-    });
+  } catch (error: unknown) {
+    handleRouteError(res, error, 'Failed to opt in', 400);
   }
 });
 
@@ -47,7 +46,7 @@ router.post('/intelligence/opt-in', async (req: Request, res: Response) => {
  */
 router.post('/intelligence/opt-out', async (req: Request, res: Response) => {
   try {
-    const customerId = (req as any).user?.id || req.body.customerId;
+    const customerId = (req as AuthRequest).userId || req.body.customerId;
     
     if (!customerId) {
       return res.status(400).json({
@@ -64,11 +63,8 @@ router.post('/intelligence/opt-out', async (req: Request, res: Response) => {
       },
       message: 'Successfully opted out of cross-customer intelligence',
     });
-  } catch (error: any) {
-    res.status(400).json({
-      error: 'Failed to opt out',
-      message: error.message,
-    });
+  } catch (error: unknown) {
+    handleRouteError(res, error, 'Failed to opt out', 400);
   }
 });
 
@@ -93,11 +89,8 @@ router.post('/intelligence/check-pattern', async (req: Request, res: Response) =
       data: match,
       matched: match !== null,
     });
-  } catch (error: any) {
-    res.status(400).json({
-      error: 'Failed to check pattern',
-      message: error.message,
-    });
+  } catch (error: unknown) {
+    handleRouteError(res, error, 'Failed to check pattern', 400);
   }
 });
 
@@ -112,11 +105,8 @@ router.get('/intelligence/insights', async (req: Request, res: Response) => {
     res.json({
       data: insights,
     });
-  } catch (error: any) {
-    res.status(500).json({
-      error: 'Failed to get insights',
-      message: error.message,
-    });
+  } catch (error: unknown) {
+    handleRouteError(res, error, 'Failed to get insights', 500);
   }
 });
 
@@ -126,7 +116,7 @@ router.get('/intelligence/insights', async (req: Request, res: Response) => {
  */
 router.post('/performance/opt-in', async (req: Request, res: Response) => {
   try {
-    const customerId = (req as any).user?.id || req.body.customerId;
+    const customerId = (req as AuthRequest).userId || req.body.customerId;
     
     if (!customerId) {
       return res.status(400).json({
@@ -143,11 +133,8 @@ router.post('/performance/opt-in', async (req: Request, res: Response) => {
       },
       message: 'Successfully opted in to performance tuning pools',
     });
-  } catch (error: any) {
-    res.status(400).json({
-      error: 'Failed to opt in',
-      message: error.message,
-    });
+  } catch (error: unknown) {
+    handleRouteError(res, error, 'Failed to opt in', 400);
   }
 });
 
@@ -157,7 +144,7 @@ router.post('/performance/opt-in', async (req: Request, res: Response) => {
  */
 router.post('/performance/submit', async (req: Request, res: Response) => {
   try {
-    const customerId = (req as any).user?.id || req.body.customerId;
+    const customerId = (req as AuthRequest).userId || req.body.customerId;
     const { jobId, adapter, ruleType, accuracy, latency, throughput } = req.body;
 
     if (!customerId || !jobId || !adapter || !ruleType) {
@@ -182,11 +169,8 @@ router.post('/performance/submit', async (req: Request, res: Response) => {
       },
       message: 'Performance metrics submitted successfully',
     });
-  } catch (error: any) {
-    res.status(400).json({
-      error: 'Failed to submit metrics',
-      message: error.message,
-    });
+  } catch (error: unknown) {
+    handleRouteError(res, error, 'Failed to submit metrics', 400);
   }
 });
 
@@ -212,11 +196,8 @@ router.get('/performance/insights', async (req: Request, res: Response) => {
     res.json({
       data: insights,
     });
-  } catch (error: any) {
-    res.status(500).json({
-      error: 'Failed to get insights',
-      message: error.message,
-    });
+  } catch (error: unknown) {
+    handleRouteError(res, error, 'Failed to get insights', 500);
   }
 });
 
@@ -242,11 +223,8 @@ router.get('/performance/recommendations', async (req: Request, res: Response) =
     res.json({
       data: recommendations,
     });
-  } catch (error: any) {
-    res.status(500).json({
-      error: 'Failed to get recommendations',
-      message: error.message,
-    });
+  } catch (error: unknown) {
+    handleRouteError(res, error, 'Failed to get recommendations', 500);
   }
 });
 
@@ -265,11 +243,8 @@ router.get('/stats', async (req: Request, res: Response) => {
         performance: performanceStats,
       },
     });
-  } catch (error: any) {
-    res.status(500).json({
-      error: 'Failed to get stats',
-      message: error.message,
-    });
+  } catch (error: unknown) {
+    handleRouteError(res, error, 'Failed to get stats', 500);
   }
 });
 

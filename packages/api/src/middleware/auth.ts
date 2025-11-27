@@ -24,15 +24,16 @@ export const authMiddleware = async (
       try {
         await validateApiKey(req, apiKey);
         return next();
-      } catch (error: any) {
+      } catch (error: unknown) {
+        const message = error instanceof Error ? error.message : "Invalid API key";
         logWarn('API key validation failed', {
           ip: req.ip,
           userAgent: req.headers['user-agent'],
-          error: error.message,
+          error: message,
         });
         return res.status(401).json({
           error: "Unauthorized",
-          message: error.message || "Invalid API key",
+          message,
         });
       }
     }
@@ -43,15 +44,16 @@ export const authMiddleware = async (
       try {
         await validateJWT(req, authHeader.substring(7));
         return next();
-      } catch (error: any) {
+      } catch (error: unknown) {
+        const message = error instanceof Error ? error.message : "The provided token is invalid or expired";
         logWarn('JWT validation failed', {
           ip: req.ip,
           userAgent: req.headers['user-agent'],
-          error: error.message,
+          error: message,
         });
         return res.status(401).json({
           error: "Invalid Token",
-          message: error.message || "The provided token is invalid or expired",
+          message,
         });
       }
     }
@@ -166,12 +168,14 @@ async function validateJWT(req: AuthRequest, token: string): Promise<void> {
     }
 
     req.userId = decoded.userId;
-  } catch (error: any) {
-    if (error.name === 'TokenExpiredError') {
-      throw new Error("Token has expired");
-    }
-    if (error.name === 'JsonWebTokenError') {
-      throw new Error("Invalid token");
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      if (error.name === 'TokenExpiredError') {
+        throw new Error("Token has expired");
+      }
+      if (error.name === 'JsonWebTokenError') {
+        throw new Error("Invalid token");
+      }
     }
     throw error;
   }

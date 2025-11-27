@@ -51,7 +51,7 @@ export function requestTimeoutMiddleware(timeoutMs: number = DEFAULT_TIMEOUT) {
 
     // Clear timeout when response finishes
     const originalEnd = res.end;
-    res.end = function(...args: any[]) {
+    res.end = function(...args: unknown[]) {
       if (req.timeout) {
         clearTimeout(req.timeout);
       }

@@ -13,7 +13,7 @@ interface AuditLog {
   event: string;
   userId: string;
   timestamp: string;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 export default function AuditTrail({ client, jobId }: AuditTrailProps) {
@@ -34,7 +34,7 @@ export default function AuditTrail({ client, jobId }: AuditTrailProps) {
         `/api/v1/audit-logs${jobId ? `?job_id=${jobId}` : ""}${filter !== "all" ? `&event=${filter}` : ""}`,
         {
           headers: {
-            Authorization: `Bearer ${(client as any).apiKey}`,
+            Authorization: `Bearer ${(client as { apiKey?: string }).apiKey || ''}`,
           },
         }
       );

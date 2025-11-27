@@ -13,6 +13,7 @@ import { cacheInvalidation } from '../middleware/api-gateway-cache';
 import { getReconciliationSummary, getJobPerformance, getMatchAccuracy } from '../infrastructure/query-optimization';
 import { sendSuccess, sendError } from '../utils/api-response';
 import { logError } from '../utils/logger';
+import { handleRouteError } from '../utils/error-handler';
 
 const router = Router();
 
@@ -51,9 +52,8 @@ router.get(
       });
 
       sendSuccess(res, summary, 'Reconciliation summary retrieved successfully');
-    } catch (error: any) {
-      logError('Failed to get reconciliation summary', error, { jobId: req.params.jobId });
-      sendError(res, 'Internal Server Error', error.message || 'Failed to get reconciliation summary', 500);
+    } catch (error: unknown) {
+      handleRouteError(res, error, 'Failed to get reconciliation summary', 500, { jobId: req.params.jobId });
     }
   }
 );
@@ -76,9 +76,8 @@ router.get(
       }
 
       sendSuccess(res, performance, 'Job performance retrieved successfully');
-    } catch (error: any) {
-      logError('Failed to get job performance', error, { jobId: req.params.jobId });
-      sendError(res, 'Internal Server Error', error.message || 'Failed to get job performance', 500);
+    } catch (error: unknown) {
+      handleRouteError(res, error, 'Failed to get job performance', 500, { jobId: req.params.jobId });
     }
   }
 );
@@ -101,9 +100,8 @@ router.get(
       }
 
       sendSuccess(res, accuracy, 'Match accuracy retrieved successfully');
-    } catch (error: any) {
-      logError('Failed to get match accuracy', error, { jobId: req.params.jobId });
-      sendError(res, 'Internal Server Error', error.message || 'Failed to get match accuracy', 500);
+    } catch (error: unknown) {
+      handleRouteError(res, error, 'Failed to get match accuracy', 500, { jobId: req.params.jobId });
     }
   }
 );

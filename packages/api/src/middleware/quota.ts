@@ -19,14 +19,19 @@ export function quotaMiddleware(quotaType: QuotaType, requestedValue: number = 1
       const quotaService = Container.get<QuotaService>('QuotaService');
       await quotaService.enforceQuota(req.tenantId, quotaType, requestedValue);
       next();
-    } catch (error: any) {
-      if (error.name === 'QuotaExceededError') {
+    } catch (error: unknown) {
+      if (error instanceof Error && 'name' in error && error.name === 'QuotaExceededError') {
+        const quotaError = error as Error & {
+          quotaType?: string;
+          currentUsage?: number;
+          limit?: number;
+        };
         res.status(429).json({
           error: 'QuotaExceeded',
-          message: error.message,
-          quotaType: error.quotaType,
-          currentUsage: error.currentUsage,
-          limit: error.limit,
+          message: quotaError.message,
+          quotaType: quotaError.quotaType,
+          currentUsage: quotaError.currentUsage,
+          limit: quotaError.limit,
         });
         return;
       }

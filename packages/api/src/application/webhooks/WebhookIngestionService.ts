@@ -43,7 +43,7 @@ export class WebhookIngestionService {
    */
   async processWebhook(
     adapterName: string,
-    payload: string | Buffer | Record<string, any>,
+    payload: string | Buffer | Record<string, unknown>,
     signature: string,
     secret: string,
     tenantId: string
@@ -96,11 +96,12 @@ export class WebhookIngestionService {
     let events: NormalizedEvent[];
     try {
       events = adapter.normalizeWebhook(payloadObj, tenantId);
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : 'Unknown error';
       return {
         success: false,
         events: [],
-        errors: [`Failed to normalize webhook: ${error.message}`],
+        errors: [`Failed to normalize webhook: ${message}`],
       };
     }
 
@@ -112,8 +113,9 @@ export class WebhookIngestionService {
     for (const event of events) {
       try {
         await this.processEvent(event, tenantId);
-      } catch (error: any) {
-        errors.push(`Failed to process event ${event.type}: ${error.message}`);
+      } catch (error: unknown) {
+        const message = error instanceof Error ? error.message : 'Unknown error';
+        errors.push(`Failed to process event ${event.type}: ${message}`);
       }
     }
 
@@ -224,7 +226,7 @@ export class WebhookIngestionService {
   /**
    * Store refund/dispute
    */
-  private async storeRefundDispute(refundDispute: any, tenantId: string): Promise<void> {
+  private async storeRefundDispute(refundDispute: Record<string, unknown>, tenantId: string): Promise<void> {
     await query(
       `INSERT INTO refunds_and_disputes (
         id, tenant_id, transaction_id, type,
@@ -253,7 +255,7 @@ export class WebhookIngestionService {
   /**
    * Store FX conversion
    */
-  private async storeFXConversion(fxConversion: any, tenantId: string): Promise<void> {
+  private async storeFXConversion(fxConversion: Record<string, unknown>, tenantId: string): Promise<void> {
     await query(
       `INSERT INTO fx_conversions (
         id, tenant_id, transaction_id, from_currency, to_currency,
@@ -281,7 +283,7 @@ export class WebhookIngestionService {
    */
   private async storeWebhookPayload(
     adapter: string,
-    payload: Record<string, any>,
+    payload: Record<string, unknown>,
     signature: string,
     tenantId: string
   ): Promise<void> {
@@ -296,7 +298,7 @@ export class WebhookIngestionService {
   /**
    * Extract idempotency key from payload
    */
-  private extractIdempotencyKey(payload: Record<string, any>, adapterName: string): string | null {
+  private extractIdempotencyKey(payload: Record<string, unknown>, adapterName: string): string | null {
     // Provider-specific idempotency key extraction
     switch (adapterName) {
       case 'stripe':

@@ -132,7 +132,7 @@ export class FXService {
    */
   async getBaseCurrency(tenantId: string): Promise<string> {
     // Get from tenant config or default to USD
-    const result = await query<{ config: any }>(
+    const result = await query<{ config: Record<string, unknown> }>(
       `SELECT config FROM tenants WHERE id = $1 LIMIT 1`,
       [tenantId]
     );

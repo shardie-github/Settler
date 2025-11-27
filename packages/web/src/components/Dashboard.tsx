@@ -228,7 +228,18 @@ function JobDetailModal({
   onClose: () => void;
   onUpdate: () => void;
 }) {
-  const [report, setReport] = useState<any>(null);
+  const [report, setReport] = useState<{
+    summary?: {
+      matched?: number;
+      unmatched?: number;
+      accuracy?: number;
+    };
+    unmatched?: Array<{
+      sourceId?: string;
+      targetId?: string;
+      reason?: string;
+    }>;
+  } | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -306,7 +317,7 @@ function JobDetailModal({
                         </tr>
                       </thead>
                       <tbody className="bg-white divide-y divide-gray-200">
-                        {report.unmatched.slice(0, 10).map((record: any, idx: number) => (
+                        {report.unmatched.slice(0, 10).map((record, idx: number) => (
                           <tr key={idx}>
                             <td className="px-4 py-3 text-sm">{record.sourceId || "-"}</td>
                             <td className="px-4 py-3 text-sm">{record.targetId || "-"}</td>

@@ -7,6 +7,7 @@
 import { Router, Request, Response } from 'express';
 import { decisionLog } from '../../services/knowledge/decision-log';
 import { aiKnowledgeAssistant } from '../../services/knowledge/ai-assistant';
+import { handleRouteError } from '../../utils/error-handler';
 
 const router = Router();
 
@@ -22,11 +23,8 @@ router.post('/decisions', async (req: Request, res: Response) => {
       data: decision,
       message: 'Decision created successfully',
     });
-  } catch (error: any) {
-    res.status(400).json({
-      error: 'Failed to create decision',
-      message: error.message,
-    });
+  } catch (error: unknown) {
+    handleRouteError(res, error, 'Failed to create decision', 400);
   }
 });
 
@@ -37,7 +35,7 @@ router.post('/decisions', async (req: Request, res: Response) => {
 router.get('/decisions', async (req: Request, res: Response) => {
   try {
     const decisions = decisionLog.queryDecisions({
-      status: req.query.status as any,
+      status: req.query.status as string | undefined,
       decisionMaker: req.query.decisionMaker as string,
       tag: req.query.tag as string,
       dateRange: req.query.startDate && req.query.endDate ? {
@@ -51,11 +49,8 @@ router.get('/decisions', async (req: Request, res: Response) => {
       data: decisions,
       count: decisions.length,
     });
-  } catch (error: any) {
-    res.status(400).json({
-      error: 'Failed to query decisions',
-      message: error.message,
-    });
+  } catch (error: unknown) {
+    handleRouteError(res, error, 'Failed to query decisions', 400);
   }
 });
 
@@ -83,11 +78,8 @@ router.get('/decisions/:id', async (req: Request, res: Response) => {
         relatedDecisions: related,
       },
     });
-  } catch (error: any) {
-    res.status(400).json({
-      error: 'Failed to get decision',
-      message: error.message,
-    });
+  } catch (error: unknown) {
+    handleRouteError(res, error, 'Failed to get decision', 400);
   }
 });
 
@@ -112,11 +104,8 @@ router.patch('/decisions/:id/outcomes', async (req: Request, res: Response) => {
       data: decision,
       message: 'Outcome updated successfully',
     });
-  } catch (error: any) {
-    res.status(400).json({
-      error: 'Failed to update outcome',
-      message: error.message,
-    });
+  } catch (error: unknown) {
+    handleRouteError(res, error, 'Failed to update outcome', 400);
   }
 });
 
@@ -142,11 +131,8 @@ router.post('/assistant/query', async (req: Request, res: Response) => {
     res.json({
       data: response,
     });
-  } catch (error: any) {
-    res.status(400).json({
-      error: 'Failed to query assistant',
-      message: error.message,
-    });
+  } catch (error: unknown) {
+    handleRouteError(res, error, 'Failed to query assistant', 400);
   }
 });
 
@@ -174,11 +160,8 @@ router.get('/stats', async (req: Request, res: Response) => {
         },
       },
     });
-  } catch (error: any) {
-    res.status(500).json({
-      error: 'Failed to get stats',
-      message: error.message,
-    });
+  } catch (error: unknown) {
+    handleRouteError(res, error, 'Failed to get stats', 500);
   }
 });
 

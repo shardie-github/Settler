@@ -13,6 +13,7 @@ import { QuickBooksExporter } from '../../application/export/QuickBooksExporter'
 import { CSVExporter } from '../../application/export/CSVExporter';
 import { JSONExporter } from '../../application/export/JSONExporter';
 import { sendSuccess, sendError } from '../../utils/api-response';
+import { handleRouteError } from '../../utils/error-handler';
 
 const router = Router();
 
@@ -99,8 +100,8 @@ router.post(
         default:
           return sendError(res, 'Bad Request', `Unsupported format: ${format}`, 400);
       }
-    } catch (error: any) {
-      sendError(res, 'Internal Server Error', error.message || 'Failed to create export', 500);
+    } catch (error: unknown) {
+      handleRouteError(res, error, 'Failed to create export', 500);
     }
   }
 );

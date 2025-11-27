@@ -12,11 +12,11 @@ export interface CreateJobRequest {
   name: string;
   source: {
     adapter: string;
-    config: Record<string, any>;
+    config: Record<string, unknown>;
   };
   target: {
     adapter: string;
-    config: Record<string, any>;
+    config: Record<string, unknown>;
   };
   rules: {
     matching: Array<{
@@ -37,7 +37,7 @@ export interface JobResponse {
   name: string;
   source: { adapter: string };
   target: { adapter: string };
-  rules: any;
+  rules: CreateJobRequest['rules'];
   schedule?: string;
   status: string;
   createdAt: string;
@@ -97,9 +97,10 @@ export class JobRouteService {
         status: 'active',
         createdAt: new Date().toISOString(),
       };
-    } catch (error: any) {
+    } catch (error: unknown) {
       logError('Failed to create job', error, { userId });
-      throw new Error('Failed to create reconciliation job');
+      const message = error instanceof Error ? error.message : 'Failed to create reconciliation job';
+      throw new Error(message);
     }
   }
 

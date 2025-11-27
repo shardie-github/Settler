@@ -8,6 +8,7 @@ import { Router, Request, Response } from 'express';
 import { graphEngine } from '../../services/reconciliation-graph/graph-engine';
 import { streamProcessor } from '../../services/reconciliation-graph/stream-processor';
 import { ReconciliationNode, ReconciliationEdge, GraphQuery } from '../../services/reconciliation-graph/types';
+import { handleRouteError } from '../../utils/error-handler';
 
 const router = Router();
 
@@ -51,11 +52,8 @@ router.post('/:jobId/nodes', async (req: Request, res: Response) => {
       data: node,
       message: 'Node added successfully',
     });
-  } catch (error: any) {
-    res.status(400).json({
-      error: 'Failed to add node',
-      message: error.message,
-    });
+  } catch (error: unknown) {
+    handleRouteError(res, error, 'Failed to add node', 400);
   }
 });
 
@@ -82,11 +80,8 @@ router.post('/:jobId/edges', async (req: Request, res: Response) => {
       data: edge,
       message: 'Edge added successfully',
     });
-  } catch (error: any) {
-    res.status(400).json({
-      error: 'Failed to add edge',
-      message: error.message,
-    });
+  } catch (error: unknown) {
+    handleRouteError(res, error, 'Failed to add edge', 400);
   }
 });
 
@@ -119,11 +114,8 @@ router.get('/:jobId/query', async (req: Request, res: Response) => {
         count: result.nodes.length,
       },
     });
-  } catch (error: any) {
-    res.status(400).json({
-      error: 'Failed to query graph',
-      message: error.message,
-    });
+  } catch (error: unknown) {
+    handleRouteError(res, error, 'Failed to query graph', 400);
   }
 });
 
@@ -151,11 +143,8 @@ router.get('/:jobId/state', async (req: Request, res: Response) => {
         updatedAt: graph.updatedAt,
       },
     });
-  } catch (error: any) {
-    res.status(400).json({
-      error: 'Failed to get graph state',
-      message: error.message,
-    });
+  } catch (error: unknown) {
+    handleRouteError(res, error, 'Failed to get graph state', 400);
   }
 });
 

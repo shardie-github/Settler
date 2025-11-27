@@ -6,6 +6,7 @@ import { requirePermission } from "../middleware/authorization";
 import { query, transaction } from "../db";
 import { hashPassword, verifyPassword } from "../utils/hash";
 import { logInfo, logError } from "../utils/logger";
+import { handleRouteError } from "../utils/error-handler";
 import { Role } from "../middleware/authorization";
 
 const router = Router();
@@ -102,12 +103,8 @@ router.delete(
         message: 'Deletion scheduled. Data will be permanently deleted in 30 days.',
         deletionDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
       });
-    } catch (error: any) {
-      logError('Failed to delete user data', error, { userId: req.userId });
-      res.status(500).json({
-        error: "Internal Server Error",
-        message: "Failed to delete user data",
-      });
+    } catch (error: unknown) {
+      handleRouteError(res, error, "Failed to delete user data", 500, { userId: req.userId });
     }
   }
 );
@@ -197,12 +194,8 @@ router.get(
       logInfo('User data exported', { userId });
 
       res.json({ data: exportData });
-    } catch (error: any) {
-      logError('Failed to export user data', error, { userId: req.userId });
-      res.status(500).json({
-        error: "Internal Server Error",
-        message: "Failed to export user data",
-      });
+    } catch (error: unknown) {
+      handleRouteError(res, error, "Failed to export user data", 500, { userId: req.userId });
     }
   }
 );

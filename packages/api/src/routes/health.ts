@@ -19,8 +19,9 @@ async function checkDatabase(): Promise<HealthCheck> {
     await query('SELECT 1');
     const latency = Date.now() - start;
     return { status: 'healthy', latency };
-  } catch (error: any) {
-    return { status: 'unhealthy', error: error.message };
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : 'Unknown error';
+    return { status: 'unhealthy', error: message };
   }
 }
 
@@ -47,8 +48,9 @@ async function checkConnectionPool(): Promise<HealthCheck> {
     }
     
     return { status: 'healthy' };
-  } catch (error: any) {
-    return { status: 'unhealthy', error: error.message };
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : 'Unknown error';
+    return { status: 'unhealthy', error: message };
   }
 }
 

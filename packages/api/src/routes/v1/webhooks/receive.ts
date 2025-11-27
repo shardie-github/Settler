@@ -7,6 +7,7 @@
 import { Router, Request, Response } from 'express';
 import { WebhookIngestionService } from '../../../application/webhooks/WebhookIngestionService';
 import { sendSuccess, sendError } from '../../../utils/api-response';
+import { handleRouteError } from '../../../utils/error-handler';
 import { AuthRequest } from '../../../middleware/auth';
 
 const router = Router();
@@ -59,8 +60,8 @@ router.post(
         processed: true, 
         events: result.events.length 
       });
-    } catch (error: any) {
-      sendError(res, 'Internal Server Error', error.message || 'Failed to process webhook', 500);
+    } catch (error: unknown) {
+      handleRouteError(res, error, 'Failed to process webhook', 500);
     }
   }
 );

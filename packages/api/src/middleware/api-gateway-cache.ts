@@ -83,7 +83,7 @@ export function apiGatewayCache(config: CacheConfig = {}) {
 
     try {
       const cacheKey = generateRequestCacheKey(req, config);
-      const cached = await get<any>(cacheKey);
+      const cached = await get<unknown>(cacheKey);
 
       if (cached) {
         logDebug('Cache hit', { key: cacheKey, path: req.path });
@@ -95,7 +95,7 @@ export function apiGatewayCache(config: CacheConfig = {}) {
       res.setHeader('X-Cache', 'MISS');
       const originalJson = res.json.bind(res);
 
-      res.json = function (body: any): Response {
+      res.json = function (body: unknown): Response {
         // Cache successful responses
         if (res.statusCode >= 200 && res.statusCode < 300) {
           set(cacheKey, body, ttl).catch((error) => {
@@ -142,7 +142,7 @@ export function cacheInvalidation(tags: string[] = []) {
 
     const originalEnd = res.end.bind(res);
 
-    res.end = function (chunk?: any, encoding?: any): Response {
+    res.end = function (chunk?: unknown, encoding?: BufferEncoding): Response {
       // Invalidate cache on successful state changes
       if (res.statusCode >= 200 && res.statusCode < 300) {
         invalidateCache(req, tags).catch((error) => {

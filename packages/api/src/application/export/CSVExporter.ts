@@ -131,14 +131,15 @@ export class CSVExporter {
   /**
    * Get column value from match object
    */
-  private getColumnValue(match: any, column: string): any {
-    return match[column] || '';
+  private getColumnValue(match: Record<string, unknown>, column: string): string {
+    const value = match[column];
+    return value !== null && value !== undefined ? String(value) : '';
   }
 
   /**
    * Get fee column value
    */
-  private getFeeColumnValue(fee: any, column: string, match: any): any {
+  private getFeeColumnValue(fee: Record<string, unknown>, column: string, match: Record<string, unknown>): string {
     if (column.startsWith('fee_')) {
       const feeField = column.replace('fee_', '');
       return fee[feeField] || '';
@@ -149,7 +150,7 @@ export class CSVExporter {
   /**
    * Escape CSV value
    */
-  private escapeCSV(value: any): string {
+  private escapeCSV(value: unknown): string {
     if (value === null || value === undefined) {
       return '';
     }

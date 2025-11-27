@@ -2,6 +2,7 @@ import { Router, Request, Response } from "express";
 import { AuthRequest } from "../middleware/auth";
 import { get, set } from "../utils/cache";
 import { logError } from "../utils/logger";
+import { handleRouteError } from "../utils/error-handler";
 
 const router = Router();
 
@@ -56,7 +57,7 @@ const ADAPTERS = [
 router.get("/", async (req: Request, res: Response) => {
   try {
     const cacheKey = 'adapters:list';
-    const cached = get<any[]>(cacheKey);
+    const cached = await get<typeof ADAPTERS>(cacheKey);
 
     if (cached) {
       return res.json({
@@ -66,18 +67,14 @@ router.get("/", async (req: Request, res: Response) => {
     }
 
     // Cache for 1 hour
-    set(cacheKey, ADAPTERS, 3600);
+    await set(cacheKey, ADAPTERS, 3600);
 
     res.json({
       data: ADAPTERS,
       count: ADAPTERS.length,
     });
-  } catch (error: any) {
-    logError('Failed to fetch adapters', error);
-    res.status(500).json({
-      error: "Internal Server Error",
-      message: "Failed to fetch adapters",
-    });
+  } catch (error: unknown) {
+    handleRouteError(res, error, "Failed to fetch adapters", 500);
   }
 });
 
@@ -100,11 +97,8 @@ router.get("/:id", async (req: Request, res: Response) => {
     };
 
     res.json({ data: adapter });
-  } catch (error) {
-    res.status(500).json({
-      error: "Internal Server Error",
-      message: "Failed to fetch adapter",
-    });
+  } catch (error: unknown) {
+    handleRouteError(res, error, "Failed to fetch adapter", 500);
   }
 });
 

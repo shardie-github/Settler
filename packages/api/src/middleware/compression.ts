@@ -61,7 +61,7 @@ export async function brotliCompressionMiddleware(
   }
 
   const originalSend = res.send;
-  res.send = function (body: any) {
+  res.send = function (body: unknown) {
     // Only compress JSON/text responses
     const contentType = res.getHeader('content-type') || '';
     if (!/json|text|html/.test(contentType as string)) {

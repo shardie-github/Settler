@@ -7,6 +7,8 @@
 import { Router, Request, Response } from 'express';
 import { complianceExportSystem } from '../../services/compliance/export-system';
 import { EdgeAgent } from '../../services/privacy-preserving/edge-agent';
+import { handleRouteError } from '../../utils/error-handler';
+import { AuthRequest } from '../../middleware/auth';
 
 const router = Router();
 
@@ -16,7 +18,7 @@ const router = Router();
  */
 router.post('/exports', async (req: Request, res: Response) => {
   try {
-    const customerId = (req as any).user?.id || req.body.customerId;
+    const customerId = (req as AuthRequest).userId || req.body.customerId;
     const { jurisdiction, format } = req.body;
 
     if (!customerId || !jurisdiction) {
@@ -36,11 +38,8 @@ router.post('/exports', async (req: Request, res: Response) => {
       data: export_,
       message: 'Export created successfully',
     });
-  } catch (error: any) {
-    res.status(400).json({
-      error: 'Failed to create export',
-      message: error.message,
-    });
+  } catch (error: unknown) {
+    handleRouteError(res, error, 'Failed to create export', 400);
   }
 });
 
@@ -64,11 +63,8 @@ router.get('/exports', async (req: Request, res: Response) => {
       data: exports,
       count: exports.length,
     });
-  } catch (error: any) {
-    res.status(500).json({
-      error: 'Failed to list exports',
-      message: error.message,
-    });
+  } catch (error: unknown) {
+    handleRouteError(res, error, 'Failed to list exports', 500);
   }
 });
 
@@ -91,11 +87,8 @@ router.get('/exports/:id', async (req: Request, res: Response) => {
     res.json({
       data: export_,
     });
-  } catch (error: any) {
-    res.status(500).json({
-      error: 'Failed to get export',
-      message: error.message,
-    });
+  } catch (error: unknown) {
+    handleRouteError(res, error, 'Failed to get export', 500);
   }
 });
 
@@ -111,11 +104,8 @@ router.get('/templates', async (req: Request, res: Response) => {
       data: templates,
       count: templates.length,
     });
-  } catch (error: any) {
-    res.status(500).json({
-      error: 'Failed to get templates',
-      message: error.message,
-    });
+  } catch (error: unknown) {
+    handleRouteError(res, error, 'Failed to get templates', 500);
   }
 });
 
@@ -125,7 +115,7 @@ router.get('/templates', async (req: Request, res: Response) => {
  */
 router.post('/edge/initialize', async (req: Request, res: Response) => {
   try {
-    const customerId = (req as any).user?.id || req.body.customerId;
+    const customerId = (req as AuthRequest).userId || req.body.customerId;
     const { apiKey, cloudEndpoint, reconciliationRules, encryptionKey } = req.body;
 
     if (!customerId || !apiKey || !cloudEndpoint || !reconciliationRules) {
@@ -152,11 +142,8 @@ router.post('/edge/initialize', async (req: Request, res: Response) => {
       },
       message: 'Edge agent initialized successfully',
     });
-  } catch (error: any) {
-    res.status(400).json({
-      error: 'Failed to initialize edge agent',
-      message: error.message,
-    });
+  } catch (error: unknown) {
+    handleRouteError(res, error, 'Failed to initialize edge agent', 400);
   }
 });
 
