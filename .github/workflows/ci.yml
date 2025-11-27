@@ -84,6 +84,16 @@ jobs:
           node-version: '20'
           cache: 'npm'
       - run: npm ci
+      - name: Run database migrations
+        run: |
+          cd packages/api
+          npm run migrate
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/settler_test
+          NODE_ENV: test
+          JWT_SECRET: test-secret-min-32-chars-long-for-testing
+          ENCRYPTION_KEY: test-encryption-key-32-chars-long!!
+        continue-on-error: true
       - run: npm run test -- --coverage
       - name: Upload coverage
         uses: codecov/codecov-action@v3
@@ -159,6 +169,16 @@ jobs:
           cache: 'npm'
       - run: npm ci
       - run: npm run build
+      - name: Run database migrations
+        run: |
+          cd packages/api
+          npm run migrate:prod
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/settler_test
+          NODE_ENV: test
+          JWT_SECRET: test-secret-min-32-chars-long-for-testing
+          ENCRYPTION_KEY: test-encryption-key-32-chars-long!!
+        continue-on-error: true
       - name: Start API server
         run: |
           cd packages/api
