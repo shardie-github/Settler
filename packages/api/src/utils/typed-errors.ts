@@ -84,9 +84,15 @@ export class RateLimitError extends ApiError {
     details?: unknown
   ) {
     super(message, details);
-    this.retryAfter = retryAfter;
-    this.limit = limit;
-    this.remaining = remaining;
+    if (retryAfter !== undefined) {
+      this.retryAfter = retryAfter;
+    }
+    if (limit !== undefined) {
+      this.limit = limit;
+    }
+    if (remaining !== undefined) {
+      this.remaining = remaining;
+    }
   }
 }
 
@@ -102,7 +108,9 @@ export class ServiceUnavailableError extends ApiError {
 
   constructor(message: string, retryAfter?: number, details?: unknown) {
     super(message, details);
-    this.retryAfter = retryAfter;
+    if (retryAfter !== undefined) {
+      this.retryAfter = retryAfter;
+    }
   }
 }
 
