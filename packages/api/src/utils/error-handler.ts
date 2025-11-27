@@ -62,10 +62,13 @@ export function handleRouteError(
   const apiError = toApiError(error);
   const message = apiError.message || defaultMessage;
   const statusCode = apiError.statusCode ?? _defaultStatusCode;
-  const errorCode = apiError.errorCode;
+  const errorCode = apiError.errorCode || 'INTERNAL_ERROR';
   const details = apiError.details;
 
   logError(defaultMessage, error, context);
 
-  sendError(res, apiError.name, message, statusCode, errorCode, details);
+  // Extract traceId from request if available
+  const traceId = (res.req as any).traceId;
+
+  sendError(res, statusCode, errorCode, message, details, traceId);
 }

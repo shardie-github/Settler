@@ -8,8 +8,11 @@ import { parseString } from 'xml2js';
  * 
  * IMPORTANT: Never enable external entities (noEnt: false)
  * This prevents XXE attacks that could read local files or perform SSRF
+ * 
+ * @param xml - XML string to parse
+ * @returns Parsed XML object (structure depends on input)
  */
-export function safeParseXML(xml: string): Promise<any> {
+export function safeParseXML(xml: string): Promise<unknown> {
   return new Promise((resolve, reject) => {
     parseString(xml, {
       explicitArray: false,
@@ -19,7 +22,7 @@ export function safeParseXML(xml: string): Promise<any> {
       // CRITICAL: Disable external entities to prevent XXE
       // This is the default, but explicitly set for security
       // noEnt: false, // Must be false (default)
-    }, (err: Error | null, result: any) => {
+    }, (err: Error | null, result: unknown) => {
       if (err) {
         reject(err);
       } else {

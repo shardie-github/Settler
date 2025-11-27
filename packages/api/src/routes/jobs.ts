@@ -16,14 +16,34 @@ const router = Router();
 const jobService = new JobRouteService();
 
 // Per-job mutex to prevent concurrent execution
-const jobMutexes = new Map<string, Mutex>();
+// Cleanup mutexes after 1 hour of inactivity to prevent memory leaks
+const jobMutexes = new Map<string, { mutex: Mutex; lastUsed: number }>();
+const MUTEX_TTL = 60 * 60 * 1000; // 1 hour
 
 function getJobMutex(jobId: string): Mutex {
-  if (!jobMutexes.has(jobId)) {
-    jobMutexes.set(jobId, new Mutex());
+  const entry = jobMutexes.get(jobId);
+  if (entry) {
+    entry.lastUsed = Date.now();
+    return entry.mutex;
   }
-  return jobMutexes.get(jobId)!;
+  
+  const mutex = new Mutex();
+  jobMutexes.set(jobId, { mutex, lastUsed: Date.now() });
+  return mutex;
 }
+
+// Cleanup old mutexes periodically
+function cleanupOldMutexes(): void {
+  const now = Date.now();
+  for (const [jobId, entry] of jobMutexes.entries()) {
+    if (now - entry.lastUsed > MUTEX_TTL) {
+      jobMutexes.delete(jobId);
+    }
+  }
+}
+
+// Run cleanup every 30 minutes
+setInterval(cleanupOldMutexes, 30 * 60 * 1000);
 
 // Validation schemas with input sanitization
 const adapterConfigSchema = z.record(
@@ -106,12 +126,7 @@ router.post(
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : "Failed to create reconciliation job";
       logError('Failed to create job', error, { userId: req.userId });
-      sendError(
-        res,
-        "Internal Server Error",
-        message,
-        500
-      );
+      sendError(res, 500, 'INTERNAL_ERROR', message, undefined, req.traceId);
     }
   }
 );
@@ -191,7 +206,7 @@ router.get(
 
       const job = await jobService.getJob(id, userId);
       if (!job) {
-        return sendError(res, "Not Found", "Job not found", 404);
+        return sendError(res, 404, 'NOT_FOUND', 'Job not found', undefined, req.traceId);
       }
 
       sendSuccess(res, job);
@@ -228,13 +243,13 @@ router.post(
       );
 
       if (jobs.length === 0) {
-        return res.status(404).json({ error: "Job not found" });
+        return sendError(res, 404, 'NOT_FOUND', 'Job not found', undefined, req.traceId);
       }
 
       const job = jobs[0];
 
       if (job.status === 'running') {
-        return res.status(409).json({ error: "Job is already running" });
+        return sendError(res, 409, 'CONFLICT', 'Job is already running', undefined, req.traceId);
       }
 
       // Update job status atomically
@@ -247,7 +262,7 @@ router.post(
       );
 
       if (updated.length === 0) {
-        return res.status(409).json({ error: "Job state changed, please retry" });
+        return sendError(res, 409, 'CONFLICT', 'Job state changed, please retry', undefined, req.traceId);
       }
 
       // Create execution record
@@ -337,7 +352,7 @@ router.delete(
 
       const deleted = await jobService.deleteJob(id, userId);
       if (!deleted) {
-        return sendError(res, "Not Found", "Job not found", 404);
+        return sendError(res, 404, 'NOT_FOUND', 'Job not found', undefined, req.traceId);
       }
 
       sendNoContent(res);

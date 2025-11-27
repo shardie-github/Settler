@@ -12,10 +12,23 @@
     "test": "turbo run test",
     "test:e2e": "playwright test",
     "lint": "turbo run lint",
+    "lint:fix": "turbo run lint -- --fix",
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\"",
+    "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md}\"",
     "typecheck": "turbo run typecheck",
     "clean": "turbo run clean && rm -rf node_modules",
+    "validate": "npm run lint && npm run typecheck && npm run format:check",
+    "validate:env": "tsx scripts/check-env.ts production",
     "prepare": "husky install"
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md}": [
+      "prettier --write"
+    ]
   },
   "devDependencies": {
     "@playwright/test": "^1.40.0",
@@ -24,7 +37,8 @@
     "lint-staged": "^15.2.0",
     "prettier": "^3.1.1",
     "turbo": "^1.11.2",
-    "typescript": "^5.3.3"
+    "typescript": "^5.3.3",
+    "tsx": "^4.7.0"
   },
   "engines": {
     "node": ">=20.0.0",

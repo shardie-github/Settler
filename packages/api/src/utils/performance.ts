@@ -3,6 +3,8 @@
  * Provides performance monitoring and optimization helpers
  */
 
+import { logWarn } from './logger';
+
 /**
  * Measure execution time of async function
  */
@@ -15,7 +17,11 @@ export async function measureAsync<T>(
   const duration = performance.now() - start;
 
   if (label && duration > 100) {
-    console.warn(`[Performance] ${label} took ${duration.toFixed(2)}ms`);
+    logWarn(`Performance: ${label} took ${duration.toFixed(2)}ms`, {
+      label,
+      duration,
+      threshold: 100,
+    });
   }
 
   return { result, duration };
@@ -33,7 +39,11 @@ export function measureSync<T>(
   const duration = performance.now() - start;
 
   if (label && duration > 100) {
-    console.warn(`[Performance] ${label} took ${duration.toFixed(2)}ms`);
+    logWarn(`Performance: ${label} took ${duration.toFixed(2)}ms`, {
+      label,
+      duration,
+      threshold: 100,
+    });
   }
 
   return { result, duration };

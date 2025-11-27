@@ -53,6 +53,11 @@ import { eventTrackingMiddleware } from "./middleware/event-tracking";
 import { setupSignalHandlers, registerShutdownHandler } from "./utils/graceful-shutdown";
 import { requestTimeoutMiddleware, getRequestTimeout } from "./middleware/request-timeout";
 import { initializeSentry, sentryRequestHandler, sentryTracingHandler, sentryErrorHandler } from "./middleware/sentry";
+import { profilingMiddleware } from "./infrastructure/observability/profiling";
+import { setCsrfToken, csrfProtection, getCsrfToken } from "./middleware/csrf";
+import { sanitizeInput, sanitizeUrlParams } from "./middleware/input-sanitization";
+import { validateStartup } from "./utils/startup-validation";
+import cookieParser from "cookie-parser";
 
 const app: Express = express();
 const PORT = config.port;
@@ -85,8 +90,20 @@ app.use(cors({
 app.use(compressionMiddleware);
 app.use(brotliCompressionMiddleware);
 
+// Cookie parser (needed for CSRF protection)
+app.use(cookieParser());
+
 // Observability middleware (tracing, metrics, logging)
 app.use(observabilityMiddleware);
+
+// Performance profiling middleware
+app.use(profilingMiddleware);
+
+// CSRF token setup (for web UI)
+app.use(setCsrfToken);
+
+// CSRF protection (for web UI state-changing operations)
+app.use(csrfProtection);
 
 // Event tracking middleware (for analytics)
 app.use("/api", eventTrackingMiddleware);
@@ -149,6 +166,10 @@ app.use(express.urlencoded({ extended: true, limit: "1mb" }));
 
 // Initialize tracing
 initializeTracing();
+
+// Input sanitization middleware (defense-in-depth)
+app.use(sanitizeInput);
+app.use(sanitizeUrlParams);
 
 // Validate secrets at startup (production and preview)
 if (config.nodeEnv === 'production' || config.nodeEnv === 'preview') {
@@ -239,6 +260,9 @@ app.use("/api/v2", authMiddleware, rulesEditorRouter);
 app.use("/api/v1/playground", playgroundRouter);
 app.use("/api/v2/playground", playgroundRouter);
 
+// CSRF token endpoint (for web UI)
+app.get("/api/csrf-token", getCsrfToken);
+
 // CLI wizard routes (requires auth)
 app.use("/api/v1", authMiddleware, cliWizardRouter);
 app.use("/api/v2", authMiddleware, cliWizardRouter);
@@ -279,6 +303,17 @@ app.use((req: Request, res: Response) => {
 // Initialize database on startup
 async function startServer() {
   try {
+    // Run startup validations
+    const validation = await validateStartup();
+    if (!validation.passed) {
+      logError('Startup validation failed', undefined, { validation });
+      if (config.nodeEnv === 'production') {
+        process.exit(1);
+      } else {
+        logWarn('Continuing despite validation failures (non-production mode)');
+      }
+    }
+
     await initDatabase();
     logInfo('Database initialized');
     

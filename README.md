@@ -134,32 +134,66 @@ No complex setup, no infrastructure to manage, no database to configure.
 | **Real-time** | Yes (webhooks) | No | Possible |
 | **Multi-platform** | Built-in | Manual | Custom per platform |
 
+## Prerequisites
+
+- **Node.js** 20+ and **npm** 10+
+- **PostgreSQL** 15+ (or Supabase account)
+- **Redis** (or Upstash account)  
+- **Docker** & **Docker Compose** (for local development)
+
 ## How to Try It
 
 ### Quick Start (Development)
 
 ```bash
-# Clone the repository
+# 1. Clone the repository
 git clone https://github.com/settler/settler.git
 cd settler
 
-# Install dependencies
+# 2. Install dependencies
 npm install
 
-# Set up environment variables
+# 3. Set up environment variables
 cp .env.example .env
 # Edit .env with your database and API keys
+# See config/env.schema.ts for all available variables
 
-# Start database (requires PostgreSQL)
+# 4. Start services (PostgreSQL, Redis)
 docker-compose up -d
 
-# Run migrations
+# 5. Run database migrations
+cd packages/api
 npm run migrate
 
-# Start API server
+# 6. Start API server (dev mode)
 npm run dev
-
 # API runs on http://localhost:3000
+
+# 7. Verify installation
+curl http://localhost:3000/health
+```
+
+### Available Scripts
+
+**Root level:**
+```bash
+npm run build          # Build all packages
+npm run dev            # Start all packages in dev mode
+npm run test           # Run all tests
+npm run lint           # Lint all packages
+npm run format         # Format all files with Prettier
+npm run typecheck      # Type check all packages
+npm run clean          # Clean build artifacts
+```
+
+**Package-specific (from package directory):**
+```bash
+cd packages/api
+npm run dev            # Start API server
+npm run test           # Run API tests
+npm run test:coverage  # Generate coverage report
+npm run migrate        # Run database migrations
+npm run lint:fix       # Auto-fix linting issues
 ```
 
 ### Using the SDK
@@ -195,23 +229,134 @@ settler jobs create \
   --target-config '{"apiKey":"..."}'
 ```
 
+## Architecture Overview
+
+Settler follows **Hexagonal Architecture** (Ports & Adapters) with **CQRS** and **Event-Driven** patterns:
+
+- **Domain Layer** (`packages/api/src/domain/`) - Core business logic, framework-agnostic
+- **Application Layer** (`packages/api/src/application/`) - Use case orchestration
+- **Infrastructure Layer** (`packages/api/src/infrastructure/`) - Technical adapters (DB, Redis, security)
+- **Presentation Layer** (`packages/api/src/routes/`) - HTTP adapters (Express routes)
+
+See [ARCHITECTURE.md](./ARCHITECTURE.md) for detailed documentation.
+
 ## Monorepo Structure
 
 This repository contains:
 
 - **`packages/api`** - Serverless API server (Express, TypeScript)
+  - `src/domain/` - Domain entities and business logic
+  - `src/application/` - Application services
+  - `src/infrastructure/` - Database, Redis, security implementations
+  - `src/routes/` - Express route handlers
+  - `src/middleware/` - Express middleware
 - **`packages/sdk`** - npm installable TypeScript SDK (`@settler/sdk`)
 - **`packages/cli`** - Command-line tool (`@settler/cli`)
 - **`packages/web`** - Next.js web UI with playground
 - **`packages/adapters`** - Platform adapters (Stripe, Shopify, QuickBooks, PayPal)
+- **`config/`** - Shared configuration (env.schema.ts)
+- **`scripts/`** - Utility scripts (check-env.ts)
+- **`docs/`** - Documentation
+
+## Troubleshooting
+
+### Database Connection Issues
+- **Verify connection string**: Check `DATABASE_URL` or `DB_*` environment variables
+- **Check PostgreSQL is running**: `docker ps` (should show postgres container)
+- **Test connection**: `psql $DATABASE_URL` or `psql -h localhost -U postgres -d settler`
+- **Common issues**:
+  - Wrong password: Verify `DB_PASSWORD` matches your PostgreSQL setup
+  - Port conflict: Ensure port 5432 is available or change `DB_PORT`
+  - Database doesn't exist: Run `createdb settler` (local) or create in Supabase dashboard
+
+### Redis Connection Issues
+- **Verify Redis URL**: Check `REDIS_URL` or `UPSTASH_REDIS_REST_URL` is set correctly
+- **Test connection**: `redis-cli ping` (should return `PONG`)
+- **Upstash setup**: If using Upstash, ensure `UPSTASH_REDIS_REST_URL` and `UPSTASH_REDIS_REST_TOKEN` are set
+- **Fallback**: API will fall back to in-memory cache if Redis is unavailable (check logs)
+
+### Migration Errors
+- **Database doesn't exist**: Create database first: `createdb settler` (local) or via Supabase dashboard
+- **Permission errors**: Ensure database user has CREATE privileges
+- **Migration files**: Check `packages/api/src/db/migrations/` for migration files
+- **Run migrations manually**: `cd packages/api && npm run migrate`
+- **Reset database** (⚠️ destroys data): Drop and recreate database, then run migrations
+
+### Type Errors
+- **Clear build cache**: `npm run clean` removes all `dist/` and `.turbo/` directories
+- **Reinstall dependencies**: `rm -rf node_modules && npm install`
+- **Check TypeScript version**: `npx tsc --version` (should be 5.3+)
+- **Type check**: `npm run typecheck` to see all type errors
+
+### API Server Won't Start
+- **Port already in use**: Change `PORT` env var or kill process using port 3000: `lsof -ti:3000 | xargs kill`
+- **Missing required env vars**: Run `tsx scripts/check-env.ts production` to validate
+- **Database not initialized**: Run migrations: `cd packages/api && npm run migrate`
+- **Check logs**: Look for error messages in console output
+
+### Authentication Issues
+- **Invalid API key**: Ensure API key starts with `rk_` prefix
+- **JWT expired**: Refresh tokens expire after 7 days, get new token via `/api/v1/auth/login`
+- **CORS errors**: Check `ALLOWED_ORIGINS` env var (use `*` for development, specific URLs for production)
+
+### Performance Issues
+- **Slow queries**: Check database indexes: `\d+ table_name` in psql
+- **High memory usage**: Check for memory leaks, restart server periodically
+- **Redis connection pool**: Adjust `DB_POOL_MAX` if seeing connection errors
+
+### Webhook Delivery Failures
+- **Check webhook URL**: Ensure URL is publicly accessible (not localhost)
+- **SSL/TLS**: Webhook URLs must use HTTPS in production
+- **Retry logic**: Failed webhooks retry up to 5 times with exponential backoff
+- **Check logs**: Look for webhook delivery errors in application logs
+
+## Environment Variables
+
+See [`.env.example`](.env.example) and [`config/env.schema.ts`](config/env.schema.ts) for complete documentation.
+
+**Required for local development:**
+- `DATABASE_URL` or `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, `DB_PASSWORD`
+- `REDIS_URL` or `UPSTASH_REDIS_REST_URL`
+- `JWT_SECRET` (min 32 chars) - Generate with: `openssl rand -base64 32`
+- `ENCRYPTION_KEY` (exactly 32 chars) - Generate with: `openssl rand -hex 16`
+
+**Optional:**
+- `SENTRY_DSN` (for error tracking)
+- `LOG_LEVEL` (default: `info`)
+- `OTLP_ENDPOINT` (for distributed tracing)
+
+**Validate environment:**
+```bash
+tsx scripts/check-env.ts production
+```
+
+## Testing
+
+```bash
+# Unit tests
+npm run test
+
+# Integration tests
+cd packages/api && npm run test
+
+# E2E tests
+npm run test:e2e
+
+# Coverage report
+cd packages/api && npm run test:coverage
+```
 
 ## Documentation
 
-- [API Documentation](./docs/api.md)
-- [Adapter Guide](./docs/adapters.md)
-- [Integration Recipes](./docs/integration-recipes.md)
-- [Troubleshooting](./docs/troubleshooting.md)
-- [Migration Runbook](./packages/api/src/db/MIGRATION_RUNBOOK.md)
+- [Architecture](./ARCHITECTURE.md) - Complete architecture documentation
+- [Contributing](./docs/CONTRIBUTING.md) - Contribution guidelines
+- [API Documentation](./docs/api.md) - API reference
+- [Adapter Guide](./docs/adapters.md) - Platform adapter documentation
+- [Integration Recipes](./docs/integration-recipes.md) - Integration examples
+- [Troubleshooting](./docs/troubleshooting.md) - Common issues and solutions
+- [Migration Runbook](./packages/api/src/db/MIGRATION_RUNBOOK.md) - Database migration guide
+- [Security](./SECURITY.md) - Security practices
+- [Deployment Guide](./DEPLOYMENT_GUIDE.md) - Deployment instructions
 
 ## Security
 

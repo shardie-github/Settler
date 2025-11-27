@@ -76,6 +76,8 @@ jobs:
           cache: 'npm'
       - run: npm ci
       - run: npm run lint
+      - run: npm run lint:fix -- --dry-run || true
+      - run: npm run format:check
       - run: npm run typecheck
 
   test:
@@ -122,6 +124,22 @@ jobs:
           ENCRYPTION_KEY: test-encryption-key-32-chars-long!!
         continue-on-error: true
       - run: npm run test -- --coverage
+      - name: Check coverage threshold
+        run: |
+          COVERAGE_FILE=./packages/api/coverage/coverage-summary.json
+          if [ -f "$COVERAGE_FILE" ]; then
+            COVERAGE=$(node -e "const fs=require('fs'); const d=JSON.parse(fs.readFileSync('$COVERAGE_FILE')); console.log(d.total.lines.pct);")
+            THRESHOLD=70
+            if (( $(echo "$COVERAGE < $THRESHOLD" | bc -l) )); then
+              echo "❌ Coverage $COVERAGE% is below $THRESHOLD% threshold"
+              exit 1
+            else
+              echo "✅ Coverage $COVERAGE% meets $THRESHOLD% threshold"
+            fi
+          else
+            echo "⚠️  Coverage file not found, skipping threshold check"
+          fi
+        continue-on-error: true
       - name: Upload coverage
         uses: codecov/codecov-action@v3
         with:

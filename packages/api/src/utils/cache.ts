@@ -5,6 +5,7 @@
 
 import Redis from 'ioredis';
 import { config } from '../config';
+import { logWarn } from './logger';
 
 interface CacheEntry<T> {
   value: T;
@@ -41,7 +42,7 @@ export function getRedisClient(): Redis | null {
       return redisClient;
     }
   } catch (error) {
-    console.warn('Redis connection failed, falling back to memory cache:', error);
+    logWarn('Redis connection failed, falling back to memory cache', { error });
   }
 
   return null;
@@ -60,7 +61,7 @@ export async function get<T>(key: string): Promise<T | null> {
         return JSON.parse(value) as T;
       }
     } catch (error) {
-      console.warn('Redis get failed, falling back to memory cache:', error);
+      logWarn('Redis get failed, falling back to memory cache', { error });
     }
   }
 
@@ -89,7 +90,7 @@ export async function set<T>(key: string, value: T, ttlSeconds: number): Promise
       await redis.setex(key, ttlSeconds, JSON.stringify(value));
       return;
     } catch (error) {
-      console.warn('Redis set failed, falling back to memory cache:', error);
+      logWarn('Redis set failed, falling back to memory cache', { error });
     }
   }
 
@@ -120,7 +121,7 @@ export async function del(key: string): Promise<void> {
     try {
       await redis.del(key);
     } catch (error) {
-      console.warn('Redis del failed:', error);
+      logWarn('Redis del failed', { error });
     }
   }
 
@@ -140,7 +141,7 @@ export async function delPattern(pattern: string): Promise<void> {
         await redis.del(...keys);
       }
     } catch (error) {
-      console.warn('Redis delPattern failed:', error);
+      logWarn('Redis delPattern failed', { error });
     }
   }
 
@@ -162,7 +163,7 @@ export async function clear(): Promise<void> {
     try {
       await redis.flushdb();
     } catch (error) {
-      console.warn('Redis clear failed:', error);
+      logWarn('Redis clear failed', { error });
     }
   }
 
