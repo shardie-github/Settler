@@ -4,6 +4,7 @@
  */
 
 import { Response } from 'express';
+import { AuthRequest } from '../middleware/auth';
 
 export interface ApiResponse<T = unknown> {
   data?: T;
@@ -22,10 +23,21 @@ export interface ApiError {
   message: string;
   code?: string;
   details?: unknown;
+  traceId?: string;
 }
 
 /**
  * Send success response
+ * 
+ * @param res - Express response object
+ * @param data - Response data
+ * @param message - Optional success message
+ * @param statusCode - HTTP status code (default: 200)
+ * 
+ * @example
+ * ```typescript
+ * sendSuccess(res, { id: '123', name: 'Job' }, 'Job created successfully', 201);
+ * ```
  */
 export function sendSuccess<T>(
   res: Response,
@@ -45,28 +57,41 @@ export function sendSuccess<T>(
 }
 
 /**
- * Send error response
+ * Send standardized error response
+ * 
+ * @param res - Express response object
+ * @param statusCode - HTTP status code (default: 400)
+ * @param code - Machine-readable error code (e.g., "VALIDATION_ERROR")
+ * @param message - Human-readable error message
+ * @param details - Optional additional error details
+ * @param traceId - Optional trace ID for debugging (auto-extracted from request if available)
+ * 
+ * @example
+ * ```typescript
+ * sendError(res, 400, 'VALIDATION_ERROR', 'Invalid input', { fields: ['name'] });
+ * sendError(res, 404, 'NOT_FOUND', 'Job not found', undefined, req.traceId);
+ * ```
  */
 export function sendError(
   res: Response,
-  error: string,
+  statusCode: number,
+  code: string,
   message: string,
-  statusCode: number = 400,
-  code?: string,
-  details?: unknown
+  details?: unknown,
+  traceId?: string
 ): void {
   const response: ApiError = {
-    error,
+    error: code,
     message,
   };
-
-  if (code) {
-    response.code = code;
-  }
 
   if (details) {
     response.details = details;
   }
+
+  // Extract traceId from request if available
+  const requestTraceId = (res.req as AuthRequest).traceId;
+  response.traceId = traceId || requestTraceId;
 
   res.status(statusCode).json(response);
 }

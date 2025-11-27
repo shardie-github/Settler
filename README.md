@@ -205,6 +205,58 @@ This repository contains:
 - **`packages/web`** - Next.js web UI with playground
 - **`packages/adapters`** - Platform adapters (Stripe, Shopify, QuickBooks, PayPal)
 
+## Troubleshooting
+
+### Database Connection Issues
+- **Verify connection string**: Check `DATABASE_URL` or `DB_*` environment variables
+- **Check PostgreSQL is running**: `docker ps` (should show postgres container)
+- **Test connection**: `psql $DATABASE_URL` or `psql -h localhost -U postgres -d settler`
+- **Common issues**:
+  - Wrong password: Verify `DB_PASSWORD` matches your PostgreSQL setup
+  - Port conflict: Ensure port 5432 is available or change `DB_PORT`
+  - Database doesn't exist: Run `createdb settler` (local) or create in Supabase dashboard
+
+### Redis Connection Issues
+- **Verify Redis URL**: Check `REDIS_URL` or `UPSTASH_REDIS_REST_URL` is set correctly
+- **Test connection**: `redis-cli ping` (should return `PONG`)
+- **Upstash setup**: If using Upstash, ensure `UPSTASH_REDIS_REST_URL` and `UPSTASH_REDIS_REST_TOKEN` are set
+- **Fallback**: API will fall back to in-memory cache if Redis is unavailable (check logs)
+
+### Migration Errors
+- **Database doesn't exist**: Create database first: `createdb settler` (local) or via Supabase dashboard
+- **Permission errors**: Ensure database user has CREATE privileges
+- **Migration files**: Check `packages/api/src/db/migrations/` for migration files
+- **Run migrations manually**: `cd packages/api && npm run migrate`
+- **Reset database** (⚠️ destroys data): Drop and recreate database, then run migrations
+
+### Type Errors
+- **Clear build cache**: `npm run clean` removes all `dist/` and `.turbo/` directories
+- **Reinstall dependencies**: `rm -rf node_modules && npm install`
+- **Check TypeScript version**: `npx tsc --version` (should be 5.3+)
+- **Type check**: `npm run typecheck` to see all type errors
+
+### API Server Won't Start
+- **Port already in use**: Change `PORT` env var or kill process using port 3000: `lsof -ti:3000 | xargs kill`
+- **Missing required env vars**: Run `tsx scripts/check-env.ts production` to validate
+- **Database not initialized**: Run migrations: `cd packages/api && npm run migrate`
+- **Check logs**: Look for error messages in console output
+
+### Authentication Issues
+- **Invalid API key**: Ensure API key starts with `rk_` prefix
+- **JWT expired**: Refresh tokens expire after 7 days, get new token via `/api/v1/auth/login`
+- **CORS errors**: Check `ALLOWED_ORIGINS` env var (use `*` for development, specific URLs for production)
+
+### Performance Issues
+- **Slow queries**: Check database indexes: `\d+ table_name` in psql
+- **High memory usage**: Check for memory leaks, restart server periodically
+- **Redis connection pool**: Adjust `DB_POOL_MAX` if seeing connection errors
+
+### Webhook Delivery Failures
+- **Check webhook URL**: Ensure URL is publicly accessible (not localhost)
+- **SSL/TLS**: Webhook URLs must use HTTPS in production
+- **Retry logic**: Failed webhooks retry up to 5 times with exponential backoff
+- **Check logs**: Look for webhook delivery errors in application logs
+
 ## Documentation
 
 - [API Documentation](./docs/api.md)
