@@ -61,18 +61,13 @@ router.post(
       const userId = req.userId!;
 
       // Update user test mode setting
-      // Note: This requires adding test_mode_enabled column to users table
-      // For now, we'll use a feature flag approach
+      // Add test_mode_enabled column if it doesn't exist (migration handles this)
       await query(
         `UPDATE users
-         SET updated_at = NOW()
-         WHERE id = $1`,
-        [userId]
+         SET test_mode_enabled = $1, updated_at = NOW()
+         WHERE id = $2`,
+        [enabled, userId]
       );
-
-      // Store test mode preference in user metadata or separate table
-      // For MVP, we can use a user_settings table or add column to users
-      // This is a placeholder - actual implementation depends on schema
 
       // Track event
       trackEventAsync(userId, 'TestModeToggled', {

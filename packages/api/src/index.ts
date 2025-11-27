@@ -25,6 +25,13 @@ import { adapterTestRouter } from "./routes/adapter-test";
 import { reportsEnhancedRouter } from "./routes/reports-enhanced";
 import { confidenceRouter } from "./routes/confidence";
 import { reconciliationStatusRouter } from "./routes/reconciliation-status";
+import { rulesEditorRouter } from "./routes/rules-editor";
+import { playgroundRouter } from "./routes/playground";
+import { cliWizardRouter } from "./routes/cli-wizard";
+import { exportEnhancedRouter } from "./routes/export-enhanced";
+import { aiAssistantRouter } from "./routes/ai-assistant";
+import { auditTrailRouter } from "./routes/audit-trail";
+import { testModeMiddleware, validateTestMode } from "./middleware/test-mode";
 import { rateLimitMiddleware } from "./utils/rate-limiter";
 import { initDatabase } from "./db";
 import { config } from "./config";
@@ -174,6 +181,12 @@ app.use("/api/v2", idempotencyMiddleware());
 app.use("/api/v1", authMiddleware, rateLimitMiddleware());
 app.use("/api/v2", authMiddleware, rateLimitMiddleware());
 
+// Test mode middleware (after auth, before routes)
+app.use("/api/v1", authMiddleware, testModeMiddleware);
+app.use("/api/v2", authMiddleware, testModeMiddleware);
+app.use("/api/v1", authMiddleware, validateTestMode);
+app.use("/api/v2", authMiddleware, validateTestMode);
+
 // Auth routes (no auth required for login/refresh)
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v2/auth", authRouter);
@@ -217,6 +230,30 @@ app.use("/api/v2", authMiddleware, confidenceRouter);
 // Reconciliation status routes (requires auth)
 app.use("/api/v1", authMiddleware, reconciliationStatusRouter);
 app.use("/api/v2", authMiddleware, reconciliationStatusRouter);
+
+// Rules editor routes (requires auth)
+app.use("/api/v1", authMiddleware, rulesEditorRouter);
+app.use("/api/v2", authMiddleware, rulesEditorRouter);
+
+// Playground routes (no auth, rate-limited)
+app.use("/api/v1/playground", playgroundRouter);
+app.use("/api/v2/playground", playgroundRouter);
+
+// CLI wizard routes (requires auth)
+app.use("/api/v1", authMiddleware, cliWizardRouter);
+app.use("/api/v2", authMiddleware, cliWizardRouter);
+
+// Enhanced export routes (requires auth)
+app.use("/api/v1", authMiddleware, exportEnhancedRouter);
+app.use("/api/v2", authMiddleware, exportEnhancedRouter);
+
+// AI assistant routes (requires auth)
+app.use("/api/v1", authMiddleware, aiAssistantRouter);
+app.use("/api/v2", authMiddleware, aiAssistantRouter);
+
+// Audit trail routes (requires auth)
+app.use("/api/v1", authMiddleware, auditTrailRouter);
+app.use("/api/v2", authMiddleware, auditTrailRouter);
 
 // Versioned API routes
 app.use("/api/v1", authMiddleware, v1Router);
