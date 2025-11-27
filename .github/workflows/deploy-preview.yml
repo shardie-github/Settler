@@ -4,6 +4,27 @@ on:
   pull_request:
     branches: [main]
 
+# Only deploy when relevant files change
+paths:
+  - 'packages/**'
+  - 'config/**'
+  - 'scripts/**'
+  - '*.json'
+  - '*.js'
+  - '*.ts'
+  - '*.yml'
+  - '*.yaml'
+  - 'tsconfig.json'
+paths-ignore:
+  - '**/*.md'
+  - 'LICENSE'
+  - 'docs/**'
+  - 'business/**'
+  - 'marketing/**'
+  - 'strategic/**'
+  - 'grafana-dashboards/**'
+  - 'sre/**'
+
 jobs:
   deploy-preview:
     name: Deploy Preview

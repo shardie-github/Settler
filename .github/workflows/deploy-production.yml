@@ -5,6 +5,27 @@ on:
     branches: [main]
   workflow_dispatch:
 
+# Only deploy when relevant files change (unless manually triggered)
+paths:
+  - 'packages/**'
+  - 'config/**'
+  - 'scripts/**'
+  - '*.json'
+  - '*.js'
+  - '*.ts'
+  - '*.yml'
+  - '*.yaml'
+  - 'tsconfig.json'
+paths-ignore:
+  - '**/*.md'
+  - 'LICENSE'
+  - 'docs/**'
+  - 'business/**'
+  - 'marketing/**'
+  - 'strategic/**'
+  - 'grafana-dashboards/**'
+  - 'sre/**'
+
 jobs:
   deploy:
     name: Deploy to Production
