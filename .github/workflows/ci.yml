@@ -6,6 +6,33 @@ on:
   pull_request:
     branches: [main, develop]
 
+# Only run checks when relevant files change
+# Skip for documentation-only changes, license, etc.
+paths:
+  - 'packages/**'
+  - 'config/**'
+  - 'scripts/**'
+  - 'tests/**'
+  - '.github/workflows/**'
+  - '*.json'
+  - '*.js'
+  - '*.ts'
+  - '*.yml'
+  - '*.yaml'
+  - 'tsconfig.json'
+  - '.eslintrc.js'
+  - '.prettierignore'
+  - '.gitignore'
+paths-ignore:
+  - '**/*.md'
+  - 'LICENSE'
+  - 'docs/**'
+  - 'business/**'
+  - 'marketing/**'
+  - 'strategic/**'
+  - 'grafana-dashboards/**'
+  - 'sre/**'
+
 jobs:
   validate-env:
     name: Validate Environment Schema
