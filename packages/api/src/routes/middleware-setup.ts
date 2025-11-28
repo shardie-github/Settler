@@ -29,6 +29,7 @@ import { feedbackRouter } from './feedback';
 import { alertsRouter } from './alerts';
 import { adapterTestRouter } from './adapter-test';
 import { reportsEnhancedRouter } from './reports-enhanced';
+import { observabilityRouter } from './observability';
 import { confidenceRouter } from './confidence';
 import { reconciliationStatusRouter } from './reconciliation-status';
 import { rulesEditorRouter } from './rules-editor';
@@ -102,6 +103,7 @@ export function setupMiddlewareAndRoutes(app: Express): void {
   mountVersionedRoutes(app, '/api-keys', apiKeysRouter, authMiddleware);
   mountVersionedRoutes(app, '/exceptions', exceptionsRouter, authMiddleware);
   mountVersionedRoutes(app, '/test-mode', testModeRouter, authMiddleware);
+  mountVersionedRoutes(app, '/observability', observabilityRouter, authMiddleware);
   mountVersionedRoutes(app, '/dashboards', dashboardsRouter, authMiddleware);
   mountVersionedRoutes(app, '/feedback', feedbackRouter, authMiddleware);
   mountVersionedRoutes(app, '/alerts', alertsRouter, authMiddleware);
