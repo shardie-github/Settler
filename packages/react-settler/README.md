@@ -1,6 +1,19 @@
 # @settler/react-settler
 
-React components for building reconciliation workflows declaratively.
+**Enterprise-grade React components for building reconciliation workflows declaratively.**
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.3-blue.svg)](https://www.typescriptlang.org/)
+
+React.Settler is the **best-in-show** open-source protocol for reconciliation workflows. Built with enterprise-grade security, performance optimizations, and developer experience in mind.
+
+## Why React.Settler?
+
+✅ **Enterprise Security** - Built-in XSS protection, input validation, audit logging  
+✅ **High Performance** - Virtualized tables, memoization, optimized rendering  
+✅ **Developer Friendly** - TypeScript-first, comprehensive hooks, testing utilities  
+✅ **Non-Intrusive** - Works everywhere, no vendor lock-in, backend agnostic  
+✅ **Production Ready** - Error boundaries, telemetry, comprehensive documentation  
 
 ## Installation
 
@@ -103,11 +116,37 @@ const jsonConfig = compileToJSON(workflow, {
 console.log(jsonConfig);
 ```
 
+## Key Features
+
+### 🔒 Security
+- **XSS Protection** - Automatic string sanitization
+- **Input Validation** - Comprehensive validation hooks
+- **Audit Logging** - Built-in compliance tracking
+- **PII Masking** - Privacy-first telemetry
+
+### ⚡ Performance
+- **Virtualization** - Handle 10,000+ transactions smoothly
+- **Memoization** - Optimized re-renders
+- **Debouncing** - Efficient search and filtering
+- **Lazy Loading** - Incremental data loading
+
+### 🛠️ Developer Experience
+- **TypeScript** - Full type safety
+- **React Hooks** - `useValidation`, `useTelemetry`, `useSecurity`
+- **Testing Utilities** - Mock data generators, test wrappers
+- **Error Boundaries** - Graceful error handling
+
+### 🏢 Enterprise Features
+- **Telemetry** - Performance and usage tracking
+- **Error Tracking** - Comprehensive error reporting
+- **Access Control** - Security context and permissions
+- **Export** - CSV, JSON, XLSX export support
+
 ## Components
 
 ### `<ReconciliationDashboard>`
 
-Main wrapper component that provides compilation context.
+Main wrapper component that provides compilation context and security.
 
 **Props:**
 - `mode?: 'ui' | 'config'` - Rendering mode (default: 'ui')
@@ -220,6 +259,66 @@ Components extract configuration without rendering UI:
 </ReconciliationDashboard>
 ```
 
+## Enterprise Features
+
+### Security & Validation
+
+```tsx
+import { useValidation, sanitizeString } from '@settler/react-settler';
+
+const { validateTransaction } = useValidation();
+const result = validateTransaction(transaction);
+if (!result.valid) {
+  // Handle validation errors
+}
+```
+
+### Telemetry & Observability
+
+```tsx
+import { setTelemetryProvider, useTelemetry } from '@settler/react-settler';
+
+// Set up telemetry
+setTelemetryProvider({
+  track: (event) => sendToAnalytics(event),
+  trackError: (error) => sendToErrorTracking(error)
+});
+
+// Use in components
+const { track } = useTelemetry('MyComponent');
+track('user.action', { action: 'click' });
+```
+
+### Error Boundaries
+
+```tsx
+import { ErrorBoundary } from '@settler/react-settler';
+
+<ErrorBoundary
+  onError={(error, errorInfo) => {
+    logError(error);
+  }}
+>
+  <YourComponent />
+</ErrorBoundary>
+```
+
+### Performance Optimization
+
+```tsx
+import { VirtualizedTable, useFilteredTransactions } from '@settler/react-settler';
+
+// Virtualized table for large datasets
+<VirtualizedTable
+  transactions={transactions}
+  height={600}
+  rowHeight={50}
+/>
+
+// Optimized filtering
+const filtered = useFilteredTransactions(transactions, filters);
+```
+
 ## Examples
 
 See the `examples/` directory for complete examples:
@@ -227,6 +326,13 @@ See the `examples/` directory for complete examples:
 - `basic-dashboard.tsx` - Simple dashboard with transactions and exceptions
 - `rule-definition.tsx` - Defining reconciliation rules
 - `config-compilation.tsx` - Compiling workflows to JSON
+
+## Documentation
+
+- [Security Guide](./docs/SECURITY.md) - Security best practices
+- [Performance Guide](./docs/PERFORMANCE.md) - Performance optimization
+- [Testing Guide](./docs/TESTING.md) - Testing utilities and patterns
+- [Protocol Specification](../protocol/PROTOCOL.md) - Complete protocol docs
 
 ## Protocol
 

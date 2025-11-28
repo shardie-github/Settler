@@ -3,9 +3,10 @@
  * Displays reconciliation exceptions requiring manual review
  */
 
-import React from 'react';
-import { ReconciliationException } from '@settler/protocol';
+import React, { useMemo } from 'react';
+import { ReconciliationException, sanitizeString } from '@settler/protocol';
 import { useCompilationContext } from '../context';
+import { useTelemetry } from '../hooks/useTelemetry';
 
 export interface ExceptionTableProps {
   exceptions: ReconciliationException[];
@@ -15,7 +16,7 @@ export interface ExceptionTableProps {
   showCategory?: boolean;
 }
 
-export function ExceptionTable({
+export const ExceptionTable = React.memo(function ExceptionTable({
   exceptions,
   onResolve,
   className,
@@ -23,6 +24,15 @@ export function ExceptionTable({
   showCategory = true
 }: ExceptionTableProps) {
   const context = useCompilationContext();
+  const { track } = useTelemetry('ExceptionTable');
+
+  // Sanitize exception descriptions
+  const sanitizedExceptions = useMemo(() => {
+    return exceptions.map(exc => ({
+      ...exc,
+      description: sanitizeString(exc.description)
+    }));
+  }, [exceptions]);
 
   // In config mode, register widget
   if (context.mode === 'config') {
@@ -55,7 +65,7 @@ export function ExceptionTable({
             </tr>
           </thead>
           <tbody>
-            {exceptions.map((exception) => (
+            {sanitizedExceptions.map((exception) => (
               <tr key={exception.id}>
                 <td>{exception.id}</td>
                 {showCategory && <td>{exception.category}</td>}
@@ -70,7 +80,12 @@ export function ExceptionTable({
                 <td>{exception.resolutionStatus}</td>
                 {onResolve && (
                   <td>
-                    <button onClick={() => onResolve(exception)}>
+                    <button
+                      onClick={() => {
+                        track('exception.resolved', { exceptionId: exception.id });
+                        onResolve(exception);
+                      }}
+                    >
                       Resolve
                     </button>
                   </td>
@@ -85,4 +100,4 @@ export function ExceptionTable({
 
   // Config mode: return null (widget registered above)
   return null;
-}
+});

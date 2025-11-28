@@ -13,9 +13,30 @@ export { ExceptionTable } from './components/ExceptionTable';
 export { MetricCard } from './components/MetricCard';
 export { RuleSet } from './components/RuleSet';
 export { MatchRule } from './components/MatchRule';
+export { ErrorBoundary } from './components/ErrorBoundary';
+export { FilterBar } from './components/FilterBar';
+export { SearchBar } from './components/SearchBar';
+export { ExportButton } from './components/ExportButton';
+export { VirtualizedTable } from './components/VirtualizedTable';
+
+// Hooks
+export { useValidation } from './hooks/useValidation';
+export { useTelemetry, setTelemetryProvider, setTelemetryConfig } from './hooks/useTelemetry';
+export { useSecurity, setAuditLogHandler } from './hooks/useSecurity';
 
 // Context
 export { CompilationProvider, useCompilationContext } from './context';
+
+// Utilities
+export { useFilteredTransactions, useSortedTransactions, useDebounce } from './utils/performance';
+export {
+  createMockTransaction,
+  createMockSettlement,
+  createMockException,
+  createMockTransactions,
+  TestWrapper,
+  createMockTelemetryProvider
+} from './utils/testing';
 
 // Types
 export type { ReconciliationDashboardProps } from './components/ReconciliationDashboard';
@@ -24,6 +45,11 @@ export type { ExceptionTableProps } from './components/ExceptionTable';
 export type { MetricCardProps } from './components/MetricCard';
 export type { RuleSetProps } from './components/RuleSet';
 export type { MatchRuleProps } from './components/MatchRule';
+export type { ErrorBoundaryProps } from './components/ErrorBoundary';
+export type { FilterBarProps, FilterState } from './components/FilterBar';
+export type { SearchBarProps } from './components/SearchBar';
+export type { ExportButtonProps } from './components/ExportButton';
+export type { VirtualizedTableProps } from './components/VirtualizedTable';
 export type { CompilationProviderProps } from './context';
 
 // Compiler

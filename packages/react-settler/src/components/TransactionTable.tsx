@@ -3,9 +3,11 @@
  * Displays reconciliation transactions in a table format
  */
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import { ReconciliationTransaction } from '@settler/protocol';
 import { useCompilationContext } from '../context';
+import { useTelemetry } from '../hooks/useTelemetry';
+import { sanitizeString } from '@settler/protocol';
 
 export interface TransactionTableProps {
   transactions: ReconciliationTransaction[];
@@ -15,7 +17,7 @@ export interface TransactionTableProps {
   showStatus?: boolean;
 }
 
-export function TransactionTable({
+export const TransactionTable = React.memo(function TransactionTable({
   transactions,
   onSelect,
   className,
@@ -23,6 +25,18 @@ export function TransactionTable({
   showStatus = true
 }: TransactionTableProps) {
   const context = useCompilationContext();
+  const { track } = useTelemetry('TransactionTable');
+
+  // Memoize sanitized transactions
+  const sanitizedTransactions = useMemo(() => {
+    return transactions.map(tx => ({
+      ...tx,
+      id: sanitizeString(tx.id),
+      provider: sanitizeString(tx.provider),
+      providerTransactionId: sanitizeString(tx.providerTransactionId),
+      referenceId: tx.referenceId ? sanitizeString(tx.referenceId) : undefined
+    }));
+  }, [transactions]);
 
   // In config mode, register widget
   if (context.mode === 'config') {
@@ -55,10 +69,13 @@ export function TransactionTable({
             </tr>
           </thead>
           <tbody>
-            {transactions.map((tx) => (
+            {sanitizedTransactions.map((tx) => (
               <tr
                 key={tx.id}
-                onClick={() => onSelect?.(tx)}
+                onClick={() => {
+                  track('transaction.selected', { transactionId: tx.id });
+                  onSelect?.(tx);
+                }}
                 style={{ cursor: onSelect ? 'pointer' : 'default' }}
               >
                 <td>{tx.id}</td>
@@ -77,4 +94,4 @@ export function TransactionTable({
 
   // Config mode: return null (widget registered above)
   return null;
-}
+});
