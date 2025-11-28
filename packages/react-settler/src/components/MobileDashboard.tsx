@@ -4,14 +4,11 @@
  */
 
 import React, { useState } from 'react';
-import {
-  ReconciliationDashboard,
-  TransactionTable,
-  ExceptionTable,
-  MetricCard,
-  FilterBar,
-  SearchBar
-} from './index';
+import { ReconciliationDashboard } from './ReconciliationDashboard';
+import { TransactionTable } from './TransactionTable';
+import { ExceptionTable } from './ExceptionTable';
+import { MetricCard } from './MetricCard';
+import { SearchBar } from './SearchBar';
 import type {
   ReconciliationTransaction,
   ReconciliationException
@@ -38,7 +35,7 @@ export function MobileDashboard({
 }: MobileDashboardProps) {
   const { track } = useTelemetry('MobileDashboard');
   const [activeTab, setActiveTab] = useState<'transactions' | 'exceptions'>('transactions');
-  const [filters, setFilters] = useState({});
+  const [filters] = useState({});
   const [searchQuery, setSearchQuery] = useState('');
 
   // Filter transactions based on search

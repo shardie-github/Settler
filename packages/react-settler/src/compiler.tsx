@@ -6,10 +6,9 @@
  * rules, widgets, and view configurations from the React tree.
  */
 
-import React, { ReactElement } from 'react';
+import { ReactElement } from 'react';
 import {
-  ReconciliationConfig,
-  WidgetConfig
+  ReconciliationConfig
 } from '@settler/protocol';
 import { CompilationProvider } from './context';
 
@@ -33,7 +32,7 @@ export function compileToConfig(
     version: '1.0.0',
     metadata: {
       name: options?.name || 'Reconciliation Workflow',
-      description: options?.description,
+      ...(options?.description ? { description: options.description } : {}),
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
     },
@@ -53,9 +52,7 @@ export function compileToConfig(
 
   // Render the component tree in config mode
   // Components will mutate the config object during render
-  const wrapped = <Wrapper>{component}</Wrapper>;
-
-  // In a real implementation, we'd use React's renderer here
+  // Note: In a real implementation, we'd use React's renderer here
   // For now, we rely on components mutating config during their render phase
   // This works because React components are functions that execute synchronously
   
@@ -69,7 +66,7 @@ export function compileToConfig(
     version: config.version || '1.0.0',
     metadata: {
       name: config.metadata?.name || 'Reconciliation Workflow',
-      description: config.metadata?.description,
+      ...(config.metadata?.description ? { description: config.metadata.description } : {}),
       createdAt: config.metadata?.createdAt || new Date().toISOString(),
       updatedAt: config.metadata?.updatedAt || new Date().toISOString()
     },

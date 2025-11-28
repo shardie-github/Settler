@@ -28,7 +28,7 @@ export function RuleSet({
   const context = useCompilationContext();
 
   // Extract rules from children (MatchRule components)
-  const rules: ReconciliationRule[] = [];
+  // Rules are collected by MatchRule components during render
 
   // In config mode, collect rules and register ruleset
   if (context.mode === 'config') {
