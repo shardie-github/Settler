@@ -14,26 +14,45 @@ npm warn config       Default value does install optional deps unless otherwise 
  ⚠ TypeScript project references are not fully supported. Attempting to build in incremental mode.
  ⨯ ESLint: Failed to load config "prettier" to extend from. Referenced from: /workspace/.eslintrc.js
    Collecting page data ...
-   Generating static pages (0/7) ...
-   Generating static pages (1/7) 
-   Generating static pages (3/7) 
-   Generating static pages (5/7) 
- ✓ Generating static pages (7/7)
-   Finalizing page optimization ...
-   Collecting build traces ...
+   Generating static pages (0/8) ...
+   Generating static pages (2/8) 
+   Generating static pages (4/8) 
+   Generating static pages (6/8) 
+Error: API key is required
+    at new p (/workspace/packages/web/.next/server/app/react-settler-demo/page.js:1:56215)
+    at /workspace/packages/web/.next/server/app/react-settler-demo/page.js:1:72117
+    at nt (/workspace/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:38747)
+    at Object.useState (/workspace/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:40704)
+    at t.useState (/workspace/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:110093)
+    at s (/workspace/packages/web/.next/server/app/react-settler-demo/page.js:1:72112)
+    at nj (/workspace/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:46252)
+    at nM (/workspace/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:47572)
+    at nN (/workspace/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:64547)
+    at nI (/workspace/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:47011) {
+  digest: '968360621'
+}
 
-Route (app)                              Size     First Load JS
-┌ ○ /                                    8.87 kB        96.1 kB
-├ ○ /_not-found                          873 B          88.1 kB
-├ ○ /docs                                138 B          87.3 kB
-├ ○ /playground                          1.11 kB        88.3 kB
-└ ƒ /realtime-dashboard                  1.72 kB        88.9 kB
-+ First Load JS shared by all            87.2 kB
-  ├ chunks/1dd3208c-1bfa912d86ba96c5.js  53.6 kB
-  ├ chunks/528-7252e02374cfc55c.js       31.7 kB
-  └ other shared chunks (total)          1.86 kB
+Error occurred prerendering page "/react-settler-demo". Read more: https://nextjs.org/docs/messages/prerender-error
 
+Error: API key is required
+    at new p (/workspace/packages/web/.next/server/app/react-settler-demo/page.js:1:56215)
+    at /workspace/packages/web/.next/server/app/react-settler-demo/page.js:1:72117
+    at nt (/workspace/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:38747)
+    at Object.useState (/workspace/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:40704)
+    at t.useState (/workspace/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:110093)
+    at s (/workspace/packages/web/.next/server/app/react-settler-demo/page.js:1:72112)
+    at nj (/workspace/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:46252)
+    at nM (/workspace/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:47572)
+    at nN (/workspace/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:64547)
+    at nI (/workspace/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:47011)
+ ✓ Generating static pages (8/8)
 
-○  (Static)   prerendered as static content
-ƒ  (Dynamic)  server-rendered on demand
-
+> Export encountered errors on following paths:
+	/react-settler-demo/page: /react-settler-demo
+npm error Lifecycle script `build` failed with error:
+npm error code 1
+npm error path /workspace/packages/web
+npm error workspace @settler/web@1.0.0
+npm error location /workspace/packages/web
+npm error command failed
+npm error command sh -c next build

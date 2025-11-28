@@ -3,7 +3,7 @@
  * Enterprise-grade error boundary with telemetry
  */
 
-import React, { Component, ErrorInfo, ReactNode } from 'react';
+import { Component, ErrorInfo, ReactNode } from 'react';
 import { ErrorTelemetry } from '@settler/protocol';
 
 export interface ErrorBoundaryProps {

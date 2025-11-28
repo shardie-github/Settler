@@ -3,7 +3,7 @@
  * Mobile-optimized reconciliation dashboard
  */
 
-import React, { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { ReconciliationDashboard } from './ReconciliationDashboard';
 import { TransactionTable } from './TransactionTable';
 import { ExceptionTable } from './ExceptionTable';
@@ -35,11 +35,10 @@ export function MobileDashboard({
 }: MobileDashboardProps) {
   const { track } = useTelemetry('MobileDashboard');
   const [activeTab, setActiveTab] = useState<'transactions' | 'exceptions'>('transactions');
-  const [filters] = useState({});
   const [searchQuery, setSearchQuery] = useState('');
 
   // Filter transactions based on search
-  const filteredTransactions = React.useMemo(() => {
+  const filteredTransactions = useMemo(() => {
     if (!searchQuery) return transactions;
     const query = searchQuery.toLowerCase();
     return transactions.filter(tx =>
@@ -50,7 +49,7 @@ export function MobileDashboard({
   }, [transactions, searchQuery]);
 
   return (
-    <ReconciliationDashboard className={className}>
+    <ReconciliationDashboard {...(className !== undefined ? { className } : {})}>
       <div
         style={{
           padding: '1rem',
@@ -193,7 +192,7 @@ export function MobileDashboard({
             >
               <TransactionTable
                 transactions={filteredTransactions}
-                onSelect={onTransactionSelect}
+                {...(onTransactionSelect !== undefined ? { onSelect: onTransactionSelect } : {})}
               />
             </div>
           ) : (
@@ -225,7 +224,7 @@ export function MobileDashboard({
             >
               <ExceptionTable
                 exceptions={exceptions}
-                onResolve={onExceptionResolve}
+                {...(onExceptionResolve !== undefined ? { onResolve: onExceptionResolve } : {})}
               />
             </div>
           ) : (

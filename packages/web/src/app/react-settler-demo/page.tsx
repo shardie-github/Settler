@@ -178,7 +178,7 @@ export default function ReactSettlerDemoPage() {
           <div className="p-6">
             <TransactionTable
               transactions={transactions}
-              onSelect={(tx) => {
+              onSelect={(tx: ReconciliationTransaction) => {
                 console.log('Selected transaction:', tx);
                 alert(`Selected transaction: ${tx.id}`);
               }}
@@ -194,7 +194,7 @@ export default function ReactSettlerDemoPage() {
           <div className="p-6">
             <ExceptionTable
               exceptions={exceptions}
-              onResolve={(exc) => {
+              onResolve={(exc: ReconciliationException) => {
                 console.log('Resolving exception:', exc);
                 alert(`Resolving exception: ${exc.id}`);
               }}

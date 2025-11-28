@@ -3,10 +3,9 @@
  * Defines a collection of reconciliation rules
  */
 
-import React, { ReactNode } from 'react';
+import { ReactNode } from 'react';
 import {
-  ReconciliationRuleSet,
-  ReconciliationRule
+  ReconciliationRuleSet
 } from '@settler/protocol';
 import { useCompilationContext } from '../context';
 
