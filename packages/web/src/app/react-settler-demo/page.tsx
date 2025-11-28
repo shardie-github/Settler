@@ -34,13 +34,22 @@ export default function ReactSettlerDemoPage() {
       : '';
   });
 
-  const [client] = useState(() => new SettlerClient({ apiKey }));
+  const [client] = useState(() => {
+    // Only create client if API key is available
+    if (!apiKey) {
+      return null as unknown as SettlerClient;
+    }
+    return new SettlerClient({ apiKey });
+  });
   const [transactions, setTransactions] = useState<ReconciliationTransaction[]>([]);
   const [exceptions, setExceptions] = useState<ReconciliationException[]>([]);
   const [loading, setLoading] = useState(true);
   const [configJson, setConfigJson] = useState<string>('');
 
   const loadData = useCallback(async () => {
+    if (!client || !apiKey) {
+      return;
+    }
     try {
       setLoading(true);
       
@@ -111,7 +120,7 @@ export default function ReactSettlerDemoPage() {
     } finally {
       setLoading(false);
     }
-  }, [client]);
+  }, [client, apiKey]);
 
   useEffect(() => {
     if (apiKey) {
