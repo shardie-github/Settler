@@ -35,15 +35,20 @@ export type ReconciliationWebhookEvent =
   | 'reconciliation.completed'
   | 'reconciliation.failed';
 
+import { requireFeature, FEATURE_FLAGS } from '../utils/licensing';
+
 /**
  * Webhook Manager
  * Manages webhook subscriptions and handlers
+ * 
+ * ⚠️ Commercial Feature: Requires Settler Commercial subscription
  */
 export class WebhookManager {
   private handlers: Map<ReconciliationWebhookEvent, WebhookHandler[]> = new Map();
   private secret: string;
 
   constructor(secret?: string) {
+    requireFeature(FEATURE_FLAGS.WEBHOOK_MANAGER, 'Webhook Manager');
     this.secret = secret || generateSecureId('webhook');
   }
 

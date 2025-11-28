@@ -1,7 +1,10 @@
 /**
  * useSecurity Hook
  * Security context and audit logging
+ * 
+ * ⚠️ Commercial Feature: Advanced security features require Settler Commercial subscription
  */
+import { requireFeature, FEATURE_FLAGS, hasFeature } from '../utils/licensing';
 
 import { useCallback, useContext } from 'react';
 import {
@@ -28,6 +31,12 @@ export function useSecurity() {
   const securityContext = context.securityContext;
 
   const auditLog = useCallback((event: AuditEvent, action: string, result: 'success' | 'failure' | 'warning', metadata?: Record<string, unknown>) => {
+    // Audit logging is a commercial feature
+    if (!hasFeature(FEATURE_FLAGS.AUDIT_LOGGING)) {
+      console.warn('Audit logging requires Settler Commercial subscription');
+      return;
+    }
+    
     if (!auditLogHandler) {
       return;
     }

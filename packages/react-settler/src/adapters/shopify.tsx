@@ -1,7 +1,10 @@
 /**
  * Shopify App Integration
  * React.Settler components optimized for Shopify app embeds
+ * 
+ * ⚠️ Commercial Feature: Requires Settler Commercial subscription
  */
+import { requireFeature, FEATURE_FLAGS, useFeatureGate } from '../utils/licensing';
 
 import React from 'react';
 import {
@@ -34,6 +37,12 @@ export function ShopifyApp({
   exceptions = [],
   onAction
 }: ShopifyAppProps) {
+  const { hasAccess, UpgradePrompt } = useFeatureGate(FEATURE_FLAGS.SHOPIFY_INTEGRATION);
+  
+  if (!hasAccess) {
+    return <UpgradePrompt feature={FEATURE_FLAGS.SHOPIFY_INTEGRATION} featureName="Shopify Integration" />;
+  }
+  
   return (
     <div
       style={{

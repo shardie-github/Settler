@@ -1,7 +1,10 @@
 /**
  * VirtualizedTable Component
  * High-performance virtualized table for large datasets
+ * 
+ * ⚠️ Commercial Feature: Requires Settler Commercial subscription
  */
+import { useFeatureGate, FEATURE_FLAGS } from '../utils/licensing';
 
 import React, { useMemo, useCallback, useState } from 'react';
 import { useCompilationContext } from '../context';
@@ -26,7 +29,12 @@ export function VirtualizedTable({
   className
 }: VirtualizedTableProps) {
   const context = useCompilationContext();
+  const { hasAccess, UpgradePrompt } = useFeatureGate(FEATURE_FLAGS.VIRTUALIZATION);
   const [scrollTop, setScrollTop] = useState(0);
+  
+  if (!hasAccess) {
+    return <UpgradePrompt feature={FEATURE_FLAGS.VIRTUALIZATION} featureName="Virtualized Tables" />;
+  }
 
   const visibleRange = useMemo(() => {
     const startIndex = Math.floor(scrollTop / rowHeight);

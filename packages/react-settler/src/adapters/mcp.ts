@@ -33,15 +33,20 @@ export interface MCPTool {
   };
 }
 
+import { requireFeature, FEATURE_FLAGS } from '../utils/licensing';
+
 /**
  * MCP Server for React.Settler
  * Exposes reconciliation workflows as MCP resources and tools
+ * 
+ * ⚠️ Commercial Feature: Requires Settler Commercial subscription
  */
 export class ReactSettlerMCPServer {
   private config: MCPServerConfig;
   private workflows: Map<string, ReconciliationConfig> = new Map();
 
   constructor(config: MCPServerConfig) {
+    requireFeature(FEATURE_FLAGS.MCP_INTEGRATION, 'MCP Server Integration');
     this.config = config;
   }
 

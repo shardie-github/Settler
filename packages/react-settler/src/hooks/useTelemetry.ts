@@ -1,7 +1,10 @@
 /**
  * useTelemetry Hook
  * Enterprise-grade telemetry and observability
+ * 
+ * ⚠️ Commercial Feature: Requires Settler Commercial subscription
  */
+import { requireFeature, FEATURE_FLAGS } from '../utils/licensing';
 
 import { useCallback, useEffect, useRef } from 'react';
 import {
@@ -42,6 +45,11 @@ export function setTelemetryConfig(config: Partial<TelemetryConfig>): void {
  * useTelemetry Hook
  */
 export function useTelemetry(componentName?: string) {
+  // Check feature access (warn in dev, allow in OSS for basic usage)
+  if (process.env.NODE_ENV === 'production') {
+    requireFeature(FEATURE_FLAGS.TELEMETRY, 'Telemetry');
+  }
+  
   const renderStartTime = useRef<number>(Date.now());
   const interactionStartTime = useRef<number | null>(null);
 

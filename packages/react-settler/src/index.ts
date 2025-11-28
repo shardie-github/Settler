@@ -68,6 +68,20 @@ export {
 // Mobile Components
 export { MobileDashboard } from './components/MobileDashboard';
 
+// Licensing & Feature Flags
+export {
+  setLicense,
+  getLicense,
+  hasFeature,
+  hasTier,
+  requireFeature,
+  requireTier,
+  useFeature,
+  useFeatureGate,
+  FEATURE_FLAGS
+} from './utils/licensing';
+export { UpgradePrompt } from './components/UpgradePrompt';
+
 // Types
 export type { ReconciliationDashboardProps } from './components/ReconciliationDashboard';
 export type { TransactionTableProps } from './components/TransactionTable';
@@ -87,6 +101,8 @@ export type { StripeAppProps } from './adapters/stripe';
 export type { MCPServerConfig, MCPResource, MCPTool } from './adapters/mcp';
 export type { WebhookPayload, ReconciliationWebhookEvent } from './utils/webhooks';
 export type { Breakpoint, BreakpointConfig } from './utils/responsive';
+export type { LicenseTier, LicenseConfig } from './utils/licensing';
+export type { UpgradePromptProps } from './components/UpgradePrompt';
 
 // Compiler
 export { compileToConfig, compileToJSON } from './compiler';

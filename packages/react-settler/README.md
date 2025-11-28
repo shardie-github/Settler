@@ -14,6 +14,15 @@ React.Settler is the **best-in-show** open-source protocol for reconciliation wo
 ✅ **Developer Friendly** - TypeScript-first, comprehensive hooks, testing utilities  
 ✅ **Non-Intrusive** - Works everywhere, no vendor lock-in, backend agnostic  
 ✅ **Production Ready** - Error boundaries, telemetry, comprehensive documentation  
+✅ **Free to Start** - OSS tier includes everything you need to get started
+
+## Pricing
+
+- 🆓 **OSS (Free)** - Core protocol, basic components, security basics, mobile & accessibility
+- 💼 **Commercial ($99/month)** - Platform integrations (Shopify, Stripe, MCP), virtualization, telemetry, audit logging
+- 🏢 **Enterprise (Custom)** - SSO, RBAC, white-label, dedicated support
+
+[View Pricing Details →](./docs/PRICING.md)  
 
 ## Installation
 
@@ -345,6 +354,8 @@ React.Settler integrates seamlessly with popular platforms:
 
 ## Documentation
 
+- [Pricing & Licensing](./docs/PRICING.md) - Feature tiers and pricing
+- [OSS vs Commercial](./docs/OSS_VS_COMMERCIAL.md) - Strategic feature split
 - [Security Guide](./docs/SECURITY.md) - Security best practices
 - [Performance Guide](./docs/PERFORMANCE.md) - Performance optimization
 - [Testing Guide](./docs/TESTING.md) - Testing utilities and patterns

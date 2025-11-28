@@ -1,7 +1,10 @@
 /**
  * Stripe App Integration
  * React.Settler components for Stripe Connect apps
+ * 
+ * ⚠️ Commercial Feature: Requires Settler Commercial subscription
  */
+import { requireFeature, FEATURE_FLAGS, useFeatureGate } from '../utils/licensing';
 
 import React from 'react';
 import {
@@ -33,6 +36,12 @@ export function StripeApp({
   exceptions = [],
   onExport
 }: StripeAppProps) {
+  const { hasAccess, UpgradePrompt } = useFeatureGate(FEATURE_FLAGS.STRIPE_INTEGRATION);
+  
+  if (!hasAccess) {
+    return <UpgradePrompt feature={FEATURE_FLAGS.STRIPE_INTEGRATION} featureName="Stripe Integration" />;
+  }
+  
   return (
     <div
       style={{
