@@ -37,6 +37,36 @@ export {
   TestWrapper,
   createMockTelemetryProvider
 } from './utils/testing';
+export {
+  useBreakpoint,
+  useMediaQuery,
+  useIsMobile,
+  useIsTablet,
+  useIsDesktop,
+  getResponsiveColumns
+} from './utils/responsive';
+export {
+  WebhookManager,
+  createWebhookManager,
+  createShopifyWebhookAdapter,
+  createStripeWebhookAdapter
+} from './utils/webhooks';
+
+// Adapters
+export {
+  ReactSettlerMCPServer,
+  createMCPServer
+} from './adapters/mcp';
+export {
+  ShopifyApp,
+  useShopifyAppBridge
+} from './adapters/shopify';
+export {
+  StripeApp
+} from './adapters/stripe';
+
+// Mobile Components
+export { MobileDashboard } from './components/MobileDashboard';
 
 // Types
 export type { ReconciliationDashboardProps } from './components/ReconciliationDashboard';
@@ -50,7 +80,13 @@ export type { FilterBarProps, FilterState } from './components/FilterBar';
 export type { SearchBarProps } from './components/SearchBar';
 export type { ExportButtonProps } from './components/ExportButton';
 export type { VirtualizedTableProps } from './components/VirtualizedTable';
+export type { MobileDashboardProps } from './components/MobileDashboard';
 export type { CompilationProviderProps } from './context';
+export type { ShopifyAppProps } from './adapters/shopify';
+export type { StripeAppProps } from './adapters/stripe';
+export type { MCPServerConfig, MCPResource, MCPTool } from './adapters/mcp';
+export type { WebhookPayload, ReconciliationWebhookEvent } from './utils/webhooks';
+export type { Breakpoint, BreakpointConfig } from './utils/responsive';
 
 // Compiler
 export { compileToConfig, compileToJSON } from './compiler';

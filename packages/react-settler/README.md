@@ -327,11 +327,29 @@ See the `examples/` directory for complete examples:
 - `rule-definition.tsx` - Defining reconciliation rules
 - `config-compilation.tsx` - Compiling workflows to JSON
 
+## Integrations
+
+React.Settler integrates seamlessly with popular platforms:
+
+- **MCP Server** - AI assistant integration via Model Context Protocol
+- **Shopify** - App store integration with Polaris design system
+- **Stripe** - Connect app integration
+- **Webhooks** - Real-time event system for Shopify, Stripe, and custom backends
+
+## Mobile & Accessibility
+
+- **Mobile-First** - Touch-optimized components with responsive breakpoints
+- **WCAG 2.1 AA** - Full accessibility compliance
+- **Keyboard Navigation** - Complete keyboard support
+- **Screen Readers** - ARIA labels and semantic HTML throughout
+
 ## Documentation
 
 - [Security Guide](./docs/SECURITY.md) - Security best practices
 - [Performance Guide](./docs/PERFORMANCE.md) - Performance optimization
 - [Testing Guide](./docs/TESTING.md) - Testing utilities and patterns
+- [Integrations Guide](./docs/INTEGRATIONS.md) - Platform integrations
+- [Accessibility Guide](./docs/ACCESSIBILITY.md) - Accessibility features
 - [Protocol Specification](../protocol/PROTOCOL.md) - Complete protocol docs
 
 ## Protocol
