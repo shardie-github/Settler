@@ -27,6 +27,7 @@ const nextConfig = {
     '@settler/sdk',
     '@settler/react-settler',
     '@settler/protocol',
+    '@settler/types',
   ],
   // PWA Configuration
   async headers() {
