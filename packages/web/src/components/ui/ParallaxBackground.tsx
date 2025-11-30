@@ -4,12 +4,18 @@ import { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { cn } from '@/lib/utils';
 
+type ScrollOffsetType = 
+  | ['start' | 'end' | 'center', 'start' | 'end' | 'center']
+  | string
+  | number
+  | (() => number);
+
 interface ParallaxBackgroundProps {
   children?: React.ReactNode;
   className?: string;
   speed?: number;
   direction?: 'up' | 'down';
-  offset?: ['start' | 'end' | 'center', number];
+  offset?: ScrollOffsetType | ScrollOffsetType[];
 }
 
 export function ParallaxBackground({
@@ -22,7 +28,7 @@ export function ParallaxBackground({
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: ref,
-    offset: [offset[0], offset[1]],
+    offset: offset as any,
   });
 
   const y = useTransform(

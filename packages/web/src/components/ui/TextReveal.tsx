@@ -18,7 +18,6 @@ export function TextReveal({
   delay = 0,
   staggerDelay = 0.05,
   splitBy = 'words',
-  as: Component = 'h1',
 }: TextRevealProps) {
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -41,7 +40,7 @@ export function TextReveal({
       opacity: 1,
       transition: {
         duration: 0.5,
-        ease: [0.22, 1, 0.36, 1], // Custom easing for smooth reveal
+        ease: [0.22, 1, 0.36, 1] as [number, number, number, number], // Custom easing for smooth reveal
       },
     },
   };
@@ -84,9 +83,13 @@ export function TextRevealHeading({
   staggerDelay = 0.05,
   splitBy = 'words',
   as: Component = 'h1',
-}: TextRevealProps & { as?: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' }) {
+  ...props
+}: TextRevealProps & { 
+  as?: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
+  id?: string;
+} & React.HTMLAttributes<HTMLHeadingElement>) {
   return (
-    <Component className={className}>
+    <Component className={className} {...props}>
       <TextReveal
         text={text}
         delay={delay}
