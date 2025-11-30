@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect, useRef, useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 
 interface Testimonial {
@@ -43,34 +44,88 @@ const defaultTestimonials: Testimonial[] = [
 ];
 
 export function SocialProof({ testimonials = defaultTestimonials }: SocialProofProps) {
+  const [isVisible, setIsVisible] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0];
+        if (entry?.isIntersecting) {
+          setIsVisible(true);
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    if (containerRef.current) {
+      observer.observe(containerRef.current);
+    }
+
+    return () => {
+      if (containerRef.current) {
+        observer.unobserve(containerRef.current);
+      }
+    };
+  }, []);
+
+  const prefersReducedMotion =
+    typeof window !== 'undefined' &&
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
   return (
-    <div className="py-16">
+    <div ref={containerRef} className="py-16" role="region" aria-labelledby="testimonials-heading">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4 text-slate-900 dark:text-white">
+          <h2
+            id="testimonials-heading"
+            className="text-3xl md:text-4xl font-bold mb-4 text-slate-900 dark:text-white"
+          >
             Loved by Developers & Finance Teams
           </h2>
           <p className="text-lg text-slate-600 dark:text-slate-300">
             Join thousands of companies using Settler for mission-critical reconciliation
           </p>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div
+          className="grid grid-cols-1 md:grid-cols-3 gap-6"
+          role="list"
+          aria-label="Customer testimonials"
+        >
           {testimonials.map((testimonial, index) => (
             <Card
               key={index}
-              className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 hover:shadow-xl transition-all"
+              className={`
+                bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800
+                transition-all duration-700
+                ${isVisible
+                  ? 'opacity-100 translate-y-0 scale-100'
+                  : 'opacity-0 translate-y-8 scale-95'
+                }
+                hover:shadow-xl hover:-translate-y-2
+              `}
+              style={{
+                transitionDelay: prefersReducedMotion ? '0ms' : `${index * 150}ms`,
+              }}
+              role="listitem"
+              aria-label={`Testimonial from ${testimonial.name}`}
             >
               <CardContent className="p-6">
-                <div className="flex items-center gap-1 mb-4">
+                <div className="flex items-center gap-1 mb-4" role="img" aria-label={`${testimonial.rating} out of 5 stars`}>
                   {[...Array(testimonial.rating)].map((_, i) => (
-                    <span key={i} className="text-yellow-400 text-lg">★</span>
+                    <span key={i} className="text-yellow-400 text-lg" aria-hidden="true">
+                      ★
+                    </span>
                   ))}
                 </div>
-                <p className="text-slate-700 dark:text-slate-300 mb-6 italic">
-                  "{testimonial.quote}"
-                </p>
+                <blockquote className="text-slate-700 dark:text-slate-300 mb-6 italic">
+                  <p>"{testimonial.quote}"</p>
+                </blockquote>
                 <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-indigo-500 flex items-center justify-center text-2xl">
+                  <div
+                    className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-indigo-500 flex items-center justify-center text-2xl"
+                    aria-hidden="true"
+                  >
                     {testimonial.image}
                   </div>
                   <div>

@@ -67,7 +67,7 @@ export function Footer() {
                 </Link>
               </li>
               <li>
-                <a href="https://status.settler.io" target="_blank" rel="noopener noreferrer" className="text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                <a href="https://status.settler.dev" target="_blank" rel="noopener noreferrer" className="text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
                   Status
                 </a>
               </li>

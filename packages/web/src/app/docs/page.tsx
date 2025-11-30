@@ -1,17 +1,42 @@
 'use client';
 
-import Link from "next/link";
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
+import { useState, useEffect, useRef } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Navigation } from "@/components/Navigation";
 import { Footer } from "@/components/Footer";
 import { ConversionCTA } from "@/components/ConversionCTA";
 import { NewsletterSignup } from "@/components/NewsletterSignup";
+import { AnimatedPageWrapper } from "@/components/AnimatedPageWrapper";
+import { AnimatedHero } from "@/components/AnimatedHero";
+import { AnimatedCodeBlock } from "@/components/AnimatedCodeBlock";
+import { AnimatedSidebar } from "@/components/AnimatedSidebar";
 
 export default function Docs() {
   const [activeSection, setActiveSection] = useState('getting-started');
+  const [isVisible, setIsVisible] = useState(false);
+  const sidebarRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    if (sidebarRef.current) {
+      observer.observe(sidebarRef.current);
+    }
+
+    return () => {
+      if (sidebarRef.current) {
+        observer.unobserve(sidebarRef.current);
+      }
+    };
+  }, []);
 
   const sections = [
     {
@@ -222,59 +247,114 @@ console.log(\`Matched: \${report.summary.matched}/\${report.summary.total}\`);`}
 
   const activeContent = sections.find(s => s.id === activeSection)?.content;
 
+  const installationCode = `# Install the SDK
+npm install @settler/sdk
+
+# Or with yarn
+yarn add @settler/sdk
+
+# Or with pnpm
+pnpm add @settler/sdk`;
+
+  const nodejsCode = `import { Settler } from '@settler/sdk';
+
+const client = new Settler({
+  apiKey: process.env.SETTLER_API_KEY,
+});`;
+
+  const reactCode = `import { useSettler } from '@settler/react-settler';
+
+function MyComponent() {
+  const { createJob, runJob } = useSettler({
+    apiKey: 'sk_...',
+  });
+  
+  // Use the hooks...
+}`;
+
+  const apiExampleCode = `const job = await client.jobs.create({
+  name: "Shopify-Stripe Reconciliation",
+  source: {
+    adapter: "shopify",
+    config: { apiKey: "..." }
+  },
+  target: {
+    adapter: "stripe",
+    config: { apiKey: "..." }
+  },
+  rules: {
+    matching: [
+      { field: "order_id", type: "exact" },
+      { field: "amount", type: "exact", tolerance: 0.01 }
+    ]
+  }
+});`;
+
+  const ecommerceCode = `// Reconcile Shopify orders with Stripe payments
+const job = await client.jobs.create({
+  name: "Monthly Reconciliation",
+  source: {
+    adapter: "shopify",
+    config: {
+      shop: "your-shop.myshopify.com",
+      accessToken: process.env.SHOPIFY_TOKEN
+    }
+  },
+  target: {
+    adapter: "stripe",
+    config: {
+      apiKey: process.env.STRIPE_SECRET_KEY
+    }
+  },
+  rules: {
+    matching: [
+      { field: "order_id", type: "exact" },
+      { field: "amount", type: "exact", tolerance: 0.01 },
+      { field: "currency", type: "exact" }
+    ],
+    conflictResolution: "last-wins"
+  }
+});
+
+// Run the job
+const report = await client.jobs.run(job.id);
+console.log(\`Matched: \${report.summary.matched}/\${report.summary.total}\`);`;
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
+    <AnimatedPageWrapper aria-label="Documentation page">
       <Navigation />
 
       {/* Hero Section */}
-      <section className="relative pt-32 pb-12 px-4 sm:px-6 lg:px-8 overflow-hidden">
-        <div className="absolute inset-0 bg-grid-slate-100 dark:bg-grid-slate-800 [mask-image:linear-gradient(0deg,white,rgba(255,255,255,0.6))] -z-10" />
-        <div className="max-w-7xl mx-auto text-center">
-          <Badge className="mb-6 bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300 border-blue-200 dark:border-blue-800">
-            Developer Documentation
-          </Badge>
-          <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent">
-            Documentation
-          </h1>
-          <p className="text-xl md:text-2xl text-slate-600 dark:text-slate-300 mb-8 max-w-3xl mx-auto">
-            Everything you need to integrate Settler into your application
-          </p>
-        </div>
-      </section>
+      <AnimatedHero
+        badge="Developer Documentation"
+        title="Documentation"
+        description="Everything you need to integrate Settler into your application"
+      />
 
       {/* Documentation Content */}
-      <section className="py-12 px-4 sm:px-6 lg:px-8">
+      <section
+        className="py-12 px-4 sm:px-6 lg:px-8"
+        aria-labelledby="docs-content-heading"
+      >
         <div className="max-w-7xl mx-auto">
+          <h2 id="docs-content-heading" className="sr-only">
+            Documentation Content
+          </h2>
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
             {/* Sidebar */}
-            <div className="lg:col-span-1">
-              <Card className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 sticky top-24">
-                <CardHeader>
-                  <CardTitle className="text-slate-900 dark:text-white">Contents</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <nav className="space-y-2">
-                    {sections.map((section) => (
-                      <button
-                        key={section.id}
-                        onClick={() => setActiveSection(section.id)}
-                        className={`w-full text-left px-4 py-2 rounded-md transition-colors ${
-                          activeSection === section.id
-                            ? 'bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 font-semibold'
-                            : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
-                        }`}
-                      >
-                        {section.title}
-                      </button>
-                    ))}
-                  </nav>
-                </CardContent>
-              </Card>
-            </div>
+            <AnimatedSidebar
+              items={sections.map((s) => ({ id: s.id, title: s.title }))}
+              activeId={activeSection}
+              onItemClick={setActiveSection}
+            />
 
             {/* Main Content */}
             <div className="lg:col-span-3">
-              <Card className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800">
+              <Card
+                className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 transition-all duration-500 hover:shadow-lg"
+                role="article"
+                aria-labelledby={`section-${activeSection}`}
+              >
                 <CardContent className="p-8">
                   {activeContent}
                 </CardContent>
@@ -307,6 +387,6 @@ console.log(\`Matched: \${report.summary.matched}/\${report.summary.total}\`);`}
       </section>
 
       <Footer />
-    </div>
+    </AnimatedPageWrapper>
   );
 }

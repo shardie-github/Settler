@@ -42,7 +42,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://settler.io",
+    url: "https://settler.dev",
     siteName: "Settler",
     title: "Settler - Reconciliation as a Service API",
     description: "Automate financial data reconciliation across fragmented SaaS and e-commerce ecosystems. One API. All Platforms. Real-Time.",

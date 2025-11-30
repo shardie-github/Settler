@@ -4,12 +4,14 @@ import Link from "next/link";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Navigation } from "@/components/Navigation";
 import { Footer } from "@/components/Footer";
 import { TrustBadges } from "@/components/TrustBadges";
-import { StatsSection } from "@/components/StatsSection";
 import { ConversionCTA } from "@/components/ConversionCTA";
+import { AnimatedPageWrapper } from "@/components/AnimatedPageWrapper";
+import { AnimatedHero } from "@/components/AnimatedHero";
+import { AnimatedFeatureCard } from "@/components/AnimatedFeatureCard";
+import { AnimatedStatCard } from "@/components/AnimatedStatCard";
 
 export default function Enterprise() {
   const [formData, setFormData] = useState({
@@ -60,180 +62,226 @@ export default function Enterprise() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
+    <AnimatedPageWrapper aria-label="Enterprise solutions page">
       <Navigation />
 
       {/* Hero Section */}
-      <section className="relative pt-32 pb-20 px-4 sm:px-6 lg:px-8 overflow-hidden">
-        <div className="absolute inset-0 bg-grid-slate-100 dark:bg-grid-slate-800 [mask-image:linear-gradient(0deg,white,rgba(255,255,255,0.6))] -z-10" />
-        <div className="max-w-7xl mx-auto text-center">
-          <Badge className="mb-6 bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300 border-blue-200 dark:border-blue-800">
-            Enterprise Solutions
-          </Badge>
-          <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent">
+      <AnimatedHero
+        badge="Enterprise Solutions"
+        title={
+          <>
             Enterprise-Grade
             <br />
             Reconciliation Platform
-          </h1>
-          <p className="text-xl md:text-2xl text-slate-600 dark:text-slate-300 mb-8 max-w-3xl mx-auto">
-            Custom solutions for large organizations with advanced security, compliance, and scale requirements.
-          </p>
+          </>
+        }
+        description="Custom solutions for large organizations with advanced security, compliance, and scale requirements."
+      />
+
+      {/* Hero CTA Buttons */}
+      <section className="px-4 sm:px-6 lg:px-8 -mt-12 mb-8" aria-label="Call to action">
+        <div className="max-w-7xl mx-auto">
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" asChild className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-8 py-6 text-lg shadow-lg hover:shadow-xl transition-all">
-              <Link href="#contact">Contact Sales</Link>
+            <Button
+              size="lg"
+              asChild
+              className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-8 py-6 text-lg shadow-lg hover:shadow-xl transition-all transform hover:scale-105 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+            >
+              <Link href="#contact" aria-label="Contact sales team">
+                Contact Sales
+              </Link>
             </Button>
-            <Button size="lg" variant="outline" asChild className="px-8 py-6 text-lg border-2">
-              <Link href="/pricing">View Pricing</Link>
+            <Button
+              size="lg"
+              variant="outline"
+              asChild
+              className="px-8 py-6 text-lg border-2 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all transform hover:scale-105 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+            >
+              <Link href="/pricing" aria-label="View pricing plans">
+                View Pricing
+              </Link>
             </Button>
           </div>
         </div>
       </section>
 
       {/* Features Grid */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8">
+      <section
+        className="py-20 px-4 sm:px-6 lg:px-8"
+        aria-labelledby="enterprise-features-heading"
+      >
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-slate-900 dark:text-white">
+            <h2
+              id="enterprise-features-heading"
+              className="text-3xl md:text-4xl font-bold mb-4 text-slate-900 dark:text-white"
+            >
               Everything You Need
             </h2>
             <p className="text-lg text-slate-600 dark:text-slate-300 max-w-2xl mx-auto">
               Enterprise features designed for scale, security, and compliance
             </p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+            role="list"
+            aria-label="Enterprise features"
+          >
             {features.map((feature, index) => (
-              <Card
-                key={index}
-                className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
-              >
-                <CardHeader>
-                  <div className="text-4xl mb-4">{feature.icon}</div>
-                  <CardTitle className="text-slate-900 dark:text-white">{feature.title}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <CardDescription className="text-slate-600 dark:text-slate-300">
-                    {feature.description}
-                  </CardDescription>
-                </CardContent>
-              </Card>
+              <div key={index} role="listitem">
+                <AnimatedFeatureCard
+                  icon={feature.icon}
+                  title={feature.title}
+                  description={feature.description}
+                  index={index}
+                />
+              </div>
             ))}
           </div>
         </div>
       </section>
 
       {/* Benefits Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white/50 dark:bg-slate-800/50">
+      <section
+        className="py-20 px-4 sm:px-6 lg:px-8 bg-white/50 dark:bg-slate-800/50"
+        aria-labelledby="benefits-heading"
+      >
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
-              <h2 className="text-3xl md:text-4xl font-bold mb-6 text-slate-900 dark:text-white">
+              <h2
+                id="benefits-heading"
+                className="text-3xl md:text-4xl font-bold mb-6 text-slate-900 dark:text-white"
+              >
                 Why Enterprise?
               </h2>
-              <div className="space-y-6">
-                <div className="flex items-start">
-                  <div className="w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                    <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
+              <div className="space-y-6" role="list" aria-label="Enterprise benefits">
+                {[
+                  {
+                    title: '99.99% Uptime SLA',
+                    description:
+                      "Guaranteed availability with financial penalties if we don't meet our SLA.",
+                  },
+                  {
+                    title: 'Custom Contracts',
+                    description:
+                      'Flexible terms, custom pricing, and dedicated account management.',
+                  },
+                  {
+                    title: 'Priority Support',
+                    description:
+                      '24/7 support with under 4 hour response time for critical issues.',
+                  },
+                  {
+                    title: 'Compliance Ready',
+                    description:
+                      'SOC 2 Type II, GDPR, PCI-DSS, HIPAA-ready with audit trails.',
+                  },
+                ].map((benefit, index) => (
+                  <div key={index} className="flex items-start" role="listitem">
+                    <div
+                      className="w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center flex-shrink-0 mt-1"
+                      aria-hidden="true"
+                    >
+                      <svg
+                        className="w-4 h-4 text-white"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M5 13l4 4L19 7"
+                        />
+                      </svg>
+                    </div>
+                    <div className="ml-4">
+                      <h3 className="font-semibold text-slate-900 dark:text-white mb-1">
+                        {benefit.title}
+                      </h3>
+                      <p className="text-slate-600 dark:text-slate-300">{benefit.description}</p>
+                    </div>
                   </div>
-                  <div className="ml-4">
-                    <h3 className="font-semibold text-slate-900 dark:text-white mb-1">99.99% Uptime SLA</h3>
-                    <p className="text-slate-600 dark:text-slate-300">
-                      Guaranteed availability with financial penalties if we don't meet our SLA.
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-start">
-                  <div className="w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                    <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                  </div>
-                  <div className="ml-4">
-                    <h3 className="font-semibold text-slate-900 dark:text-white mb-1">Custom Contracts</h3>
-                    <p className="text-slate-600 dark:text-slate-300">
-                      Flexible terms, custom pricing, and dedicated account management.
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-start">
-                  <div className="w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                    <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                  </div>
-                  <div className="ml-4">
-                    <h3 className="font-semibold text-slate-900 dark:text-white mb-1">Priority Support</h3>
-                    <p className="text-slate-600 dark:text-slate-300">
-                      24/7 support with under 4 hour response time for critical issues.
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-start">
-                  <div className="w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                    <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                  </div>
-                  <div className="ml-4">
-                    <h3 className="font-semibold text-slate-900 dark:text-white mb-1">Compliance Ready</h3>
-                    <p className="text-slate-600 dark:text-slate-300">
-                      SOC 2 Type II, GDPR, PCI-DSS, HIPAA-ready with audit trails.
-                    </p>
-                  </div>
-                </div>
+                ))}
               </div>
             </div>
-            <Card className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 shadow-xl">
+            <Card
+              className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 shadow-xl transition-all duration-500 hover:shadow-2xl"
+              role="region"
+              aria-labelledby="demo-form-heading"
+            >
               <CardHeader>
-                <CardTitle className="text-2xl text-slate-900 dark:text-white">Request a Demo</CardTitle>
+                <CardTitle id="demo-form-heading" className="text-2xl text-slate-900 dark:text-white">
+                  Request a Demo
+                </CardTitle>
                 <CardDescription>
                   Schedule a personalized demo with our enterprise team
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <form onSubmit={handleSubmit} className="space-y-4">
+                <form onSubmit={handleSubmit} className="space-y-4" aria-label="Demo request form">
                   <div>
-                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                    <label
+                      htmlFor="name"
+                      className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2"
+                    >
                       Name
                     </label>
                     <input
+                      id="name"
                       type="text"
                       required
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                       className="w-full px-4 py-2 border border-slate-300 dark:border-slate-700 rounded-md bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      aria-required="true"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                    <label
+                      htmlFor="email"
+                      className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2"
+                    >
                       Email
                     </label>
                     <input
+                      id="email"
                       type="email"
                       required
                       value={formData.email}
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                       className="w-full px-4 py-2 border border-slate-300 dark:border-slate-700 rounded-md bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      aria-required="true"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                    <label
+                      htmlFor="company"
+                      className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2"
+                    >
                       Company
                     </label>
                     <input
+                      id="company"
                       type="text"
                       required
                       value={formData.company}
                       onChange={(e) => setFormData({ ...formData, company: e.target.value })}
                       className="w-full px-4 py-2 border border-slate-300 dark:border-slate-700 rounded-md bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      aria-required="true"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                    <label
+                      htmlFor="message"
+                      className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2"
+                    >
                       Message
                     </label>
                     <textarea
+                      id="message"
                       rows={4}
                       value={formData.message}
                       onChange={(e) => setFormData({ ...formData, message: e.target.value })}
@@ -243,8 +291,9 @@ export default function Enterprise() {
                   </div>
                   <Button
                     type="submit"
-                    className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white"
+                    className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white transition-all transform hover:scale-105 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                     size="lg"
+                    aria-label="Submit demo request form"
                   >
                     Request Demo
                   </Button>
@@ -255,8 +304,41 @@ export default function Enterprise() {
         </div>
       </section>
 
-      {/* Stats Section */}
-      <StatsSection />
+      {/* Enterprise Stats - Unique */}
+      <section
+        className="py-16 bg-white/50 dark:bg-slate-800/50"
+        aria-labelledby="enterprise-stats-heading"
+      >
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2
+            id="enterprise-stats-heading"
+            className="text-2xl md:text-3xl font-bold text-center mb-12 text-slate-900 dark:text-white"
+          >
+            Enterprise Performance
+          </h2>
+          <div
+            className="grid grid-cols-2 md:grid-cols-4 gap-8"
+            role="list"
+            aria-label="Enterprise performance metrics"
+          >
+            {[
+              { value: '99.99%', label: 'Uptime SLA', description: 'Guaranteed availability' },
+              { value: '<4hr', label: 'Support Response', description: 'Critical issues' },
+              { value: '24/7', label: 'Support Coverage', description: 'Always available' },
+              { value: '100%', label: 'Compliance', description: 'SOC 2, GDPR, PCI-DSS' },
+            ].map((stat, index) => (
+              <div key={index} role="listitem">
+                <AnimatedStatCard
+                  value={stat.value}
+                  label={stat.label}
+                  description={stat.description}
+                  index={index}
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
       {/* Trust Indicators */}
       <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white/50 dark:bg-slate-800/50">
@@ -289,6 +371,6 @@ export default function Enterprise() {
       </section>
 
       <Footer />
-    </div>
+    </AnimatedPageWrapper>
   );
 }

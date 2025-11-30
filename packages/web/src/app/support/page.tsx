@@ -1,12 +1,13 @@
 'use client';
 
-import Link from "next/link";
 import { useState } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Navigation } from "@/components/Navigation";
 import { Footer } from "@/components/Footer";
 import { ConversionCTA } from "@/components/ConversionCTA";
+import { AnimatedPageWrapper } from "@/components/AnimatedPageWrapper";
+import { AnimatedHero } from "@/components/AnimatedHero";
+import { AnimatedFeatureCard } from "@/components/AnimatedFeatureCard";
 
 export default function Support() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -38,7 +39,7 @@ export default function Support() {
       icon: '📧',
       title: 'Email Support',
       description: 'Get help via email (response within 24 hours)',
-      link: 'mailto:support@settler.io',
+      link: 'mailto:support@settler.dev',
       linkText: 'Email Us',
       external: true,
     },
@@ -77,61 +78,39 @@ export default function Support() {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
+    <AnimatedPageWrapper aria-label="Support and help center">
       <Navigation />
 
       {/* Hero Section */}
-      <section className="relative pt-32 pb-20 px-4 sm:px-6 lg:px-8 overflow-hidden">
-        <div className="absolute inset-0 bg-grid-slate-100 dark:bg-grid-slate-800 [mask-image:linear-gradient(0deg,white,rgba(255,255,255,0.6))] -z-10" />
-        <div className="max-w-7xl mx-auto text-center">
-          <Badge className="mb-6 bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300 border-blue-200 dark:border-blue-800">
-            We're Here to Help
-          </Badge>
-          <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent">
-            Support & Help Center
-          </h1>
-          <p className="text-xl md:text-2xl text-slate-600 dark:text-slate-300 mb-8 max-w-3xl mx-auto">
-            Find answers, get help, and connect with our team
-          </p>
-        </div>
-      </section>
+      <AnimatedHero
+        badge="We're Here to Help"
+        title="Support & Help Center"
+        description="Find answers, get help, and connect with our team"
+      />
 
       {/* Support Options */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8">
+      <section
+        className="py-20 px-4 sm:px-6 lg:px-8"
+        aria-labelledby="support-options-heading"
+      >
         <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+          <h2 id="support-options-heading" className="sr-only">
+            Support Options
+          </h2>
+          <div
+            className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12"
+            role="list"
+            aria-label="Available support channels"
+          >
             {supportOptions.map((option, index) => (
-              <Card
-                key={index}
-                className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
-              >
-                <CardHeader>
-                  <div className="text-4xl mb-4">{option.icon}</div>
-                  <CardTitle className="text-slate-900 dark:text-white">{option.title}</CardTitle>
-                  <CardDescription className="text-slate-600 dark:text-slate-300">
-                    {option.description}
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  {option.external ? (
-                    <a
-                      href={option.link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-blue-600 dark:text-blue-400 hover:underline font-medium"
-                    >
-                      {option.linkText} →
-                    </a>
-                  ) : (
-                    <Link
-                      href={option.link}
-                      className="text-blue-600 dark:text-blue-400 hover:underline font-medium"
-                    >
-                      {option.linkText} →
-                    </Link>
-                  )}
-                </CardContent>
-              </Card>
+              <div key={index} role="listitem">
+                <AnimatedFeatureCard
+                  icon={option.icon}
+                  title={option.title}
+                  description={option.description}
+                  index={index}
+                />
+              </div>
             ))}
           </div>
         </div>
@@ -157,16 +136,18 @@ export default function Support() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full px-4 py-3 border border-slate-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              aria-label="Search frequently asked questions"
             />
           </div>
 
           {/* FAQ List */}
-          <div className="space-y-4">
+          <div className="space-y-4" role="list" aria-label="Frequently asked questions">
             {filteredFaqs.length > 0 ? (
               filteredFaqs.map((faq, index) => (
                 <Card
                   key={index}
-                  className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800"
+                  className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 transition-all duration-300 hover:shadow-lg"
+                  role="listitem"
                 >
                   <CardHeader>
                     <CardTitle className="text-lg text-slate-900 dark:text-white">
@@ -198,7 +179,7 @@ export default function Support() {
             title="Still Need Help?"
             description="Our support team is ready to assist you. Get in touch via email or schedule a call with our sales team."
             primaryAction="Email Support"
-            primaryLink="mailto:support@settler.io"
+            primaryLink="mailto:support@settler.dev"
             secondaryAction="Contact Sales"
             secondaryLink="/enterprise"
             variant="gradient"
@@ -207,6 +188,6 @@ export default function Support() {
       </section>
 
       <Footer />
-    </div>
+    </AnimatedPageWrapper>
   );
 }

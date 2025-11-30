@@ -458,7 +458,7 @@ See [CONTRIBUTING.md](./docs/contributing.md) for guidelines.
 **Made with ❤️ for developers who hate manual reconciliation.**
 
 For questions or support:
-- **Documentation:** [docs.settler.io](https://docs.settler.io)
+- **Documentation:** [docs.settler.dev](https://docs.settler.dev)
 - **Issues:** [GitHub Issues](https://github.com/settler/settler/issues)
-- **Email:** support@settler.io
+- **Email:** support@settler.dev
 - **Founder:** scottrmhardie@gmail.com

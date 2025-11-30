@@ -14,7 +14,7 @@ describe('SettlerClient', () => {
   beforeEach(() => {
     client = new SettlerClient({
       apiKey: 'test_api_key',
-      baseUrl: 'https://api.settler.io',
+      baseUrl: 'https://api.settler.dev',
     });
   });
 

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -8,6 +8,8 @@ import { Navigation } from "@/components/Navigation";
 import { Footer } from "@/components/Footer";
 import { ConversionCTA } from "@/components/ConversionCTA";
 import { TrustBadges } from "@/components/TrustBadges";
+import { AnimatedPageWrapper } from "@/components/AnimatedPageWrapper";
+import { AnimatedHero } from "@/components/AnimatedHero";
 
 export default function Playground() {
   const [apiKey, setApiKey] = useState("");
@@ -76,33 +78,69 @@ console.log("Report:", report.data.summary);
     }, 1500);
   };
 
+  const [isVisible, setIsVisible] = useState(false);
+  const playgroundRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0];
+        if (entry?.isIntersecting) {
+          setIsVisible(true);
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    if (playgroundRef.current) {
+      observer.observe(playgroundRef.current);
+    }
+
+    return () => {
+      if (playgroundRef.current) {
+        observer.unobserve(playgroundRef.current);
+      }
+    };
+  }, []);
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
+    <AnimatedPageWrapper aria-label="Interactive playground">
       <Navigation />
 
       {/* Hero Section */}
-      <section className="relative pt-32 pb-12 px-4 sm:px-6 lg:px-8 overflow-hidden">
-        <div className="absolute inset-0 bg-grid-slate-100 dark:bg-grid-slate-800 [mask-image:linear-gradient(0deg,white,rgba(255,255,255,0.6))] -z-10" />
-        <div className="max-w-7xl mx-auto text-center">
-          <Badge className="mb-6 bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300 border-blue-200 dark:border-blue-800">
-            Interactive Playground
-          </Badge>
-          <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent">
-            Try Settler API
-          </h1>
-          <p className="text-xl md:text-2xl text-slate-600 dark:text-slate-300 mb-8 max-w-3xl mx-auto">
-            Test the API, see examples, and experiment with reconciliation jobs
-          </p>
-        </div>
-      </section>
+      <AnimatedHero
+        badge="Interactive Playground"
+        title="Try Settler API"
+        description="Test the API, see examples, and experiment with reconciliation jobs"
+      />
 
       {/* Playground Content */}
-      <section className="py-12 px-4 sm:px-6 lg:px-8">
+      <section
+        ref={playgroundRef}
+        className="py-12 px-4 sm:px-6 lg:px-8"
+        aria-labelledby="playground-heading"
+      >
         <div className="max-w-7xl mx-auto">
+          <h2 id="playground-heading" className="sr-only">
+            Interactive Playground
+          </h2>
           {/* API Key Input */}
-          <Card className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 mb-6">
+          <Card
+            className={`
+              bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 mb-6
+              transition-all duration-700
+              ${isVisible
+                ? 'opacity-100 translate-y-0'
+                : 'opacity-0 translate-y-8'
+              }
+            `}
+            role="region"
+            aria-labelledby="api-config-heading"
+          >
             <CardHeader>
-              <CardTitle className="text-slate-900 dark:text-white">API Configuration</CardTitle>
+              <CardTitle id="api-config-heading" className="text-slate-900 dark:text-white">
+                API Configuration
+              </CardTitle>
               <CardDescription className="text-slate-600 dark:text-slate-300">
                 Enter your API key to test with real credentials, or leave empty for demo mode
               </CardDescription>
@@ -118,11 +156,13 @@ console.log("Report:", report.data.summary);
                   }}
                   placeholder="sk_your_api_key"
                   className="flex-1 px-4 py-2 border border-slate-300 dark:border-slate-700 rounded-md bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent font-mono text-sm"
+                  aria-label="API key input"
                 />
                 <Button
                   onClick={handleRun}
                   disabled={isRunning}
-                  className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-8"
+                  className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-8 transition-all transform hover:scale-105 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                  aria-label={isRunning ? 'Running code' : 'Run code'}
                 >
                   {isRunning ? 'Running...' : 'Run Code'}
                 </Button>
@@ -131,12 +171,28 @@ console.log("Report:", report.data.summary);
           </Card>
 
           {/* Code Editor and Output */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div
+            className={`
+              grid grid-cols-1 lg:grid-cols-2 gap-6
+              transition-all duration-700
+              ${isVisible
+                ? 'opacity-100 translate-y-0'
+                : 'opacity-0 translate-y-8'
+              }
+            `}
+            style={{ transitionDelay: '200ms' }}
+          >
             {/* Code Editor */}
-            <Card className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800">
+            <Card
+              className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 transition-all duration-300 hover:shadow-lg"
+              role="region"
+              aria-labelledby="editor-heading"
+            >
               <CardHeader>
                 <div className="flex items-center justify-between">
-                  <CardTitle className="text-slate-900 dark:text-white">Code Editor</CardTitle>
+                  <CardTitle id="editor-heading" className="text-slate-900 dark:text-white">
+                    Code Editor
+                  </CardTitle>
                   <Badge className="bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300">
                     TypeScript
                   </Badge>
@@ -151,15 +207,23 @@ console.log("Report:", report.data.summary);
                   onChange={(e) => setCode(e.target.value)}
                   className="w-full h-[500px] p-4 font-mono text-sm border border-slate-300 dark:border-slate-700 rounded-md bg-slate-900 dark:bg-slate-950 text-green-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
                   spellCheck={false}
+                  aria-label="Code editor"
                 />
               </CardContent>
             </Card>
 
             {/* Output */}
-            <Card className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800">
+            <Card
+              className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 transition-all duration-300 hover:shadow-lg"
+              role="region"
+              aria-labelledby="output-heading"
+              aria-live="polite"
+            >
               <CardHeader>
                 <div className="flex items-center justify-between">
-                  <CardTitle className="text-slate-900 dark:text-white">Output</CardTitle>
+                  <CardTitle id="output-heading" className="text-slate-900 dark:text-white">
+                    Output
+                  </CardTitle>
                   <Badge className="bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300">
                     Console
                   </Badge>
@@ -169,7 +233,11 @@ console.log("Report:", report.data.summary);
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="w-full h-[500px] p-4 bg-slate-900 dark:bg-slate-950 text-green-400 font-mono text-sm rounded-md overflow-auto border border-slate-300 dark:border-slate-700">
+                <div
+                  className="w-full h-[500px] p-4 bg-slate-900 dark:bg-slate-950 text-green-400 font-mono text-sm rounded-md overflow-auto border border-slate-300 dark:border-slate-700"
+                  role="log"
+                  aria-label="Code execution output"
+                >
                   <pre className="whitespace-pre-wrap">{output}</pre>
                 </div>
               </CardContent>
@@ -177,16 +245,36 @@ console.log("Report:", report.data.summary);
           </div>
 
           {/* Quick Examples */}
-          <div className="mt-8">
-            <Card className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800">
+          <div
+            className={`
+              mt-8
+              transition-all duration-700
+              ${isVisible
+                ? 'opacity-100 translate-y-0'
+                : 'opacity-0 translate-y-8'
+              }
+            `}
+            style={{ transitionDelay: '400ms' }}
+          >
+            <Card
+              className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 transition-all duration-300 hover:shadow-lg"
+              role="region"
+              aria-labelledby="examples-heading"
+            >
               <CardHeader>
-                <CardTitle className="text-slate-900 dark:text-white">Quick Examples</CardTitle>
+                <CardTitle id="examples-heading" className="text-slate-900 dark:text-white">
+                  Quick Examples
+                </CardTitle>
                 <CardDescription className="text-slate-600 dark:text-slate-300">
                   Try these pre-configured examples
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div
+                  className="grid grid-cols-1 md:grid-cols-3 gap-4"
+                  role="list"
+                  aria-label="Quick example templates"
+                >
                   <Button
                     variant="outline"
                     onClick={() => {
@@ -212,7 +300,9 @@ const job = await client.jobs.create({
 const report = await client.jobs.run(job.data.id);
 console.log(report.data.summary);`);
                     }}
-                    className="h-auto py-4 text-left"
+                    className="h-auto py-4 text-left transition-all transform hover:scale-105 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                    role="listitem"
+                    aria-label="Load QuickBooks to Stripe example"
                   >
                     <div>
                       <div className="font-semibold mb-1">QuickBooks → Stripe</div>
@@ -247,7 +337,9 @@ const job = await client.jobs.create({
 const report = await client.jobs.run(job.data.id);
 console.log(report.data.summary);`);
                     }}
-                    className="h-auto py-4 text-left"
+                    className="h-auto py-4 text-left transition-all transform hover:scale-105 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                    role="listitem"
+                    aria-label="Load PayPal to Shopify example"
                   >
                     <div>
                       <div className="font-semibold mb-1">PayPal → Shopify</div>
@@ -281,7 +373,9 @@ client.webhooks.on("reconciliation.complete", (event) => {
   console.log("Reconciliation complete:", event.data);
 });`);
                     }}
-                    className="h-auto py-4 text-left"
+                    className="h-auto py-4 text-left transition-all transform hover:scale-105 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                    role="listitem"
+                    aria-label="Load real-time webhooks example"
                   >
                     <div>
                       <div className="font-semibold mb-1">Real-time Webhooks</div>
@@ -325,6 +419,6 @@ client.webhooks.on("reconciliation.complete", (event) => {
       </section>
 
       <Footer />
-    </div>
+    </AnimatedPageWrapper>
   );
 }

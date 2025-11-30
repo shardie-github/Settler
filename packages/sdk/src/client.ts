@@ -24,7 +24,7 @@ import {
 export interface SettlerConfig {
   /** API key for authentication (required) */
   apiKey: string;
-  /** Base URL for the API (default: https://api.settler.io) */
+  /** Base URL for the API (default: https://api.settler.dev) */
   baseUrl?: string;
   /** Request timeout in milliseconds (default: 30000) */
   timeout?: number;
@@ -91,7 +91,7 @@ export class SettlerClient {
     }
 
     this.apiKey = config.apiKey;
-    this.baseUrl = config.baseUrl || "https://api.settler.io";
+    this.baseUrl = config.baseUrl || "https://api.settler.dev";
     this.timeout = config.timeout || 30000;
     this.retryConfig = config.retry || {};
     this.deduplicateRequests = config.deduplicateRequests !== false;
