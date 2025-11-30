@@ -28,7 +28,9 @@
       "@settler/protocol": ["../protocol/dist"],
       "@settler/protocol/*": ["../protocol/dist/*"],
       "@settler/sdk": ["../sdk/dist"],
-      "@settler/sdk/*": ["../sdk/dist/*"]
+      "@settler/sdk/*": ["../sdk/dist/*"],
+      "@settler/types": ["../types/dist"],
+      "@settler/types/*": ["../types/dist/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
