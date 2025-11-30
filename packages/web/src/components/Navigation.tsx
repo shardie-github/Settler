@@ -42,6 +42,13 @@ export function Navigation() {
               Docs
             </Link>
             <Link
+              href="/cookbooks"
+              className="text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded px-2 py-1"
+              role="menuitem"
+            >
+              Cookbooks
+            </Link>
+            <Link
               href="/pricing"
               className="text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded px-2 py-1"
               role="menuitem"
@@ -124,6 +131,14 @@ export function Navigation() {
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Docs
+              </Link>
+              <Link
+                href="/cookbooks"
+                className="text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded px-2 py-1"
+                role="menuitem"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Cookbooks
               </Link>
               <Link
                 href="/pricing"
