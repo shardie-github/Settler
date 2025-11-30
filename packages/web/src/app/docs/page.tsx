@@ -7,6 +7,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Navigation } from "@/components/Navigation";
 import { Footer } from "@/components/Footer";
+import { ConversionCTA } from "@/components/ConversionCTA";
+import { NewsletterSignup } from "@/components/NewsletterSignup";
 
 export default function Docs() {
   const [activeSection, setActiveSection] = useState('getting-started');
@@ -282,24 +284,25 @@ console.log(\`Matched: \${report.summary.matched}/\${report.summary.total}\`);`}
         </div>
       </section>
 
+      {/* Newsletter Signup */}
+      <section className="py-12 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-4xl mx-auto">
+          <NewsletterSignup />
+        </div>
+      </section>
+
       {/* CTA Section */}
       <section className="py-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto">
-          <Card className="bg-gradient-to-r from-blue-600 to-indigo-600 border-0 shadow-2xl">
-            <CardHeader className="text-center">
-              <CardTitle className="text-3xl md:text-4xl text-white mb-4">
-                Ready to Get Started?
-              </CardTitle>
-              <CardDescription className="text-blue-100 text-lg">
-                Try Settler in our interactive playground
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="text-center">
-              <Button size="lg" variant="secondary" asChild className="bg-white text-blue-600 hover:bg-blue-50 px-8 py-6 text-lg">
-                <Link href="/playground">Try Playground</Link>
-              </Button>
-            </CardContent>
-          </Card>
+          <ConversionCTA
+            title="Ready to Get Started?"
+            description="Try Settler in our interactive playground. No signup required."
+            primaryAction="Try Playground"
+            primaryLink="/playground"
+            secondaryAction="View Pricing"
+            secondaryLink="/pricing"
+            variant="gradient"
+          />
         </div>
       </section>
 

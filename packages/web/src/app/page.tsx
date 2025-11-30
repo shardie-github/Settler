@@ -7,6 +7,12 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Navigation } from "@/components/Navigation";
 import { Footer } from "@/components/Footer";
+import { TrustBadges } from "@/components/TrustBadges";
+import { CustomerLogos } from "@/components/CustomerLogos";
+import { StatsSection } from "@/components/StatsSection";
+import { SocialProof } from "@/components/SocialProof";
+import { NewsletterSignup } from "@/components/NewsletterSignup";
+import { ConversionCTA } from "@/components/ConversionCTA";
 
 export default function Home() {
   const [mounted, setMounted] = useState(false);
@@ -126,6 +132,19 @@ const report = await client.jobs.run(job.id);
         </div>
       </section>
 
+      {/* Stats Section */}
+      <StatsSection />
+
+      {/* Trust Badges */}
+      <section className="py-12 px-4 sm:px-6 lg:px-8 bg-white/50 dark:bg-slate-800/50">
+        <div className="max-w-7xl mx-auto">
+          <TrustBadges />
+        </div>
+      </section>
+
+      {/* Customer Logos */}
+      <CustomerLogos />
+
       {/* Code Example Section */}
       <section className="py-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
@@ -188,93 +207,28 @@ const report = await client.jobs.run(job.id);
         </div>
       </section>
 
-      {/* Testimonials Section */}
+      {/* Social Proof / Testimonials */}
+      <SocialProof />
+
+      {/* Newsletter Signup */}
       <section className="py-20 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-slate-900 dark:text-white">
-              Trusted by Developers
-            </h2>
-            <p className="text-lg text-slate-600 dark:text-slate-300 max-w-2xl mx-auto">
-              See what developers are saying about Settler
-            </p>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <Card className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800">
-              <CardContent className="pt-6">
-                <div className="flex items-center mb-4">
-                  <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-indigo-500 rounded-full flex items-center justify-center text-white font-bold text-lg">
-                    JD
-                  </div>
-                  <div className="ml-4">
-                    <div className="font-semibold text-slate-900 dark:text-white">John Doe</div>
-                    <div className="text-sm text-slate-600 dark:text-slate-400">CTO, TechCorp</div>
-                  </div>
-                </div>
-                <p className="text-slate-600 dark:text-slate-300 italic">
-                  "Settler saved us 3 hours per day. The API is incredibly simple and the accuracy is outstanding."
-                </p>
-              </CardContent>
-            </Card>
-            <Card className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800">
-              <CardContent className="pt-6">
-                <div className="flex items-center mb-4">
-                  <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white font-bold text-lg">
-                    SM
-                  </div>
-                  <div className="ml-4">
-                    <div className="font-semibold text-slate-900 dark:text-white">Sarah Miller</div>
-                    <div className="text-sm text-slate-600 dark:text-slate-400">Founder, EcomShop</div>
-                  </div>
-                </div>
-                <p className="text-slate-600 dark:text-slate-300 italic">
-                  "Integration took less than 5 minutes. Best developer experience we've had with any API."
-                </p>
-              </CardContent>
-            </Card>
-            <Card className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800">
-              <CardContent className="pt-6">
-                <div className="flex items-center mb-4">
-                  <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-teal-500 rounded-full flex items-center justify-center text-white font-bold text-lg">
-                    MC
-                  </div>
-                  <div className="ml-4">
-                    <div className="font-semibold text-slate-900 dark:text-white">Mike Chen</div>
-                    <div className="text-sm text-slate-600 dark:text-slate-400">Lead Engineer, FinTech Inc</div>
-                  </div>
-                </div>
-                <p className="text-slate-600 dark:text-slate-300 italic">
-                  "The real-time reconciliation and webhook support eliminated all our manual processes."
-                </p>
-              </CardContent>
-            </Card>
-          </div>
+        <div className="max-w-4xl mx-auto">
+          <NewsletterSignup />
         </div>
       </section>
 
-      {/* CTA Section */}
+      {/* Final CTA Section */}
       <section className="py-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto">
-          <Card className="bg-gradient-to-r from-blue-600 to-indigo-600 border-0 shadow-2xl">
-            <CardHeader className="text-center">
-              <CardTitle className="text-3xl md:text-4xl text-white mb-4">
-                Ready to Automate Your Reconciliation?
-              </CardTitle>
-              <CardDescription className="text-blue-100 text-lg">
-                Join thousands of companies using Settler to automate their financial operations
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="text-center">
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button size="lg" variant="secondary" asChild className="bg-white text-blue-600 hover:bg-blue-50 px-8 py-6 text-lg">
-                  <Link href="/playground">Start Free Trial</Link>
-                </Button>
-                <Button size="lg" variant="outline" asChild className="border-2 border-white text-white hover:bg-white/10 px-8 py-6 text-lg">
-                  <Link href="/docs">Read Documentation</Link>
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
+          <ConversionCTA
+            title="Ready to Automate Your Reconciliation?"
+            description="Join thousands of companies using Settler to automate their financial operations. Start free, no credit card required."
+            primaryAction="Start Free Trial"
+            primaryLink="/playground"
+            secondaryAction="View Pricing"
+            secondaryLink="/pricing"
+            variant="gradient"
+          />
         </div>
       </section>
 

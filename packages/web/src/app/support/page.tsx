@@ -7,6 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Navigation } from "@/components/Navigation";
 import { Footer } from "@/components/Footer";
+import { ConversionCTA } from "@/components/ConversionCTA";
 
 export default function Support() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -194,26 +195,15 @@ export default function Support() {
       {/* Contact Section */}
       <section className="py-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto">
-          <Card className="bg-gradient-to-r from-blue-600 to-indigo-600 border-0 shadow-2xl">
-            <CardHeader className="text-center">
-              <CardTitle className="text-3xl md:text-4xl text-white mb-4">
-                Still Need Help?
-              </CardTitle>
-              <CardDescription className="text-blue-100 text-lg">
-                Our support team is ready to assist you
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="text-center">
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button size="lg" variant="secondary" asChild className="bg-white text-blue-600 hover:bg-blue-50 px-8 py-6 text-lg">
-                  <a href="mailto:support@settler.io">Email Support</a>
-                </Button>
-                <Button size="lg" variant="outline" asChild className="border-2 border-white text-white hover:bg-white/10 px-8 py-6 text-lg">
-                  <Link href="/enterprise">Contact Sales</Link>
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
+          <ConversionCTA
+            title="Still Need Help?"
+            description="Our support team is ready to assist you. Get in touch via email or schedule a call with our sales team."
+            primaryAction="Email Support"
+            primaryLink="mailto:support@settler.io"
+            secondaryAction="Contact Sales"
+            secondaryLink="/enterprise"
+            variant="gradient"
+          />
         </div>
       </section>
 

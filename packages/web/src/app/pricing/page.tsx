@@ -7,6 +7,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Navigation } from "@/components/Navigation";
 import { Footer } from "@/components/Footer";
+import { TrustBadges } from "@/components/TrustBadges";
+import { FeatureComparison } from "@/components/FeatureComparison";
+import { ConversionCTA } from "@/components/ConversionCTA";
 
 export default function Pricing() {
   const [billingCycle, setBillingCycle] = useState<'monthly' | 'annual'>('monthly');
@@ -221,6 +224,21 @@ export default function Pricing() {
         </div>
       </section>
 
+      {/* Trust Badges */}
+      <section className="py-12 px-4 sm:px-6 lg:px-8 bg-white/50 dark:bg-slate-800/50">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-8">
+            <h2 className="text-2xl font-bold mb-4 text-slate-900 dark:text-white">
+              Trusted & Secure
+            </h2>
+          </div>
+          <TrustBadges />
+        </div>
+      </section>
+
+      {/* Feature Comparison Table */}
+      <FeatureComparison />
+
       {/* FAQ Section */}
       <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white/50 dark:bg-slate-800/50">
         <div className="max-w-4xl mx-auto">
@@ -276,26 +294,15 @@ export default function Pricing() {
       {/* CTA Section */}
       <section className="py-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto">
-          <Card className="bg-gradient-to-r from-blue-600 to-indigo-600 border-0 shadow-2xl">
-            <CardHeader className="text-center">
-              <CardTitle className="text-3xl md:text-4xl text-white mb-4">
-                Still have questions?
-              </CardTitle>
-              <CardDescription className="text-blue-100 text-lg">
-                Our team is here to help you choose the right plan for your needs.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="text-center">
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button size="lg" variant="secondary" asChild className="bg-white text-blue-600 hover:bg-blue-50 px-8 py-6 text-lg">
-                  <Link href="/support">Contact Support</Link>
-                </Button>
-                <Button size="lg" variant="outline" asChild className="border-2 border-white text-white hover:bg-white/10 px-8 py-6 text-lg">
-                  <Link href="/enterprise">Talk to Sales</Link>
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
+          <ConversionCTA
+            title="Still have questions?"
+            description="Our team is here to help you choose the right plan for your needs."
+            primaryAction="Contact Support"
+            primaryLink="/support"
+            secondaryAction="Talk to Sales"
+            secondaryLink="/enterprise"
+            variant="gradient"
+          />
         </div>
       </section>
 

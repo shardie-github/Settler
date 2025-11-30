@@ -7,6 +7,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Navigation } from "@/components/Navigation";
 import { Footer } from "@/components/Footer";
+import { TrustBadges } from "@/components/TrustBadges";
+import { StatsSection } from "@/components/StatsSection";
+import { ConversionCTA } from "@/components/ConversionCTA";
 
 export default function Enterprise() {
   const [formData, setFormData] = useState({
@@ -252,29 +255,36 @@ export default function Enterprise() {
         </div>
       </section>
 
+      {/* Stats Section */}
+      <StatsSection />
+
       {/* Trust Indicators */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8">
+      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white/50 dark:bg-slate-800/50">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold mb-4 text-slate-900 dark:text-white">
-              Trusted by Enterprise Teams
+              Enterprise-Grade Security & Compliance
             </h2>
             <p className="text-lg text-slate-600 dark:text-slate-300 max-w-2xl mx-auto">
               Join leading companies using Settler for mission-critical reconciliation
             </p>
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            {['SOC 2 Type II', 'GDPR Compliant', 'PCI-DSS Ready', '99.99% SLA'].map((item, index) => (
-              <div key={index} className="text-center">
-                <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-indigo-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                </div>
-                <h3 className="font-semibold text-slate-900 dark:text-white">{item}</h3>
-              </div>
-            ))}
-          </div>
+          <TrustBadges />
+        </div>
+      </section>
+
+      {/* Final CTA */}
+      <section className="py-20 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-4xl mx-auto">
+          <ConversionCTA
+            title="Ready to Transform Your Reconciliation?"
+            description="Schedule a personalized demo with our enterprise team and see how Settler can scale with your business."
+            primaryAction="Request Demo"
+            primaryLink="#contact"
+            secondaryAction="View Pricing"
+            secondaryLink="/pricing"
+            variant="gradient"
+          />
         </div>
       </section>
 
