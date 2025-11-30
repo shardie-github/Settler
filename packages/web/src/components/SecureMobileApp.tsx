@@ -31,7 +31,7 @@ interface SecurityHeaders {
  */
 export default function SecureMobileApp({
   apiKey,
-  baseURL = "https://api.settler.io",
+  baseURL = "https://api.settler.dev",
   securityPolicy,
 }: SecureMobileAppProps) {
   const [client, setClient] = useState<SettlerClient | null>(null);

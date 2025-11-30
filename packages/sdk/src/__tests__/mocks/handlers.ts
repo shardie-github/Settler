@@ -1,6 +1,6 @@
 import { http, HttpResponse } from 'msw';
 
-const API_BASE = 'https://api.settler.io';
+const API_BASE = 'https://api.settler.dev';
 
 export const handlers = [
   // Jobs API

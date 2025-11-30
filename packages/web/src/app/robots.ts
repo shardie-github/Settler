@@ -7,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: '/',
       disallow: ['/api/', '/admin/'],
     },
-    sitemap: 'https://settler.io/sitemap.xml',
+    sitemap: 'https://settler.dev/sitemap.xml',
   };
 }

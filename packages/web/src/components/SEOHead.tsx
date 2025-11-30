@@ -16,7 +16,7 @@ export function SEOHead({
   noindex = false,
 }: SEOHeadProps) {
   const fullTitle = title.includes('Settler') ? title : `${title} | Settler`;
-  const url = canonical || 'https://settler.io';
+  const url = canonical || 'https://settler.dev';
 
   return (
     <Head>

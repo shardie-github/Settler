@@ -38,7 +38,7 @@ export default function Support() {
       icon: '📧',
       title: 'Email Support',
       description: 'Get help via email (response within 24 hours)',
-      link: 'mailto:support@settler.io',
+      link: 'mailto:support@settler.dev',
       linkText: 'Email Us',
       external: true,
     },
@@ -198,7 +198,7 @@ export default function Support() {
             title="Still Need Help?"
             description="Our support team is ready to assist you. Get in touch via email or schedule a call with our sales team."
             primaryAction="Email Support"
-            primaryLink="mailto:support@settler.io"
+            primaryLink="mailto:support@settler.dev"
             secondaryAction="Contact Sales"
             secondaryLink="/enterprise"
             variant="gradient"

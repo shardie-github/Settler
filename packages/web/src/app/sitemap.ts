@@ -1,7 +1,7 @@
 import { MetadataRoute } from 'next';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://settler.io';
+  const baseUrl = 'https://settler.dev';
 
   return [
     {
