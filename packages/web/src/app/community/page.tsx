@@ -1,6 +1,5 @@
 'use client';
 
-import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -39,7 +38,7 @@ export default function Community() {
       icon: Github,
       title: 'GitHub',
       description: 'Contribute to open-source adapters, report issues, and collaborate on the Settler SDK.',
-      link: 'https://github.com/settler',
+      link: 'https://github.com/shardie-github/Settler-API',
       linkText: 'View on GitHub',
       external: true,
       gradient: 'from-slate-700 to-slate-900',
@@ -312,7 +311,7 @@ export default function Community() {
             primaryAction="Join Discord"
             primaryLink="https://discord.gg/settler"
             secondaryAction="View on GitHub"
-            secondaryLink="https://github.com/settler"
+            secondaryLink="https://github.com/shardie-github/Settler-API"
             variant="gradient"
           />
         </div>

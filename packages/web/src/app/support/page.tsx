@@ -1,13 +1,15 @@
 'use client';
 
 import { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Navigation } from "@/components/Navigation";
 import { Footer } from "@/components/Footer";
 import { ConversionCTA } from "@/components/ConversionCTA";
 import { AnimatedPageWrapper } from "@/components/AnimatedPageWrapper";
 import { AnimatedHero } from "@/components/AnimatedHero";
-import { AnimatedFeatureCard } from "@/components/AnimatedFeatureCard";
+import { FAQSchema } from "@/components/StructuredData";
 import Link from "next/link";
 
 export default function Support() {
@@ -159,27 +161,63 @@ export default function Support() {
   const faqs = [
     {
       question: 'How do I get started with Settler?',
-      answer: 'Start by installing the SDK with `npm install @settler/sdk`, then check out our documentation or try the playground to see it in action.',
+      answer: 'Get started in under 5 minutes! Install the SDK with `npm install @settler/sdk`, get your API key from the dashboard, and create your first reconciliation job. Check out our quickstart guide in the documentation or try the interactive playground to see it in action.',
     },
     {
       question: 'What platforms does Settler support?',
-      answer: 'Settler supports 50+ platforms including Stripe, Shopify, QuickBooks, PayPal, Square, and more. You can also build custom adapters.',
+      answer: 'Settler supports 50+ platforms including Stripe, Shopify, QuickBooks, PayPal, Square, Amazon Pay, and many more. We have pre-built adapters for the most popular platforms, and you can easily build custom adapters for any platform with our adapter SDK.',
     },
     {
       question: 'Is there a free tier?',
-      answer: 'Yes! Our OSS tier is free forever with 1,000 reconciliations/month. Check out our pricing page for details.',
+      answer: 'Yes! Our OSS (Open Source) tier is free forever with 1,000 reconciliations per month, access to 2 adapters, and 7-day log retention. Perfect for getting started and small projects. Check out our pricing page for full details on all tiers.',
     },
     {
       question: 'How accurate is the reconciliation?',
-      answer: 'Settler achieves 99.7% accuracy with our advanced matching algorithms and confidence scoring.',
+      answer: 'Settler achieves 99.7% accuracy with our advanced matching algorithms, confidence scoring, and fuzzy matching capabilities. We use multiple matching strategies including exact matching, fuzzy matching, and date range matching to ensure high accuracy even with imperfect data.',
     },
     {
       question: 'Can I use Settler on-premise?',
-      answer: 'Yes, Enterprise plans include on-premise deployment options. Contact our sales team for more information.',
+      answer: 'Yes! Enterprise plans include on-premise deployment options for maximum security and compliance. We provide Docker containers and deployment guides. Contact our sales team at enterprise@settler.dev to discuss your requirements.',
     },
     {
       question: 'What security certifications do you have?',
-      answer: 'We\'re SOC 2 Type II certified, GDPR compliant, and PCI-DSS ready. Enterprise customers get additional security features.',
+      answer: 'We\'re SOC 2 Type II certified, GDPR compliant, and PCI-DSS ready. All data is encrypted at rest and in transit using AES-256-GCM. Enterprise customers get additional security features including SSO, RBAC, and dedicated security reviews.',
+    },
+    {
+      question: 'How do I handle unmatched records?',
+      answer: 'Settler provides a comprehensive exception queue where you can review unmatched records, see confidence scores, and manually resolve discrepancies. You can also configure automatic retry rules and webhook notifications for unmatched records.',
+    },
+    {
+      question: 'What happens if my reconciliation job fails?',
+      answer: 'Settler automatically retries failed jobs with exponential backoff. You\'ll receive webhook notifications for failures, and all errors are logged with detailed information. Check the job logs via the API or dashboard to diagnose issues.',
+    },
+    {
+      question: 'Can I reconcile multiple currencies?',
+      answer: 'Yes! Settler supports multi-currency reconciliation with automatic currency conversion using real-time exchange rates. You can configure currency matching rules and tolerance levels for each currency pair.',
+    },
+    {
+      question: 'How do webhooks work?',
+      answer: 'Settler sends webhooks for key events like reconciliation completion, job failures, and unmatched records. Webhooks are signed with HMAC for security verification. Failed webhook deliveries are automatically retried up to 5 times with exponential backoff.',
+    },
+    {
+      question: 'What is the API rate limit?',
+      answer: 'Rate limits vary by plan. OSS tier: 100 requests/minute. Commercial: 1,000 requests/minute. Enterprise: Custom limits. All responses include rate limit headers (X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset) so you can implement proper backoff strategies.',
+    },
+    {
+      question: 'How do I build a custom adapter?',
+      answer: 'Custom adapters are built using our adapter SDK. Each adapter implements a simple interface to fetch and normalize data from your platform. Check out our adapter documentation and examples in the cookbooks section.',
+    },
+    {
+      question: 'What data retention policies do you have?',
+      answer: 'Data retention varies by plan: OSS (7 days), Commercial (30 days), Enterprise (custom, up to 7 years). You can export all data via the API at any time. Enterprise customers can configure custom retention policies.',
+    },
+    {
+      question: 'How do I integrate Settler with my existing systems?',
+      answer: 'Settler is API-first and integrates easily with any system. Use our REST API, TypeScript/JavaScript SDK, or CLI. We provide webhooks for real-time updates and detailed documentation with integration recipes for common patterns.',
+    },
+    {
+      question: 'What kind of support do you offer?',
+      answer: 'OSS tier: Community support via Discord and GitHub. Commercial: Email support with 24-hour response time. Enterprise: 24/7 priority support with SLA guarantees, dedicated account manager, and phone support. See the support tiers section above for details.',
     },
   ];
 
@@ -190,6 +228,7 @@ export default function Support() {
 
   return (
     <AnimatedPageWrapper aria-label="Support and help center">
+      <FAQSchema faqs={faqs} />
       <Navigation />
 
       {/* Hero Section */}

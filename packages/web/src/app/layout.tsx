@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { SmoothScroll } from "@/components/ui/SmoothScroll";
+import { OrganizationSchema, WebSiteSchema, SoftwareApplicationSchema } from "@/components/StructuredData";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -110,6 +111,9 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <meta name="apple-mobile-web-app-title" content="Settler" />
+        <OrganizationSchema />
+        <WebSiteSchema />
+        <SoftwareApplicationSchema />
         <script
           dangerouslySetInnerHTML={{
             __html: `
