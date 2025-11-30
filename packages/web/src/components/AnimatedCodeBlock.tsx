@@ -61,7 +61,7 @@ export function AnimatedCodeBlock({
 
     // Typewriter effect
     let currentIndex = 0;
-    const typeSpeed = 15; // milliseconds per character
+    const typeSpeed = 8; // milliseconds per character
 
     const typeInterval = setInterval(() => {
       if (currentIndex < code.length) {
@@ -81,7 +81,7 @@ export function AnimatedCodeBlock({
         max-w-4xl mx-auto 
         bg-slate-900 border-slate-800 
         shadow-2xl
-        transition-all duration-1000
+        transition-all duration-300
         ${isVisible 
           ? 'opacity-100 translate-y-0' 
           : 'opacity-0 translate-y-8'

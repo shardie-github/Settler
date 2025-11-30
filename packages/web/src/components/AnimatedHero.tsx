@@ -51,7 +51,7 @@ export function AnimatedHero({
       <div className="max-w-7xl mx-auto text-center">
         {badge && (
           <Badge
-            className={`mb-6 bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300 border-blue-200 dark:border-blue-800 transition-all duration-700 ${animationClass}`}
+            className={`mb-6 bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300 border-blue-200 dark:border-blue-800 transition-all duration-300 ${animationClass}`}
             aria-label="Page category badge"
           >
             {badge}
@@ -59,14 +59,14 @@ export function AnimatedHero({
         )}
         <h1
           id="hero-heading"
-          className={`text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent transition-all duration-1000 ${animationClass}`}
-          style={{ transitionDelay: prefersReducedMotion ? '0ms' : '200ms' }}
+          className={`text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent transition-all duration-300 ${animationClass}`}
+          style={{ transitionDelay: prefersReducedMotion ? '0ms' : '100ms' }}
         >
           {title}
         </h1>
         <p
-          className={`text-xl md:text-2xl text-slate-600 dark:text-slate-300 mb-8 max-w-3xl mx-auto transition-all duration-1000 ${animationClass}`}
-          style={{ transitionDelay: prefersReducedMotion ? '0ms' : '400ms' }}
+          className={`text-xl md:text-2xl text-slate-600 dark:text-slate-300 mb-8 max-w-3xl mx-auto transition-all duration-300 ${animationClass}`}
+          style={{ transitionDelay: prefersReducedMotion ? '0ms' : '150ms' }}
         >
           {description}
         </p>

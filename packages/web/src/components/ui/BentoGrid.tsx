@@ -61,6 +61,7 @@ export function BentoGrid({
         'grid w-full grid-cols-1',
         gridColsClass[columns],
         gapClasses[gap],
+        'max-w-full',
         className
       )}
     >
@@ -81,6 +82,8 @@ export function BentoGridItem({
         colSpanClasses[colSpan],
         rowSpanClasses[rowSpan],
         'min-h-[200px]',
+        'w-full',
+        'overflow-hidden',
         className
       )}
     >

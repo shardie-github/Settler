@@ -36,28 +36,35 @@ export function Navigation() {
           <div className="hidden md:flex items-center space-x-6" role="menubar">
             <Link
               href="/docs"
-              className="text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded px-2 py-1"
+              className="text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded px-2 py-1"
               role="menuitem"
             >
               Docs
             </Link>
             <Link
               href="/pricing"
-              className="text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded px-2 py-1"
+              className="text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded px-2 py-1"
               role="menuitem"
             >
               Pricing
             </Link>
             <Link
               href="/enterprise"
-              className="text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded px-2 py-1"
+              className="text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded px-2 py-1"
               role="menuitem"
             >
               Enterprise
             </Link>
             <Link
+              href="/community"
+              className="text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded px-2 py-1"
+              role="menuitem"
+            >
+              Community
+            </Link>
+            <Link
               href="/support"
-              className="text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded px-2 py-1"
+              className="text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded px-2 py-1"
               role="menuitem"
             >
               Support
@@ -72,7 +79,7 @@ export function Navigation() {
             <DarkModeToggle />
             <Button
               asChild
-              className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white transition-all transform hover:scale-105 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+              className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white transition-all duration-200 transform hover:scale-105 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
             >
               <Link href="/playground" aria-label="Get started with Settler">
                 Get Started
@@ -112,7 +119,7 @@ export function Navigation() {
             <div className="flex flex-col space-y-4">
               <Link
                 href="/docs"
-                className="text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded px-2 py-1"
+                className="text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded px-2 py-1"
                 role="menuitem"
                 onClick={() => setMobileMenuOpen(false)}
               >
@@ -120,7 +127,7 @@ export function Navigation() {
               </Link>
               <Link
                 href="/pricing"
-                className="text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded px-2 py-1"
+                className="text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded px-2 py-1"
                 role="menuitem"
                 onClick={() => setMobileMenuOpen(false)}
               >
@@ -128,15 +135,23 @@ export function Navigation() {
               </Link>
               <Link
                 href="/enterprise"
-                className="text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded px-2 py-1"
+                className="text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded px-2 py-1"
                 role="menuitem"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Enterprise
               </Link>
               <Link
+                href="/community"
+                className="text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded px-2 py-1"
+                role="menuitem"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Community
+              </Link>
+              <Link
                 href="/support"
-                className="text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded px-2 py-1"
+                className="text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded px-2 py-1"
                 role="menuitem"
                 onClick={() => setMobileMenuOpen(false)}
               >
@@ -152,7 +167,7 @@ export function Navigation() {
               </Link>
               <Button
                 asChild
-                className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white w-full transition-all transform hover:scale-105 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white w-full transition-all duration-200 transform hover:scale-105 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
               >
                 <Link href="/playground" aria-label="Get started with Settler">
                   Get Started
