@@ -1,4 +1,5 @@
 import * as React from 'react';
+import Link from 'next/link';
 import { cn } from '@/lib/utils';
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -8,13 +9,13 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant: variantProp = 'default', size: sizeProp = 'default', ...props }, ref) => {
+  ({ className, variant: variantProp = 'default', size: sizeProp = 'default', asChild, children, ...props }, ref) => {
     const variant = variantProp;
     const size = sizeProp;
     const baseStyles = 'inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50';
     
     const variants = {
-      default: 'bg-primary text-primary-foreground hover:bg-primary/90',
+      default: 'bg-primary-600 text-white hover:bg-primary-700',
       destructive: 'bg-destructive text-destructive-foreground hover:bg-destructive/90',
       outline: 'border border-input bg-background hover:bg-accent hover:text-accent-foreground',
       secondary: 'bg-secondary text-secondary-foreground hover:bg-secondary/80',
@@ -29,17 +30,28 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       icon: 'h-10 w-10',
     };
 
+    const classes = cn(
+      baseStyles,
+      variants[variant],
+      sizes[size],
+      className
+    );
+
+    if (asChild && React.isValidElement(children)) {
+      return React.cloneElement(children as React.ReactElement<any>, {
+        className: cn(classes, (children.props as any)?.className),
+        ...props,
+      });
+    }
+
     return (
       <button
-        className={cn(
-          baseStyles,
-          variants[variant],
-          sizes[size],
-          className
-        )}
+        className={classes}
         ref={ref}
         {...props}
-      />
+      >
+        {children}
+      </button>
     );
   }
 );
