@@ -18,8 +18,10 @@ import { AnimatedCodeBlock } from "@/components/AnimatedCodeBlock";
 // Removed StatsSection - replaced with unique secondary stats
 
 export default function Home() {
+  const [mounted, setMounted] = useState(false);
+
   useEffect(() => {
-    // Component mounted
+    setMounted(true);
   }, []);
 
   const features = [
