@@ -66,7 +66,7 @@ export function SoftwareApplicationSchema() {
   return <StructuredData data={schema} />;
 }
 
-export function FAQSchema(faqs: Array<{ question: string; answer: string }>) {
+export function FAQSchema({ faqs }: { faqs: Array<{ question: string; answer: string }> }) {
   const schema = {
     '@context': 'https://schema.org',
     '@type': 'FAQPage',
