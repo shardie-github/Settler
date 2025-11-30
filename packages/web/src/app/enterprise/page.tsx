@@ -165,7 +165,7 @@ export default function Enterprise() {
                   <div className="ml-4">
                     <h3 className="font-semibold text-slate-900 dark:text-white mb-1">Priority Support</h3>
                     <p className="text-slate-600 dark:text-slate-300">
-                      24/7 support with &lt;4 hour response time for critical issues.
+                      24/7 support with under 4 hour response time for critical issues.
                     </p>
                   </div>
                 </div>
