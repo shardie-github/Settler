@@ -5,7 +5,10 @@ import { NextRequest, NextResponse } from 'next/server';
  * 
  * Receives analytics events from the onboarding flow and other components.
  * In production, this would forward to your APM system (Sentry, Datadog, etc.)
+ * 
+ * CTO Mode: Force dynamic rendering for API routes
  */
+export const dynamic = 'force-dynamic';
 
 interface AnalyticsEvent {
   event: string;
