@@ -6,10 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Navigation } from "@/components/Navigation";
 import { Footer } from "@/components/Footer";
-import { ConversionCTA } from "@/components/ConversionCTA";
 import { AnimatedPageWrapper } from "@/components/AnimatedPageWrapper";
-import { AnimatedHero } from "@/components/AnimatedHero";
-import { SpotlightCard } from "@/components/ui/SpotlightCard";
 import { AnimatedCodeBlock } from "@/components/AnimatedCodeBlock";
 import Link from "next/link";
 import { 
@@ -22,9 +19,7 @@ import {
   AlertCircle,
   Key,
   BarChart3,
-  RefreshCw,
-  Code2,
-  BookOpen
+  RefreshCw
 } from "lucide-react";
 
 export default function Cookbooks() {
@@ -76,7 +71,7 @@ const job = await settler.jobs.create({
 
 const report = await settler.jobs.run(job.data.id);
 console.log(\`Matched: \${report.data.summary.matched}\`);`,
-      gradient: 'from-blue-500 to-cyan-500',
+      gradient: 'from-blue-600 to-indigo-600',
     },
     {
       id: 'saas-stripe-quickbooks',
@@ -120,7 +115,7 @@ const job = await settler.jobs.create({
   },
   schedule: "0 0 1 * *", // First day of month at midnight
 });`,
-      gradient: 'from-purple-500 to-indigo-500',
+      gradient: 'from-indigo-600 to-purple-600',
     },
     {
       id: 'multi-provider',
@@ -159,7 +154,7 @@ await Promise.all([
   settler.jobs.run(stripeJob.data.id),
   settler.jobs.run(paypalJob.data.id),
 ]);`,
-      gradient: 'from-emerald-500 to-teal-500',
+      gradient: 'from-emerald-600 to-teal-600',
     },
     {
       id: 'realtime-webhooks',
@@ -211,7 +206,7 @@ app.post("/webhooks/settler", async (req, res) => {
   
   res.json({ received: true });
 });`,
-      gradient: 'from-orange-500 to-red-500',
+      gradient: 'from-orange-600 to-red-600',
     },
     {
       id: 'exception-handling',
@@ -249,7 +244,7 @@ await settler.exceptions.bulkResolve({
   resolution: "ignored",
   notes: "Low-value transactions, acceptable variance",
 });`,
-      gradient: 'from-yellow-500 to-amber-500',
+      gradient: 'from-amber-600 to-orange-600',
     },
     {
       id: 'scheduled-reconciliations',
@@ -285,7 +280,7 @@ const weeklyJob = await settler.jobs.create({
   rules: { matching: [{ field: "transaction_id", type: "exact" }] },
   schedule: "0 9 * * 1", // Cron: Monday at 9 AM
 });`,
-      gradient: 'from-indigo-500 to-purple-500',
+      gradient: 'from-indigo-600 to-purple-600',
     },
     {
       id: 'multi-currency',
@@ -326,7 +321,7 @@ const job = await settler.jobs.create({
     },
   },
 });`,
-      gradient: 'from-cyan-500 to-blue-500',
+      gradient: 'from-cyan-600 to-blue-600',
     },
     {
       id: 'api-key-management',
@@ -363,7 +358,7 @@ console.log("Regenerated key:", regenerated.data.key);
 
 // Revoke API key
 await settler.apiKeys.delete(keys.data[0].id);`,
-      gradient: 'from-slate-600 to-slate-800',
+      gradient: 'from-slate-700 to-slate-900',
     },
     {
       id: 'dashboard-metrics',
@@ -397,7 +392,7 @@ const usage = await settler.dashboards.usage({
 });
 console.log("Reconciliation volume:", usage.data.reconciliationVolume);
 console.log("Accuracy trends:", usage.data.accuracyTrends);`,
-      gradient: 'from-green-500 to-emerald-500',
+      gradient: 'from-green-600 to-emerald-600',
     },
     {
       id: 'error-handling',
@@ -438,7 +433,7 @@ async function createJobWithRetry(config: any, maxRetries = 3) {
   }
   throw new Error("Max retries exceeded");
 }`,
-      gradient: 'from-red-500 to-pink-500',
+      gradient: 'from-red-600 to-rose-600',
     },
   ];
 
@@ -456,14 +451,19 @@ async function createJobWithRetry(config: any, maxRetries = 3) {
       <Navigation />
 
       {/* Hero Section */}
-      <AnimatedHero
-        badge="Workflow Recipes"
-        title="Cookbooks & Workflows"
-        description="Pre-built reconciliation workflows and recipes for common use cases. Copy, customize, and deploy."
-      />
+      <section className="pt-24 pb-12 px-4 sm:px-6 lg:px-8 border-b border-slate-200 dark:border-slate-800">
+        <div className="max-w-4xl mx-auto text-center">
+          <h1 className="text-4xl md:text-5xl font-bold mb-4 text-slate-900 dark:text-white">
+            Cookbooks & Workflows
+          </h1>
+          <p className="text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
+            Pre-built reconciliation workflows and recipes for common use cases. Copy, customize, and deploy.
+          </p>
+        </div>
+      </section>
 
       {/* Category Filter */}
-      <section className="py-8 px-4 sm:px-6 lg:px-8 bg-white/50 dark:bg-slate-800/50">
+      <section className="py-12 px-4 sm:px-6 lg:px-8 border-b border-slate-200 dark:border-slate-800">
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-wrap gap-2 justify-center">
             {categories.map((category) => (
@@ -473,8 +473,8 @@ async function createJobWithRetry(config: any, maxRetries = 3) {
                 onClick={() => setSelectedCategory(category)}
                 className={`transition-all duration-200 ${
                   selectedCategory === category
-                    ? "bg-blue-600 text-white hover:bg-blue-700"
-                    : "border-slate-300 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800"
+                    ? "bg-slate-900 dark:bg-white text-white dark:text-slate-900 hover:bg-slate-800 dark:hover:bg-slate-100"
+                    : "border-slate-300 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300"
                 }`}
               >
                 {category}
@@ -486,7 +486,7 @@ async function createJobWithRetry(config: any, maxRetries = 3) {
 
       {/* Cookbooks Grid */}
       <section
-        className="py-20 px-4 sm:px-6 lg:px-8"
+        className="py-16 px-4 sm:px-6 lg:px-8"
         aria-labelledby="cookbooks-heading"
       >
         <div className="max-w-7xl mx-auto">
@@ -497,15 +497,14 @@ async function createJobWithRetry(config: any, maxRetries = 3) {
             {filteredCookbooks.map((cookbook) => {
               const Icon = cookbook.icon;
               return (
-                <SpotlightCard
+                <Card
                   key={cookbook.id}
-                  className="h-full cursor-pointer"
-                  spotlightColor="rgba(59, 130, 246, 0.2)"
+                  className="h-full cursor-pointer bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 transition-all duration-200 hover:shadow-lg hover:border-blue-300 dark:hover:border-blue-700"
                   onClick={() => setSelectedCookbook(cookbook.id)}
                 >
                   <div className="flex flex-col h-full">
-                    <div className={`w-12 h-12 rounded-lg bg-gradient-to-br ${cookbook.gradient} p-3 mb-4 flex items-center justify-center`}>
-                      <Icon className="w-6 h-6 text-white" />
+                    <div className={`w-10 h-10 rounded-lg bg-gradient-to-br ${cookbook.gradient} p-2.5 mb-4 flex items-center justify-center`}>
+                      <Icon className="w-5 h-5 text-white" />
                     </div>
                     <div className="flex items-center gap-2 mb-2">
                       <Badge variant="outline" className="text-xs">
@@ -515,10 +514,10 @@ async function createJobWithRetry(config: any, maxRetries = 3) {
                         {cookbook.difficulty}
                       </Badge>
                     </div>
-                    <h3 className="text-xl font-bold mb-2 text-slate-900 dark:text-white">
+                    <h3 className="text-lg font-semibold mb-2 text-slate-900 dark:text-white">
                       {cookbook.title}
                     </h3>
-                    <p className="text-slate-600 dark:text-slate-300 mb-4 flex-grow text-sm">
+                    <p className="text-slate-600 dark:text-slate-400 mb-4 flex-grow text-sm leading-relaxed">
                       {cookbook.description}
                     </p>
                     <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 mb-2">
@@ -526,8 +525,8 @@ async function createJobWithRetry(config: any, maxRetries = 3) {
                       <span>{cookbook.adapters.join(' → ')}</span>
                     </div>
                     <Button
-                      variant="outline"
-                      className="w-full border-slate-300 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800"
+                      variant="ghost"
+                      className="w-full text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
                       onClick={(e) => {
                         e.stopPropagation();
                         setSelectedCookbook(cookbook.id);
@@ -536,7 +535,7 @@ async function createJobWithRetry(config: any, maxRetries = 3) {
                       View Recipe →
                     </Button>
                   </div>
-                </SpotlightCard>
+                </Card>
               );
             })}
           </div>
@@ -546,11 +545,11 @@ async function createJobWithRetry(config: any, maxRetries = 3) {
       {/* Selected Cookbook Detail Modal */}
       {selectedCookbookData && (
         <div
-          className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+          className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4"
           onClick={() => setSelectedCookbook(null)}
         >
           <Card
-            className="max-w-4xl w-full max-h-[90vh] overflow-y-auto bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800"
+            className="max-w-4xl w-full max-h-[90vh] overflow-y-auto bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
             <CardHeader>
@@ -580,20 +579,20 @@ async function createJobWithRetry(config: any, maxRetries = 3) {
             </CardHeader>
             <CardContent className="space-y-6">
               <div>
-                <h4 className="font-semibold text-slate-900 dark:text-white mb-2">Use Case</h4>
-                <p className="text-slate-600 dark:text-slate-300">{selectedCookbookData.useCase}</p>
+                <h4 className="font-semibold text-slate-900 dark:text-white mb-2 text-sm">Use Case</h4>
+                <p className="text-slate-600 dark:text-slate-400 text-sm">{selectedCookbookData.useCase}</p>
               </div>
               <div>
-                <h4 className="font-semibold text-slate-900 dark:text-white mb-2">Adapters</h4>
+                <h4 className="font-semibold text-slate-900 dark:text-white mb-2 text-sm">Adapters</h4>
                 <div className="flex flex-wrap gap-2">
                   {selectedCookbookData.adapters.map((adapter) => (
-                    <Badge key={adapter} variant="outline">{adapter}</Badge>
+                    <Badge key={adapter} variant="outline" className="text-xs">{adapter}</Badge>
                   ))}
                 </div>
               </div>
               <div>
-                <h4 className="font-semibold text-slate-900 dark:text-white mb-2">Features</h4>
-                <ul className="list-disc list-inside text-slate-600 dark:text-slate-300 space-y-1">
+                <h4 className="font-semibold text-slate-900 dark:text-white mb-2 text-sm">Features</h4>
+                <ul className="list-disc list-inside text-slate-600 dark:text-slate-400 space-y-1 text-sm">
                   {selectedCookbookData.features.map((feature, idx) => (
                     <li key={idx}>{feature}</li>
                   ))}
@@ -608,18 +607,19 @@ async function createJobWithRetry(config: any, maxRetries = 3) {
                   language="typescript"
                 />
               </div>
-              <div className="flex gap-4">
+              <div className="flex gap-3">
                 <Button
                   asChild
-                  className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700"
+                  className="bg-slate-900 dark:bg-white text-white dark:text-slate-900 hover:bg-slate-800 dark:hover:bg-slate-100"
                 >
                   <Link href="/playground">Try in Playground</Link>
                 </Button>
                 <Button
                   variant="outline"
+                  className="border-slate-300 dark:border-slate-700"
                   asChild
                 >
-                  <Link href="/docs">View Full Docs</Link>
+                  <Link href="/docs">View Docs</Link>
                 </Button>
               </div>
             </CardContent>
@@ -628,17 +628,29 @@ async function createJobWithRetry(config: any, maxRetries = 3) {
       )}
 
       {/* CTA Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-4xl mx-auto">
-          <ConversionCTA
-            title="Ready to Build Your Workflow?"
-            description="Start with a cookbook recipe or build your own custom reconciliation workflow in minutes."
-            primaryAction="Try Playground"
-            primaryLink="/playground"
-            secondaryAction="View Documentation"
-            secondaryLink="/docs"
-            variant="gradient"
-          />
+      <section className="py-16 px-4 sm:px-6 lg:px-8 border-t border-slate-200 dark:border-slate-800">
+        <div className="max-w-4xl mx-auto text-center">
+          <h2 className="text-2xl font-semibold mb-3 text-slate-900 dark:text-white">
+            Ready to build your workflow?
+          </h2>
+          <p className="text-slate-600 dark:text-slate-400 mb-6">
+            Start with a cookbook recipe or build your own custom reconciliation workflow in minutes.
+          </p>
+          <div className="flex gap-3 justify-center">
+            <Button
+              asChild
+              className="bg-slate-900 dark:bg-white text-white dark:text-slate-900 hover:bg-slate-800 dark:hover:bg-slate-100"
+            >
+              <Link href="/playground">Try Playground</Link>
+            </Button>
+            <Button
+              variant="outline"
+              className="border-slate-300 dark:border-slate-700"
+              asChild
+            >
+              <Link href="/docs">View Documentation</Link>
+            </Button>
+          </div>
         </div>
       </section>
 
