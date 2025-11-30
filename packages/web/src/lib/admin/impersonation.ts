@@ -30,11 +30,14 @@ export async function impersonateUser(
       .single();
     
     if (adminError || !adminUser) {
-      return error('Admin user not found');
+      return error('Admin user not found') as ActionResult<{ sessionToken: string }>;
     }
     
-    if (adminUser.role !== 'admin' && adminUser.role !== 'owner') {
-      return error('Insufficient permissions for impersonation');
+    const adminRole = (adminUser as { role?: string }).role;
+    const adminTenantId = (adminUser as { tenant_id?: string }).tenant_id;
+    
+    if (adminRole !== 'admin' && adminRole !== 'owner') {
+      return error('Insufficient permissions for impersonation') as ActionResult<{ sessionToken: string }>;
     }
     
     // Verify target user exists and is in same tenant
@@ -45,11 +48,14 @@ export async function impersonateUser(
       .single();
     
     if (targetError || !targetUser) {
-      return error('Target user not found');
+      return error('Target user not found') as ActionResult<{ sessionToken: string }>;
     }
     
-    if (targetUser.tenant_id !== adminUser.tenant_id) {
-      return error('Cannot impersonate user from different tenant');
+    const targetTenantId = (targetUser as { tenant_id?: string }).tenant_id;
+    const targetEmail = (targetUser as { email?: string }).email;
+    
+    if (targetTenantId !== adminTenantId) {
+      return error('Cannot impersonate user from different tenant') as ActionResult<{ sessionToken: string }>;
     }
     
     // Create impersonation session
@@ -58,24 +64,24 @@ export async function impersonateUser(
     
     // Log impersonation activity
     await supabase.from('activity_logs').insert({
-      tenant_id: adminUser.tenant_id,
+      tenant_id: adminTenantId,
       entity_type: 'user',
       entity_id: targetUserId,
       action: 'impersonated',
       user_id: adminUserId,
       metadata: {
         target_user_id: targetUserId,
-        target_email: targetUser.email,
+        target_email: targetEmail,
         admin_user_id: adminUserId,
       },
-    });
+    } as never);
     
     return success({
       sessionToken: `impersonation_${targetUserId}_${Date.now()}`,
     }, 'Impersonation session created');
   } catch (err) {
     const errorMessage = err instanceof Error ? err.message : 'Failed to impersonate user';
-    return error(errorMessage);
+    return error(errorMessage) as ActionResult<{ sessionToken: string }>;
   }
 }
 
@@ -94,7 +100,7 @@ export async function stopImpersonation(
       entity_id: adminUserId,
       action: 'impersonation_ended',
       user_id: adminUserId,
-    });
+    } as never);
     
     return success(null, 'Impersonation ended');
   } catch (err) {

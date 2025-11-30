@@ -10,7 +10,6 @@ interface AnimatedHeroProps {
   title: string | ReactNode;
   description: string;
   className?: string;
-  'aria-label'?: string;
 }
 
 /**
@@ -22,7 +21,6 @@ export function AnimatedHero({
   title,
   description,
   className = '',
-  'aria-label': ariaLabel,
 }: AnimatedHeroProps) {
   const [mounted, setMounted] = useState(false);
 

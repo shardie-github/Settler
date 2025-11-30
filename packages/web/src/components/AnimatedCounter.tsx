@@ -35,8 +35,9 @@ export function AnimatedCounter({
 
   useEffect(() => {
     const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting && !isVisible) {
+      (entries) => {
+        const entry = entries[0];
+        if (entry?.isIntersecting && !isVisible) {
           setIsVisible(true);
         }
       },

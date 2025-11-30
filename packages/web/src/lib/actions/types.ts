@@ -14,14 +14,24 @@ export type ActionResult<T = unknown> =
  * Helper to create success result
  */
 export function success<T>(data: T, message?: string): ActionResult<T> {
-  return { success: true, data, message };
+  if (message) {
+    return { success: true, data, message };
+  }
+  return { success: true, data };
 }
 
 /**
  * Helper to create error result
  */
 export function error(message: string, error?: string, data?: unknown): ActionResult {
-  return { success: false, message, error, data };
+  const result: ActionResult = { success: false, message };
+  if (error) {
+    result.error = error;
+  }
+  if (data !== undefined) {
+    result.data = data;
+  }
+  return result;
 }
 
 /**
@@ -35,7 +45,7 @@ export async function withErrorHandling<T>(
     const data = await fn();
     return success(data);
   } catch (err) {
-    const error = err instanceof Error ? err.message : String(err);
-    return error(errorMessage, error);
+    const errorMsg = err instanceof Error ? err.message : String(err);
+    return error(errorMessage, errorMsg);
   }
 }

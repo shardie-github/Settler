@@ -6,7 +6,7 @@
  * - Store flags in Supabase config or environment
  */
 
-import { getEnvBoolean, getEnvWithDefault } from '@/lib/env';
+import { getEnvBoolean } from '@/lib/env';
 
 export interface FeatureFlags {
   enableAdvancedMatching: boolean;
@@ -43,10 +43,13 @@ export async function getFeatureFlag(
         .eq('id', tenantId)
         .single();
       
-      if (tenant?.config && typeof tenant.config === 'object') {
-        const config = tenant.config as Record<string, unknown>;
-        if (typeof config[flag] === 'boolean') {
-          return config[flag] as boolean;
+      if (tenant && typeof tenant === 'object' && 'config' in tenant) {
+        const config = (tenant as { config?: unknown }).config;
+        if (config && typeof config === 'object') {
+          const configObj = config as Record<string, unknown>;
+          if (typeof configObj[flag] === 'boolean') {
+            return configObj[flag] as boolean;
+          }
         }
       }
     } catch (error) {

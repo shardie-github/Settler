@@ -57,6 +57,20 @@ export interface Database {
         Insert: Omit<Database['public']['Tables']['users']['Row'], 'id' | 'created_at' | 'updated_at'>;
         Update: Partial<Database['public']['Tables']['users']['Insert']>;
       };
+      activity_logs: {
+        Row: {
+          id: string;
+          tenant_id: string | null;
+          entity_type: string;
+          entity_id: string;
+          action: string;
+          user_id: string | null;
+          metadata: Json | null;
+          created_at: string;
+        };
+        Insert: Omit<Database['public']['Tables']['activity_logs']['Row'], 'id' | 'created_at'>;
+        Update: Partial<Database['public']['Tables']['activity_logs']['Insert']>;
+      };
       // Add other tables as needed
       [key: string]: {
         Row: Record<string, unknown>;
