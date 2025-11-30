@@ -36,12 +36,28 @@
   }
 }
 
+/* Glassmorphism Utility Classes */
+@layer utilities {
+  .glass {
+    @apply backdrop-blur-md bg-white/10 dark:bg-white/5 border border-white/10 dark:border-white/5;
+  }
+  
+  .glass-strong {
+    @apply backdrop-blur-lg bg-white/20 dark:bg-white/10 border border-white/20 dark:border-white/10;
+  }
+  
+  .glass-subtle {
+    @apply backdrop-blur-sm bg-white/5 dark:bg-white/5 border border-white/5 dark:border-white/5;
+  }
+}
+
 @layer base {
   * {
     @apply border-border;
   }
   body {
     @apply bg-background text-foreground;
+    font-family: var(--font-inter), system-ui, -apple-system, sans-serif;
     font-feature-settings: "rlig" 1, "calt" 1;
   }
 }
