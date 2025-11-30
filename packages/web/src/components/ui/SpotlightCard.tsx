@@ -46,7 +46,7 @@ export function SpotlightCard({
       ref={cardRef}
       className={cn(
         'relative group rounded-2xl p-6 overflow-hidden',
-        'glass transition-all duration-300',
+        'glass transition-all duration-200',
         'hover:shadow-2xl hover:shadow-electric-cyan/20',
         className
       )}
@@ -59,7 +59,7 @@ export function SpotlightCard({
     >
       {/* Spotlight effect */}
       <div
-        className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+        className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none"
         style={{
           background: `radial-gradient(${spotlightSize}px circle at ${mousePosition.x}px ${mousePosition.y}px, ${spotlightColor}, transparent 70%)`,
         }}

@@ -51,14 +51,14 @@ export function AnimatedStatCard({
     typeof window !== 'undefined' &&
     window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  const animationDelay = prefersReducedMotion ? 0 : delay + index * 150;
+  const animationDelay = prefersReducedMotion ? 0 : delay + index * 50;
 
   return (
     <div
       ref={cardRef}
       className={`
         text-center
-        transition-all duration-700
+        transition-all duration-300
         ${isVisible 
           ? 'opacity-100 translate-y-0 scale-100' 
           : 'opacity-0 translate-y-6 scale-95'

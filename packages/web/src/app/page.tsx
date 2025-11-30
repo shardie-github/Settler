@@ -110,7 +110,7 @@ const report = await client.jobs.run(job.id);
       </a>
       <div 
         id="main-content"
-        className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-black"
+        className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-slate-900 dark:via-slate-800 dark:to-black"
         role="main"
         aria-label="Settler homepage"
       >
@@ -128,14 +128,14 @@ const report = await client.jobs.run(job.id);
           
           {/* Grid background */}
           <div 
-            className="absolute inset-0 bg-grid-slate-800 [mask-image:linear-gradient(0deg,white,rgba(255,255,255,0.3))] -z-10"
+            className="absolute inset-0 bg-grid-slate-200 dark:bg-grid-slate-800 [mask-image:linear-gradient(0deg,white,rgba(255,255,255,0.3))] -z-10"
             aria-hidden="true"
           />
           
           <div className="max-w-7xl mx-auto relative z-10">
             <div className="text-center">
               <Badge 
-                className="mb-6 glass-strong text-electric-cyan border-electric-cyan/30 hover:border-electric-cyan/50 transition-all"
+                className="mb-6 glass-strong text-blue-600 dark:text-electric-cyan border-blue-300 dark:border-electric-cyan/30 hover:border-blue-400 dark:hover:border-electric-cyan/50 transition-all duration-200"
                 aria-label="Product category"
               >
                 Reconciliation-as-a-Service API
@@ -145,17 +145,17 @@ const report = await client.jobs.run(job.id);
                 as="h1"
                 id="hero-heading"
                 text="Make Reconciliation As Simple As Email"
-                className="text-5xl md:text-7xl lg:text-8xl font-bold mb-6 bg-gradient-to-r from-electric-cyan via-electric-purple to-electric-blue bg-clip-text text-transparent"
-                delay={0.2}
-                staggerDelay={0.03}
+                className="text-5xl md:text-7xl lg:text-8xl font-bold mb-6 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 dark:from-electric-cyan dark:via-electric-purple dark:to-electric-blue bg-clip-text text-transparent"
+                delay={0.1}
+                staggerDelay={0.02}
                 splitBy="words"
               />
               
               <TextReveal
                 text="Automate financial data reconciliation across fragmented SaaS and e-commerce ecosystems. One API. All platforms. Real-time."
-                className="text-xl md:text-2xl text-slate-300 mb-8 max-w-3xl mx-auto"
-                delay={0.8}
-                staggerDelay={0.02}
+                className="text-xl md:text-2xl text-slate-700 dark:text-slate-300 mb-8 max-w-3xl mx-auto"
+                delay={0.4}
+                staggerDelay={0.01}
                 splitBy="words"
               />
               
@@ -167,7 +167,7 @@ const report = await client.jobs.run(job.id);
                 <Button 
                   size="lg" 
                   asChild 
-                  className="bg-gradient-to-r from-electric-cyan to-electric-blue hover:from-electric-cyan/90 hover:to-electric-blue/90 text-white px-8 py-6 text-lg shadow-lg hover:shadow-electric-cyan/50 transition-all transform hover:scale-105 focus:ring-2 focus:ring-electric-cyan focus:ring-offset-2 focus:ring-offset-slate-900"
+                  className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 dark:from-electric-cyan dark:to-electric-blue dark:hover:from-electric-cyan/90 dark:hover:to-electric-blue/90 text-white px-8 py-6 text-lg shadow-lg hover:shadow-blue-500/50 dark:hover:shadow-electric-cyan/50 transition-all duration-200 transform hover:scale-105 focus:ring-2 focus:ring-blue-500 dark:focus:ring-electric-cyan focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-slate-900"
                 >
                   <Link href="/playground" aria-label="Start free trial of Settler">
                     Start Free Trial
@@ -177,7 +177,7 @@ const report = await client.jobs.run(job.id);
                   size="lg" 
                   variant="outline" 
                   asChild 
-                  className="px-8 py-6 text-lg border-2 border-white/20 glass hover:border-electric-purple/50 hover:bg-white/5 transition-all transform hover:scale-105 focus:ring-2 focus:ring-electric-purple focus:ring-offset-2 focus:ring-offset-slate-900"
+                  className="px-8 py-6 text-lg border-2 border-slate-300 dark:border-white/20 glass hover:border-indigo-500 dark:hover:border-electric-purple/50 hover:bg-slate-50 dark:hover:bg-white/5 transition-all duration-200 transform hover:scale-105 focus:ring-2 focus:ring-indigo-500 dark:focus:ring-electric-purple focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-slate-900"
                 >
                   <Link href="/docs" aria-label="View Settler documentation">
                     View Documentation
@@ -219,9 +219,9 @@ const report = await client.jobs.run(job.id);
               as="h2"
               id="secondary-stats-heading" 
               text="Trusted by Industry Leaders"
-              className="text-2xl md:text-3xl font-bold text-center mb-12 text-white"
+              className="text-2xl md:text-3xl font-bold text-center mb-12 text-slate-900 dark:text-white"
               delay={0}
-              staggerDelay={0.03}
+              staggerDelay={0.02}
             />
             <BentoGrid columns={4} gap="md">
               {secondaryStats.map((stat, index) => (
@@ -264,15 +264,15 @@ const report = await client.jobs.run(job.id);
                 as="h2"
                 id="code-example-heading"
                 text="Get Started in Minutes"
-                className="text-3xl md:text-4xl font-bold mb-4 text-white"
+                className="text-3xl md:text-4xl font-bold mb-4 text-slate-900 dark:text-white"
                 delay={0}
-                staggerDelay={0.03}
+                staggerDelay={0.02}
               />
               <TextReveal
                 text="Simple, developer-friendly API that works with any platform"
-                className="text-lg text-slate-300 max-w-2xl mx-auto"
-                delay={0.3}
-                staggerDelay={0.02}
+                className="text-lg text-slate-700 dark:text-slate-300 max-w-2xl mx-auto"
+                delay={0.2}
+                staggerDelay={0.01}
               />
             </div>
             <SpotlightCard className="p-0 overflow-hidden">
@@ -291,46 +291,49 @@ const report = await client.jobs.run(job.id);
           className="py-20 px-4 sm:px-6 lg:px-8 glass-subtle"
           aria-labelledby="features-heading"
         >
-          <div className="max-w-7xl mx-auto">
+          <div className="max-w-7xl mx-auto w-full">
             <div className="text-center mb-16">
               <TextRevealHeading
                 as="h2"
                 id="features-heading"
                 text="Everything You Need"
-                className="text-3xl md:text-4xl font-bold mb-4 text-white"
+                className="text-3xl md:text-4xl font-bold mb-4 text-slate-900 dark:text-white"
                 delay={0}
-                staggerDelay={0.03}
+                staggerDelay={0.02}
               />
               <TextReveal
                 text="Built for developers, designed for scale"
-                className="text-lg text-slate-300 max-w-2xl mx-auto"
-                delay={0.3}
-                staggerDelay={0.02}
+                className="text-lg text-slate-700 dark:text-slate-300 max-w-2xl mx-auto"
+                delay={0.2}
+                staggerDelay={0.01}
               />
             </div>
-            <BentoGrid columns={3} gap="lg">
-              {features.map((feature, index) => {
-                const Icon = feature.icon;
-                return (
-                  <BentoGridItem 
-                    key={index} 
-                    colSpan={index === 0 || index === 3 ? 2 : 1}
-                    rowSpan={index === 0 ? 2 : 1}
-                  >
-                    <SpotlightCard 
-                      className="h-full flex flex-col p-6"
-                      spotlightColor={index % 2 === 0 ? 'rgba(6, 182, 212, 0.3)' : 'rgba(168, 85, 247, 0.3)'}
+            <div className="w-full">
+              <BentoGrid columns={3} gap="lg" className="w-full">
+                {features.map((feature, index) => {
+                  const Icon = feature.icon;
+                  return (
+                    <BentoGridItem 
+                      key={index} 
+                      colSpan={index === 0 || index === 3 ? 2 : 1}
+                      rowSpan={index === 0 ? 2 : 1}
+                      className="w-full"
                     >
-                      <div className={`w-12 h-12 rounded-lg bg-gradient-to-br ${feature.gradient} p-3 mb-4 flex items-center justify-center`}>
-                        <Icon className="w-6 h-6 text-white" />
-                      </div>
-                      <h3 className="text-xl font-bold mb-2 text-white">{feature.title}</h3>
-                      <p className="text-slate-300 flex-grow">{feature.description}</p>
-                    </SpotlightCard>
-                  </BentoGridItem>
-                );
-              })}
-            </BentoGrid>
+                      <SpotlightCard 
+                        className="h-full flex flex-col p-6 w-full"
+                        spotlightColor={index % 2 === 0 ? 'rgba(6, 182, 212, 0.3)' : 'rgba(168, 85, 247, 0.3)'}
+                      >
+                        <div className={`w-12 h-12 rounded-lg bg-gradient-to-br ${feature.gradient} p-3 mb-4 flex items-center justify-center`}>
+                          <Icon className="w-6 h-6 text-white" />
+                        </div>
+                      <h3 className="text-xl font-bold mb-2 text-slate-900 dark:text-white">{feature.title}</h3>
+                      <p className="text-slate-700 dark:text-slate-300 flex-grow">{feature.description}</p>
+                      </SpotlightCard>
+                    </BentoGridItem>
+                  );
+                })}
+              </BentoGrid>
+            </div>
           </div>
         </section>
 

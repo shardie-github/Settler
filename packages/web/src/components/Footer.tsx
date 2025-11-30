@@ -25,22 +25,27 @@ export function Footer() {
             <h3 className="font-semibold text-slate-900 dark:text-white mb-4">Product</h3>
             <ul className="space-y-2 text-sm">
               <li>
-                <Link href="/docs" className="text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                <Link href="/docs" className="text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200">
                   Documentation
                 </Link>
               </li>
               <li>
-                <Link href="/playground" className="text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                <Link href="/cookbooks" className="text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200">
+                  Cookbooks
+                </Link>
+              </li>
+              <li>
+                <Link href="/playground" className="text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200">
                   Playground
                 </Link>
               </li>
               <li>
-                <Link href="/pricing" className="text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                <Link href="/pricing" className="text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200">
                   Pricing
                 </Link>
               </li>
               <li>
-                <Link href="/enterprise" className="text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                <Link href="/enterprise" className="text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200">
                   Enterprise
                 </Link>
               </li>
@@ -52,22 +57,27 @@ export function Footer() {
             <h3 className="font-semibold text-slate-900 dark:text-white mb-4">Resources</h3>
             <ul className="space-y-2 text-sm">
               <li>
-                <Link href="/support" className="text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                <Link href="/support" className="text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200">
                   Support
                 </Link>
               </li>
               <li>
-                <a href="https://github.com/settler" target="_blank" rel="noopener noreferrer" className="text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                <Link href="/community" className="text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200">
+                  Community
+                </Link>
+              </li>
+              <li>
+                <a href="https://github.com/settler" target="_blank" rel="noopener noreferrer" className="text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200">
                   GitHub
                 </a>
               </li>
               <li>
-                <Link href="/docs" className="text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                <Link href="/docs" className="text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200">
                   API Reference
                 </Link>
               </li>
               <li>
-                <a href="https://status.settler.dev" target="_blank" rel="noopener noreferrer" className="text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                <a href="https://status.settler.dev" target="_blank" rel="noopener noreferrer" className="text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200">
                   Status
                 </a>
               </li>
@@ -102,13 +112,13 @@ export function Footer() {
             © 2026 Settler. All rights reserved.
           </div>
           <div className="flex space-x-6 text-sm text-slate-600 dark:text-slate-400">
-            <a href="https://twitter.com/settler_io" target="_blank" rel="noopener noreferrer" className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+            <a href="https://twitter.com/settler_io" target="_blank" rel="noopener noreferrer" className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200">
               Twitter
             </a>
-            <a href="https://github.com/settler" target="_blank" rel="noopener noreferrer" className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+            <a href="https://github.com/settler" target="_blank" rel="noopener noreferrer" className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200">
               GitHub
             </a>
-            <a href="https://discord.gg/settler" target="_blank" rel="noopener noreferrer" className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+            <a href="https://discord.gg/settler" target="_blank" rel="noopener noreferrer" className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200">
               Discord
             </a>
           </div>

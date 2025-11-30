@@ -8,6 +8,7 @@ import { ConversionCTA } from "@/components/ConversionCTA";
 import { AnimatedPageWrapper } from "@/components/AnimatedPageWrapper";
 import { AnimatedHero } from "@/components/AnimatedHero";
 import { AnimatedFeatureCard } from "@/components/AnimatedFeatureCard";
+import Link from "next/link";
 
 export default function Support() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -19,6 +20,15 @@ export default function Support() {
       description: 'Comprehensive guides, API reference, and tutorials',
       link: '/docs',
       linkText: 'Browse Docs',
+      tier: 'All Plans',
+    },
+    {
+      icon: '📖',
+      title: 'Cookbooks & Examples',
+      description: 'Pre-built workflows and code examples for common use cases',
+      link: '/cookbooks',
+      linkText: 'View Cookbooks',
+      tier: 'All Plans',
     },
     {
       icon: '💬',
@@ -27,6 +37,7 @@ export default function Support() {
       link: 'https://discord.gg/settler',
       linkText: 'Join Discord',
       external: true,
+      tier: 'All Plans',
     },
     {
       icon: '🎮',
@@ -34,6 +45,7 @@ export default function Support() {
       description: 'Test the API and see examples in action',
       link: '/playground',
       linkText: 'Try Playground',
+      tier: 'All Plans',
     },
     {
       icon: '📧',
@@ -42,6 +54,105 @@ export default function Support() {
       link: 'mailto:support@settler.dev',
       linkText: 'Email Us',
       external: true,
+      tier: 'Commercial+',
+    },
+    {
+      icon: '🚀',
+      title: 'Priority Support',
+      description: '24/7 support with SLA guarantees and dedicated account manager',
+      link: '/enterprise',
+      linkText: 'Learn More',
+      tier: 'Enterprise',
+    },
+  ];
+
+  const supportTiers = [
+    {
+      tier: 'OSS / Free',
+      features: [
+        'Documentation & Guides',
+        'Community Support (Discord, GitHub)',
+        'Cookbooks & Examples',
+        'Interactive Playground',
+      ],
+      responseTime: 'Community response',
+    },
+    {
+      tier: 'Commercial',
+      features: [
+        'Everything in OSS',
+        'Email Support (24 hour response)',
+        'Technical Integration Help',
+        'Bug Reports & Feature Requests',
+      ],
+      responseTime: '24 hours',
+    },
+    {
+      tier: 'Enterprise',
+      features: [
+        'Everything in Commercial',
+        '24/7 Priority Support',
+        'Dedicated Account Manager',
+        'SLA Guarantees (<4hr response)',
+        'Phone Support',
+        'Custom Integration Support',
+      ],
+      responseTime: '<4 hours (P1)',
+    },
+  ];
+
+  const escalationLevels = [
+    {
+      level: 'Level 1',
+      name: 'Support Bot / Self-Service',
+      includes: ['Documentation', 'Community', 'Knowledge Base', 'Automated Responses'],
+    },
+    {
+      level: 'Level 2',
+      name: 'Support Engineer',
+      includes: ['Email Support', 'Technical Questions', 'Integration Help'],
+    },
+    {
+      level: 'Level 3',
+      name: 'Senior Support Engineer',
+      includes: ['Complex Issues', 'Performance Problems', 'Advanced Integration'],
+    },
+    {
+      level: 'Level 4',
+      name: 'Engineering Team',
+      includes: ['Bugs', 'Feature Requests', 'Infrastructure Issues'],
+    },
+    {
+      level: 'Level 5',
+      name: 'Leadership',
+      includes: ['Critical Incidents', 'Security Issues', 'Customer Escalations'],
+    },
+  ];
+
+  const severityLevels = [
+    {
+      severity: 'P0: Critical',
+      description: 'System down, data breach, complete service outage',
+      responseTime: '15 minutes',
+      resolutionTime: '4 hours',
+    },
+    {
+      severity: 'P1: High',
+      description: 'Major feature broken, high error rate, multiple customers affected',
+      responseTime: '1 hour',
+      resolutionTime: '24 hours',
+    },
+    {
+      severity: 'P2: Medium',
+      description: 'Minor feature broken, moderate error rate, single customer affected',
+      responseTime: '4 hours',
+      resolutionTime: '72 hours',
+    },
+    {
+      severity: 'P3: Low',
+      description: 'Documentation issues, UI improvements, feature requests',
+      responseTime: '24 hours',
+      resolutionTime: '7 days',
     },
   ];
 
@@ -94,23 +205,194 @@ export default function Support() {
         aria-labelledby="support-options-heading"
       >
         <div className="max-w-7xl mx-auto">
-          <h2 id="support-options-heading" className="sr-only">
-            Support Options
+          <h2 id="support-options-heading" className="text-3xl md:text-4xl font-bold text-center mb-4 text-slate-900 dark:text-white">
+            Support Channels
           </h2>
+          <p className="text-center text-slate-600 dark:text-slate-300 mb-12 max-w-2xl mx-auto">
+            Choose the support channel that works best for you
+          </p>
           <div
-            className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12"
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12"
             role="list"
             aria-label="Available support channels"
           >
             {supportOptions.map((option, index) => (
-              <div key={index} role="listitem">
-                <AnimatedFeatureCard
-                  icon={option.icon}
-                  title={option.title}
-                  description={option.description}
-                  index={index}
-                />
-              </div>
+              <Card
+                key={index}
+                className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 transition-all duration-200 hover:shadow-lg hover:scale-[1.02]"
+                role="listitem"
+              >
+                <CardHeader>
+                  <div className="text-4xl mb-2">{option.icon}</div>
+                  <div className="flex items-center justify-between">
+                    <CardTitle className="text-lg text-slate-900 dark:text-white">
+                      {option.title}
+                    </CardTitle>
+                    <Badge variant="outline" className="text-xs">
+                      {option.tier}
+                    </Badge>
+                  </div>
+                  <CardDescription className="text-slate-600 dark:text-slate-300">
+                    {option.description}
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  {option.external ? (
+                    <Button
+                      asChild
+                      variant="outline"
+                      className="w-full border-slate-300 dark:border-slate-700"
+                    >
+                      <a
+                        href={option.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label={`${option.linkText} (opens in new tab)`}
+                      >
+                        {option.linkText} →
+                      </a>
+                    </Button>
+                  ) : (
+                    <Button
+                      asChild
+                      variant="outline"
+                      className="w-full border-slate-300 dark:border-slate-700"
+                    >
+                      <Link href={option.link}>
+                        {option.linkText} →
+                      </Link>
+                    </Button>
+                  )}
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Support Tiers */}
+      <section
+        className="py-20 px-4 sm:px-6 lg:px-8 bg-white/50 dark:bg-slate-800/50"
+        aria-labelledby="support-tiers-heading"
+      >
+        <div className="max-w-7xl mx-auto">
+          <h2 id="support-tiers-heading" className="text-3xl md:text-4xl font-bold text-center mb-4 text-slate-900 dark:text-white">
+            Support Tiers
+          </h2>
+          <p className="text-center text-slate-600 dark:text-slate-300 mb-12 max-w-2xl mx-auto">
+            Different support levels for different needs
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {supportTiers.map((tier, index) => (
+              <Card
+                key={index}
+                className={`bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 transition-all duration-200 hover:shadow-lg ${
+                  tier.tier === 'Enterprise' ? 'ring-2 ring-blue-500' : ''
+                }`}
+              >
+                <CardHeader>
+                  <CardTitle className="text-xl text-slate-900 dark:text-white mb-2">
+                    {tier.tier}
+                  </CardTitle>
+                  <CardDescription className="text-slate-600 dark:text-slate-300">
+                    Response Time: {tier.responseTime}
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <ul className="space-y-2">
+                    {tier.features.map((feature, idx) => (
+                      <li key={idx} className="flex items-start text-sm text-slate-600 dark:text-slate-300">
+                        <span className="mr-2 text-green-500">✓</span>
+                        {feature}
+                      </li>
+                    ))}
+                  </ul>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Escalation Matrix */}
+      <section
+        className="py-20 px-4 sm:px-6 lg:px-8"
+        aria-labelledby="escalation-heading"
+      >
+        <div className="max-w-7xl mx-auto">
+          <h2 id="escalation-heading" className="text-3xl md:text-4xl font-bold text-center mb-4 text-slate-900 dark:text-white">
+            Support Escalation
+          </h2>
+          <p className="text-center text-slate-600 dark:text-slate-300 mb-12 max-w-2xl mx-auto">
+            How we handle and escalate support requests
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+            {escalationLevels.map((level, index) => (
+              <Card
+                key={index}
+                className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800"
+              >
+                <CardHeader>
+                  <Badge variant="outline" className="w-fit mb-2">
+                    {level.level}
+                  </Badge>
+                  <CardTitle className="text-lg text-slate-900 dark:text-white">
+                    {level.name}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <ul className="space-y-1 text-sm text-slate-600 dark:text-slate-300">
+                    {level.includes.map((item, idx) => (
+                      <li key={idx} className="flex items-start">
+                        <span className="mr-2">•</span>
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Severity Levels */}
+      <section
+        className="py-20 px-4 sm:px-6 lg:px-8 bg-white/50 dark:bg-slate-800/50"
+        aria-labelledby="severity-heading"
+      >
+        <div className="max-w-4xl mx-auto">
+          <h2 id="severity-heading" className="text-3xl md:text-4xl font-bold text-center mb-4 text-slate-900 dark:text-white">
+            Issue Severity & Response Times
+          </h2>
+          <p className="text-center text-slate-600 dark:text-slate-300 mb-12">
+            We prioritize issues based on severity to ensure critical problems are resolved quickly
+          </p>
+          <div className="space-y-4">
+            {severityLevels.map((severity, index) => (
+              <Card
+                key={index}
+                className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800"
+              >
+                <CardHeader>
+                  <div className="flex items-center justify-between">
+                    <CardTitle className="text-lg text-slate-900 dark:text-white">
+                      {severity.severity}
+                    </CardTitle>
+                    <div className="flex gap-4 text-sm">
+                      <Badge variant="outline">
+                        Response: {severity.responseTime}
+                      </Badge>
+                      <Badge variant="outline">
+                        Resolution: {severity.resolutionTime}
+                      </Badge>
+                    </div>
+                  </div>
+                  <CardDescription className="text-slate-600 dark:text-slate-300">
+                    {severity.description}
+                  </CardDescription>
+                </CardHeader>
+              </Card>
             ))}
           </div>
         </div>
