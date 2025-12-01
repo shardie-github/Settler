@@ -29,10 +29,10 @@ async function DashboardMetrics() {
     }
 
     // Fetch KPI data using RPC function (with error handling)
-    let kpiData = null;
+    let kpiData: { new_users_week: number; actions_last_hour: number; top_post_engagement: number; all_cylinders_firing: boolean } | null = null;
     try {
       const result = await supabase.rpc('get_kpi_health_status').single();
-      kpiData = result.data;
+      kpiData = result.data as { new_users_week: number; actions_last_hour: number; top_post_engagement: number; all_cylinders_firing: boolean } | null;
       if (result.error) {
         console.warn('RPC function error:', result.error);
       }
@@ -78,11 +78,15 @@ async function DashboardMetrics() {
       // Calculate engagement and find top post
       if (posts && posts.length > 0) {
         const typedPosts = posts as Array<{ id: string; title: string; views: number; upvotes: number }>;
-        topPost = typedPosts.reduce((max, post) => {
-          const engagement = (post.views || 0) + (post.upvotes || 0) * 2;
-          const maxEngagement = (max.views || 0) + (max.upvotes || 0) * 2;
-          return engagement > maxEngagement ? post : max;
-        }, typedPosts[0]);
+        const firstPost = typedPosts[0];
+        if (firstPost) {
+          const result = typedPosts.reduce((max, post) => {
+            const engagement = (post.views || 0) + (post.upvotes || 0) * 2;
+            const maxEngagement = (max.views || 0) + (max.upvotes || 0) * 2;
+            return engagement > maxEngagement ? post : max;
+          }, firstPost);
+          topPost = result || null;
+        }
       }
     } catch (err) {
       console.warn('Error fetching posts:', err);
@@ -118,7 +122,7 @@ async function DashboardMetrics() {
       topPostTitle: topPost?.title || 'No posts today yet',
       totalPosts: totalPosts,
       totalProfiles: totalProfiles,
-      allCylindersFiring: kpiData?.all_cylinders_firing || false,
+      allCylindersFiring: kpiData ? kpiData.all_cylinders_firing : false,
     };
 
     return (
