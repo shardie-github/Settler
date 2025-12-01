@@ -45,7 +45,7 @@ export function SEOHead({
 
       {/* Favicon */}
       <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-      <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+      <link rel="apple-touch-icon" href="/icon-192x192.svg" />
 
       {/* Structured Data */}
       <script
