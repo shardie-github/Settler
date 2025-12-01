@@ -71,6 +71,90 @@ export interface Database {
         Insert: Omit<Database['public']['Tables']['activity_logs']['Row'], 'id' | 'created_at'>;
         Update: Partial<Database['public']['Tables']['activity_logs']['Insert']>;
       };
+      // Ecosystem tables
+      profiles: {
+        Row: {
+          id: string;
+          user_id: string;
+          email: string;
+          name: string | null;
+          avatar_url: string | null;
+          bio: string | null;
+          role: string;
+          impact_score: number;
+          metadata: Json;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: Omit<Database['public']['Tables']['profiles']['Row'], 'id' | 'created_at' | 'updated_at'>;
+        Update: Partial<Database['public']['Tables']['profiles']['Insert']>;
+      };
+      posts: {
+        Row: {
+          id: string;
+          user_id: string;
+          title: string;
+          content: string;
+          post_type: string;
+          status: string;
+          views: number;
+          upvotes: number;
+          downvotes: number;
+          comments_count: number;
+          metadata: Json;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: Omit<Database['public']['Tables']['posts']['Row'], 'id' | 'created_at' | 'updated_at'>;
+        Update: Partial<Database['public']['Tables']['posts']['Insert']>;
+      };
+      activity_log: {
+        Row: {
+          id: string;
+          user_id: string | null;
+          activity_type: string;
+          entity_type: string | null;
+          entity_id: string | null;
+          metadata: Json;
+          ip_address: string | null;
+          user_agent: string | null;
+          created_at: string;
+        };
+        Insert: Omit<Database['public']['Tables']['activity_log']['Row'], 'id' | 'created_at'>;
+        Update: Partial<Database['public']['Tables']['activity_log']['Insert']>;
+      };
+      positioning_feedback: {
+        Row: {
+          id: string;
+          user_id: string | null;
+          five_word_vp: string | null;
+          target_persona_pain: string | null;
+          clarity_rating: number | null;
+          feedback_text: string | null;
+          impact_score: number;
+          metadata: Json;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: Omit<Database['public']['Tables']['positioning_feedback']['Row'], 'id' | 'created_at' | 'updated_at'>;
+        Update: Partial<Database['public']['Tables']['positioning_feedback']['Insert']>;
+      };
+      notifications: {
+        Row: {
+          id: string;
+          user_id: string;
+          notification_type: string;
+          title: string;
+          message: string | null;
+          entity_type: string | null;
+          entity_id: string | null;
+          read: boolean;
+          metadata: Json;
+          created_at: string;
+        };
+        Insert: Omit<Database['public']['Tables']['notifications']['Row'], 'id' | 'created_at'>;
+        Update: Partial<Database['public']['Tables']['notifications']['Insert']>;
+      };
       // Add other tables as needed
       [key: string]: {
         Row: Record<string, unknown>;
@@ -79,11 +163,53 @@ export interface Database {
       };
     };
     Views: {
+      kpi_new_users_week: {
+        Row: {
+          count: number;
+        };
+      };
+      kpi_actions_last_hour: {
+        Row: {
+          count: number;
+        };
+      };
+      kpi_most_engaged_post_today: {
+        Row: {
+          id: string;
+          title: string;
+          user_id: string;
+          views: number;
+          total_engagement: number;
+        };
+      };
+      kpi_health_status: {
+        Row: {
+          new_users_week: number;
+          actions_last_hour: number;
+          top_post_engagement: number;
+          all_cylinders_firing: boolean;
+        };
+      };
       [key: string]: {
         Row: Record<string, unknown>;
       };
     };
     Functions: {
+      get_kpi_health_status: {
+        Args: Record<string, never>;
+        Returns: {
+          new_users_week: number;
+          actions_last_hour: number;
+          top_post_engagement: number;
+          all_cylinders_firing: boolean;
+        };
+      };
+      calculate_positioning_impact_score: {
+        Args: {
+          p_feedback_id: string;
+        };
+        Returns: number;
+      };
       [key: string]: {
         Args: Record<string, unknown>;
         Returns: unknown;
