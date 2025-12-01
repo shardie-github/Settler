@@ -14,7 +14,8 @@
   },
   "dependencies": {
     "@settler/types": "*",
-    "zod": "^3.22.4"
+    "zod": "^3.22.4",
+    "stripe": "^14.21.0"
   },
   "devDependencies": {
     "@types/node": "^20.10.0",

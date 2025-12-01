@@ -8,6 +8,7 @@
 import { EnhancedAdapter, AdapterConfig, DateRange, NormalizedEvent } from './enhanced-base';
 import { Transaction, Settlement, Fee, RefundDispute, TransactionType, TransactionStatus, SettlementStatus, RefundDisputeType, RefundDisputeStatus } from '@settler/types';
 import crypto from 'crypto';
+import Stripe from 'stripe';
 
 export class StripeEnhancedAdapter implements EnhancedAdapter {
   name = 'stripe';
@@ -104,47 +105,49 @@ export class StripeEnhancedAdapter implements EnhancedAdapter {
   /**
    * Poll transactions from Stripe API
    */
-  async pollTransactions(config: AdapterConfig, _dateRange: DateRange): Promise<Transaction[]> {
+  async pollTransactions(config: AdapterConfig, dateRange: DateRange): Promise<Transaction[]> {
     const apiKey = config.apiKey;
     if (!apiKey) {
       throw new Error('Stripe API key is required');
     }
 
-    // In production, use Stripe SDK
-    // const stripe = new Stripe(apiKey);
-    // const charges = await stripe.charges.list({
-    //   created: {
-    //     gte: Math.floor(dateRange.start.getTime() / 1000),
-    //     lte: Math.floor(dateRange.end.getTime() / 1000),
-    //   },
-    //   limit: 100,
-    // });
+    const stripe = new Stripe(apiKey, {
+      apiVersion: '2024-11-20.acacia',
+    });
 
-    // Mock implementation for now
-    return [];
+    const charges = await stripe.charges.list({
+      created: {
+        gte: Math.floor(dateRange.start.getTime() / 1000),
+        lte: Math.floor(dateRange.end.getTime() / 1000),
+      },
+      limit: 100,
+    });
+
+    return charges.data.map((charge) => this.normalizeTransaction(charge, config.tenantId || 'default'));
   }
 
   /**
    * Poll settlements from Stripe API
    */
-  async pollSettlements(config: AdapterConfig, _dateRange: DateRange): Promise<Settlement[]> {
+  async pollSettlements(config: AdapterConfig, dateRange: DateRange): Promise<Settlement[]> {
     const apiKey = config.apiKey;
     if (!apiKey) {
       throw new Error('Stripe API key is required');
     }
 
-    // In production, use Stripe SDK
-    // const stripe = new Stripe(apiKey);
-    // const payouts = await stripe.payouts.list({
-    //   created: {
-    //     gte: Math.floor(dateRange.start.getTime() / 1000),
-    //     lte: Math.floor(dateRange.end.getTime() / 1000),
-    //   },
-    //   limit: 100,
-    // });
+    const stripe = new Stripe(apiKey, {
+      apiVersion: '2024-11-20.acacia',
+    });
 
-    // Mock implementation for now
-    return [];
+    const payouts = await stripe.payouts.list({
+      created: {
+        gte: Math.floor(dateRange.start.getTime() / 1000),
+        lte: Math.floor(dateRange.end.getTime() / 1000),
+      },
+      limit: 100,
+    });
+
+    return payouts.data.map((payout) => this.normalizeSettlement(payout, config.tenantId || 'default'));
   }
 
   /**
