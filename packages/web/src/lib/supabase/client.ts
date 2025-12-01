@@ -16,15 +16,17 @@ import { Database } from '@/types/database.types';
  * Only use in Client Components ('use client')
  */
 export function createClient() {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
 
-  if (!supabaseUrl) {
-    throw new Error('Missing NEXT_PUBLIC_SUPABASE_URL environment variable');
-  }
-
-  if (!supabaseAnonKey) {
-    throw new Error('Missing NEXT_PUBLIC_SUPABASE_ANON_KEY environment variable');
+  // During build, these might not be available - return a mock client
+  if (!supabaseUrl || !supabaseAnonKey) {
+    if (typeof window === 'undefined') {
+      // Server-side during build - return a minimal mock
+      return {} as ReturnType<typeof createBrowserClient<Database>>;
+    }
+    // Client-side but missing env vars - this should not happen in production
+    console.warn('Supabase environment variables not set');
   }
 
   return createBrowserClient<Database>(supabaseUrl, supabaseAnonKey);

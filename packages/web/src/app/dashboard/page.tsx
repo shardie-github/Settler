@@ -12,67 +12,115 @@ import { getExternalMetrics } from '@/lib/api/external';
 
 // Server Component: Fetch metrics from Supabase
 async function DashboardMetrics() {
-  const supabase = await createClient();
-  
-  // Fetch external metrics (GitHub, NPM)
-  const externalMetrics = await getExternalMetrics();
+  try {
+    const supabase = await createClient();
+    
+    // Fetch external metrics (GitHub, NPM) - with error handling
+    let externalMetrics;
+    try {
+      externalMetrics = await getExternalMetrics();
+    } catch (err) {
+      console.warn('Failed to fetch external metrics:', err);
+      externalMetrics = {
+        github: { stars: 0, forks: 0, watchers: 0, openIssues: 0, lastUpdated: new Date().toISOString() },
+        npm: { downloads: 0, version: '0.0.0', lastUpdated: new Date().toISOString() },
+        timestamp: new Date().toISOString(),
+      };
+    }
 
-  // Fetch KPI data using RPC function
-  const { data: kpiData } = await supabase.rpc('get_kpi_health_status').single();
+    // Fetch KPI data using RPC function (with error handling)
+    let kpiData = null;
+    try {
+      const result = await supabase.rpc('get_kpi_health_status').single();
+      kpiData = result.data;
+      if (result.error) {
+        console.warn('RPC function error:', result.error);
+      }
+    } catch (err) {
+      console.warn('RPC function not available, using fallback queries:', err);
+    }
 
-  // Fetch recent activity count
-  const { count: recentActivityCount } = await supabase
-    .from('activity_log')
-    .select('*', { count: 'exact', head: true })
-    .gte('created_at', new Date(Date.now() - 60 * 60 * 1000).toISOString());
+    // Fetch recent activity count
+    let recentActivityCount = 0;
+    try {
+      const { count } = await supabase
+        .from('activity_log')
+        .select('*', { count: 'exact', head: true })
+        .gte('created_at', new Date(Date.now() - 60 * 60 * 1000).toISOString());
+      recentActivityCount = count || 0;
+    } catch (err) {
+      console.warn('Error fetching activity count:', err);
+    }
 
-  // Fetch new users this week
-  const { count: newUsersCount } = await supabase
-    .from('profiles')
-    .select('*', { count: 'exact', head: true })
-    .gte('created_at', new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString());
+    // Fetch new users this week
+    let newUsersCount = 0;
+    try {
+      const { count } = await supabase
+        .from('profiles')
+        .select('*', { count: 'exact', head: true })
+        .gte('created_at', new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString());
+      newUsersCount = count || 0;
+    } catch (err) {
+      console.warn('Error fetching new users count:', err);
+    }
 
-  // Fetch most engaged post (using raw SQL calculation)
-  const { data: posts } = await supabase
-    .from('posts')
-    .select('id, title, views, upvotes')
-    .eq('status', 'published')
-    .gte('created_at', new Date().toISOString().split('T')[0])
-    .order('created_at', { ascending: false })
-    .limit(10);
-  
-  // Calculate engagement and find top post
-  const topPost = posts && posts.length > 0
-    ? posts.reduce((max, post) => {
-        const engagement = (post.views || 0) + (post.upvotes || 0) * 2;
-        const maxEngagement = (max.views || 0) + (max.upvotes || 0) * 2;
-        return engagement > maxEngagement ? post : max;
-      }, posts[0])
-    : null;
+    // Fetch most engaged post (using raw SQL calculation)
+    let topPost = null;
+    try {
+      const { data: posts } = await supabase
+        .from('posts')
+        .select('id, title, views, upvotes')
+        .eq('status', 'published')
+        .gte('created_at', new Date().toISOString().split('T')[0])
+        .order('created_at', { ascending: false })
+        .limit(10);
+      
+      // Calculate engagement and find top post
+      if (posts && posts.length > 0) {
+        topPost = posts.reduce((max, post) => {
+          const engagement = (post.views || 0) + (post.upvotes || 0) * 2;
+          const maxEngagement = (max.views || 0) + (max.upvotes || 0) * 2;
+          return engagement > maxEngagement ? post : max;
+        }, posts[0]);
+      }
+    } catch (err) {
+      console.warn('Error fetching posts:', err);
+    }
 
-  // Fetch total posts count
-  const { count: totalPosts } = await supabase
-    .from('posts')
-    .select('*', { count: 'exact', head: true })
-    .eq('status', 'published');
+    // Fetch total posts count
+    let totalPosts = 0;
+    try {
+      const { count } = await supabase
+        .from('posts')
+        .select('*', { count: 'exact', head: true })
+        .eq('status', 'published');
+      totalPosts = count || 0;
+    } catch (err) {
+      console.warn('Error fetching total posts:', err);
+    }
 
-  // Fetch total profiles count
-  const { count: totalProfiles } = await supabase
-    .from('profiles')
-    .select('*', { count: 'exact', head: true });
+    // Fetch total profiles count
+    let totalProfiles = 0;
+    try {
+      const { count } = await supabase
+        .from('profiles')
+        .select('*', { count: 'exact', head: true });
+      totalProfiles = count || 0;
+    } catch (err) {
+      console.warn('Error fetching total profiles:', err);
+    }
 
-  const metrics = {
-    newUsersWeek: newUsersCount || 0,
-    actionsLastHour: recentActivityCount || 0,
-    topPostEngagement: topPost ? (topPost.views || 0) + (topPost.upvotes || 0) * 2 : 0,
-    topPostTitle: topPost?.title || 'No posts today yet',
-    totalPosts: totalPosts || 0,
-    totalProfiles: totalProfiles || 0,
-    allCylindersFiring: kpiData?.all_cylinders_firing || false,
-    kpiData: kpiData,
-  };
+    const metrics = {
+      newUsersWeek: newUsersCount,
+      actionsLastHour: recentActivityCount,
+      topPostEngagement: topPost ? (topPost.views || 0) + (topPost.upvotes || 0) * 2 : 0,
+      topPostTitle: topPost?.title || 'No posts today yet',
+      totalPosts: totalPosts,
+      totalProfiles: totalProfiles,
+      allCylindersFiring: kpiData?.all_cylinders_firing || false,
+    };
 
-  return (
+    return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-slate-900 dark:via-slate-800 dark:to-black">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="text-center mb-12">
@@ -245,7 +293,22 @@ async function DashboardMetrics() {
         </div>
       </div>
     </div>
-  );
+    );
+  } catch (error) {
+    console.error('Error in DashboardMetrics:', error);
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-red-600 dark:text-red-400 mb-4">
+            Error loading dashboard metrics
+          </p>
+          <p className="text-slate-600 dark:text-slate-400 text-sm">
+            Please try refreshing the page
+          </p>
+        </div>
+      </div>
+    );
+  }
 }
 
 function MetricCard({

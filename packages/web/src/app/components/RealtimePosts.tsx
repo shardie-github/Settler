@@ -25,59 +25,86 @@ export function RealtimePosts() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const supabase = createClient();
+    try {
+      const supabase = createClient();
 
-    // Initial fetch
-    const fetchPosts = async () => {
-      const { data, error } = await supabase
-        .from('posts')
-        .select('id, title, views, upvotes, downvotes, created_at')
-        .eq('status', 'published')
-        .order('created_at', { ascending: false })
-        .limit(10);
-
-      if (error) {
-        console.error('Error fetching posts:', error);
-      } else {
-        setPosts(data || []);
+      // Check if supabase client is valid
+      if (!supabase || typeof supabase.from !== 'function') {
+        console.warn('Supabase client not available');
+        setIsLoading(false);
+        return;
       }
-      setIsLoading(false);
-    };
 
-    fetchPosts();
+      // Initial fetch
+      const fetchPosts = async () => {
+        try {
+          const { data, error } = await supabase
+            .from('posts')
+            .select('id, title, views, upvotes, downvotes, created_at')
+            .eq('status', 'published')
+            .order('created_at', { ascending: false })
+            .limit(10);
 
-    // Subscribe to real-time changes
-    const channel = supabase
-      .channel('posts-changes')
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'posts',
-          filter: 'status=eq.published',
-        },
-        (payload) => {
-          console.log('Post change received:', payload);
-          
-          if (payload.eventType === 'INSERT') {
-            setPosts((prev) => [payload.new as Post, ...prev].slice(0, 10));
-          } else if (payload.eventType === 'UPDATE') {
-            setPosts((prev) =>
-              prev.map((post) =>
-                post.id === payload.new.id ? (payload.new as Post) : post
-              )
-            );
-          } else if (payload.eventType === 'DELETE') {
-            setPosts((prev) => prev.filter((post) => post.id !== payload.old.id));
+          if (error) {
+            console.error('Error fetching posts:', error);
+          } else {
+            setPosts(data || []);
           }
+        } catch (err) {
+          console.error('Error in fetchPosts:', err);
+        } finally {
+          setIsLoading(false);
         }
-      )
-      .subscribe();
+      };
 
-    return () => {
-      supabase.removeChannel(channel);
-    };
+      fetchPosts();
+
+      // Subscribe to real-time changes
+      try {
+        const channel = supabase
+          .channel('posts-changes')
+          .on(
+            'postgres_changes',
+            {
+              event: '*',
+              schema: 'public',
+              table: 'posts',
+              filter: 'status=eq.published',
+            },
+            (payload) => {
+              console.log('Post change received:', payload);
+              
+              if (payload.eventType === 'INSERT') {
+                setPosts((prev) => [payload.new as Post, ...prev].slice(0, 10));
+              } else if (payload.eventType === 'UPDATE') {
+                setPosts((prev) =>
+                  prev.map((post) =>
+                    post.id === payload.new.id ? (payload.new as Post) : post
+                  )
+                );
+              } else if (payload.eventType === 'DELETE') {
+                setPosts((prev) => prev.filter((post) => post.id !== payload.old.id));
+              }
+            }
+          )
+          .subscribe();
+
+        return () => {
+          try {
+            supabase.removeChannel(channel);
+          } catch (err) {
+            console.error('Error removing channel:', err);
+          }
+        };
+      } catch (err) {
+        console.error('Error setting up realtime subscription:', err);
+        return () => {};
+      }
+    } catch (err) {
+      console.error('Error initializing Supabase client:', err);
+      setIsLoading(false);
+      return () => {};
+    }
   }, []);
 
   if (isLoading) {

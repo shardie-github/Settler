@@ -15,7 +15,7 @@ import { Footer } from '@/components/Footer';
 import { UserPlus, CheckCircle2, AlertCircle } from 'lucide-react';
 import { redirect } from 'next/navigation';
 
-async function SignUpForm() {
+function SignUpForm() {
   async function handleSubmit(formData: FormData) {
     'use server';
     

@@ -18,15 +18,12 @@ import { Database } from '@/types/database.types';
 export async function createClient() {
   const cookieStore = await cookies();
 
-  const supabaseUrl = process.env.SUPABASE_URL;
-  const supabaseAnonKey = process.env.SUPABASE_ANON_KEY;
+  const supabaseUrl = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL || '';
+  const supabaseAnonKey = process.env.SUPABASE_ANON_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
 
-  if (!supabaseUrl) {
-    throw new Error('Missing SUPABASE_URL environment variable');
-  }
-
-  if (!supabaseAnonKey) {
-    throw new Error('Missing SUPABASE_ANON_KEY environment variable');
+  // During build, these might not be available
+  if (!supabaseUrl || !supabaseAnonKey) {
+    console.warn('Supabase environment variables not set - some features may not work');
   }
 
   return createServerClient<Database>(supabaseUrl, supabaseAnonKey, {
@@ -61,15 +58,12 @@ export async function createClient() {
  * WARNING: Only use in Server Actions/Route Handlers, never expose to client
  */
 export async function createAdminClient() {
-  const supabaseUrl = process.env.SUPABASE_URL;
-  const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  const supabaseUrl = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL || '';
+  const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
 
-  if (!supabaseUrl) {
-    throw new Error('Missing SUPABASE_URL environment variable');
-  }
-
-  if (!supabaseServiceRoleKey) {
-    throw new Error('Missing SUPABASE_SERVICE_ROLE_KEY environment variable');
+  // During build, these might not be available
+  if (!supabaseUrl || !supabaseServiceRoleKey) {
+    console.warn('Supabase admin environment variables not set - admin features may not work');
   }
 
   // Use regular supabase client with service role key (bypasses RLS)

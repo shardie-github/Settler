@@ -23,7 +23,14 @@ export async function GET() {
     const supabase = await createAdminClient();
 
     // Query the combined KPI health status view using RPC
-    const { data, error } = await supabase.rpc('get_kpi_health_status').single();
+    let data, error;
+    try {
+      const result = await supabase.rpc('get_kpi_health_status').single();
+      data = result.data;
+      error = result.error;
+    } catch (err) {
+      error = err as Error;
+    }
     
     // Fallback: Query individual views if RPC doesn't exist
     if (error) {
