@@ -33,18 +33,32 @@ export class PrioritizedQueue {
     private queueName: string,
     private processor: (job: Job<QueueJobData>) => Promise<any>
   ) {
-    const redisOptions: {
-      host: string;
-      port: number;
-      url?: string;
-    } = {
-      host: config.redis.host,
-      port: config.redis.port,
-    };
+    // Prefer REDIS_URL if provided (Upstash format: rediss://default:password@host:6379)
     if (config.redis.url) {
-      redisOptions.url = config.redis.url;
+      this.redis = new Redis(config.redis.url, {
+        maxRetriesPerRequest: 3,
+        enableReadyCheck: true,
+        lazyConnect: true,
+      });
+    } else {
+      // Fallback to individual host/port configuration
+      const redisOptions: {
+        host: string;
+        port: number;
+        password?: string;
+        tls?: boolean;
+      } = {
+        host: config.redis.host,
+        port: config.redis.port,
+      };
+      if (config.redis.password) {
+        redisOptions.password = config.redis.password;
+      }
+      if (process.env.REDIS_TLS === 'true') {
+        redisOptions.tls = true;
+      }
+      this.redis = new Redis(redisOptions);
     }
-    this.redis = new Redis(redisOptions);
 
     this.queue = new Queue(queueName, {
       connection: this.redis,

@@ -1,48 +1,39 @@
 # Quick Redis Setup Guide
 
-## ✅ What You Have
+## ✅ Perfect! You Have Everything You Need
 
-- **REST URL:** `https://pretty-buck-23396.upstash.io`
-- **REST Token:** `AVtkAAIncDJjZmUxNTlhNmMyMjI0YmNjYTk5YjY4YzI2YzEyZjUyN3AyMjMzOTY`
+You have the **Redis URL** from Upstash, which includes all connection details:
 
-## ⚠️ What You Still Need
+```
+REDIS_URL="rediss://default:AVtkAAIncDJjZmUxNTlhNmMyMjI0YmNjYTk5YjY4YzI2YzEyZjUyN3AyMjMzOTY@pretty-buck-23396.upstash.io:6379"
+```
 
-**TCP Connection Details** (required for BullMQ job queues)
-
----
-
-## How to Get TCP Details
-
-1. Go to [console.upstash.com](https://console.upstash.com)
-2. Click on your database: **pretty-buck-23396**
-3. Look for **"TCP Endpoint"** or **"Endpoint"** section
-4. Copy:
-   - **Host:** `pretty-buck-23396.upstash.io` (without `:6379`)
-   - **Port:** `6379`
-   - **Password:** `Axxxxx...` (this is DIFFERENT from REST token!)
+This single URL works for:
+- ✅ BullMQ job queues (TCP connection)
+- ✅ Caching operations
+- ✅ Rate limiting
 
 ---
 
 ## Environment Variables for Vercel
 
-Once you have TCP details, set these in **Vercel Dashboard → Settings → Environment Variables**:
+Set this in **Vercel Dashboard → Settings → Environment Variables**:
 
 ```bash
-# REST API (for caching)
+# Redis URL (Primary - works for everything)
+REDIS_URL=rediss://default:AVtkAAIncDJjZmUxNTlhNmMyMjI0YmNjYTk5YjY4YzI2YzEyZjUyN3AyMjMzOTY@pretty-buck-23396.upstash.io:6379
+
+# REST API (Optional - only if using Upstash REST client directly)
 UPSTASH_REDIS_REST_URL=https://pretty-buck-23396.upstash.io
 UPSTASH_REDIS_REST_TOKEN=AVtkAAIncDJjZmUxNTlhNmMyMjI0YmNjYTk5YjY4YzI2YzEyZjUyN3AyMjMzOTY
-
-# TCP Connection (for BullMQ - REQUIRED)
-REDIS_HOST=pretty-buck-23396.upstash.io
-REDIS_PORT=6379
-REDIS_PASSWORD=your-tcp-password-from-dashboard
-REDIS_TLS=true
 ```
 
-**Important:**
-- `REDIS_PASSWORD` = TCP password (NOT the REST token!)
-- `REDIS_TLS=true` is required
-- `REDIS_HOST` should NOT include `https://` or port number
+**That's it!** The `REDIS_URL` is all you need. The code will automatically:
+- Use TLS (the `rediss://` protocol indicates secure connection)
+- Connect to the correct host and port
+- Authenticate with the password
+
+**Note:** The `rediss://` protocol (with double 's') means Redis Secure/TLS, which is required for Upstash.
 
 ---
 
