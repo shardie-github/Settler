@@ -44,8 +44,8 @@ export function PositioningFeedbackForm() {
       if (response.success) {
         setResult({
           success: true,
-          impactScore: response.impactScore,
-          message: `Thank you! Your feedback earned ${response.impactScore} impact points.`,
+          ...(response.impactScore !== undefined && { impactScore: response.impactScore }),
+          message: `Thank you! Your feedback earned ${response.impactScore ?? 0} impact points.`,
         });
         // Reset form
         setFormData({

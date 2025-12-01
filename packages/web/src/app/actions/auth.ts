@@ -63,7 +63,7 @@ export async function signUpUser(
         email: authData.user.email!,
         name: name || authData.user.email!.split('@')[0],
         impact_score: 0,
-      });
+      } as any);
 
     if (profileError) {
       // If profile creation fails, we should handle it gracefully
@@ -83,7 +83,7 @@ export async function signUpUser(
           source: 'web_signup',
           timestamp: new Date().toISOString(),
         },
-      });
+      } as any);
 
     if (activityError) {
       console.error('Activity log error:', activityError);
@@ -130,7 +130,7 @@ export async function logActivity(
         entity_type: entityType,
         entity_id: entityId,
         metadata: metadata || {},
-      });
+      } as any);
 
     if (error) {
       console.error('Activity log error:', error);

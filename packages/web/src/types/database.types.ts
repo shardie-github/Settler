@@ -86,8 +86,32 @@ export interface Database {
           created_at: string;
           updated_at: string;
         };
-        Insert: Omit<Database['public']['Tables']['profiles']['Row'], 'id' | 'created_at' | 'updated_at'>;
-        Update: Partial<Database['public']['Tables']['profiles']['Insert']>;
+        Insert: {
+          id?: string;
+          user_id: string;
+          email: string;
+          name?: string | null;
+          avatar_url?: string | null;
+          bio?: string | null;
+          role?: string;
+          impact_score?: number;
+          metadata?: Json;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          user_id?: string;
+          email?: string;
+          name?: string | null;
+          avatar_url?: string | null;
+          bio?: string | null;
+          role?: string;
+          impact_score?: number;
+          metadata?: Json;
+          created_at?: string;
+          updated_at?: string;
+        };
       };
       posts: {
         Row: {
@@ -120,8 +144,28 @@ export interface Database {
           user_agent: string | null;
           created_at: string;
         };
-        Insert: Omit<Database['public']['Tables']['activity_log']['Row'], 'id' | 'created_at'>;
-        Update: Partial<Database['public']['Tables']['activity_log']['Insert']>;
+        Insert: {
+          id?: string;
+          user_id?: string | null;
+          activity_type: string;
+          entity_type?: string | null;
+          entity_id?: string | null;
+          metadata?: Json;
+          ip_address?: string | null;
+          user_agent?: string | null;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          user_id?: string | null;
+          activity_type?: string;
+          entity_type?: string | null;
+          entity_id?: string | null;
+          metadata?: Json;
+          ip_address?: string | null;
+          user_agent?: string | null;
+          created_at?: string;
+        };
       };
       positioning_feedback: {
         Row: {
@@ -136,8 +180,30 @@ export interface Database {
           created_at: string;
           updated_at: string;
         };
-        Insert: Omit<Database['public']['Tables']['positioning_feedback']['Row'], 'id' | 'created_at' | 'updated_at'>;
-        Update: Partial<Database['public']['Tables']['positioning_feedback']['Insert']>;
+        Insert: {
+          id?: string;
+          user_id?: string | null;
+          five_word_vp?: string | null;
+          target_persona_pain?: string | null;
+          clarity_rating?: number | null;
+          feedback_text?: string | null;
+          impact_score?: number;
+          metadata?: Json;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          user_id?: string | null;
+          five_word_vp?: string | null;
+          target_persona_pain?: string | null;
+          clarity_rating?: number | null;
+          feedback_text?: string | null;
+          impact_score?: number;
+          metadata?: Json;
+          created_at?: string;
+          updated_at?: string;
+        };
       };
       notifications: {
         Row: {
@@ -167,11 +233,15 @@ export interface Database {
         Row: {
           count: number;
         };
+        Insert: never;
+        Update: never;
       };
       kpi_actions_last_hour: {
         Row: {
           count: number;
         };
+        Insert: never;
+        Update: never;
       };
       kpi_most_engaged_post_today: {
         Row: {
@@ -179,8 +249,11 @@ export interface Database {
           title: string;
           user_id: string;
           views: number;
+          upvotes: number;
           total_engagement: number;
         };
+        Insert: never;
+        Update: never;
       };
       kpi_health_status: {
         Row: {
@@ -189,9 +262,13 @@ export interface Database {
           top_post_engagement: number;
           all_cylinders_firing: boolean;
         };
+        Insert: never;
+        Update: never;
       };
       [key: string]: {
         Row: Record<string, unknown>;
+        Insert: never;
+        Update: never;
       };
     };
     Functions: {

@@ -12,7 +12,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Navigation } from '@/components/Navigation';
 import { Footer } from '@/components/Footer';
-import { UserPlus, CheckCircle2, AlertCircle } from 'lucide-react';
+import { UserPlus } from 'lucide-react';
 import { redirect } from 'next/navigation';
 
 function SignUpForm() {
@@ -24,7 +24,7 @@ function SignUpForm() {
     const name = formData.get('name') as string;
 
     if (!email || !password) {
-      return { success: false, error: 'Email and password are required' };
+      return;
     }
 
     const result = await signUpUser(email, password, name);
@@ -32,8 +32,6 @@ function SignUpForm() {
     if (result.success) {
       redirect('/dashboard');
     }
-    
-    return result;
   }
 
   return (

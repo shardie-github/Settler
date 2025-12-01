@@ -65,7 +65,7 @@ async function DashboardMetrics() {
     }
 
     // Fetch most engaged post (using raw SQL calculation)
-    let topPost = null;
+    let topPost: { id: string; title: string; views: number; upvotes: number } | null = null;
     try {
       const { data: posts } = await supabase
         .from('posts')
@@ -77,11 +77,12 @@ async function DashboardMetrics() {
       
       // Calculate engagement and find top post
       if (posts && posts.length > 0) {
-        topPost = posts.reduce((max, post) => {
+        const typedPosts = posts as Array<{ id: string; title: string; views: number; upvotes: number }>;
+        topPost = typedPosts.reduce((max, post) => {
           const engagement = (post.views || 0) + (post.upvotes || 0) * 2;
           const maxEngagement = (max.views || 0) + (max.upvotes || 0) * 2;
           return engagement > maxEngagement ? post : max;
-        }, posts[0]);
+        }, typedPosts[0]);
       }
     } catch (err) {
       console.warn('Error fetching posts:', err);
@@ -319,7 +320,7 @@ function MetricCard({
   description,
   passed,
 }: {
-  icon: React.ComponentType<{ className?: string }>;
+  icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
   title: string;
   value: number;
   threshold: number;
