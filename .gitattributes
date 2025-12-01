@@ -1,0 +1,4 @@
+# Git-crypt encryption rules
+# Files in INVESTOR-RELATIONS-PRIVATE will be encrypted
+# NOTE: Run 'git crypt init' and 'git crypt add-gpg-user <email>' before committing
+INVESTOR-RELATIONS-PRIVATE/** filter=git-crypt diff=git-crypt
