@@ -29,10 +29,13 @@ async function DashboardMetrics() {
     }
 
     // Fetch KPI data using RPC function (with error handling)
-    let kpiData: { new_users_week: number; actions_last_hour: number; top_post_engagement: number; all_cylinders_firing: boolean } | null = null;
+    type KpiHealthData = { new_users_week: number; actions_last_hour: number; top_post_engagement: number; all_cylinders_firing: boolean };
+    let kpiData: KpiHealthData | null = null;
     try {
       const result = await supabase.rpc('get_kpi_health_status').single();
-      kpiData = result.data as { new_users_week: number; actions_last_hour: number; top_post_engagement: number; all_cylinders_firing: boolean } | null;
+      if (result.data) {
+        kpiData = result.data as KpiHealthData;
+      }
       if (result.error) {
         console.warn('RPC function error:', result.error);
       }
@@ -80,12 +83,13 @@ async function DashboardMetrics() {
         const typedPosts = posts as Array<{ id: string; title: string; views: number; upvotes: number }>;
         const firstPost = typedPosts[0];
         if (firstPost) {
-          const result = typedPosts.reduce((max, post) => {
+          type PostType = { id: string; title: string; views: number; upvotes: number };
+          const result: PostType = typedPosts.reduce<PostType>((max: PostType, post: PostType) => {
             const engagement = (post.views || 0) + (post.upvotes || 0) * 2;
             const maxEngagement = (max.views || 0) + (max.upvotes || 0) * 2;
             return engagement > maxEngagement ? post : max;
           }, firstPost);
-          topPost = result || null;
+          topPost = result;
         }
       }
     } catch (err) {
@@ -122,7 +126,7 @@ async function DashboardMetrics() {
       topPostTitle: topPost?.title || 'No posts today yet',
       totalPosts: totalPosts,
       totalProfiles: totalProfiles,
-      allCylindersFiring: kpiData ? kpiData.all_cylinders_firing : false,
+      allCylindersFiring: kpiData?.all_cylinders_firing ?? false,
     };
 
     return (
