@@ -1,35 +1,31 @@
 import { Adapter, NormalizedData, FetchOptions, ValidationResult } from "./base";
+import Stripe from "stripe";
 
 export class StripeAdapter implements Adapter {
   name = "stripe";
   version = "1.0.0";
 
   async fetch(options: FetchOptions): Promise<NormalizedData[]> {
-    const { config } = options;
+    const { config, dateRange } = options;
     const apiKey = config.apiKey as string;
 
     if (!apiKey) {
       throw new Error("Stripe API key is required");
     }
 
-    // In production, use Stripe SDK
-    // const stripe = new Stripe(apiKey);
-    // const charges = await stripe.charges.list({
-    //   created: { gte: Math.floor(dateRange.start.getTime() / 1000) }
-    // });
+    const stripe = new Stripe(apiKey, {
+      apiVersion: "2024-11-20.acacia",
+    });
 
-    // Mock implementation
-    return [
-      {
-        id: "ch_1234567890",
-        amount: 99.99,
-        currency: "usd",
-        date: new Date(),
-        metadata: { order_id: "order_123" },
-        sourceId: "ch_1234567890",
-        referenceId: "order_123",
+    const charges = await stripe.charges.list({
+      created: {
+        gte: dateRange?.start ? Math.floor(dateRange.start.getTime() / 1000) : undefined,
+        lte: dateRange?.end ? Math.floor(dateRange.end.getTime() / 1000) : undefined,
       },
-    ];
+      limit: 100,
+    });
+
+    return charges.data.map((charge) => this.normalize(charge));
   }
 
   normalize(data: unknown): NormalizedData {
