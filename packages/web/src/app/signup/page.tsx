@@ -14,6 +14,7 @@ import { Navigation } from '@/components/Navigation';
 import { Footer } from '@/components/Footer';
 import { UserPlus } from 'lucide-react';
 import { redirect } from 'next/navigation';
+import Link from 'next/link';
 
 function SignUpForm() {
   async function handleSubmit(formData: FormData) {
@@ -113,12 +114,12 @@ export default function SignUpPage() {
           <div className="mt-6 text-center">
             <p className="text-sm text-slate-600 dark:text-slate-400">
               Already have an account?{' '}
-              <a
-                href="/login"
+              <Link
+                href="/dashboard"
                 className="text-blue-600 dark:text-electric-cyan hover:underline"
               >
-                Sign in
-              </a>
+                Go to Dashboard
+              </Link>
             </p>
           </div>
         </div>

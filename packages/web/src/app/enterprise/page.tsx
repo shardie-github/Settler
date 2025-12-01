@@ -87,7 +87,7 @@ export default function Enterprise() {
               asChild
               className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-8 py-6 text-lg shadow-lg hover:shadow-xl transition-all transform hover:scale-105 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
             >
-              <Link href="#contact" aria-label="Contact sales team">
+              <Link href="#demo-form" aria-label="Contact sales team">
                 Contact Sales
               </Link>
             </Button>
@@ -208,6 +208,7 @@ export default function Enterprise() {
               </div>
             </div>
             <Card
+              id="demo-form"
               className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 shadow-xl transition-all duration-500 hover:shadow-2xl"
               role="region"
               aria-labelledby="demo-form-heading"
@@ -362,7 +363,7 @@ export default function Enterprise() {
             title="Ready to Transform Your Reconciliation?"
             description="Schedule a personalized demo with our enterprise team and see how Settler can scale with your business."
             primaryAction="Request Demo"
-            primaryLink="#contact"
+            primaryLink="#demo-form"
             secondaryAction="View Pricing"
             secondaryLink="/pricing"
             variant="gradient"
