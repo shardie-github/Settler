@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Navigation } from "@/components/Navigation";
@@ -9,35 +9,11 @@ import { ConversionCTA } from "@/components/ConversionCTA";
 import { NewsletterSignup } from "@/components/NewsletterSignup";
 import { AnimatedPageWrapper } from "@/components/AnimatedPageWrapper";
 import { AnimatedHero } from "@/components/AnimatedHero";
-import { AnimatedCodeBlock } from "@/components/AnimatedCodeBlock";
 import { AnimatedSidebar } from "@/components/AnimatedSidebar";
 import Link from "next/link";
 
 export default function Docs() {
   const [activeSection, setActiveSection] = useState('getting-started');
-  const [isVisible, setIsVisible] = useState(false);
-  const sidebarRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-        }
-      },
-      { threshold: 0.1 }
-    );
-
-    if (sidebarRef.current) {
-      observer.observe(sidebarRef.current);
-    }
-
-    return () => {
-      if (sidebarRef.current) {
-        observer.unobserve(sidebarRef.current);
-      }
-    };
-  }, []);
 
   const sections = [
     {
@@ -255,79 +231,6 @@ console.log(\`Matched: \${report.summary.matched}/\${report.summary.total}\`);`}
   ];
 
   const activeContent = sections.find(s => s.id === activeSection)?.content;
-
-  const installationCode = `# Install the SDK
-npm install @settler/sdk
-
-# Or with yarn
-yarn add @settler/sdk
-
-# Or with pnpm
-pnpm add @settler/sdk`;
-
-  const nodejsCode = `import { Settler } from '@settler/sdk';
-
-const client = new Settler({
-  apiKey: process.env.SETTLER_API_KEY,
-});`;
-
-  const reactCode = `import { useSettler } from '@settler/react-settler';
-
-function MyComponent() {
-  const { createJob, runJob } = useSettler({
-    apiKey: 'sk_...',
-  });
-  
-  // Use the hooks...
-}`;
-
-  const apiExampleCode = `const job = await client.jobs.create({
-  name: "Shopify-Stripe Reconciliation",
-  source: {
-    adapter: "shopify",
-    config: { apiKey: "..." }
-  },
-  target: {
-    adapter: "stripe",
-    config: { apiKey: "..." }
-  },
-  rules: {
-    matching: [
-      { field: "order_id", type: "exact" },
-      { field: "amount", type: "exact", tolerance: 0.01 }
-    ]
-  }
-});`;
-
-  const ecommerceCode = `// Reconcile Shopify orders with Stripe payments
-const job = await client.jobs.create({
-  name: "Monthly Reconciliation",
-  source: {
-    adapter: "shopify",
-    config: {
-      shop: "your-shop.myshopify.com",
-      accessToken: process.env.SHOPIFY_TOKEN
-    }
-  },
-  target: {
-    adapter: "stripe",
-    config: {
-      apiKey: process.env.STRIPE_SECRET_KEY
-    }
-  },
-  rules: {
-    matching: [
-      { field: "order_id", type: "exact" },
-      { field: "amount", type: "exact", tolerance: 0.01 },
-      { field: "currency", type: "exact" }
-    ],
-    conflictResolution: "last-wins"
-  }
-});
-
-// Run the job
-const report = await client.jobs.run(job.id);
-console.log(\`Matched: \${report.summary.matched}/\${report.summary.total}\`);`;
 
   return (
     <AnimatedPageWrapper aria-label="Documentation page">
