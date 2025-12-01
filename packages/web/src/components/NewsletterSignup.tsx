@@ -12,12 +12,28 @@ export function NewsletterSignup() {
     e.preventDefault();
     setStatus('loading');
     
-    // Simulate API call
-    setTimeout(() => {
+    try {
+      const response = await fetch('/api/newsletter/subscribe', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, type: 'free-tier' }),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || 'Failed to subscribe');
+      }
+
       setStatus('success');
       setEmail('');
       setTimeout(() => setStatus('idle'), 3000);
-    }, 1000);
+    } catch (error) {
+      console.error('Newsletter subscription error:', error);
+      setStatus('error');
+      setTimeout(() => setStatus('idle'), 3000);
+    }
   };
 
   return (

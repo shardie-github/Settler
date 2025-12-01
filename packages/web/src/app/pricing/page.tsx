@@ -204,6 +204,74 @@ export default function Pricing() {
         </div>
       </section>
 
+      {/* Stripe Webhook Configuration Section */}
+      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-slate-50 dark:bg-slate-900">
+        <div className="max-w-4xl mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold mb-4 text-slate-900 dark:text-white">
+              Stripe Integration & Webhooks
+            </h2>
+            <p className="text-lg text-slate-600 dark:text-slate-300">
+              Configure Stripe webhooks to enable real-time payment reconciliation
+            </p>
+          </div>
+          
+          <div className="bg-white dark:bg-slate-800 rounded-lg p-8 shadow-lg">
+            <h3 className="text-xl font-semibold mb-4 text-slate-900 dark:text-white">
+              Webhook Configuration
+            </h3>
+            <p className="text-slate-600 dark:text-slate-300 mb-6">
+              To enable Stripe payment reconciliation, configure webhooks in your Stripe Dashboard:
+            </p>
+            
+            <div className="space-y-4">
+              <div>
+                <h4 className="font-semibold text-slate-900 dark:text-white mb-2">1. Webhook Endpoint URL</h4>
+                <div className="bg-slate-900 dark:bg-black rounded-lg p-4 overflow-x-auto">
+                  <code className="text-green-400 text-sm">
+                    https://your-domain.com/api/webhooks/stripe
+                  </code>
+                </div>
+              </div>
+              
+              <div>
+                <h4 className="font-semibold text-slate-900 dark:text-white mb-2">2. Events to Subscribe</h4>
+                <ul className="list-disc list-inside text-slate-600 dark:text-slate-300 space-y-2">
+                  <li><code className="bg-slate-100 dark:bg-slate-700 px-2 py-1 rounded">payment_intent.succeeded</code></li>
+                  <li><code className="bg-slate-100 dark:bg-slate-700 px-2 py-1 rounded">payment_intent.payment_failed</code></li>
+                  <li><code className="bg-slate-100 dark:bg-slate-700 px-2 py-1 rounded">customer.subscription.created</code></li>
+                  <li><code className="bg-slate-100 dark:bg-slate-700 px-2 py-1 rounded">customer.subscription.updated</code></li>
+                  <li><code className="bg-slate-100 dark:bg-slate-700 px-2 py-1 rounded">invoice.payment_succeeded</code></li>
+                  <li><code className="bg-slate-100 dark:bg-slate-700 px-2 py-1 rounded">checkout.session.completed</code></li>
+                </ul>
+              </div>
+              
+              <div>
+                <h4 className="font-semibold text-slate-900 dark:text-white mb-2">3. API Key Configuration</h4>
+                <p className="text-slate-600 dark:text-slate-300 mb-2">
+                  Add your Stripe API key to your environment variables:
+                </p>
+                <div className="bg-slate-900 dark:bg-black rounded-lg p-4 overflow-x-auto">
+                  <code className="text-green-400 text-sm">
+                    STRIPE_SECRET_KEY=sk_your_api_key_here<br/>
+                    STRIPE_WEBHOOK_SECRET=whsec_your_webhook_secret_here
+                  </code>
+                </div>
+                <p className="text-sm text-slate-500 dark:text-slate-400 mt-2">
+                  <strong>Note:</strong> API keys will be provided after signup. Webhook secret is available in your Stripe Dashboard after creating a webhook endpoint.
+                </p>
+              </div>
+              
+              <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4 mt-6">
+                <p className="text-sm text-blue-800 dark:text-blue-200">
+                  <strong>💡 Need Help?</strong> Check out our <a href="/docs" className="underline hover:text-blue-600 dark:hover:text-blue-300">documentation</a> for detailed integration guides, or <a href="/support" className="underline hover:text-blue-600 dark:hover:text-blue-300">contact support</a> for assistance.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Feature Comparison Table */}
       <FeatureComparison />
 
