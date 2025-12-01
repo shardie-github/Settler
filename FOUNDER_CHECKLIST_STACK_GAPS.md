@@ -89,32 +89,28 @@ These are **critical** for security and core functionality.
 
 ---
 
-#### 3. Resend Email Setup (Transactional Emails)
-**Time:** 20 minutes  
+#### 3. Resend Email Setup (Transactional Emails) ✅
+**Time:** 5 minutes (you already have the API key!)  
 **Cost:** Free tier (100 emails/day) or $20/month for 50K emails
 
 **Why:** Required for sign-up verification, password reset, welcome emails
 
-**Steps:**
-1. Go to [resend.com](https://resend.com) and create account
-2. Verify your email
-3. Go to **API Keys**
-4. Click "Create API Key"
-5. Name it: "Settler Production"
-6. Copy the API key (starts with `re_`)
-
-**For Production (Later):**
-- Go to **Domains** → Add your domain (e.g., `settler.dev`)
-- Add DNS records as instructed (TXT, MX records)
-- Wait for verification (can take 24 hours)
-- For now, you can use Resend's test domain
+**✅ You Already Have:**
+- API Key: `re_jD36Bjud_DcRF2FJuajKNrPVVTy8pQsYp`
 
 **Set in Vercel:**
-- `RESEND_API_KEY` = your API key
-- `RESEND_FROM_EMAIL` = `onboarding@resend.dev` (test) or `noreply@yourdomain.com` (production)
+- `RESEND_API_KEY` = `re_jD36Bjud_DcRF2FJuajKNrPVVTy8pQsYp`
+- `RESEND_FROM_EMAIL` = `onboarding@resend.dev` (test domain - works immediately)
 - `RESEND_FROM_NAME` = `Settler`
 
-**✅ Done when:** Test email sends successfully (ask developer to test)
+**For Production (Later):**
+- Go to [resend.com/domains](https://resend.com/domains)
+- Add your domain (e.g., `settler.dev`)
+- Add DNS records as instructed (TXT, MX records)
+- Wait for verification (can take 24 hours)
+- Update `RESEND_FROM_EMAIL` to `noreply@yourdomain.com`
+
+**✅ Done when:** Variable is set in Vercel (test email can be sent to verify)
 
 ---
 
