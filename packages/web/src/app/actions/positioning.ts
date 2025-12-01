@@ -54,7 +54,7 @@ export async function submitPositioningFeedback(
         target_persona_pain: input.targetPersonaPain,
         clarity_rating: input.clarityRating,
         feedback_text: input.feedbackText,
-      })
+      } as any)
       .select()
       .single();
 
@@ -71,8 +71,8 @@ export async function submitPositioningFeedback(
 
     return {
       success: true,
-      impactScore: data.impact_score,
-      feedbackId: data.id,
+      impactScore: (data as any)?.impact_score,
+      feedbackId: (data as any)?.id,
     };
   } catch (error) {
     console.error('Positioning feedback error:', error);

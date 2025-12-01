@@ -29,10 +29,13 @@ async function DashboardMetrics() {
     }
 
     // Fetch KPI data using RPC function (with error handling)
-    let kpiData = null;
+    type KpiHealthData = { new_users_week: number; actions_last_hour: number; top_post_engagement: number; all_cylinders_firing: boolean };
+    let kpiData: KpiHealthData | null = null;
     try {
-      const result = await supabase.rpc('get_kpi_health_status').single();
-      kpiData = result.data;
+      const result = await supabase.rpc('get_kpi_health_status').single() as { data: KpiHealthData | null; error: any };
+      if (result.data) {
+        kpiData = result.data;
+      }
       if (result.error) {
         console.warn('RPC function error:', result.error);
       }
@@ -65,7 +68,7 @@ async function DashboardMetrics() {
     }
 
     // Fetch most engaged post (using raw SQL calculation)
-    let topPost = null;
+    let topPost: { id: string; title: string; views: number; upvotes: number } | null = null;
     try {
       const { data: posts } = await supabase
         .from('posts')
@@ -77,11 +80,17 @@ async function DashboardMetrics() {
       
       // Calculate engagement and find top post
       if (posts && posts.length > 0) {
-        topPost = posts.reduce((max, post) => {
-          const engagement = (post.views || 0) + (post.upvotes || 0) * 2;
-          const maxEngagement = (max.views || 0) + (max.upvotes || 0) * 2;
-          return engagement > maxEngagement ? post : max;
-        }, posts[0]);
+        const typedPosts = posts as Array<{ id: string; title: string; views: number; upvotes: number }>;
+        const firstPost = typedPosts[0];
+        if (firstPost) {
+          type PostType = { id: string; title: string; views: number; upvotes: number };
+          const result: PostType = typedPosts.reduce<PostType>((max: PostType, post: PostType) => {
+            const engagement = (post.views || 0) + (post.upvotes || 0) * 2;
+            const maxEngagement = (max.views || 0) + (max.upvotes || 0) * 2;
+            return engagement > maxEngagement ? post : max;
+          }, firstPost);
+          topPost = result;
+        }
       }
     } catch (err) {
       console.warn('Error fetching posts:', err);
@@ -117,7 +126,7 @@ async function DashboardMetrics() {
       topPostTitle: topPost?.title || 'No posts today yet',
       totalPosts: totalPosts,
       totalProfiles: totalProfiles,
-      allCylindersFiring: kpiData?.all_cylinders_firing || false,
+      allCylindersFiring: kpiData?.all_cylinders_firing ?? false,
     };
 
     return (
@@ -319,7 +328,7 @@ function MetricCard({
   description,
   passed,
 }: {
-  icon: React.ComponentType<{ className?: string }>;
+  icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
   title: string;
   value: number;
   threshold: number;

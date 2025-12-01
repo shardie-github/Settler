@@ -41,9 +41,9 @@ export async function GET() {
         supabase.from('kpi_most_engaged_post_today').select('total_engagement').single(),
       ]);
       
-      const newUsersWeek = kpi1.data?.count || 0;
-      const actionsLastHour = kpi2.data?.count || 0;
-      const topPostEngagement = kpi3.data?.total_engagement || 0;
+      const newUsersWeek = (kpi1.data as any)?.count || 0;
+      const actionsLastHour = (kpi2.data as any)?.count || 0;
+      const topPostEngagement = (kpi3.data as any)?.total_engagement || 0;
       
       return NextResponse.json({
         status: (newUsersWeek > 50 && actionsLastHour > 100 && topPostEngagement > 100) 
@@ -74,11 +74,22 @@ export async function GET() {
       });
     }
 
+    if (!data) {
+      return NextResponse.json(
+        {
+          status: 'Error',
+          message: 'Failed to fetch health status',
+        },
+        { status: 500 }
+      );
+    }
+
+    const typedData = data as any;
     const healthStatus: KPIHealthStatus = {
-      newUsersWeek: data.new_users_week || 0,
-      actionsLastHour: data.actions_last_hour || 0,
-      topPostEngagement: data.top_post_engagement || 0,
-      allCylindersFiring: data.all_cylinders_firing || false,
+      newUsersWeek: typedData.new_users_week || 0,
+      actionsLastHour: typedData.actions_last_hour || 0,
+      topPostEngagement: typedData.top_post_engagement || 0,
+      allCylindersFiring: typedData.all_cylinders_firing || false,
     };
 
     // Check if all KPIs meet thresholds
