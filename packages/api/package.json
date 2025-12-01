@@ -63,6 +63,7 @@
     "@sentry/profiling-node": "^7.91.0",
     "@supabase/supabase-js": "^2.39.0",
     "@upstash/redis": "^1.25.0",
+    "resend": "^3.2.0",
     "xml2js": "^0.6.2"
   },
   "devDependencies": {
