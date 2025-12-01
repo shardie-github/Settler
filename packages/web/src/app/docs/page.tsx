@@ -11,6 +11,7 @@ import { AnimatedPageWrapper } from "@/components/AnimatedPageWrapper";
 import { AnimatedHero } from "@/components/AnimatedHero";
 import { AnimatedCodeBlock } from "@/components/AnimatedCodeBlock";
 import { AnimatedSidebar } from "@/components/AnimatedSidebar";
+import Link from "next/link";
 
 export default function Docs() {
   const [activeSection, setActiveSection] = useState('getting-started');
@@ -51,17 +52,22 @@ export default function Docs() {
               across fragmented SaaS and e-commerce ecosystems. With Settler, you can reconcile transactions, 
               orders, and events between any two platforms in real-time.
             </p>
-            <p className="text-slate-600 dark:text-slate-300">
+            <p className="text-slate-600 dark:text-slate-300 mb-4">
               Our API-first approach means you can integrate reconciliation into your existing workflows without 
               building custom infrastructure or maintaining complex matching logic.
             </p>
+            <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4 mb-4">
+              <p className="text-sm text-blue-800 dark:text-blue-200">
+                <strong>💡 Pro Tip:</strong> Try our <Link href="/playground" className="underline hover:text-blue-600 dark:hover:text-blue-300">interactive playground</Link> to test the API without signing up, or explore our <Link href="/cookbooks" className="underline hover:text-blue-600 dark:hover:text-blue-300">cookbooks</Link> for ready-to-use examples.
+              </p>
+            </div>
           </div>
           <div>
             <h3 className="text-2xl font-bold mb-4 text-slate-900 dark:text-white">Quick Start</h3>
             <p className="text-slate-600 dark:text-slate-300 mb-4">
               Get started in 5 minutes:
             </p>
-            <div className="bg-slate-900 dark:bg-slate-800 rounded-lg p-6 overflow-x-auto">
+            <div className="bg-slate-900 dark:bg-slate-800 rounded-lg p-6 overflow-x-auto mb-4">
               <pre className="text-green-400 text-sm">
                 <code>{`# Install the SDK
 npm install @settler/sdk
@@ -73,6 +79,9 @@ yarn add @settler/sdk
 pnpm add @settler/sdk`}</code>
               </pre>
             </div>
+            <p className="text-slate-600 dark:text-slate-300 text-sm">
+              Need help? Check out our <Link href="/support" className="text-blue-600 dark:text-blue-400 hover:underline">support page</Link> or <Link href="/community" className="text-blue-600 dark:text-blue-400 hover:underline">join our community</Link>.
+            </p>
           </div>
         </div>
       ),
