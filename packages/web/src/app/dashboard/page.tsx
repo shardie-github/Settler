@@ -32,9 +32,9 @@ async function DashboardMetrics() {
     type KpiHealthData = { new_users_week: number; actions_last_hour: number; top_post_engagement: number; all_cylinders_firing: boolean };
     let kpiData: KpiHealthData | null = null;
     try {
-      const result = await supabase.rpc('get_kpi_health_status').single();
+      const result = await supabase.rpc('get_kpi_health_status').single() as { data: KpiHealthData | null; error: any };
       if (result.data) {
-        kpiData = result.data as KpiHealthData;
+        kpiData = result.data;
       }
       if (result.error) {
         console.warn('RPC function error:', result.error);
