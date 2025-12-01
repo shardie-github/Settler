@@ -25,7 +25,14 @@ import { cliWizardRouter } from "./routes/cli-wizard";
 import { exportEnhancedRouter } from "./routes/export-enhanced";
 import { aiAssistantRouter } from "./routes/ai-assistant";
 import { auditTrailRouter } from "./routes/audit-trail";
+import { webhookManagementRouter } from "./routes/webhook-management";
+import { notificationsRouter } from "./routes/notifications";
+import { usageRouter } from "./routes/usage";
+import { batchRouter } from "./routes/batch";
+import { exportsRouter } from "./routes/exports";
 import { testModeMiddleware, validateTestMode } from "./middleware/test-mode";
+import { featureFlagsMiddleware } from "./middleware/feature-flags";
+import { usageTrackingMiddleware } from "./middleware/usage-tracking";
 import { rateLimitMiddleware } from "./utils/rate-limiter";
 import { initDatabase } from "./db";
 import { config } from "./config";
@@ -51,6 +58,8 @@ import { setCsrfToken, csrfProtection, getCsrfToken } from "./middleware/csrf";
 import { sanitizeInput, sanitizeUrlParams } from "./middleware/input-sanitization";
 import { validateStartup } from "./utils/startup-validation";
 import cookieParser from "cookie-parser";
+import { initializeWebSocket } from "./infrastructure/websocket";
+import { createServer } from "http";
 
 const app: Express = express();
 const PORT = config.port;
@@ -100,6 +109,12 @@ app.use(csrfProtection);
 
 // Event tracking middleware (for analytics)
 app.use("/api", eventTrackingMiddleware);
+
+// Feature flags middleware (loads feature flags for each request)
+app.use("/api", featureFlagsMiddleware());
+
+// Usage tracking middleware (tracks API usage for billing)
+app.use("/api", usageTrackingMiddleware());
 
 // Request timeout middleware (must be before routes)
 if (config.features.enableRequestTimeout) {
@@ -272,6 +287,26 @@ app.use("/api/v2", authMiddleware, aiAssistantRouter);
 app.use("/api/v1", authMiddleware, auditTrailRouter);
 app.use("/api/v2", authMiddleware, auditTrailRouter);
 
+// Webhook management routes (requires auth)
+app.use("/api/v1/webhooks", authMiddleware, webhookManagementRouter);
+app.use("/api/v2/webhooks", authMiddleware, webhookManagementRouter);
+
+// Notification routes (requires auth)
+app.use("/api/v1/notifications", authMiddleware, notificationsRouter);
+app.use("/api/v2/notifications", authMiddleware, notificationsRouter);
+
+// Usage tracking routes (requires auth)
+app.use("/api/v1/usage", authMiddleware, usageRouter);
+app.use("/api/v2/usage", authMiddleware, usageRouter);
+
+// Batch processing routes (requires auth)
+app.use("/api/v1/batch", authMiddleware, batchRouter);
+app.use("/api/v2/batch", authMiddleware, batchRouter);
+
+// Export routes (requires auth)
+app.use("/api/v1/exports", authMiddleware, exportsRouter);
+app.use("/api/v2/exports", authMiddleware, exportsRouter);
+
 // Versioned API routes
 app.use("/api/v1", authMiddleware, v1Router);
 app.use("/api/v2", authMiddleware, v2Router);
@@ -327,7 +362,12 @@ async function startServer() {
       logInfo('Webhook processing stopped');
     });
     
-    const server = app.listen(PORT, () => {
+    const httpServer = createServer(app);
+    
+    // Initialize WebSocket server
+    initializeWebSocket(httpServer);
+    
+    const server = httpServer.listen(PORT, () => {
       logInfo(`Settler API server running on port ${PORT}`, { port: PORT });
     });
     
