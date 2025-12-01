@@ -22,22 +22,49 @@ export async function GET() {
   try {
     const supabase = await createAdminClient();
 
-    // Query the combined KPI health status view
-    const { data, error } = await supabase
-      .from('kpi_health_status')
-      .select('*')
-      .single();
-
+    // Query the combined KPI health status view using RPC
+    const { data, error } = await supabase.rpc('get_kpi_health_status').single();
+    
+    // Fallback: Query individual views if RPC doesn't exist
     if (error) {
-      console.error('KPI health check error:', error);
-      return NextResponse.json(
-        {
-          status: 'Error',
-          message: 'Failed to check KPI health',
-          error: error.message,
+      console.warn('RPC function not available, using fallback:', error);
+      const [kpi1, kpi2, kpi3] = await Promise.all([
+        supabase.from('kpi_new_users_week').select('count').single(),
+        supabase.from('kpi_actions_last_hour').select('count').single(),
+        supabase.from('kpi_most_engaged_post_today').select('total_engagement').single(),
+      ]);
+      
+      const newUsersWeek = kpi1.data?.count || 0;
+      const actionsLastHour = kpi2.data?.count || 0;
+      const topPostEngagement = kpi3.data?.total_engagement || 0;
+      
+      return NextResponse.json({
+        status: (newUsersWeek > 50 && actionsLastHour > 100 && topPostEngagement > 100) 
+          ? 'Loud and High ✓' 
+          : 'Building Momentum',
+        allCylindersFiring: newUsersWeek > 50 && actionsLastHour > 100 && topPostEngagement > 100,
+        kpis: {
+          kpi1: {
+            name: 'New Users This Week',
+            value: newUsersWeek,
+            threshold: 50,
+            passed: newUsersWeek > 50,
+          },
+          kpi2: {
+            name: 'Actions Completed in Last Hour',
+            value: actionsLastHour,
+            threshold: 100,
+            passed: actionsLastHour > 100,
+          },
+          kpi3: {
+            name: 'Most Engaged Post Engagement',
+            value: topPostEngagement,
+            threshold: 100,
+            passed: topPostEngagement > 100,
+          },
         },
-        { status: 500 }
-      );
+        timestamp: new Date().toISOString(),
+      });
     }
 
     const healthStatus: KPIHealthStatus = {
