@@ -1,0 +1,73 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "create": "Create",
+    "update": "Update",
+    "close": "Close",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "search": "Search",
+    "filter": "Filter",
+    "sort": "Sort",
+    "actions": "Actions",
+    "more": "More"
+  },
+  "navigation": {
+    "home": "Home",
+    "docs": "Docs",
+    "cookbooks": "Cookbooks",
+    "pricing": "Pricing",
+    "enterprise": "Enterprise",
+    "community": "Community",
+    "support": "Support",
+    "playground": "Playground",
+    "getStarted": "Get Started"
+  },
+  "forms": {
+    "required": "This field is required",
+    "invalidEmail": "Please enter a valid email address",
+    "invalidUrl": "Please enter a valid URL",
+    "minLength": "Must be at least {min} characters",
+    "maxLength": "Must be no more than {max} characters",
+    "passwordMismatch": "Passwords do not match",
+    "submit": "Submit",
+    "submitting": "Submitting...",
+    "reset": "Reset"
+  },
+  "errors": {
+    "generic": "Something went wrong. Please try again.",
+    "network": "Network error. Please check your connection.",
+    "notFound": "The requested resource was not found.",
+    "unauthorized": "You are not authorized to access this resource.",
+    "forbidden": "Access forbidden.",
+    "serverError": "Server error. Please try again later.",
+    "tryAgain": "Try Again",
+    "contactSupport": "Contact Support"
+  },
+  "emptyStates": {
+    "noData": "No data available",
+    "noResults": "No results found",
+    "noItems": "No items",
+    "createFirst": "Create your first item to get started"
+  },
+  "buttons": {
+    "create": "Create",
+    "save": "Save",
+    "saveChanges": "Save Changes",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "view": "View",
+    "viewDashboard": "View Dashboard",
+    "getStarted": "Get Started",
+    "learnMore": "Learn More"
+  }
+}

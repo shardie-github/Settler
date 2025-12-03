@@ -1,13 +1,14 @@
 /**
  * EmptyState Component
  * 
- * Reusable empty state display component.
+ * Reusable empty state display component with consistent styling and accessibility.
  */
 
 'use client';
 
 import { Inbox, LucideIcon } from 'lucide-react';
 import { Button } from './button';
+import { cn } from '@/lib/utils';
 
 export interface EmptyStateProps {
   /**
@@ -29,6 +30,15 @@ export interface EmptyStateProps {
     label: string;
     onClick: () => void;
   };
+  /**
+   * Size variant
+   * @default 'default'
+   */
+  size?: 'sm' | 'default' | 'lg';
+  /**
+   * Additional className
+   */
+  className?: string;
 }
 
 export function EmptyState({
@@ -36,16 +46,75 @@ export function EmptyState({
   title = 'No data available',
   description,
   action,
+  size = 'default',
+  className,
 }: EmptyStateProps) {
+  const sizeClasses = {
+    sm: {
+      container: 'py-8',
+      icon: 'w-10 h-10',
+      title: 'text-base',
+      description: 'text-sm',
+    },
+    default: {
+      container: 'py-12',
+      icon: 'w-12 h-12',
+      title: 'text-lg',
+      description: 'text-base',
+    },
+    lg: {
+      container: 'py-16',
+      icon: 'w-16 h-16',
+      title: 'text-xl',
+      description: 'text-lg',
+    },
+  };
+
+  const currentSize = sizeClasses[size];
+
   return (
-    <div className="flex flex-col items-center justify-center py-12 px-4">
-      <Icon className="w-12 h-12 text-slate-400 dark:text-slate-500 mb-4" />
-      <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-2">{title}</h3>
+    <div
+      className={cn(
+        'flex flex-col items-center justify-center px-4',
+        currentSize.container,
+        className
+      )}
+      role="status"
+      aria-live="polite"
+    >
+      <Icon
+        className={cn(
+          'text-muted-foreground mb-4',
+          currentSize.icon,
+          'motion-safe:animate-fade-in'
+        )}
+        aria-hidden="true"
+      />
+      <h3
+        className={cn(
+          'font-semibold text-foreground mb-2 text-center',
+          currentSize.title
+        )}
+      >
+        {title}
+      </h3>
       {description && (
-        <p className="text-slate-600 dark:text-slate-400 text-center mb-6 max-w-md">{description}</p>
+        <p
+          className={cn(
+            'text-muted-foreground text-center mb-6 max-w-md',
+            currentSize.description
+          )}
+        >
+          {description}
+        </p>
       )}
       {action && (
-        <Button onClick={action.onClick} variant="outline">
+        <Button
+          onClick={action.onClick}
+          variant="default"
+          size={size === 'sm' ? 'sm' : 'default'}
+          aria-label={action.label}
+        >
           {action.label}
         </Button>
       )}

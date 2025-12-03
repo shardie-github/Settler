@@ -25,6 +25,12 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
    * @default false
    */
   fullWidth?: boolean;
+  
+  /**
+   * Loading state - shows spinner and disables button
+   * @default false
+   */
+  loading?: boolean;
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
@@ -35,28 +41,68 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       size = 'default',
       asChild = false,
       fullWidth = false,
+      loading = false,
+      disabled,
       children,
       ...props
     },
     ref
   ) => {
+    const isDisabled = disabled || loading;
+    
     const baseStyles = [
-      'inline-flex items-center justify-center',
+      'inline-flex items-center justify-center gap-2',
       'rounded-md text-sm font-medium',
       'ring-offset-background',
-      'transition-colors',
+      // Enhanced transitions for all interactive properties
+      'transition-[background-color,color,transform,box-shadow,border-color] duration-100 ease-out',
+      // Focus styles - visible and accessible
       'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
-      'disabled:pointer-events-none disabled:opacity-50',
+      'focus-visible:ring-offset-background',
+      // Disabled state
+      'disabled:pointer-events-none disabled:opacity-50 disabled:cursor-not-allowed',
+      // Active state with subtle scale
       'active:scale-[0.98]',
+      // Respect reduced motion
+      'motion-reduce:transition-none motion-reduce:active:scale-100',
     ];
     
     const variants = {
-      default: 'bg-primary-600 text-white hover:bg-primary-700 active:bg-primary-800',
-      destructive: 'bg-destructive text-destructive-foreground hover:bg-destructive/90 active:bg-destructive',
-      outline: 'border border-input bg-background hover:bg-accent hover:text-accent-foreground',
-      secondary: 'bg-muted text-muted-foreground hover:bg-muted/80',
-      ghost: 'hover:bg-accent hover:text-accent-foreground',
-      link: 'text-primary-600 underline-offset-4 hover:underline',
+      default: [
+        'bg-primary-600 text-white',
+        'hover:bg-primary-700 hover:shadow-md',
+        'active:bg-primary-800 active:shadow-sm',
+        'focus-visible:ring-primary-600',
+      ],
+      destructive: [
+        'bg-destructive text-destructive-foreground',
+        'hover:bg-destructive/90 hover:shadow-md',
+        'active:bg-destructive active:shadow-sm',
+        'focus-visible:ring-destructive',
+      ],
+      outline: [
+        'border-2 border-input bg-background',
+        'hover:bg-accent hover:text-accent-foreground hover:border-accent',
+        'active:bg-accent/80 active:border-accent',
+        'focus-visible:ring-ring',
+      ],
+      secondary: [
+        'bg-muted text-muted-foreground',
+        'hover:bg-muted/80 hover:shadow-sm',
+        'active:bg-muted/70',
+        'focus-visible:ring-ring',
+      ],
+      ghost: [
+        'hover:bg-accent hover:text-accent-foreground',
+        'active:bg-accent/80',
+        'focus-visible:ring-ring',
+      ],
+      link: [
+        'text-primary-600 underline-offset-4',
+        'hover:underline hover:text-primary-700',
+        'active:text-primary-800',
+        'focus-visible:ring-ring focus-visible:underline',
+      ],
     };
 
     const sizes = {
@@ -74,9 +120,36 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       className
     );
 
+    // Loading spinner component
+    const LoadingSpinner = () => (
+      <svg
+        className="animate-spin h-4 w-4"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        aria-hidden="true"
+      >
+        <circle
+          className="opacity-25"
+          cx="12"
+          cy="12"
+          r="10"
+          stroke="currentColor"
+          strokeWidth="4"
+        />
+        <path
+          className="opacity-75"
+          fill="currentColor"
+          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+        />
+      </svg>
+    );
+
     if (asChild && React.isValidElement(children)) {
       return React.cloneElement(children as React.ReactElement, {
         className: cn(classes, (children.props as { className?: string })?.className),
+        disabled: isDisabled,
+        'aria-busy': loading,
         ...props,
       });
     }
@@ -86,8 +159,12 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         className={classes}
         ref={ref}
         type={props.type || 'button'}
+        disabled={isDisabled}
+        aria-busy={loading}
+        aria-disabled={isDisabled}
         {...props}
       >
+        {loading && <LoadingSpinner />}
         {children}
       </button>
     );

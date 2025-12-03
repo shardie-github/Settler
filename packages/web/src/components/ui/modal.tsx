@@ -71,6 +71,10 @@ const Modal: React.FC<ModalProps> = ({
     setIsMounted(true);
   }, []);
 
+  // Focus trap refs
+  const modalRef = React.useRef<HTMLDivElement>(null);
+  const previousFocusRef = React.useRef<HTMLElement | null>(null);
+
   React.useEffect(() => {
     if (!open || !closeOnEscape) return;
 
@@ -83,6 +87,60 @@ const Modal: React.FC<ModalProps> = ({
     document.addEventListener('keydown', handleEscape);
     return () => document.removeEventListener('keydown', handleEscape);
   }, [open, closeOnEscape, onClose]);
+
+  // Focus trap management
+  React.useEffect(() => {
+    if (!open) return;
+
+    // Store the previously focused element
+    previousFocusRef.current = document.activeElement as HTMLElement;
+
+    // Focus the modal
+    const timer = setTimeout(() => {
+      const firstFocusable = modalRef.current?.querySelector(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+      ) as HTMLElement;
+      firstFocusable?.focus();
+    }, 100);
+
+    return () => {
+      clearTimeout(timer);
+      // Restore focus when modal closes
+      previousFocusRef.current?.focus();
+    };
+  }, [open]);
+
+  // Trap focus within modal
+  React.useEffect(() => {
+    if (!open) return;
+
+    const handleTabKey = (e: KeyboardEvent) => {
+      if (e.key !== 'Tab' || !modalRef.current) return;
+
+      const focusableElements = modalRef.current.querySelectorAll(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+      );
+      const firstElement = focusableElements[0] as HTMLElement;
+      const lastElement = focusableElements[focusableElements.length - 1] as HTMLElement;
+
+      if (e.shiftKey) {
+        // Shift + Tab
+        if (document.activeElement === firstElement) {
+          e.preventDefault();
+          lastElement?.focus();
+        }
+      } else {
+        // Tab
+        if (document.activeElement === lastElement) {
+          e.preventDefault();
+          firstElement?.focus();
+        }
+      }
+    };
+
+    document.addEventListener('keydown', handleTabKey);
+    return () => document.removeEventListener('keydown', handleTabKey);
+  }, [open]);
 
   React.useEffect(() => {
     if (open) {
@@ -115,10 +173,7 @@ const Modal: React.FC<ModalProps> = ({
     <div
       className="fixed inset-0 z-50 flex items-center justify-center p-4"
       onClick={handleBackdropClick}
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby={title ? 'modal-title' : undefined}
-      aria-describedby={description ? 'modal-description' : undefined}
+      aria-hidden="true"
     >
       {/* Backdrop */}
       <div
@@ -128,13 +183,19 @@ const Modal: React.FC<ModalProps> = ({
       
       {/* Modal Content */}
       <div
+        ref={modalRef}
         className={cn(
           'relative z-50 w-full rounded-lg border bg-card text-card-foreground shadow-lg',
           'animate-in fade-in-0 zoom-in-95 slide-in-from-bottom-4',
           'max-h-[90vh] overflow-y-auto',
+          'motion-reduce:animate-none',
           sizeClasses[size]
         )}
         onClick={(e) => e.stopPropagation()}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={title ? 'modal-title' : undefined}
+        aria-describedby={description ? 'modal-description' : undefined}
       >
         {/* Header */}
         {(title || showCloseButton) && (

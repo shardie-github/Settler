@@ -60,18 +60,19 @@ export function Navigation() {
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-6" role="menubar">
+          <nav className="hidden md:flex items-center space-x-6" aria-label="Desktop navigation">
             {navigationItems.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
                 className={cn(
                   'text-muted-foreground hover:text-primary-600 dark:hover:text-primary-400',
-                  'transition-colors duration-200',
+                  'transition-colors duration-200 ease-out',
                   'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
-                  'rounded px-2 py-1'
+                  'focus-visible:ring-offset-background',
+                  'rounded px-2 py-1',
+                  'motion-reduce:transition-none'
                 )}
-                role="menuitem"
               >
                 {item.label}
               </Link>
@@ -80,6 +81,7 @@ export function Navigation() {
             <Button
               asChild
               variant="default"
+              size="default"
             >
               <Link href="/playground" aria-label="Get started with Settler">
                 Get Started
@@ -95,12 +97,15 @@ export function Navigation() {
               className={cn(
                 'p-2 rounded-md',
                 'text-muted-foreground hover:bg-muted',
-                'transition-colors',
-                'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2'
+                'transition-colors duration-200 ease-out',
+                'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
+                'focus-visible:ring-offset-background',
+                'motion-reduce:transition-none'
               )}
-              aria-label="Toggle menu"
+              aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
               aria-expanded={mobileMenuOpen}
               aria-controls="mobile-menu"
+              type="button"
             >
               {mobileMenuOpen ? (
                 <X className="w-6 h-6" aria-hidden="true" />
@@ -117,23 +122,25 @@ export function Navigation() {
             id="mobile-menu"
             className={cn(
               'md:hidden py-4 border-t border-border',
-              'animate-in slide-in-from-top-2 fade-in-0'
+              'motion-safe:animate-in motion-safe:slide-in-from-top-2 motion-safe:fade-in-0',
+              'motion-reduce:animate-none'
             )}
             role="menu"
             aria-label="Mobile navigation menu"
           >
-            <div className="flex flex-col space-y-4">
+            <nav className="flex flex-col space-y-4" aria-label="Mobile navigation">
               {navigationItems.map((item) => (
                 <Link
                   key={item.href}
                   href={item.href}
                   className={cn(
                     'text-muted-foreground hover:text-primary-600 dark:hover:text-primary-400',
-                    'transition-colors duration-200',
+                    'transition-colors duration-200 ease-out',
                     'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
-                    'rounded px-2 py-1'
+                    'focus-visible:ring-offset-background',
+                    'rounded px-2 py-1',
+                    'motion-reduce:transition-none'
                   )}
-                  role="menuitem"
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   {item.label}
@@ -142,13 +149,14 @@ export function Navigation() {
               <Button
                 asChild
                 variant="default"
+                size="default"
                 className="w-full"
               >
                 <Link href="/playground" aria-label="Get started with Settler">
                   Get Started
                 </Link>
               </Button>
-            </div>
+            </nav>
           </div>
         )}
       </div>
