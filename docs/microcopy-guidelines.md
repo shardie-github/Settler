@@ -1,235 +1,438 @@
 # Microcopy Guidelines
 
-## Overview
+This document defines the tone, voice, style, and writing standards for all user-facing text in the Settler product.
 
-This document defines the tone, voice, and writing standards for all user-facing text in the Settler application. Consistent microcopy creates a cohesive user experience and builds trust.
+## Table of Contents
 
-## Tone & Voice
+1. [Tone & Voice Framework](#tone--voice-framework)
+2. [Writing Rules](#writing-rules)
+3. [Component-Specific Guidelines](#component-specific-guidelines)
+4. [Before/After Examples](#beforeafter-examples)
+5. [Terminology Consistency](#terminology-consistency)
+
+---
+
+## Tone & Voice Framework
 
 ### Tone
-- **Friendly**: Approachable and warm, but not overly casual
-- **Professional**: Competent and trustworthy
-- **Concise**: Direct and to the point, avoiding verbosity
-- **Empowering**: Helps users understand and take action
+
+**Friendly, Professional, Concise**
+
+- **Friendly**: Approachable and human, not robotic or cold
+- **Professional**: Competent and trustworthy, not casual or unprofessional
+- **Concise**: Direct and to the point, no unnecessary words
 
 ### Voice
-- **Active**: Use active voice ("Create project" not "Project can be created")
-- **Empowering**: Focus on what users can accomplish
-- **Non-patronizing**: Treat users as capable and intelligent
-- **Clear**: Avoid jargon unless necessary, explain technical terms when used
 
-### Style Principles
+**Active, Empowering, Non-Patronizing**
 
-1. **Be Direct**: Say what you mean clearly and concisely
-2. **Be Positive**: Frame instructions positively when possible
-3. **Be Specific**: Avoid vague phrases like "a moment" or "soon"
-4. **Be Consistent**: Use the same terminology throughout
-5. **Be Action-Oriented**: Use verbs for buttons and actions
+- **Active**: Use active voice ("Create project" not "Project will be created")
+- **Empowering**: Give users control and clear next steps
+- **Non-Patronizing**: Treat users as capable, avoid condescension
+
+### Style
+
+**Direct, Positive, Non-Verbose**
+
+- **Direct**: Say what you mean, avoid ambiguity
+- **Positive**: Frame positively when possible ("Save changes" not "Don't lose changes")
+- **Non-Verbose**: Use fewer words, avoid filler phrases
+
+### Language
+
+**Free of Jargon Unless Necessary**
+
+- Use plain language when possible
+- Define technical terms on first use
+- Avoid internal terminology users wouldn't understand
+
+---
 
 ## Writing Rules
 
+### 1. Clarity Over Cleverness
+
+❌ **Avoid**: "Oops! Something went sideways"
+✅ **Use**: "Something went wrong. Please try again."
+
+### 2. Action-Oriented CTAs
+
+❌ **Avoid**: "Click here", "You can try", "This might take a moment"
+✅ **Use**: "Create Project", "Save Changes", "View Dashboard"
+
+### 3. Specific Instructions
+
+❌ **Avoid**: "An error occurred"
+✅ **Use**: "Failed to save changes. Please check your connection and try again."
+
+### 4. Positive Framing
+
+❌ **Avoid**: "Don't forget to save"
+✅ **Use**: "Remember to save your changes"
+
+### 5. Consistent Grammar
+
+- **Title Case**: For navigation items, section headings
+- **Sentence Case**: For buttons, form labels, descriptions
+- **No mixing** unless consistent across the product
+
+### 6. Avoid Vague Phrases
+
+❌ **Avoid**:
+- "Click here"
+- "You can try"
+- "This might take a moment"
+- "Something went wrong" (without context)
+
+✅ **Use**:
+- "Create Project" (specific action)
+- "Try Again" (clear action)
+- "Processing... This usually takes 2-3 seconds" (specific timing)
+- "Failed to load data. Please check your connection." (specific error)
+
+### 7. User-Centric Language
+
+❌ **Avoid**: "The system will process your request"
+✅ **Use**: "Processing your request..."
+
+### 8. Error Messages
+
+- **Clear cause**: What went wrong (without exposing internals)
+- **Actionable**: What the user can do next
+- **Helpful**: Link to support or documentation if relevant
+
+---
+
+## Component-Specific Guidelines
+
 ### Buttons & CTAs
 
-**Format**: Title case, action verbs
+#### Primary Actions
+- Use action verbs: "Create", "Save", "Submit", "Continue"
+- Be specific: "Create Project" not "Create"
+- Use present tense: "Save Changes" not "Saving Changes"
+
+**Examples**:
 - ✅ "Create Project"
 - ✅ "Save Changes"
 - ✅ "View Dashboard"
-- ✅ "Get Started"
-- ❌ "create project" (sentence case)
-- ❌ "Click here" (vague)
-- ❌ "Submit" (too generic)
+- ✅ "Start Free Trial"
+- ❌ "Click to Create"
+- ❌ "Create New Project" (if context is clear)
 
-**Guidelines**:
-- Use action verbs: Create, Save, Delete, Edit, View, etc.
-- Be specific: "Save Changes" not "Save"
-- For destructive actions, be clear: "Delete Account" not "Remove"
+#### Secondary Actions
+- Use descriptive verbs: "Cancel", "Back", "Skip"
+- Be clear about consequences: "Discard Changes" not "Cancel"
+
+**Examples**:
+- ✅ "Cancel"
+- ✅ "Discard Changes"
+- ✅ "Back to Dashboard"
+- ❌ "Go Back" (if context is clear)
+
+#### Destructive Actions
+- Be explicit: "Delete Project" not "Delete"
+- Confirm consequences: "Delete Project and All Data"
+
+**Examples**:
+- ✅ "Delete Project"
+- ✅ "Remove Integration"
+- ❌ "Delete" (too vague)
 
 ### Form Labels & Placeholders
 
-**Labels**:
-- Be descriptive: "Email Address" not "Email" (if context unclear)
-- Use title case: "First Name"
-- Required fields: Add asterisk (*) and indicate in help text
+#### Labels
+- Use sentence case: "Email address" not "Email Address"
+- Be descriptive: "Project name" not "Name"
+- Indicate required fields: "Email address *" or use `required` attribute
 
-**Placeholders**:
-- Show example format: "john@example.com"
-- Be helpful: "Enter your email address"
-- Avoid placeholder as only label (accessibility issue)
+**Examples**:
+- ✅ "Email address"
+- ✅ "Project name"
+- ✅ "API key"
+- ❌ "Email" (if context isn't clear)
+- ❌ "Enter your email" (too verbose for label)
 
-**Error Messages**:
-- Be specific: "Email address is invalid" not "Error"
+#### Placeholders
+- Show example format: "you@example.com"
+- Be helpful: "Enter project name" not "Name"
+- Don't replace labels: Placeholders are hints, not labels
+
+**Examples**:
+- ✅ "you@example.com"
+- ✅ "my-awesome-project"
+- ✅ "Enter API key"
+- ❌ "Email" (too vague)
+- ❌ "Click here to enter email" (too verbose)
+
+#### Error Messages
+- Be specific: "Please enter a valid email address"
 - Be actionable: "Password must be at least 8 characters"
-- Be helpful: "This email is already registered. Try signing in instead."
+- Avoid blame: "Invalid email" not "You entered an invalid email"
+
+**Examples**:
+- ✅ "Please enter a valid email address"
+- ✅ "Password must be at least 8 characters"
+- ✅ "This field is required"
+- ❌ "Invalid input"
+- ❌ "Error"
 
 ### Empty States
 
-**Structure**:
-1. Icon/Illustration (visual)
-2. Headline (what's missing)
-3. Description (why it's empty, optional)
-4. CTA (what to do next)
+#### Structure
+1. **Headline**: What's missing (H3 or H4)
+2. **Description**: Why it's empty and what to do (body text)
+3. **CTA**: Clear next step (button)
 
 **Examples**:
-- ✅ "No projects yet"
-  - "Create your first project to get started"
-  - [Create Project]
-- ✅ "No results found"
-  - "Try adjusting your filters or search terms"
-  - [Clear Filters]
+
+**No Projects**:
+- Headline: "No projects yet"
+- Description: "Create your first project to start reconciling transactions"
+- CTA: "Create Project"
+
+**No Results**:
+- Headline: "No results found"
+- Description: "Try adjusting your filters or search terms"
+- CTA: "Clear Filters"
+
+**No Data**:
+- Headline: "No data available"
+- Description: "Data will appear here once transactions are processed"
+- CTA: (none, or "View Documentation")
 
 ### Error States
 
-**Structure**:
-1. Clear error title
-2. User-friendly explanation (no technical jargon)
-3. Actionable next steps
-4. Retry/Support options
+#### Structure
+1. **Title**: What went wrong (H3)
+2. **Message**: Specific error (sanitized, user-friendly)
+3. **Actions**: Retry, Contact Support
 
 **Examples**:
-- ✅ "Unable to load data"
-  - "Please check your connection and try again"
-  - [Try Again] [Contact Support]
-- ✅ "Something went wrong"
-  - "We're working on fixing this. Please try again in a few minutes."
-  - [Try Again]
+
+**Network Error**:
+- Title: "Connection Error"
+- Message: "Unable to connect to the server. Please check your internet connection and try again."
+- Actions: "Try Again", "Contact Support"
+
+**Not Found**:
+- Title: "Page Not Found"
+- Message: "The page you're looking for doesn't exist or has been moved."
+- Actions: "Go Home", "Back"
+
+**Server Error**:
+- Title: "Server Error"
+- Message: "Something went wrong on our end. We've been notified and are working on a fix."
+- Actions: "Try Again", "Contact Support"
 
 ### Loading States
 
-- Use present continuous: "Loading..." not "Load"
-- Be specific when possible: "Saving changes..." not "Loading..."
-- For long operations: "Processing... This may take a minute"
+- Be specific: "Loading projects..." not "Loading..."
+- Show progress when possible: "Processing 3 of 10 transactions..."
+- Set expectations: "This may take a few moments"
+
+**Examples**:
+- ✅ "Loading projects..."
+- ✅ "Saving changes..."
+- ✅ "Processing transaction..."
+- ✅ "Syncing data... This may take a few moments"
+- ❌ "Loading..."
+- ❌ "Please wait"
 
 ### Success Messages
 
 - Be specific: "Project created successfully" not "Success"
 - Be brief: "Changes saved" not "Your changes have been successfully saved"
-- Use positive language: "Connected" not "Connection successful"
+- Use positive language: "Project created" not "Project was created"
+
+**Examples**:
+- ✅ "Project created successfully"
+- ✅ "Changes saved"
+- ✅ "Integration connected"
+- ❌ "Success"
+- ❌ "Done"
 
 ### Tooltips
 
-- Be concise: One line when possible
-- Be helpful: Explain why, not just what
-- Examples:
-  - ✅ "This setting affects all team members"
-  - ❌ "Settings"
+- Be concise: One sentence, max 80 characters
+- Be helpful: Explain what the action does
+- Use sentence case
 
-### Modal Titles & Descriptions
+**Examples**:
+- ✅ "Delete this project permanently"
+- ✅ "Refresh the current view"
+- ✅ "Export data as CSV"
+- ❌ "Click to delete"
+- ❌ "Delete"
 
-**Titles**: Clear action or question
-- ✅ "Delete Project?"
-- ✅ "Create New Project"
-- ❌ "Warning"
-- ❌ "Are you sure?"
+### Modals
 
-**Descriptions**: Explain consequences
-- ✅ "This action cannot be undone. All data will be permanently deleted."
-- ❌ "This will delete the project."
+#### Titles
+- Use title case: "Delete Project"
+- Be specific: "Delete Project" not "Confirm"
+
+#### Descriptions
+- Explain consequences: "This will permanently delete the project and all associated data."
+- Be clear: "This action cannot be undone."
+
+#### Actions
+- Primary: Destructive action ("Delete Project")
+- Secondary: Cancel ("Cancel")
+
+**Examples**:
+
+**Delete Confirmation**:
+- Title: "Delete Project"
+- Description: "This will permanently delete 'My Project' and all associated data. This action cannot be undone."
+- Primary: "Delete Project"
+- Secondary: "Cancel"
+
+---
+
+## Before/After Examples
+
+### Example 1: Button CTA
+
+❌ **Before**: "Click here to get started"
+✅ **After**: "Get Started"
+
+### Example 2: Form Error
+
+❌ **Before**: "Error"
+✅ **After**: "Please enter a valid email address"
+
+### Example 3: Empty State
+
+❌ **Before**: 
+- Headline: "Nothing here"
+- Description: "You can try creating something"
+- CTA: "Click here"
+
+✅ **After**:
+- Headline: "No projects yet"
+- Description: "Create your first project to start reconciling transactions"
+- CTA: "Create Project"
+
+### Example 4: Loading State
+
+❌ **Before**: "Loading... This might take a moment"
+✅ **After**: "Loading projects... This usually takes 2-3 seconds"
+
+### Example 5: Error Message
+
+❌ **Before**: "Something went wrong"
+✅ **After**: "Failed to save changes. Please check your connection and try again."
+
+### Example 6: Success Message
+
+❌ **Before**: "Success!"
+✅ **After**: "Project created successfully"
+
+---
 
 ## Terminology Consistency
 
 ### Standard Terms
 
-| Context | Preferred Term | Avoid |
-|---------|---------------|-------|
-| User actions | Create, Edit, Delete, View | Add, Remove, Show |
-| Data states | Loading, Error, Empty | Fetching, Failed, None |
-| Navigation | Dashboard, Settings, Profile | Home, Config, Account |
-| Forms | Submit, Save, Cancel | Send, Store, Close |
+Use these terms consistently across the product:
 
-### Technical Terms
+| Term | Usage | Don't Use |
+|------|-------|-----------|
+| **Project** | User's reconciliation project | Job, Task, Workflow |
+| **Integration** | Connected platform (Stripe, Shopify) | Connector, Adapter, Service |
+| **Transaction** | Financial transaction record | Payment, Record, Item |
+| **Reconciliation** | Matching process | Matching, Sync, Comparison |
+| **Dashboard** | Main overview page | Home, Overview |
+| **Settings** | Configuration page | Preferences, Config |
+| **API Key** | Authentication key | Token, Secret, Credential |
 
-When using technical terms:
-1. **First use**: Explain briefly
-   - "API key (used to authenticate requests)"
-2. **Subsequent uses**: Use consistently
-3. **Avoid**: Unnecessary technical jargon in user-facing text
+### Action Verbs
 
-## Before & After Examples
+| Action | Usage |
+|--------|-------|
+| **Create** | For new items (projects, integrations) |
+| **Add** | For adding items to collections |
+| **Save** | For saving changes |
+| **Delete** | For removing items |
+| **Remove** | For removing from collections |
+| **Update** | For modifying existing items |
+| **View** | For viewing details |
+| **Edit** | For editing items |
+| **Cancel** | For canceling actions |
+| **Confirm** | For confirming actions |
+| **Retry** | For retrying failed actions |
+| **Refresh** | For refreshing data |
 
-### Button Labels
+### Status Terms
 
-**Before**: "Click here to get started"
-**After**: "Get Started"
-
-**Before**: "Submit"
-**After**: "Save Changes"
-
-**Before**: "Remove"
-**After**: "Delete Project"
-
-### Error Messages
-
-**Before**: "Error: Failed to fetch"
-**After**: "Unable to load data. Please check your connection and try again."
-
-**Before**: "404 Not Found"
-**After**: "The page you're looking for doesn't exist."
-
-### Empty States
-
-**Before**: "No data"
-**After**: "No projects yet. Create your first project to get started."
-
-**Before**: "Nothing here"
-**After**: "No results found. Try adjusting your search or filters."
-
-### Form Placeholders
-
-**Before**: "Email"
-**After**: "you@example.com"
-
-**Before**: "Password"
-**After**: "Enter your password"
-
-## Accessibility Considerations
-
-1. **Alt Text**: Descriptive for images, empty for decorative
-2. **ARIA Labels**: Use when text isn't visible (icon buttons)
-3. **Error Announcements**: Use `aria-live` for dynamic errors
-4. **Loading States**: Use `aria-busy` and `aria-live`
-
-## Language & Localization
-
-- Write in plain English (US)
-- Avoid idioms and cultural references
-- Keep strings externalized for translation
-- Consider RTL languages in layout (future)
-
-## Review Checklist
-
-Before publishing any user-facing text:
-
-- [ ] Uses active voice
-- [ ] Is concise and clear
-- [ ] Uses consistent terminology
-- [ ] Provides actionable guidance
-- [ ] Avoids technical jargon (or explains it)
-- [ ] Is accessible (proper labels, ARIA)
-- [ ] Matches tone and voice guidelines
-- [ ] Has been proofread for typos
-
-## Examples by Component Type
-
-### Navigation
-- "Docs" (not "Documentation" - too long for nav)
-- "Get Started" (not "Sign Up" - more welcoming)
-
-### Forms
-- "Email Address" (label)
-- "you@example.com" (placeholder)
-- "Please enter a valid email address" (error)
-
-### Buttons
-- Primary: "Create Project"
-- Secondary: "Cancel"
-- Destructive: "Delete Account"
-
-### Notifications
-- Success: "Project created successfully"
-- Error: "Unable to save changes. Please try again."
-- Info: "Your changes have been saved"
+| Status | Usage |
+|--------|-------|
+| **Active** | Currently running/enabled |
+| **Inactive** | Currently stopped/disabled |
+| **Pending** | Waiting to start |
+| **Processing** | Currently running |
+| **Completed** | Finished successfully |
+| **Failed** | Finished with error |
+| **Cancelled** | User cancelled |
 
 ---
 
-**Last Updated**: Phase 8 Implementation
-**Maintained By**: Design & Product Team
+## Checklist
+
+When writing microcopy, ensure:
+
+- [ ] Uses active voice
+- [ ] Is specific and actionable
+- [ ] Avoids vague phrases
+- [ ] Uses consistent terminology
+- [ ] Is concise (no unnecessary words)
+- [ ] Frames positively when possible
+- [ ] Provides clear next steps
+- [ ] Uses consistent grammar (title case vs sentence case)
+- [ ] Avoids jargon unless necessary
+- [ ] Is user-centric (not system-centric)
+
+---
+
+## Implementation
+
+### Using i18n System
+
+All user-facing strings should be externalized to `/lib/i18n/locales/en.json`:
+
+```json
+{
+  "buttons": {
+    "create": "Create",
+    "saveChanges": "Save Changes",
+    "viewDashboard": "View Dashboard"
+  },
+  "forms": {
+    "required": "This field is required",
+    "invalidEmail": "Please enter a valid email address"
+  },
+  "emptyStates": {
+    "noProjects": "No projects yet",
+    "noProjectsDescription": "Create your first project to start reconciling transactions"
+  }
+}
+```
+
+### Component Usage
+
+```tsx
+import { useTranslation } from '@/lib/i18n';
+
+function MyComponent() {
+  const { t } = useTranslation();
+  
+  return (
+    <Button>{t('buttons.create')}</Button>
+  );
+}
+```
+
+---
+
+**Last Updated**: Phase 8 - UX Polish
+**Version**: 1.0.0

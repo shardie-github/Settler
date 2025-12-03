@@ -105,25 +105,67 @@ export interface I18nContextValue {
 
 /**
  * Simple translation function
- * In a full implementation, this would load from locale files
+ * Loads translations from locale files
  */
+import enTranslations from './locales/en.json';
+
+const translations: Record<Locale, any> = {
+  en: enTranslations,
+  // Add other locales as they're implemented
+  fr: enTranslations, // Placeholder
+  es: enTranslations, // Placeholder
+  de: enTranslations, // Placeholder
+  ja: enTranslations, // Placeholder
+  zh: enTranslations, // Placeholder
+};
+
+/**
+ * Get nested value from object by dot-notation key
+ */
+function getNestedValue(obj: any, key: string): string | undefined {
+  const keys = key.split('.');
+  let value = obj;
+  
+  for (const k of keys) {
+    if (value && typeof value === 'object' && k in value) {
+      value = value[k];
+    } else {
+      return undefined;
+    }
+  }
+  
+  return typeof value === 'string' ? value : undefined;
+}
+
+/**
+ * Replace parameters in translation string
+ */
+function replaceParams(str: string, params?: Record<string, string | number>): string {
+  if (!params) return str;
+  
+  let result = str;
+  Object.entries(params).forEach(([key, value]) => {
+    result = result.replace(new RegExp(`\\{${key}\\}`, 'g'), String(value));
+  });
+  
+  return result;
+}
+
 export function translate(
   key: string,
   locale: Locale = defaultLocale,
   params?: Record<string, string | number>
 ): string {
-  // For now, return the key as fallback
-  // In production, this would load from locale files
-  let translation = key;
+  const localeTranslations = translations[locale] || translations[defaultLocale];
+  const translation = getNestedValue(localeTranslations, key);
   
-  // Simple parameter replacement
-  if (params) {
-    Object.entries(params).forEach(([paramKey, value]) => {
-      translation = translation.replace(`{${paramKey}}`, String(value));
-    });
+  if (!translation) {
+    // Fallback to key if translation not found
+    console.warn(`Translation missing for key: ${key}`);
+    return key;
   }
   
-  return translation;
+  return replaceParams(translation, params);
 }
 
 /**

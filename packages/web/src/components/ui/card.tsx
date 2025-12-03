@@ -51,7 +51,8 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
         ref={ref}
         className={cn(
           'rounded-lg border bg-card text-card-foreground',
-          'transition-shadow',
+          'transition-shadow duration-200 ease-out',
+          'motion-reduce:transition-none',
           elevationClasses[elevation],
           hover && 'hover:shadow-lg cursor-pointer',
           className
