@@ -1,6 +1,7 @@
 'use client';
 
 import { ReactNode, useEffect } from 'react';
+import { cn } from '@/lib/utils';
 
 interface AnimatedPageWrapperProps {
   children: ReactNode;
@@ -33,7 +34,12 @@ export function AnimatedPageWrapper({
       </a>
       <div 
         id="main-content"
-        className={`min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 ${className}`}
+        className={cn(
+          'min-h-screen',
+          'bg-gradient-to-br from-background via-primary-50/50 to-electric-indigo/10',
+          'dark:from-background dark:via-background dark:to-background',
+          className
+        )}
         role="main"
         aria-label={ariaLabel || 'Page content'}
       >

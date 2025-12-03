@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { cn } from '@/lib/utils';
 
 interface ConversionCTAProps {
   title?: string;
@@ -24,10 +25,10 @@ export function ConversionCTA({
   if (variant === 'minimal') {
     return (
       <div className="text-center py-12" role="region" aria-labelledby="cta-title">
-        <h3 id="cta-title" className="text-2xl font-bold mb-4 text-slate-900 dark:text-white">
+        <h3 id="cta-title" className="text-2xl font-bold mb-4 text-foreground">
           {title}
         </h3>
-        <p className="text-slate-600 dark:text-slate-300 mb-6 max-w-2xl mx-auto">{description}</p>
+        <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">{description}</p>
         <div
           className="flex flex-col sm:flex-row gap-4 justify-center"
           role="group"
@@ -36,7 +37,7 @@ export function ConversionCTA({
           <Button
             asChild
             size="lg"
-            className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white transition-all transform hover:scale-105 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+            variant="default"
           >
             <Link href={primaryLink} aria-label={primaryAction}>
               {primaryAction}
@@ -47,7 +48,6 @@ export function ConversionCTA({
               asChild
               size="lg"
               variant="outline"
-              className="transition-all transform hover:scale-105 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
             >
               <Link href={secondaryLink} aria-label={secondaryAction}>
                 {secondaryAction}
@@ -62,7 +62,12 @@ export function ConversionCTA({
   if (variant === 'gradient') {
     return (
       <Card
-        className="bg-gradient-to-r from-blue-600 to-indigo-600 border-0 shadow-2xl transition-all duration-500 hover:shadow-3xl"
+        className={cn(
+          'bg-gradient-to-r from-primary-600 to-electric-indigo',
+          'border-0 shadow-2xl',
+          'transition-all duration-500 hover:shadow-3xl'
+        )}
+        elevation="lg"
         role="region"
         aria-labelledby="cta-title"
       >
@@ -70,7 +75,7 @@ export function ConversionCTA({
           <CardTitle id="cta-title" className="text-3xl md:text-4xl text-white mb-4">
             {title}
           </CardTitle>
-          <CardDescription className="text-blue-100 text-lg">{description}</CardDescription>
+          <CardDescription className="text-primary-100 text-lg">{description}</CardDescription>
         </CardHeader>
         <CardContent className="text-center">
           <div
@@ -82,7 +87,7 @@ export function ConversionCTA({
               size="lg"
               variant="secondary"
               asChild
-              className="bg-white text-blue-600 hover:bg-blue-50 px-8 py-6 text-lg transition-all transform hover:scale-105 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+              className="bg-white text-primary-600 hover:bg-primary-50"
             >
               <Link href={primaryLink} aria-label={primaryAction}>
                 {primaryAction}
@@ -93,7 +98,7 @@ export function ConversionCTA({
                 size="lg"
                 variant="outline"
                 asChild
-                className="border-2 border-white text-white hover:bg-white/10 px-8 py-6 text-lg transition-all transform hover:scale-105 focus:ring-2 focus:ring-white focus:ring-offset-2"
+                className="border-2 border-white text-white hover:bg-white/10"
               >
                 <Link href={secondaryLink} aria-label={secondaryAction}>
                   {secondaryAction}
@@ -108,15 +113,16 @@ export function ConversionCTA({
 
   return (
     <Card
-      className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 shadow-xl transition-all duration-500 hover:shadow-2xl"
+      elevation="lg"
+      hover
       role="region"
       aria-labelledby="cta-title"
     >
       <CardHeader className="text-center">
-        <CardTitle id="cta-title" className="text-2xl md:text-3xl text-slate-900 dark:text-white mb-2">
+        <CardTitle id="cta-title" className="text-2xl md:text-3xl mb-2">
           {title}
         </CardTitle>
-        <CardDescription className="text-slate-600 dark:text-slate-300">{description}</CardDescription>
+        <CardDescription>{description}</CardDescription>
       </CardHeader>
       <CardContent className="text-center">
         <div
@@ -127,7 +133,7 @@ export function ConversionCTA({
           <Button
             size="lg"
             asChild
-            className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-8 transition-all transform hover:scale-105 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+            variant="default"
           >
             <Link href={primaryLink} aria-label={primaryAction}>
               {primaryAction}
@@ -138,7 +144,6 @@ export function ConversionCTA({
               size="lg"
               variant="outline"
               asChild
-              className="transition-all transform hover:scale-105 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
             >
               <Link href={secondaryLink} aria-label={secondaryAction}>
                 {secondaryAction}

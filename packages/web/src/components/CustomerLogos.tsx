@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { cn } from '@/lib/utils';
 
 export function CustomerLogos() {
   const [isVisible, setIsVisible] = useState(false);
@@ -44,7 +45,7 @@ export function CustomerLogos() {
 
   return (
     <div ref={containerRef} className="py-12" role="region" aria-label="Customer logos">
-      <p className="text-center text-sm text-slate-600 dark:text-slate-400 mb-8">
+      <p className="text-center text-sm text-muted-foreground mb-8">
         Trusted by leading companies
       </p>
       <div
@@ -55,16 +56,16 @@ export function CustomerLogos() {
         {logos.map((company, index) => (
           <div
             key={index}
-            className={`
-              flex items-center justify-center w-24 h-24 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 shadow-sm
-              transition-all duration-500
-              ${isVisible
+            className={cn(
+              'flex items-center justify-center w-24 h-24',
+              'bg-card rounded-lg border border-border shadow-sm',
+              'transition-all duration-500',
+              isVisible
                 ? 'opacity-100 translate-y-0 scale-100'
-                : 'opacity-0 translate-y-4 scale-95'
-              }
-              hover:opacity-100 hover:grayscale-0 hover:scale-110 hover:shadow-lg
-              ${prefersReducedMotion ? '' : 'opacity-60 grayscale'}
-            `}
+                : 'opacity-0 translate-y-4 scale-95',
+              'hover:opacity-100 hover:grayscale-0 hover:scale-110 hover:shadow-lg',
+              !prefersReducedMotion && 'opacity-60 grayscale'
+            )}
             style={{
               transitionDelay: prefersReducedMotion ? '0ms' : `${index * 100}ms`,
             }}

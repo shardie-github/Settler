@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
+import { cn } from '@/lib/utils';
 
 interface Testimonial {
   name: string;
@@ -79,11 +80,11 @@ export function SocialProof({ testimonials = defaultTestimonials }: SocialProofP
         <div className="text-center mb-12">
           <h2
             id="testimonials-heading"
-            className="text-3xl md:text-4xl font-bold mb-4 text-slate-900 dark:text-white"
+            className="text-3xl md:text-4xl font-bold mb-4 text-foreground"
           >
             Loved by Developers & Finance Teams
           </h2>
-          <p className="text-lg text-slate-600 dark:text-slate-300">
+          <p className="text-lg text-muted-foreground">
             Join thousands of companies using Settler for mission-critical reconciliation
           </p>
         </div>
@@ -95,15 +96,14 @@ export function SocialProof({ testimonials = defaultTestimonials }: SocialProofP
           {testimonials.map((testimonial, index) => (
             <Card
               key={index}
-              className={`
-                bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800
-                transition-all duration-700
-                ${isVisible
+              className={cn(
+                'bg-card border-border',
+                'transition-all duration-700',
+                isVisible
                   ? 'opacity-100 translate-y-0 scale-100'
-                  : 'opacity-0 translate-y-8 scale-95'
-                }
-                hover:shadow-xl hover:-translate-y-2
-              `}
+                  : 'opacity-0 translate-y-8 scale-95',
+                'hover:shadow-xl hover:-translate-y-2'
+              )}
               style={{
                 transitionDelay: prefersReducedMotion ? '0ms' : `${index * 150}ms`,
               }}
@@ -118,7 +118,7 @@ export function SocialProof({ testimonials = defaultTestimonials }: SocialProofP
                     </span>
                   ))}
                 </div>
-                <blockquote className="text-slate-700 dark:text-slate-300 mb-6 italic">
+                <blockquote className="text-muted-foreground mb-6 italic">
                   <p>"{testimonial.quote}"</p>
                 </blockquote>
                 <div className="flex items-center gap-3">

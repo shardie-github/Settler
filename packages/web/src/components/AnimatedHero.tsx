@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { Badge } from '@/components/ui/badge';
-
+import { cn } from '@/lib/utils';
 import { ReactNode } from 'react';
 
 interface AnimatedHeroProps {
@@ -59,13 +59,23 @@ export function AnimatedHero({
         )}
         <h1
           id="hero-heading"
-          className={`text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent transition-all duration-300 ${animationClass}`}
+          className={cn(
+            'text-5xl md:text-7xl font-bold mb-6',
+            'bg-gradient-to-r from-primary-600 via-electric-indigo to-electric-purple',
+            'bg-clip-text text-transparent',
+            'transition-all duration-300',
+            animationClass
+          )}
           style={{ transitionDelay: prefersReducedMotion ? '0ms' : '100ms' }}
         >
           {title}
         </h1>
         <p
-          className={`text-xl md:text-2xl text-slate-600 dark:text-slate-300 mb-8 max-w-3xl mx-auto transition-all duration-300 ${animationClass}`}
+          className={cn(
+            'text-xl md:text-2xl text-muted-foreground mb-8 max-w-3xl mx-auto',
+            'transition-all duration-300',
+            animationClass
+          )}
           style={{ transitionDelay: prefersReducedMotion ? '0ms' : '150ms' }}
         >
           {description}
