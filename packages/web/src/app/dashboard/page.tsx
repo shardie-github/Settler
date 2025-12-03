@@ -12,6 +12,9 @@ import { getExternalMetrics } from '@/lib/api/external';
 import { Navigation } from '@/components/Navigation';
 import { Footer } from '@/components/Footer';
 
+// Force dynamic rendering since we use cookies
+export const dynamic = 'force-dynamic';
+
 // Server Component: Fetch metrics from Supabase
 async function DashboardMetrics() {
   try {

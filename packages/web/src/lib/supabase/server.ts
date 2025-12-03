@@ -16,6 +16,7 @@ import { Database } from '@/types/database.types';
  * Uses cookies for session management
  */
 export async function createClient() {
+  // eslint-disable-next-line @typescript-eslint/await-thenable
   const cookieStore = await cookies();
 
   const supabaseUrl = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL || '';

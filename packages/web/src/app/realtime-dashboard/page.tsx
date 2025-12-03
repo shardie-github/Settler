@@ -263,6 +263,7 @@ export default function RealtimeDashboard({ params, searchParams }: PageProps) {
           ))}
         </div>
       </div>
+      </div>
       <Footer />
     </div>
   );
