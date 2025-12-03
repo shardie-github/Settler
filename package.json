@@ -11,6 +11,8 @@
     "dev": "turbo run dev",
     "test": "turbo run test",
     "test:e2e": "playwright test",
+    "test:visual": "playwright test --project=visual-regression",
+    "test:visual:update": "playwright test --project=visual-regression --update-snapshots",
     "lint": "turbo run lint",
     "lint:fix": "turbo run lint -- --fix",
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\"",
