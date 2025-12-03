@@ -4,11 +4,15 @@ import * as React from 'react';
 import { Button } from './button';
 import { AlertCircle } from 'lucide-react';
 import { EmptyState } from './empty-state';
+import { logger } from '@/lib/logging/logger';
+import { analytics } from '@/lib/analytics';
+import { diagnostics } from '@/lib/diagnostics';
 
 export interface ErrorBoundaryProps {
   children: React.ReactNode;
   fallback?: React.ComponentType<ErrorFallbackProps>;
   onError?: (error: Error, errorInfo: React.ErrorInfo) => void;
+  componentName?: string;
 }
 
 export interface ErrorFallbackProps {
@@ -47,7 +51,27 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
   }
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-    console.error('ErrorBoundary caught an error:', error, errorInfo);
+    const componentName = this.props.componentName || 'Unknown';
+    
+    // Log error
+    logger.error(`ErrorBoundary caught error in ${componentName}`, error, {
+      componentStack: errorInfo.componentStack,
+      componentName,
+    });
+
+    // Track in diagnostics
+    diagnostics.trackComponentError(componentName, error, {
+      componentStack: errorInfo.componentStack,
+    });
+
+    // Track in analytics
+    analytics.trackError(error, {
+      type: 'error_boundary',
+      component: componentName,
+      componentStack: errorInfo.componentStack,
+    });
+
+    // Call custom error handler
     this.props.onError?.(error, errorInfo);
   }
 

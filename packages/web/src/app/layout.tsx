@@ -5,6 +5,7 @@ import { SmoothScroll } from "@/components/ui/SmoothScroll";
 import { OrganizationSchema, WebSiteSchema, SoftwareApplicationSchema } from "@/components/StructuredData";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { ErrorBoundary } from "@/components/ui/error-boundary";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -132,9 +133,11 @@ export default function RootLayout({
         />
       </head>
       <body>
-        <SmoothScroll>{children}</SmoothScroll>
-        <Analytics />
-        <SpeedInsights />
+        <ErrorBoundary componentName="RootLayout">
+          <SmoothScroll>{children}</SmoothScroll>
+          <Analytics />
+          <SpeedInsights />
+        </ErrorBoundary>
       </body>
     </html>
   );
