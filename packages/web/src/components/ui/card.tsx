@@ -3,6 +3,18 @@ import { cn } from '@/lib/utils';
 
 export interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
+  
+  /**
+   * Visual elevation variant
+   * @default 'default'
+   */
+  elevation?: 'none' | 'sm' | 'default' | 'lg';
+  
+  /**
+   * Whether card has hover effect
+   * @default false
+   */
+  hover?: boolean;
 }
 
 export interface CardHeaderProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -26,18 +38,30 @@ export interface CardFooterProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 const Card = React.forwardRef<HTMLDivElement, CardProps>(
-  ({ className, children, ...props }, ref) => (
-    <div
-      ref={ref}
-      className={cn(
-        'rounded-lg border bg-card text-card-foreground shadow-sm',
-        className
-      )}
-      {...props}
-    >
-      {children}
-    </div>
-  )
+  ({ className, children, elevation = 'default', hover = false, ...props }, ref) => {
+    const elevationClasses = {
+      none: '',
+      sm: 'shadow-sm',
+      default: 'shadow-md',
+      lg: 'shadow-lg',
+    };
+
+    return (
+      <div
+        ref={ref}
+        className={cn(
+          'rounded-lg border bg-card text-card-foreground',
+          'transition-shadow',
+          elevationClasses[elevation],
+          hover && 'hover:shadow-lg cursor-pointer',
+          className
+        )}
+        {...props}
+      >
+        {children}
+      </div>
+    );
+  }
 );
 Card.displayName = 'Card';
 

@@ -115,7 +115,7 @@ html {
 
 /* Focus visible for accessibility */
 :focus-visible {
-  outline: 2px solid theme('colors.blue.500');
+  outline: 2px solid theme('colors.primary.600');
   outline-offset: 2px;
   border-radius: 4px;
 }
@@ -126,7 +126,7 @@ html {
   left: -9999px;
   z-index: 999;
   padding: 1em;
-  background-color: theme('colors.blue.600');
+  background-color: theme('colors.primary.600');
   color: white;
   text-decoration: none;
 }
@@ -135,4 +135,43 @@ html {
   left: 50%;
   transform: translateX(-50%);
   top: 1em;
+}
+
+/* Animation utilities */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes glow {
+  0% {
+    box-shadow: 0 0 5px rgba(6, 182, 212, 0.5), 0 0 10px rgba(6, 182, 212, 0.3);
+  }
+  100% {
+    box-shadow: 0 0 20px rgba(6, 182, 212, 0.8), 0 0 30px rgba(168, 85, 247, 0.5);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
 }
