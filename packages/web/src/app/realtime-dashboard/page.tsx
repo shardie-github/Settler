@@ -5,27 +5,9 @@
 
 'use client';
 
-import { useEffect, useState } from 'react';
 import { Navigation } from '@/components/Navigation';
 import { Footer } from '@/components/Footer';
-
-interface ExecutionUpdate {
-  type: string;
-  executionId?: string;
-  status?: string;
-  startedAt?: string;
-  completedAt?: string;
-  error?: string;
-  summary?: {
-    total_source_records?: number;
-    total_target_records?: number;
-    matched_count?: number;
-    unmatched_source_count?: number;
-    unmatched_target_count?: number;
-    errors_count?: number;
-    accuracy_percentage?: number;
-  };
-}
+import { useRealtimeExecution } from '@/lib/hooks/use-realtime-execution';
 
 interface PageProps {
   params?: Record<string, string | string[] | undefined>;
@@ -35,75 +17,12 @@ interface PageProps {
 export default function RealtimeDashboard({ params, searchParams }: PageProps) {
   const jobId = (params?.jobId as string | undefined) || (searchParams?.jobId as string | undefined) || '';
   const apiKey = (searchParams?.apiKey as string | undefined) || '';
-  const [connected, setConnected] = useState(false);
-  const [execution, setExecution] = useState<ExecutionUpdate | null>(null);
-  const [logs, setLogs] = useState<string[]>([]);
-  const [errors, setErrors] = useState<string[]>([]);
 
-  useEffect(() => {
-    if (!jobId || !apiKey) {
-      return;
-    }
-
-    // EventSource doesn't support custom headers, so we use fetch with streaming
-    const url = `/api/v1/realtime/reconciliations/${jobId}?token=${encodeURIComponent(apiKey)}`;
-    const eventSource = new EventSource(url);
-
-    eventSource.onopen = () => {
-      setConnected(true);
-      addLog('Connected to real-time updates');
-    };
-
-    eventSource.onmessage = (event) => {
-      try {
-        const data: ExecutionUpdate = JSON.parse(event.data);
-
-        if (data.type === 'connected') {
-          addLog('Connection established');
-        } else if (data.type === 'execution_update') {
-          setExecution(data);
-          addLog(`Status update: ${data.status}`);
-
-          if (data.error) {
-            addError(data.error);
-          }
-
-          if (data.status === 'completed' || data.status === 'failed') {
-            eventSource.close();
-            setConnected(false);
-            addLog('Reconciliation finished. Connection closed.');
-          }
-        }
-      } catch (error) {
-        console.error('Failed to parse SSE message:', error);
-      }
-    };
-
-    eventSource.onerror = (error) => {
-      console.error('SSE error:', error);
-      setConnected(false);
-      addLog('Connection error. Attempting to reconnect...');
-      
-      // Reconnect after 5 seconds
-      setTimeout(() => {
-        eventSource.close();
-        // Re-run effect to reconnect
-        window.location.reload();
-      }, 5000);
-    };
-
-    return () => {
-      eventSource.close();
-    };
-  }, [jobId, apiKey]);
-
-  const addLog = (message: string) => {
-    setLogs((prev) => [...prev.slice(-99), `${new Date().toISOString()}: ${message}`]);
-  };
-
-  const addError = (error: string) => {
-    setErrors((prev) => [...prev.slice(-49), `${new Date().toISOString()}: ${error}`]);
-  };
+  const { connected, execution, logs, errors } = useRealtimeExecution({
+    jobId,
+    apiKey,
+    enabled: !!jobId && !!apiKey,
+  });
 
   const getStatusColor = (status?: string) => {
     switch (status) {

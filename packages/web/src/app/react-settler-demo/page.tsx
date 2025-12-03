@@ -7,7 +7,7 @@
 
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useMemo } from 'react';
 import {
   ReconciliationDashboard,
   TransactionTable,
@@ -21,9 +21,11 @@ import type {
   ReconciliationTransaction,
   ReconciliationException
 } from '@settler/react-settler';
-import { SettlerClient } from '@settler/sdk';
 import { Navigation } from '@/components/Navigation';
 import { Footer } from '@/components/Footer';
+import { useJobs } from '@/lib/hooks/use-jobs';
+import { DataLoader } from '@/components/ui/data-loader';
+import { ErrorState } from '@/components/ui/error-state';
 
 // Force dynamic rendering to avoid static generation issues
 export const dynamic = 'force-dynamic';
@@ -36,99 +38,70 @@ export default function ReactSettlerDemoPage() {
       : '';
   });
 
-  const [client] = useState(() => {
-    // Only create client if API key is available
-    if (!apiKey) {
-      return null as unknown as SettlerClient;
-    }
-    return new SettlerClient({ apiKey });
+  // Use React Query hook for jobs data
+  const jobsQuery = useJobs({
+    apiKey,
+    limit: 10,
+    enabled: !!apiKey,
   });
-  const [transactions, setTransactions] = useState<ReconciliationTransaction[]>([]);
-  const [exceptions, setExceptions] = useState<ReconciliationException[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [configJson, setConfigJson] = useState<string>('');
 
-  const loadData = useCallback(async () => {
-    if (!client || !apiKey) {
-      return;
+  // Transform jobs to transactions (this could be moved to a data transformation function)
+  const transactions: ReconciliationTransaction[] = useMemo(() => {
+    if (!jobsQuery.data) return [];
+    return jobsQuery.data.map((job, idx) => ({
+      id: `tx-${job.id}`,
+      provider: ((job.source as unknown) as Record<string, unknown>)?.adapter as string || 'stripe',
+      providerTransactionId: `ch_${job.id.slice(0, 10)}`,
+      amount: { value: 100.0 * (idx + 1), currency: 'USD' },
+      currency: 'USD',
+      date: job.createdAt || new Date().toISOString(),
+      status: 'succeeded',
+      referenceId: job.name
+    }));
+  }, [jobsQuery.data]);
+
+  // Mock exceptions (in production, this would come from API)
+  const exceptions: ReconciliationException[] = useMemo(() => [
+    {
+      id: 'exc-1',
+      category: 'amount_mismatch',
+      severity: 'high',
+      description: 'Transaction amount does not match settlement',
+      resolutionStatus: 'open',
+      createdAt: new Date().toISOString()
     }
-    try {
-      setLoading(true);
-      
-      // Load jobs to get reconciliation data
-      const jobsResponse = await client.jobs.list({ limit: 10 });
-      const jobs = jobsResponse.data || [];
+  ], []);
 
-      // Transform job data to reconciliation transactions
-      // Note: This is a simplified transformation - in production,
-      // you'd fetch actual transaction and exception data from reports
-      const mockTransactions: ReconciliationTransaction[] = jobs.map((job, idx) => ({
-        id: `tx-${job.id}`,
-        provider: ((job.source as unknown) as Record<string, unknown>)?.adapter as string || 'stripe',
-        providerTransactionId: `ch_${job.id.slice(0, 10)}`,
-        amount: { value: 100.0 * (idx + 1), currency: 'USD' },
-        currency: 'USD',
-        date: job.createdAt || new Date().toISOString(),
-        status: 'succeeded',
-        referenceId: job.name
-      }));
+  // Compile workflow to JSON (static, doesn't need to be in state)
+  const configJson = useMemo(() => {
+    const workflow = (
+      <ReconciliationDashboard>
+        <RuleSet id="demo-rules" name="Demo Rules" priority="exact-first">
+          <MatchRule
+            id="rule-1"
+            name="Exact Amount Match"
+            field="amount"
+            type="exact"
+            priority={1}
+          />
+          <MatchRule
+            id="rule-2"
+            name="Date Range Match"
+            field="date"
+            type="range"
+            tolerance={{ days: 7 }}
+            priority={2}
+          />
+        </RuleSet>
+      </ReconciliationDashboard>
+    );
 
-      const mockExceptions: ReconciliationException[] = [
-        {
-          id: 'exc-1',
-          category: 'amount_mismatch',
-          severity: 'high',
-          description: 'Transaction amount does not match settlement',
-          resolutionStatus: 'open',
-          createdAt: new Date().toISOString()
-        }
-      ];
-
-      setTransactions(mockTransactions);
-      setExceptions(mockExceptions);
-
-      // Compile workflow to JSON
-      const workflow = (
-        <ReconciliationDashboard>
-          <RuleSet id="demo-rules" name="Demo Rules" priority="exact-first">
-            <MatchRule
-              id="rule-1"
-              name="Exact Amount Match"
-              field="amount"
-              type="exact"
-              priority={1}
-            />
-            <MatchRule
-              id="rule-2"
-              name="Date Range Match"
-              field="date"
-              type="range"
-              tolerance={{ days: 7 }}
-              priority={2}
-            />
-          </RuleSet>
-        </ReconciliationDashboard>
-      );
-
-      const json = compileToJSON(workflow, {
-        name: 'Settler Dashboard Demo',
-        description: 'Demo reconciliation workflow',
-        pretty: true
-      });
-
-      setConfigJson(json);
-    } catch (error) {
-      console.error('Failed to load data:', error);
-    } finally {
-      setLoading(false);
-    }
-  }, [client, apiKey]);
-
-  useEffect(() => {
-    if (apiKey) {
-      void loadData();
-    }
-  }, [apiKey, loadData]);
+    return compileToJSON(workflow, {
+      name: 'Settler Dashboard Demo',
+      description: 'Demo reconciliation workflow',
+      pretty: true
+    });
+  }, []);
 
   if (!apiKey) {
     return (
@@ -139,20 +112,6 @@ export default function ReactSettlerDemoPage() {
             <p className="text-yellow-800 dark:text-yellow-300">
               Please provide an API key via the <code className="bg-yellow-100 dark:bg-yellow-900/40 px-2 py-1 rounded">?apiKey=...</code> query parameter.
             </p>
-          </div>
-        </div>
-        <Footer />
-      </div>
-    );
-  }
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-slate-900 dark:via-slate-800 dark:to-black">
-        <Navigation />
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 pt-24">
-          <div className="text-center py-12">
-            <div className="text-lg text-slate-900 dark:text-white">Loading reconciliation data...</div>
           </div>
         </div>
         <Footer />
@@ -172,7 +131,24 @@ export default function ReactSettlerDemoPage() {
         </p>
       </div>
 
-      <ReconciliationDashboard>
+      <DataLoader
+        query={jobsQuery}
+        isEmpty={(data) => data.length === 0}
+        errorComponent={(error) => (
+          <ErrorState
+            error={error}
+            title="Failed to load reconciliation data"
+            onRetry={() => jobsQuery.refetch()}
+          />
+        )}
+        emptyComponent={
+          <div className="text-center py-12">
+            <p className="text-slate-600 dark:text-slate-400">No reconciliation jobs found.</p>
+          </div>
+        }
+      >
+        {(data) => (
+          <ReconciliationDashboard>
         {/* Metrics */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
           <MetricCard
@@ -241,6 +217,8 @@ export default function ReactSettlerDemoPage() {
           </div>
         </div>
       </ReconciliationDashboard>
+        )}
+      </DataLoader>
       </div>
       <Footer />
     </div>
