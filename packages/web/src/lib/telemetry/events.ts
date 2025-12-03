@@ -2,6 +2,9 @@
  * UX Telemetry Events
  * 
  * Unified event catalog and tracking system for user interactions.
+ * 
+ * Note: For product analytics events (onboarding, conversions, experiments),
+ * use the ProductEvents from './product-events.ts'
  */
 
 import { analytics } from '../analytics';

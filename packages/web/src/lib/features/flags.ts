@@ -1,9 +1,12 @@
 /**
- * Feature Flag Infrastructure
+ * Feature Flag Infrastructure (Legacy)
  * 
- * PM Mode: Future-Proofing
- * - Wrap risky operations in feature flags
- * - Store flags in Supabase config or environment
+ * @deprecated Use the new feature flag system from '@/lib/flags' instead.
+ * This file is kept for backward compatibility.
+ * 
+ * New code should use:
+ * - useFeatureFlag() hook from '@/lib/flags/hooks'
+ * - resolveFlag() from '@/lib/flags/resolver'
  */
 
 import { getEnvBoolean } from '@/lib/env';
@@ -22,6 +25,8 @@ export interface FeatureFlags {
 /**
  * Get feature flag value from environment or database
  * Falls back to environment variables, can be overridden by database config
+ * 
+ * @deprecated Use resolveFlag() from '@/lib/flags/resolver' instead
  */
 export async function getFeatureFlag(
   flag: keyof FeatureFlags,
@@ -63,6 +68,8 @@ export async function getFeatureFlag(
 
 /**
  * Get all feature flags for a tenant
+ * 
+ * @deprecated Use useFeatureFlags() hook from '@/lib/flags/hooks' instead
  */
 export async function getAllFeatureFlags(
   tenantId?: string
@@ -81,6 +88,8 @@ export async function getAllFeatureFlags(
 
 /**
  * Check if feature is enabled (synchronous, for client components)
+ * 
+ * @deprecated Use useFeatureFlag() hook from '@/lib/flags/hooks' instead
  */
 export function isFeatureEnabled(flag: keyof FeatureFlags): boolean {
   const envKey = `ENABLE_${flag.toUpperCase().replace(/([A-Z])/g, '_$1')}`;
