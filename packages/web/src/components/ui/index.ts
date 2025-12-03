@@ -61,5 +61,11 @@ export type { LoadingProps, SkeletonProps } from './loading';
 export { EmptyState } from './empty-state';
 export type { EmptyStateProps } from './empty-state';
 
+export { ErrorState } from './error-state';
+export type { ErrorStateProps } from './error-state';
+
+export { DataLoader } from './data-loader';
+export type { DataLoaderProps } from './data-loader';
+
 export { ErrorBoundary } from './error-boundary';
 export type { ErrorBoundaryProps, ErrorFallbackProps } from './error-boundary';
