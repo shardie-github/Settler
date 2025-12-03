@@ -64,8 +64,9 @@ console.log("Report:", report.data.summary);
     setOutput("// Running...\n");
     
     // Simulate API call (in production, this would call your backend)
-    setTimeout(() => {
-      setOutput(`✅ Job created: job_abc123xyz
+    await new Promise<void>((resolve) => {
+      setTimeout(() => {
+        setOutput(`✅ Job created: job_abc123xyz
 📊 Report Summary:
    Total: 150
    Matched: 145
@@ -74,8 +75,10 @@ console.log("Report:", report.data.summary);
    Accuracy: 98.7%
 
 🎉 Reconciliation completed successfully!`);
-      setIsRunning(false);
-    }, 1500);
+        setIsRunning(false);
+        resolve();
+      }, 1500);
+    });
   };
 
   const [isVisible, setIsVisible] = useState(false);

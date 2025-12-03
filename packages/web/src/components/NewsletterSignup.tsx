@@ -13,11 +13,14 @@ export function NewsletterSignup() {
     setStatus('loading');
     
     // Simulate API call
-    setTimeout(() => {
-      setStatus('success');
-      setEmail('');
-      setTimeout(() => setStatus('idle'), 3000);
-    }, 1000);
+    await new Promise<void>((resolve) => {
+      setTimeout(() => {
+        setStatus('success');
+        setEmail('');
+        setTimeout(() => setStatus('idle'), 3000);
+        resolve();
+      }, 1000);
+    });
   };
 
   return (
