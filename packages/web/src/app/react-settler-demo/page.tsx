@@ -22,6 +22,8 @@ import type {
   ReconciliationException
 } from '@settler/react-settler';
 import { SettlerClient } from '@settler/sdk';
+import { Navigation } from '@/components/Navigation';
+import { Footer } from '@/components/Footer';
 
 // Force dynamic rendering to avoid static generation issues
 export const dynamic = 'force-dynamic';
@@ -130,31 +132,41 @@ export default function ReactSettlerDemoPage() {
 
   if (!apiKey) {
     return (
-      <div className="container mx-auto p-6">
-        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-          <p className="text-yellow-800">
-            Please provide an API key via the <code>?apiKey=...</code> query parameter.
-          </p>
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-slate-900 dark:via-slate-800 dark:to-black">
+        <Navigation />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 pt-24">
+          <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4">
+            <p className="text-yellow-800 dark:text-yellow-300">
+              Please provide an API key via the <code className="bg-yellow-100 dark:bg-yellow-900/40 px-2 py-1 rounded">?apiKey=...</code> query parameter.
+            </p>
+          </div>
         </div>
+        <Footer />
       </div>
     );
   }
 
   if (loading) {
     return (
-      <div className="container mx-auto p-6">
-        <div className="text-center py-12">
-          <div className="text-lg">Loading reconciliation data...</div>
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-slate-900 dark:via-slate-800 dark:to-black">
+        <Navigation />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 pt-24">
+          <div className="text-center py-12">
+            <div className="text-lg text-slate-900 dark:text-white">Loading reconciliation data...</div>
+          </div>
         </div>
+        <Footer />
       </div>
     );
   }
 
   return (
-    <div className="container mx-auto p-6">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-slate-900 dark:via-slate-800 dark:to-black">
+      <Navigation />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 pt-24">
       <div className="mb-6">
-        <h1 className="text-3xl font-bold mb-2">React.Settler Demo</h1>
-        <p className="text-gray-600">
+        <h1 className="text-3xl font-bold mb-2 text-slate-900 dark:text-white">React.Settler Demo</h1>
+        <p className="text-slate-600 dark:text-slate-300">
           This page demonstrates the @settler/react-settler component library
           integrated into the Settler dashboard.
         </p>
@@ -183,9 +195,9 @@ export default function ReactSettlerDemoPage() {
         </div>
 
         {/* Transactions Table */}
-        <div className="bg-white rounded-lg shadow mb-6">
-          <div className="px-6 py-4 border-b border-gray-200">
-            <h2 className="text-xl font-semibold">Transactions</h2>
+        <div className="bg-white dark:bg-slate-800 rounded-lg shadow mb-6 border border-slate-200 dark:border-slate-700">
+          <div className="px-6 py-4 border-b border-slate-200 dark:border-slate-700">
+            <h2 className="text-xl font-semibold text-slate-900 dark:text-white">Transactions</h2>
           </div>
           <div className="p-6">
             <TransactionTable
@@ -199,9 +211,9 @@ export default function ReactSettlerDemoPage() {
         </div>
 
         {/* Exceptions Table */}
-        <div className="bg-white rounded-lg shadow mb-6">
-          <div className="px-6 py-4 border-b border-gray-200">
-            <h2 className="text-xl font-semibold">Exceptions</h2>
+        <div className="bg-white dark:bg-slate-800 rounded-lg shadow mb-6 border border-slate-200 dark:border-slate-700">
+          <div className="px-6 py-4 border-b border-slate-200 dark:border-slate-700">
+            <h2 className="text-xl font-semibold text-slate-900 dark:text-white">Exceptions</h2>
           </div>
           <div className="p-6">
             <ExceptionTable
@@ -215,20 +227,22 @@ export default function ReactSettlerDemoPage() {
         </div>
 
         {/* Compiled Config */}
-        <div className="bg-white rounded-lg shadow">
-          <div className="px-6 py-4 border-b border-gray-200">
-            <h2 className="text-xl font-semibold">Compiled Configuration</h2>
-            <p className="text-sm text-gray-600 mt-1">
+        <div className="bg-white dark:bg-slate-800 rounded-lg shadow border border-slate-200 dark:border-slate-700">
+          <div className="px-6 py-4 border-b border-slate-200 dark:border-slate-700">
+            <h2 className="text-xl font-semibold text-slate-900 dark:text-white">Compiled Configuration</h2>
+            <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">
               JSON config extracted from React component tree
             </p>
           </div>
           <div className="p-6">
-            <pre className="bg-gray-50 p-4 rounded overflow-auto text-sm">
+            <pre className="bg-slate-50 dark:bg-slate-900 p-4 rounded overflow-auto text-sm text-slate-900 dark:text-slate-100">
               {configJson}
             </pre>
           </div>
         </div>
       </ReconciliationDashboard>
+      </div>
+      <Footer />
     </div>
   );
 }
