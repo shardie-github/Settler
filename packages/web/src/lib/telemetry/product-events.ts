@@ -382,12 +382,25 @@ export function trackCtaClick(
     destination?: string;
   }
 ) {
-  ProductEvents.engagement.ctaClicked({
+  const props: {
+    ctaName: string;
+    ctaLocation: string;
+    ctaText?: string;
+    destination?: string;
+  } = {
     ctaName,
-    ctaLocation: properties?.ctaLocation || window.location.pathname,
-    ctaText: properties?.ctaText,
-    destination: properties?.destination,
-  });
+    ctaLocation: properties?.ctaLocation || (typeof window !== 'undefined' ? window.location.pathname : ''),
+  };
+  
+  if (properties?.ctaText) {
+    props.ctaText = properties.ctaText;
+  }
+  
+  if (properties?.destination) {
+    props.destination = properties.destination;
+  }
+  
+  ProductEvents.engagement.ctaClicked(props);
 }
 
 /**

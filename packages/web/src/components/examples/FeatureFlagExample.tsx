@@ -7,7 +7,7 @@
 
 'use client';
 
-import { useFeatureFlag, useExperiment } from '@/lib/flags';
+import { useFeatureFlag, useExperiment, useExperimentConversion } from '@/lib/flags';
 import { ProductEvents } from '@/lib/telemetry/product-events';
 import { useEffect } from 'react';
 
@@ -147,15 +147,15 @@ export function OnboardingExample() {
   );
 }
 
-function OnboardingV2A({ onStepComplete, onComplete }: any) {
+function OnboardingV2A(_props: { onStepComplete: (step: number, name: string) => void; onComplete: () => void }) {
   return <div>Onboarding Variant A</div>;
 }
 
-function OnboardingV2B({ onStepComplete, onComplete }: any) {
+function OnboardingV2B(_props: { onStepComplete: (step: number, name: string) => void; onComplete: () => void }) {
   return <div>Onboarding Variant B</div>;
 }
 
-function OnboardingControl({ onStepComplete, onComplete }: any) {
+function OnboardingControl(_props: { onStepComplete: (step: number, name: string) => void; onComplete: () => void }) {
   return <div>Onboarding Control</div>;
 }
 

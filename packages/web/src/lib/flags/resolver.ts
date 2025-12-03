@@ -8,7 +8,7 @@
  * - Flag metadata
  */
 
-import { FlagKey, FlagMetadata, RolloutType, FLAG_REGISTRY } from './flags';
+import { FlagKey, FlagMetadata, FLAG_REGISTRY } from './flags';
 import { ProductEvents } from '../telemetry/product-events';
 
 export interface UserContext {
@@ -17,6 +17,9 @@ export interface UserContext {
   segments?: string[]; // e.g., ['beta_testers', 'enterprise']
   attributes?: Record<string, any>; // Custom attributes
 }
+
+// Re-export FlagKey for convenience
+export type { FlagKey } from './flags';
 
 export interface FlagResolutionResult {
   value: boolean | string;
@@ -284,7 +287,7 @@ function getEnvOverride(key: FlagKey): boolean | string | null {
  * Get remote config value (placeholder for future integration)
  * Can integrate with LaunchDarkly, GrowthBook, Unleash, etc.
  */
-async function getRemoteConfig(key: FlagKey): Promise<boolean | string | null> {
+async function getRemoteConfig(_key: FlagKey): Promise<boolean | string | null> {
   // TODO: Integrate with remote config provider
   // Example:
   // const config = await fetchRemoteConfig(key);
@@ -306,10 +309,10 @@ function getEnvironmentDefault(metadata: FlagMetadata): boolean | string | null 
   switch (env) {
     case 'development':
       return envDefaults.development ?? null;
-    case 'staging':
-      return envDefaults.staging ?? null;
     case 'production':
       return envDefaults.production ?? null;
+    case 'test':
+      return null; // Use default in test
     default:
       return null;
   }
@@ -325,14 +328,14 @@ export function isFeatureEnabled(key: FlagKey, userContext?: UserContext): boole
 
   // Check environment override first
   const envValue = getEnvOverride(key);
-  if (envValue !== null) {
-    return typeof envValue === 'boolean' ? envValue : false;
+  if (envValue !== null && typeof envValue === 'boolean') {
+    return envValue;
   }
 
   // Check environment default
   const envDefault = getEnvironmentDefault(metadata);
-  if (envDefault !== null) {
-    return typeof envDefault === 'boolean' ? envDefault : false;
+  if (envDefault !== null && typeof envDefault === 'boolean') {
+    return envDefault;
   }
 
   // For experiments, return false (use getExperimentVariant instead)
@@ -390,9 +393,15 @@ export function getExperimentVariant(
     return envDefault;
   }
 
+  // Fallback to default variant
+  if (typeof metadata.defaultValue === 'string') {
+    return metadata.defaultValue;
+  }
+
   // Assign variant
   if (!userContext?.userId) {
-    return typeof metadata.defaultValue === 'string' ? metadata.defaultValue : 'control';
+    const defaultVariant = typeof metadata.defaultValue === 'string' ? metadata.defaultValue : 'control';
+    return defaultVariant;
   }
 
   const variants = metadata.experimentVariants || ['control'];

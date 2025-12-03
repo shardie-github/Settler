@@ -6,11 +6,11 @@
 
 import { useState, useEffect, useMemo } from 'react';
 import {
-  FlagKey,
   resolveFlag,
   isFeatureEnabled,
   getExperimentVariant,
   UserContext,
+  FlagKey,
 } from './resolver';
 import { ProductEvents } from '../telemetry/product-events';
 
@@ -31,11 +31,16 @@ function getCurrentUserContext(): UserContext | undefined {
 
   if (!userId) return undefined;
 
-  return {
+  const context: UserContext = {
     userId,
-    email,
     segments,
   };
+  
+  if (email) {
+    context.email = email;
+  }
+
+  return context;
 }
 
 /**
@@ -73,7 +78,7 @@ export function useFeatureFlag(key: FlagKey): boolean {
             });
           }
         }
-      } catch (error) {
+      } catch (_error) {
         // Fallback to synchronous check
         if (mounted) {
           const fallbackValue = isFeatureEnabled(key, userContext);
@@ -140,7 +145,7 @@ export function useExperimentVariant(experimentKey: FlagKey): string {
             });
           }
         }
-      } catch (error) {
+      } catch (_error) {
         // Fallback to synchronous check
         if (mounted) {
           const fallbackVariant = getExperimentVariant(experimentKey, userContext);
@@ -205,11 +210,11 @@ export function useFeatureFlags(keys: FlagKey[]): Record<FlagKey, boolean> {
           setFlags(flagsMap);
           setLoading(false);
         }
-      } catch (error) {
+      } catch (_error) {
         // Fallback to synchronous checks
         if (mounted) {
-          const flagsMap = keys.reduce((acc, key) => {
-            acc[key] = isFeatureEnabled(key, userContext);
+          const flagsMap = keys.reduce((acc, flagKey) => {
+            acc[flagKey] = isFeatureEnabled(flagKey, userContext);
             return acc;
           }, {} as Record<FlagKey, boolean>);
 
@@ -294,7 +299,7 @@ export function useExperimentConversion(experimentKey: FlagKey) {
       planId: conversionName,
       planName: conversionName,
       billingCycle: 'monthly',
-      ...properties,
+      amount: properties?.value,
     });
 
     // Also track with experiment context
