@@ -136,6 +136,13 @@ export default function RootLayout({
       <body>
         <ErrorBoundary componentName="RootLayout">
           <QueryProvider>
+            {/* Skip to main content link for accessibility */}
+            <a
+              href="#main-content"
+              className="skip-to-main"
+            >
+              Skip to main content
+            </a>
             <SmoothScroll>{children}</SmoothScroll>
             <Analytics />
             <SpeedInsights />

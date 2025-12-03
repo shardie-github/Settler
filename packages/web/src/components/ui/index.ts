@@ -55,8 +55,11 @@ export { SmoothScroll } from './SmoothScroll';
 export { BentoGrid, BentoGridItem } from './BentoGrid';
 export { CodeBlock } from './code-block';
 
-export { Loading, Skeleton } from './loading';
-export type { LoadingProps, SkeletonProps } from './loading';
+export { Loading } from './loading';
+export type { LoadingProps } from './loading';
+
+export { Skeleton, SkeletonText, SkeletonCard } from './skeleton';
+export type { SkeletonProps, SkeletonTextProps, SkeletonCardProps } from './skeleton';
 
 export { EmptyState } from './empty-state';
 export type { EmptyStateProps } from './empty-state';

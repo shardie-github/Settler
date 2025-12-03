@@ -1,0 +1,157 @@
+/**
+ * Internationalization (i18n) System
+ * 
+ * Provides a lightweight i18n solution for externalizing user-facing strings.
+ * Ready for future integration with next-intl or similar libraries.
+ */
+
+export type Locale = 'en' | 'fr' | 'es' | 'de' | 'ja' | 'zh';
+
+export const defaultLocale: Locale = 'en';
+
+export const supportedLocales: Locale[] = ['en'];
+
+/**
+ * Translation keys structure
+ * This should match the structure in locale files
+ */
+export interface TranslationKeys {
+  common: {
+    loading: string;
+    error: string;
+    success: string;
+    cancel: string;
+    confirm: string;
+    save: string;
+    delete: string;
+    edit: string;
+    create: string;
+    update: string;
+    close: string;
+    back: string;
+    next: string;
+    previous: string;
+    search: string;
+    filter: string;
+    sort: string;
+    actions: string;
+    more: string;
+  };
+  navigation: {
+    home: string;
+    docs: string;
+    cookbooks: string;
+    pricing: string;
+    enterprise: string;
+    community: string;
+    support: string;
+    playground: string;
+    getStarted: string;
+  };
+  forms: {
+    required: string;
+    invalidEmail: string;
+    invalidUrl: string;
+    minLength: string;
+    maxLength: string;
+    passwordMismatch: string;
+    submit: string;
+    submitting: string;
+    reset: string;
+  };
+  errors: {
+    generic: string;
+    network: string;
+    notFound: string;
+    unauthorized: string;
+    forbidden: string;
+    serverError: string;
+    tryAgain: string;
+    contactSupport: string;
+  };
+  emptyStates: {
+    noData: string;
+    noResults: string;
+    noItems: string;
+    createFirst: string;
+  };
+  buttons: {
+    create: string;
+    save: string;
+    saveChanges: string;
+    cancel: string;
+    delete: string;
+    edit: string;
+    view: string;
+    viewDashboard: string;
+    getStarted: string;
+    learnMore: string;
+  };
+}
+
+/**
+ * Translation function type
+ */
+export type TranslateFunction = (key: string, params?: Record<string, string | number>) => string;
+
+/**
+ * Translation context
+ */
+export interface I18nContextValue {
+  locale: Locale;
+  t: TranslateFunction;
+  setLocale: (locale: Locale) => void;
+}
+
+/**
+ * Simple translation function
+ * In a full implementation, this would load from locale files
+ */
+export function translate(
+  key: string,
+  locale: Locale = defaultLocale,
+  params?: Record<string, string | number>
+): string {
+  // For now, return the key as fallback
+  // In production, this would load from locale files
+  let translation = key;
+  
+  // Simple parameter replacement
+  if (params) {
+    Object.entries(params).forEach(([paramKey, value]) => {
+      translation = translation.replace(`{${paramKey}}`, String(value));
+    });
+  }
+  
+  return translation;
+}
+
+/**
+ * Get locale from browser or storage
+ */
+export function getLocale(): Locale {
+  if (typeof window === 'undefined') return defaultLocale;
+  
+  // Check localStorage first
+  const stored = localStorage.getItem('locale');
+  if (stored && supportedLocales.includes(stored as Locale)) {
+    return stored as Locale;
+  }
+  
+  // Check browser language
+  const browserLang = navigator.language.split('-')[0];
+  if (supportedLocales.includes(browserLang as Locale)) {
+    return browserLang as Locale;
+  }
+  
+  return defaultLocale;
+}
+
+/**
+ * Set locale preference
+ */
+export function setLocale(locale: Locale): void {
+  if (typeof window === 'undefined') return;
+  localStorage.setItem('locale', locale);
+  // In a full implementation, this would trigger a re-render
+}

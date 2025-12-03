@@ -1,0 +1,73 @@
+{
+  "common": {
+    "loading": "Chargement...",
+    "error": "Erreur",
+    "success": "Succès",
+    "cancel": "Annuler",
+    "confirm": "Confirmer",
+    "save": "Enregistrer",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "create": "Créer",
+    "update": "Mettre à jour",
+    "close": "Fermer",
+    "back": "Retour",
+    "next": "Suivant",
+    "previous": "Précédent",
+    "search": "Rechercher",
+    "filter": "Filtrer",
+    "sort": "Trier",
+    "actions": "Actions",
+    "more": "Plus"
+  },
+  "navigation": {
+    "home": "Accueil",
+    "docs": "Documentation",
+    "cookbooks": "Guides",
+    "pricing": "Tarifs",
+    "enterprise": "Entreprise",
+    "community": "Communauté",
+    "support": "Support",
+    "playground": "Playground",
+    "getStarted": "Commencer"
+  },
+  "forms": {
+    "required": "Ce champ est requis",
+    "invalidEmail": "Veuillez entrer une adresse e-mail valide",
+    "invalidUrl": "Veuillez entrer une URL valide",
+    "minLength": "Doit contenir au moins {min} caractères",
+    "maxLength": "Ne doit pas dépasser {max} caractères",
+    "passwordMismatch": "Les mots de passe ne correspondent pas",
+    "submit": "Soumettre",
+    "submitting": "Soumission...",
+    "reset": "Réinitialiser"
+  },
+  "errors": {
+    "generic": "Une erreur s'est produite. Veuillez réessayer.",
+    "network": "Erreur réseau. Veuillez vérifier votre connexion.",
+    "notFound": "La ressource demandée n'a pas été trouvée.",
+    "unauthorized": "Vous n'êtes pas autorisé à accéder à cette ressource.",
+    "forbidden": "Accès interdit.",
+    "serverError": "Erreur serveur. Veuillez réessayer plus tard.",
+    "tryAgain": "Réessayer",
+    "contactSupport": "Contacter le support"
+  },
+  "emptyStates": {
+    "noData": "Aucune donnée disponible",
+    "noResults": "Aucun résultat trouvé",
+    "noItems": "Aucun élément",
+    "createFirst": "Créez votre premier élément pour commencer"
+  },
+  "buttons": {
+    "create": "Créer",
+    "save": "Enregistrer",
+    "saveChanges": "Enregistrer les modifications",
+    "cancel": "Annuler",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "view": "Voir",
+    "viewDashboard": "Voir le tableau de bord",
+    "getStarted": "Commencer",
+    "learnMore": "En savoir plus"
+  }
+}
