@@ -2,28 +2,52 @@ import * as React from 'react';
 import { cn } from '@/lib/utils';
 
 export interface BadgeProps extends React.HTMLAttributes<HTMLDivElement> {
-  variant?: 'default' | 'secondary' | 'destructive' | 'outline';
+  /**
+   * Visual style variant
+   * @default 'default'
+   */
+  variant?: 'default' | 'secondary' | 'destructive' | 'outline' | 'success' | 'warning';
+  
+  /**
+   * Size variant
+   * @default 'default'
+   */
+  size?: 'sm' | 'default' | 'lg';
 }
 
-function Badge({ className, variant: variantProp = 'default', ...props }: BadgeProps) {
-  const variant = variantProp;
-  const variants = {
-    default: 'border-transparent bg-primary text-primary-foreground hover:bg-primary/80',
-    secondary: 'border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80',
-    destructive: 'border-transparent bg-destructive text-destructive-foreground hover:bg-destructive/80',
-    outline: 'text-foreground',
-  };
+const Badge = React.forwardRef<HTMLDivElement, BadgeProps>(
+  ({ className, variant = 'default', size = 'default', ...props }, ref) => {
+    const variants = {
+      default: 'border-transparent bg-primary-600 text-white hover:bg-primary-700',
+      secondary: 'border-transparent bg-muted text-muted-foreground hover:bg-muted/80',
+      destructive: 'border-transparent bg-destructive text-destructive-foreground hover:bg-destructive/90',
+      outline: 'border-border text-foreground bg-transparent hover:bg-accent',
+      success: 'border-transparent bg-green-600 text-white hover:bg-green-700',
+      warning: 'border-transparent bg-yellow-600 text-white hover:bg-yellow-700',
+    };
 
-  return (
-    <div
-      className={cn(
-        'inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2',
-        variants[variant],
-        className
-      )}
-      {...props}
-    />
-  );
-}
+    const sizes = {
+      sm: 'px-1.5 py-0.5 text-xs',
+      default: 'px-2.5 py-0.5 text-xs',
+      lg: 'px-3 py-1 text-sm',
+    };
+
+    return (
+      <div
+        ref={ref}
+        className={cn(
+          'inline-flex items-center rounded-full border font-semibold',
+          'transition-colors',
+          'focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2',
+          variants[variant],
+          sizes[size],
+          className
+        )}
+        {...props}
+      />
+    );
+  }
+);
+Badge.displayName = 'Badge';
 
 export { Badge };

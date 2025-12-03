@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import dynamic from "next/dynamic";
+import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Navigation } from "@/components/Navigation";
@@ -11,6 +12,8 @@ import { ParallaxBackground, ParallaxBlobs } from "@/components/ui/ParallaxBackg
 import { SpotlightCard } from "@/components/ui/SpotlightCard";
 import { BentoGrid, BentoGridItem } from "@/components/ui/BentoGrid";
 import { Zap, Lock, Rocket, Target, Plug, BarChart3 } from "lucide-react";
+import { analytics } from "@/lib/analytics";
+import { useTrackCTA } from "@/lib/telemetry/hooks";
 
 // Dynamic imports for heavy components
 const TrustBadges = dynamic(() => import("@/components/TrustBadges").then(mod => ({ default: mod.TrustBadges })), { ssr: true });
@@ -22,6 +25,15 @@ const AnimatedCodeBlock = dynamic(() => import("@/components/AnimatedCodeBlock")
 const AnimatedStatCard = dynamic(() => import("@/components/AnimatedStatCard").then(mod => ({ default: mod.AnimatedStatCard })), { ssr: true });
 
 export default function Home() {
+  const trackCTA = useTrackCTA();
+
+  // Track page view
+  useEffect(() => {
+    analytics.trackPageView('/', {
+      title: 'Settler - Reconciliation as a Service API',
+    });
+  }, []);
+
   const features = [
     {
       icon: Zap,
@@ -168,6 +180,7 @@ const report = await client.jobs.run(job.id);
                   size="lg" 
                   asChild 
                   className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 dark:from-electric-cyan dark:to-electric-blue dark:hover:from-electric-cyan/90 dark:hover:to-electric-blue/90 text-white px-8 py-6 text-lg shadow-lg hover:shadow-blue-500/50 dark:hover:shadow-electric-cyan/50 transition-all duration-200 transform hover:scale-105 focus:ring-2 focus:ring-blue-500 dark:focus:ring-electric-cyan focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-slate-900"
+                  onClick={() => trackCTA('Start Free Trial', { location: 'hero' })}
                 >
                   <Link href="/playground" aria-label="Start free trial of Settler">
                     Start Free Trial

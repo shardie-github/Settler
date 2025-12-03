@@ -6,11 +6,19 @@ const withMDX = require("@next/mdx")({
   },
 });
 
+const withBundleAnalyzer = require('@next/bundle-analyzer')({
+  enabled: process.env.ANALYZE === 'true',
+});
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   pageExtensions: ["ts", "tsx", "js", "jsx", "md", "mdx"],
   reactStrictMode: true,
   swcMinify: true,
+  // Enable instrumentation
+  experimental: {
+    instrumentationHook: true,
+  },
   eslint: {
     // Warning: This allows production builds to successfully complete even if
     // your project has ESLint errors.
@@ -29,6 +37,14 @@ const nextConfig = {
     '@settler/protocol',
     '@settler/types',
   ],
+  // Image Optimization
+  images: {
+    formats: ['image/webp', 'image/avif'],
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
+    // Add external image domains here if needed
+    // domains: ['example.com'],
+  },
   // PWA Configuration
   async headers() {
     return [
@@ -69,4 +85,4 @@ const nextConfig = {
   },
 };
 
-module.exports = withMDX(nextConfig);
+module.exports = withBundleAnalyzer(withMDX(nextConfig));

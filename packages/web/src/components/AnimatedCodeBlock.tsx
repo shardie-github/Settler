@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { cn } from '@/lib/utils';
 
 interface AnimatedCodeBlockProps {
   code: string;
@@ -77,16 +78,15 @@ export function AnimatedCodeBlock({
 
   return (
     <Card
-      className={`
-        max-w-4xl mx-auto 
-        bg-slate-900 border-slate-800 
-        shadow-2xl
-        transition-all duration-300
-        ${isVisible 
+      className={cn(
+        'max-w-4xl mx-auto',
+        'bg-slate-900 border-slate-800',
+        'shadow-2xl',
+        'transition-all duration-300',
+        isVisible 
           ? 'opacity-100 translate-y-0' 
           : 'opacity-0 translate-y-8'
-        }
-      `}
+      )}
       role="region"
       aria-labelledby="code-title"
       aria-describedby="code-description"
@@ -95,7 +95,7 @@ export function AnimatedCodeBlock({
         <CardTitle id="code-title" className="text-white">
           {title}
         </CardTitle>
-        <CardDescription id="code-description" className="text-slate-400">
+        <CardDescription id="code-description" className="text-muted-foreground">
           {description}
         </CardDescription>
       </CardHeader>
