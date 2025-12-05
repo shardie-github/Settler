@@ -95,24 +95,61 @@ export function PreTestQuestionnaire({ onComplete, onSkip, className }: PreTestQ
 
   const progress = ((currentQuestion + 1) / questions.length) * 100;
 
-  const handleAnswer = (questionId: string, value: string | string[]) => {
-    setAnswers((prev) => ({
-      ...prev,
+  const handleAnswer = async (questionId: string, value: string | string[]) => {
+    const newAnswers = {
+      ...answers,
       [questionId]: value,
-    }));
+    };
+    setAnswers(newAnswers);
 
     if (currentQuestion < questions.length - 1) {
       setCurrentQuestion(currentQuestion + 1);
     } else {
-      onComplete(answers);
+      // Save answers when complete
+      try {
+        const response = await fetch('/api/user/pre-test', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(newAnswers),
+        });
+
+        if (response.ok) {
+          onComplete(newAnswers);
+        } else {
+          console.error('Failed to save pre-test answers');
+          // Still call onComplete even if save fails
+          onComplete(newAnswers);
+        }
+      } catch (error) {
+        console.error('Error saving pre-test answers:', error);
+        // Still call onComplete even if save fails
+        onComplete(newAnswers);
+      }
     }
   };
 
-  const handleNext = () => {
+  const handleNext = async () => {
     if (currentQuestion < questions.length - 1) {
       setCurrentQuestion(currentQuestion + 1);
     } else {
-      onComplete(answers);
+      // Save answers when complete
+      try {
+        const response = await fetch('/api/user/pre-test', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(answers),
+        });
+
+        if (response.ok) {
+          onComplete(answers);
+        } else {
+          console.error('Failed to save pre-test answers');
+          onComplete(answers);
+        }
+      } catch (error) {
+        console.error('Error saving pre-test answers:', error);
+        onComplete(answers);
+      }
     }
   };
 

@@ -4,9 +4,8 @@
  * Shows user's reconciliation data, trial status, usage stats, and personalized recommendations
  */
 
-'use client';
-
 import { Suspense } from 'react';
+import { redirect } from 'next/navigation';
 import { Navigation } from '@/components/Navigation';
 import { Footer } from '@/components/Footer';
 import { TrialCountdownBanner } from '@/components/TrialCountdownBanner';
@@ -21,87 +20,21 @@ import Link from 'next/link';
 // Force dynamic rendering
 export const dynamic = 'force-dynamic';
 
-// Mock data - in production, fetch from API
-interface UserDashboardData {
-  user: {
-    id: string;
-    email: string;
-    firstName?: string;
-    planType: 'free' | 'trial' | 'commercial' | 'enterprise';
-    trialEndDate?: string;
-  };
-  usage: {
-    reconciliations: {
-      current: number;
-      limit: number | 'unlimited';
-    };
-    playgroundRuns: {
-      current: number;
-      limit: number | 'unlimited';
-    };
-  };
-  recentJobs: Array<{
-    id: string;
-    name: string;
-    status: 'completed' | 'running' | 'failed';
-    matchedCount: number;
-    unmatchedCount: number;
-    accuracy: number;
-    createdAt: string;
-  }>;
-  metrics: {
-    totalReconciliations: number;
-    averageAccuracy: number;
-    timeSaved: number;
-    jobsCreated: number;
-  };
-  isFirstVisit: boolean;
-}
+import { getUserDashboardData } from '@/lib/data/user-dashboard';
+import type { UserDashboardData } from '@/lib/data/user-dashboard';
 
-async function fetchUserDashboard(): Promise<UserDashboardData> {
-  // In production, fetch from API with authentication
-  // For now, return mock data
-  return {
-    user: {
-      id: 'user_123',
-      email: 'user@example.com',
-      firstName: 'John',
-      planType: 'trial',
-      trialEndDate: new Date(Date.now() + 20 * 24 * 60 * 60 * 1000).toISOString(),
-    },
-    usage: {
-      reconciliations: {
-        current: 450,
-        limit: 1000,
-      },
-      playgroundRuns: {
-        current: 2,
-        limit: 3,
-      },
-    },
-    recentJobs: [
-      {
-        id: 'job_1',
-        name: 'Shopify-Stripe Daily Reconciliation',
-        status: 'completed',
-        matchedCount: 145,
-        unmatchedCount: 3,
-        accuracy: 98.0,
-        createdAt: new Date().toISOString(),
-      },
-    ],
-    metrics: {
-      totalReconciliations: 450,
-      averageAccuracy: 98.5,
-      timeSaved: 12,
-      jobsCreated: 3,
-    },
-    isFirstVisit: false,
-  };
+async function fetchUserDashboard(): Promise<UserDashboardData | null> {
+  return getUserDashboardData();
 }
 
 async function UserDashboardContent() {
   const data = await fetchUserDashboard();
+
+  // Redirect to signup if not authenticated
+  if (!data) {
+    redirect('/signup');
+    return null;
+  }
 
   // Show welcome dashboard for first-time users
   if (data.isFirstVisit) {

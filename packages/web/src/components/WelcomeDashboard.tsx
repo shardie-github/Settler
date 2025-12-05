@@ -21,12 +21,24 @@ export function WelcomeDashboard({
   const [showPreTest, setShowPreTest] = useState(false);
   const [preTestCompleted, setPreTestCompleted] = useState(false);
 
-  const handlePreTestComplete = (answers: PreTestAnswers) => {
-    // In production, save to API
-    console.log('Pre-test answers:', answers);
-    setPreTestCompleted(true);
-    setShowPreTest(false);
-    // Personalize experience based on answers
+  const handlePreTestComplete = async (answers: PreTestAnswers) => {
+    try {
+      const response = await fetch('/api/user/pre-test', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(answers),
+      });
+
+      if (response.ok) {
+        setPreTestCompleted(true);
+        setShowPreTest(false);
+        // Personalize experience based on answers
+      } else {
+        console.error('Failed to save pre-test answers');
+      }
+    } catch (error) {
+      console.error('Error saving pre-test answers:', error);
+    }
   };
 
   const quickStartSteps = [

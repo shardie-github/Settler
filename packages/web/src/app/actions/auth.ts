@@ -54,7 +54,11 @@ export async function signUpUser(
       };
     }
 
-    // 2. Create profile in profiles table (RLS will enforce user_id match)
+    // 2. Create profile in profiles table with trial setup
+    const trialStartDate = new Date();
+    const trialEndDate = new Date();
+    trialEndDate.setDate(trialEndDate.getDate() + 30); // 30-day trial
+
     const { error: profileError } = await supabase
       .from('profiles')
       .insert({
@@ -63,6 +67,11 @@ export async function signUpUser(
         email: authData.user.email!,
         name: name || authData.user.email!.split('@')[0],
         impact_score: 0,
+        plan_type: 'trial',
+        trial_start_date: trialStartDate.toISOString(),
+        trial_end_date: trialEndDate.toISOString(),
+        pre_test_completed: false,
+        pre_test_answers: {},
       } as any);
 
     if (profileError) {
@@ -90,7 +99,27 @@ export async function signUpUser(
       // Don't fail the sign-up if activity logging fails
     }
 
-    // 4. Revalidate relevant paths
+    // 4. Send welcome email (trial welcome)
+    try {
+      const { sendTrialWelcomeEmail } = await import('@/../../api/src/lib/email-lifecycle');
+      await sendTrialWelcomeEmail(
+        {
+          email: authData.user.email!,
+          firstName: name || authData.user.email!.split('@')[0],
+          planType: 'trial',
+        },
+        {
+          trialStartDate: trialStartDate.toISOString(),
+          trialEndDate: trialEndDate.toISOString(),
+          daysRemaining: 30,
+        }
+      );
+    } catch (emailError) {
+      console.error('Failed to send welcome email:', emailError);
+      // Don't fail signup if email fails
+    }
+
+    // 5. Revalidate relevant paths
     revalidatePath('/');
     revalidatePath('/dashboard');
 
