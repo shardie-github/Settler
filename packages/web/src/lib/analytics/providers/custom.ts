@@ -16,7 +16,7 @@ interface CustomProviderConfig {
 class CustomProvider implements AnalyticsProvider {
   private config: CustomProviderConfig;
   private eventQueue: Array<{ type: string; data: any }> = [];
-  private flushTimer?: NodeJS.Timeout;
+  private flushTimer: NodeJS.Timeout | null = null;
 
   constructor(config: CustomProviderConfig) {
     this.config = {
@@ -41,10 +41,9 @@ class CustomProvider implements AnalyticsProvider {
   }
 
   private stopFlushTimer() {
-    const timer = this.flushTimer;
-    if (timer) {
-      clearInterval(timer);
-      this.flushTimer = undefined;
+    if (this.flushTimer !== null) {
+      clearInterval(this.flushTimer);
+      this.flushTimer = null;
     }
   }
 
