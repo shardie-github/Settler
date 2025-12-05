@@ -113,8 +113,8 @@ console.log("Report:", report.data.summary);
       {/* Hero Section */}
       <AnimatedHero
         badge="Interactive Playground"
-        title="Try Settler API"
-        description="Test the API, see examples, and experiment with reconciliation jobs"
+        title="Try Settler Free for 30 Days"
+        description="Test our platform with real examples. No credit card required. Get full access to all features."
       />
 
       {/* Playground Content */}
@@ -410,12 +410,12 @@ client.webhooks.on("reconciliation.complete", (event) => {
       <section className="py-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto">
           <ConversionCTA
-            title="Ready to Integrate?"
-            description="Get your API key and start reconciling in minutes. Free tier available."
-            primaryAction="Get API Key"
-            primaryLink="/pricing"
-            secondaryAction="View Documentation"
-            secondaryLink="/docs"
+            title="Ready to Start Your Free Trial?"
+            description="Get full access for 30 days. No credit card required. Start matching transactions in minutes."
+            primaryAction="Start 30-Day Free Trial"
+            primaryLink="/signup"
+            secondaryAction="View Pricing"
+            secondaryLink="/pricing"
             variant="gradient"
           />
         </div>

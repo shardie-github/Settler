@@ -39,9 +39,9 @@ class GA4Provider implements AnalyticsProvider {
     document.head.appendChild(script);
 
     // Initialize gtag
-    window.gtag = function() {
+    window.gtag = function(...args: unknown[]) {
       if (window.dataLayer) {
-        window.dataLayer.push(arguments);
+        window.dataLayer.push(args);
       }
     };
 

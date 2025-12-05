@@ -21,7 +21,7 @@ export default function NewEdgeNodePage() {
     nodeKey: string;
   } | null>(null);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
     // In production, call API

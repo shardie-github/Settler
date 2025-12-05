@@ -48,16 +48,21 @@ export default function ReactSettlerDemoPage() {
   // Transform jobs to transactions (this could be moved to a data transformation function)
   const transactions: ReconciliationTransaction[] = useMemo(() => {
     if (!jobsQuery.data) return [];
-    return jobsQuery.data.map((job, idx) => ({
-      id: `tx-${job.id}`,
-      provider: ((job.source as unknown) as Record<string, unknown>)?.adapter as string || 'stripe',
-      providerTransactionId: `ch_${job.id.slice(0, 10)}`,
-      amount: { value: 100.0 * (idx + 1), currency: 'USD' },
-      currency: 'USD',
-      date: job.createdAt || new Date().toISOString(),
-      status: 'succeeded',
-      referenceId: job.name
-    }));
+    return jobsQuery.data.map((job, idx) => {
+      const sourceAdapter = job.source && typeof job.source === 'object' && 'adapter' in job.source
+        ? String(job.source.adapter)
+        : 'stripe';
+      return {
+        id: `tx-${job.id}`,
+        provider: sourceAdapter,
+        providerTransactionId: `ch_${job.id.slice(0, 10)}`,
+        amount: { value: 100.0 * (idx + 1), currency: 'USD' },
+        currency: 'USD',
+        date: job.createdAt || new Date().toISOString(),
+        status: 'succeeded',
+        referenceId: job.name
+      };
+    });
   }, [jobsQuery.data]);
 
   // Mock exceptions (in production, this would come from API)

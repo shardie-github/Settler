@@ -457,7 +457,7 @@ async function createJobWithRetry(config: any, maxRetries = 3) {
             Cookbooks & Workflows
           </h1>
           <p className="text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
-            Pre-built reconciliation workflows and recipes for common use cases. Copy, customize, and deploy.
+            Ready-to-use templates for common scenarios. Copy, customize, and deploy in minutes.
           </p>
         </div>
       </section>
