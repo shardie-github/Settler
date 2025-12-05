@@ -1,0 +1,42 @@
+{{> header}}
+      <h1 style="color: #2563eb; margin: 0 0 16px 0;">Welcome to Settler, {{user.first_name}}! 🎉</h1>
+      
+      <p>Your 30-day free trial starts now—no credit card required.</p>
+      
+      <p>Here's how to get value in the next 10 minutes:</p>
+      
+      <ol style="line-height: 2; padding-left: 20px;">
+        <li style="margin: 12px 0;"><strong>Complete your profile</strong> (2 min)<br>
+        → Help us personalize your experience<br>
+        <a href="{{profile_setup_url}}" style="color: #2563eb;">Complete Profile →</a></li>
+        
+        <li style="margin: 12px 0;"><strong>Connect your first platform</strong> (3 min)<br>
+        → See how easy it is to match transactions<br>
+        <a href="{{playground_url}}" style="color: #2563eb;">Try Playground →</a></li>
+        
+        <li style="margin: 12px 0;"><strong>Try a demo reconciliation</strong> (5 min)<br>
+        → See results in real-time<br>
+        <a href="{{demo_url}}" style="color: #2563eb;">Run Demo →</a></li>
+      </ol>
+      
+      <div style="background-color: #f0f9ff; border-left: 4px solid #2563eb; padding: 16px; margin: 24px 0;">
+        <p style="margin: 0 0 8px 0;"><strong>Your trial includes:</strong></p>
+        <ul style="margin: 8px 0 0 0; padding-left: 20px;">
+          <li>Full access to all features</li>
+          <li>Unlimited reconciliations</li>
+          <li>All cookbooks and workflows</li>
+          <li>Free 30-minute consultation (worth $200)</li>
+        </ul>
+      </div>
+      
+      <p>Your trial ends on <strong>{{trial_end_date}}</strong>. We'll send you helpful tips along the way.</p>
+      
+      {{> button button_text="Go to Dashboard" button_url="{{dashboard_url}}" button_color="#2563eb"}}
+      
+      <p style="color: #6b7280; font-size: 14px; margin-top: 24px;">Questions? Just reply to this email—we're here to help.</p>
+      
+      <p style="color: #6b7280; font-size: 14px; margin-top: 16px;">
+        Best,<br>
+        The Settler Team
+      </p>
+{{> footer}}

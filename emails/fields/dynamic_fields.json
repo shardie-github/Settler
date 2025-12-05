@@ -1,0 +1,77 @@
+{
+  "user": {
+    "first_name": "User's first name",
+    "last_name": "User's last name",
+    "email": "User's email address",
+    "industry": "User's industry (e-commerce, SaaS, etc.)",
+    "company_name": "User's company name",
+    "plan_type": "User's plan (free, trial, commercial, enterprise)"
+  },
+  "trial": {
+    "trial_end_date": "Trial end date (formatted)",
+    "trial_start_date": "Trial start date (formatted)",
+    "days_remaining": "Number of days remaining in trial",
+    "charge_date": "Date when first charge occurs (trial_end_date + 30 days)"
+  },
+  "product": {
+    "product_name": "Settler",
+    "upgrade_url": "URL to upgrade page",
+    "dashboard_url": "URL to user dashboard",
+    "support_url": "URL to support page",
+    "pricing_url": "URL to pricing page",
+    "docs_url": "URL to documentation",
+    "playground_url": "URL to playground",
+    "cookbooks_url": "URL to cookbooks page"
+  },
+  "reconciliation": {
+    "job_name": "Name of reconciliation job",
+    "job_id": "Reconciliation job ID",
+    "matched_count": "Number of matched transactions",
+    "unmatched_count": "Number of unmatched transactions",
+    "accuracy": "Accuracy percentage",
+    "time_saved": "Hours saved vs manual matching",
+    "report_url": "URL to reconciliation report",
+    "platform_name": "Platform name (Shopify, Stripe, etc.)"
+  },
+  "recommendations": {
+    "next_recommendation": "Next recommended action",
+    "workflow_suggestion": "Suggested workflow/cookbook",
+    "analysis_summary": "Summary of analysis insights",
+    "top_insight_1": "Top insight #1",
+    "top_insight_2": "Top insight #2",
+    "recommendation_1": "Recommendation #1",
+    "recommendation_2": "Recommendation #2"
+  },
+  "metrics": {
+    "total_reconciliations": "Total reconciliations processed",
+    "jobs_created": "Number of jobs created",
+    "accuracy": "Average accuracy percentage",
+    "time_saved": "Total hours saved"
+  },
+  "workflow": {
+    "workflow_name": "Name of workflow/cookbook",
+    "workflow_description": "Description of workflow",
+    "use_case": "Use case for workflow",
+    "setup_time": "Time to set up workflow",
+    "workflow_url": "URL to workflow/cookbook"
+  },
+  "case_study": {
+    "similar_company": "Name of similar company (for case study)",
+    "case_study_url": "URL to case study",
+    "case_studies_url": "URL to case studies page"
+  },
+  "monthly": {
+    "month": "Current month name",
+    "renewal_date": "Subscription renewal date",
+    "milestone_name": "Name of milestone achieved",
+    "milestone_metric": "Metric for milestone"
+  },
+  "urls": {
+    "profile_setup_url": "URL to profile setup",
+    "demo_url": "URL to demo reconciliation",
+    "free_tier_url": "URL to free tier info",
+    "free_tier_info_url": "URL to free tier information",
+    "consultation_url": "URL to book consultation",
+    "insights_url": "URL to insights dashboard"
+  }
+}
