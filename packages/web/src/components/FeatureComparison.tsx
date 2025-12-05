@@ -21,6 +21,7 @@ const features: Feature[] = [
   { name: 'RBAC', free: false, commercial: false, enterprise: true },
   { name: 'White-label', free: false, commercial: false, enterprise: true },
   { name: 'On-premise Deployment', free: false, commercial: false, enterprise: true },
+  { name: 'Edge AI', free: false, commercial: 'Add-on', enterprise: true },
 ];
 
 export function FeatureComparison() {

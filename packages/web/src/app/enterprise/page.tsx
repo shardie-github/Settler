@@ -12,6 +12,7 @@ import { AnimatedPageWrapper } from "@/components/AnimatedPageWrapper";
 import { AnimatedHero } from "@/components/AnimatedHero";
 import { AnimatedFeatureCard } from "@/components/AnimatedFeatureCard";
 import { AnimatedStatCard } from "@/components/AnimatedStatCard";
+import { EdgeAIMarketingSection } from "@/components/EdgeAIMarketingSection";
 
 export default function Enterprise() {
   const [formData, setFormData] = useState({
@@ -355,6 +356,9 @@ export default function Enterprise() {
           <TrustBadges />
         </div>
       </section>
+
+      {/* Edge AI Section */}
+      <EdgeAIMarketingSection variant="default" />
 
       {/* Final CTA */}
       <section className="py-20 px-4 sm:px-6 lg:px-8">
