@@ -1,0 +1,229 @@
+/**
+ * Matching Service
+ * Performs local fuzzy matching and candidate scoring using optimized models
+ */
+
+import Database from 'better-sqlite3';
+import { ModelManager } from './ModelManager';
+import { logger } from '../utils/logger';
+
+export interface Candidate {
+  sourceId: string;
+  targetId: string;
+  confidenceScore: number;
+  scoreMatrix: Record<string, number>;
+  features?: Record<string, unknown>;
+}
+
+export class MatchingService {
+  constructor(
+    private db: Database.Database,
+    private modelManager: ModelManager
+  ) {}
+
+  async findCandidates(
+    sourceData: unknown[],
+    targetData: unknown[]
+  ): Promise<Candidate[]> {
+    logger.info('Finding candidates', {
+      sourceCount: sourceData.length,
+      targetCount: targetData.length,
+    });
+
+    const candidates: Candidate[] = [];
+
+    // Simple fuzzy matching (can be enhanced with ML models)
+    for (const source of sourceData) {
+      if (typeof source !== 'object' || source === null) continue;
+
+      const sourceRecord = source as Record<string, unknown>;
+      const sourceId = this.extractId(sourceRecord);
+
+      for (const target of targetData) {
+        if (typeof target !== 'object' || target === null) continue;
+
+        const targetRecord = target as Record<string, unknown>;
+        const targetId = this.extractId(targetRecord);
+
+        const score = this.calculateMatchScore(sourceRecord, targetRecord);
+        
+        if (score > 0.5) { // Threshold for candidate
+          candidates.push({
+            sourceId,
+            targetId,
+            confidenceScore: score,
+            scoreMatrix: {
+              amount: this.compareAmount(sourceRecord, targetRecord),
+              date: this.compareDate(sourceRecord, targetRecord),
+              description: this.compareString(sourceRecord, targetRecord, 'description'),
+            },
+          });
+        }
+      }
+    }
+
+    // Sort by confidence score
+    candidates.sort((a, b) => b.confidenceScore - a.confidenceScore);
+
+    // Limit to top candidates
+    return candidates.slice(0, 100);
+  }
+
+  private extractId(record: Record<string, unknown>): string {
+    return String(record.id || record.transaction_id || record.order_id || '');
+  }
+
+  private calculateMatchScore(
+    source: Record<string, unknown>,
+    target: Record<string, unknown>
+  ): number {
+    let totalScore = 0;
+    let weightSum = 0;
+
+    // Amount matching (high weight)
+    const amountScore = this.compareAmount(source, target);
+    totalScore += amountScore * 0.4;
+    weightSum += 0.4;
+
+    // Date matching (medium weight)
+    const dateScore = this.compareDate(source, target);
+    totalScore += dateScore * 0.3;
+    weightSum += 0.3;
+
+    // Description/ID matching (medium weight)
+    const descScore = this.compareString(source, target, 'description') ||
+                     this.compareString(source, target, 'id');
+    totalScore += descScore * 0.3;
+    weightSum += 0.3;
+
+    return weightSum > 0 ? totalScore / weightSum : 0;
+  }
+
+  private compareAmount(
+    source: Record<string, unknown>,
+    target: Record<string, unknown>
+  ): number {
+    const sourceAmount = this.extractAmount(source);
+    const targetAmount = this.extractAmount(target);
+
+    if (sourceAmount === null || targetAmount === null) {
+      return 0;
+    }
+
+    const diff = Math.abs(sourceAmount - targetAmount);
+    const maxAmount = Math.max(Math.abs(sourceAmount), Math.abs(targetAmount));
+
+    if (maxAmount === 0) {
+      return sourceAmount === targetAmount ? 1 : 0;
+    }
+
+    // Exact match = 1.0, 1% difference = 0.9, etc.
+    return Math.max(0, 1 - diff / maxAmount);
+  }
+
+  private extractAmount(record: Record<string, unknown>): number | null {
+    const amount = record.amount || record.total || record.value;
+    if (typeof amount === 'number') {
+      return amount;
+    }
+    if (typeof amount === 'string') {
+      const parsed = parseFloat(amount.replace(/[^0-9.-]/g, ''));
+      return isNaN(parsed) ? null : parsed;
+    }
+    return null;
+  }
+
+  private compareDate(
+    source: Record<string, unknown>,
+    target: Record<string, unknown>
+  ): number {
+    const sourceDate = this.extractDate(source);
+    const targetDate = this.extractDate(target);
+
+    if (!sourceDate || !targetDate) {
+      return 0;
+    }
+
+    const diffMs = Math.abs(sourceDate.getTime() - targetDate.getTime());
+    const diffDays = diffMs / (1000 * 60 * 60 * 24);
+
+    // Same day = 1.0, 1 day difference = 0.9, 7 days = 0.3, etc.
+    return Math.max(0, 1 - diffDays / 7);
+  }
+
+  private extractDate(record: Record<string, unknown>): Date | null {
+    const dateField = record.date || record.timestamp || record.created_at;
+    if (dateField instanceof Date) {
+      return dateField;
+    }
+    if (typeof dateField === 'string') {
+      const parsed = new Date(dateField);
+      return isNaN(parsed.getTime()) ? null : parsed;
+    }
+    if (typeof dateField === 'number') {
+      return new Date(dateField);
+    }
+    return null;
+  }
+
+  private compareString(
+    source: Record<string, unknown>,
+    target: Record<string, unknown>,
+    field: string
+  ): number {
+    const sourceValue = String(source[field] || '').toLowerCase();
+    const targetValue = String(target[field] || '').toLowerCase();
+
+    if (!sourceValue || !targetValue) {
+      return 0;
+    }
+
+    // Simple Levenshtein-like similarity
+    if (sourceValue === targetValue) {
+      return 1.0;
+    }
+
+    if (sourceValue.includes(targetValue) || targetValue.includes(sourceValue)) {
+      return 0.8;
+    }
+
+    // Calculate simple similarity
+    const longer = sourceValue.length > targetValue.length ? sourceValue : targetValue;
+    const shorter = sourceValue.length > targetValue.length ? targetValue : sourceValue;
+    
+    if (longer.length === 0) {
+      return 1.0;
+    }
+
+    const editDistance = this.levenshteinDistance(sourceValue, targetValue);
+    return 1 - editDistance / longer.length;
+  }
+
+  private levenshteinDistance(str1: string, str2: string): number {
+    const matrix: number[][] = [];
+
+    for (let i = 0; i <= str2.length; i++) {
+      matrix[i] = [i];
+    }
+
+    for (let j = 0; j <= str1.length; j++) {
+      matrix[0][j] = j;
+    }
+
+    for (let i = 1; i <= str2.length; i++) {
+      for (let j = 1; j <= str1.length; j++) {
+        if (str2.charAt(i - 1) === str1.charAt(j - 1)) {
+          matrix[i][j] = matrix[i - 1][j - 1];
+        } else {
+          matrix[i][j] = Math.min(
+            matrix[i - 1][j - 1] + 1,
+            matrix[i][j - 1] + 1,
+            matrix[i - 1][j] + 1
+          );
+        }
+      }
+    }
+
+    return matrix[str2.length][str1.length];
+  }
+}
