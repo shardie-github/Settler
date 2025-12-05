@@ -267,7 +267,6 @@ if (typeof window !== 'undefined') {
         const scrollPercentage = documentHeight > 0 ? (scrollY / documentHeight) * 100 : 0;
 
         telemetry.trackScrollDepth(scrollPercentage);
-        lastScrollY = scrollY;
         ticking = false;
       });
 

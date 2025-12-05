@@ -16,7 +16,7 @@ interface CustomProviderConfig {
 class CustomProvider implements AnalyticsProvider {
   private config: CustomProviderConfig;
   private eventQueue: Array<{ type: string; data: any }> = [];
-  private flushTimer?: NodeJS.Timeout;
+  private flushTimer: NodeJS.Timeout | null = null;
 
   constructor(config: CustomProviderConfig) {
     this.config = {
@@ -32,9 +32,18 @@ class CustomProvider implements AnalyticsProvider {
 
   private startFlushTimer() {
     if (this.config.flushInterval) {
+      // Clear any existing timer before starting a new one
+      this.stopFlushTimer();
       this.flushTimer = setInterval(() => {
         this.flush();
       }, this.config.flushInterval);
+    }
+  }
+
+  private stopFlushTimer() {
+    if (this.flushTimer !== null) {
+      clearInterval(this.flushTimer);
+      this.flushTimer = null;
     }
   }
 
@@ -128,6 +137,11 @@ class CustomProvider implements AnalyticsProvider {
 
   init() {
     // Custom provider doesn't need initialization
+  }
+
+  destroy() {
+    // Clean up timer on destroy
+    this.stopFlushTimer();
   }
 }
 
