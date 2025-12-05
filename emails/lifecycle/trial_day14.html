@@ -1,0 +1,27 @@
+{{> header}}
+      <h1 style="color: #2563eb; margin: 0 0 16px 0;">How {{case_study.similar_company}} saved 15 hours/week</h1>
+      
+      <p>Hi {{user.first_name}},</p>
+      
+      <p>{{case_study.similar_company}}, a {{user.industry}} company similar to yours, was spending 15 hours per week on manual reconciliation.</p>
+      
+      <div style="background-color: #f0fdf4; border-left: 4px solid #22c55e; padding: 16px; margin: 24px 0;">
+        <p style="margin: 0 0 8px 0;"><strong>After switching to Settler:</strong></p>
+        <ul style="margin: 8px 0 0 0; padding-left: 20px;">
+          <li>✅ 99.7% accuracy (up from 92%)</li>
+          <li>✅ 15 hours saved per week</li>
+          <li>✅ Real-time visibility into all transactions</li>
+          <li>✅ Zero manual errors</li>
+        </ul>
+      </div>
+      
+      {{> button button_text="Read Full Story" button_url="{{case_study.case_study_url}}" button_color="#2563eb"}}
+      
+      <p>Your trial ends in {{trial.days_remaining}} days. Want similar results?</p>
+      
+      {{> button button_text="Upgrade Now" button_url="{{product.upgrade_url}}" button_color="#22c55e"}}
+      <p style="color: #666; font-size: 14px; text-align: center; margin-top: 8px;">(Includes free consultation)</p>
+      
+      <p>Or continue exploring:</p>
+      <p><a href="{{case_study.case_studies_url}}" style="color: #2563eb;">View More Case Studies →</a></p>
+{{> footer}}

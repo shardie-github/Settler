@@ -170,12 +170,35 @@ export async function sendPasswordResetEmail(
 
 /**
  * Welcome email (after verification)
+ * Now uses lifecycle email system for trial users
  */
 export async function sendWelcomeEmail(
   email: string,
   userName?: string,
-  dashboardLink?: string
+  dashboardLink?: string,
+  isTrialUser?: boolean,
+  trialEndDate?: string
 ): Promise<{ id: string } | null> {
+  // If trial user, use lifecycle email system
+  if (isTrialUser && trialEndDate) {
+    const { sendTrialWelcomeEmail } = await import('./email-lifecycle');
+    return sendTrialWelcomeEmail(
+      {
+        email,
+        firstName: userName,
+        planType: 'trial',
+      },
+      {
+        trialStartDate: new Date().toISOString(),
+        trialEndDate,
+        daysRemaining: Math.ceil(
+          (new Date(trialEndDate).getTime() - Date.now()) / (1000 * 60 * 60 * 24)
+        ),
+      }
+    );
+  }
+
+  // Legacy welcome email for non-trial users
   const name = userName || email.split('@')[0];
   const dashboard = dashboardLink || 'https://app.settler.dev/dashboard';
   

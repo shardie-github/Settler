@@ -1,0 +1,31 @@
+{{> header}}
+      <h1 style="color: #2563eb; margin: 0 0 16px 0;">Your {{monthly.month}} Summary</h1>
+      
+      <p>Hi {{user.first_name}},</p>
+      
+      <p>Here's what you accomplished last month:</p>
+      
+      <div style="background-color: #f0f9ff; border-left: 4px solid #2563eb; padding: 16px; margin: 24px 0;">
+        <p style="margin: 0 0 8px 0;"><strong>Key Metrics:</strong></p>
+        <ul style="margin: 8px 0 0 0; padding-left: 20px;">
+          <li>{{metrics.total_reconciliations}} reconciliations processed</li>
+          <li>{{metrics.accuracy}}% average accuracy</li>
+          <li>{{metrics.time_saved}} hours saved vs manual matching</li>
+          <li>{{metrics.jobs_created}} jobs created</li>
+        </ul>
+      </div>
+      
+      <p><strong>Top Insights:</strong></p>
+      <ul>
+        <li>{{recommendations.top_insight_1}}</li>
+        <li>{{recommendations.top_insight_2}}</li>
+      </ul>
+      
+      <p><strong>Recommended Next Steps:</strong></p>
+      <ul>
+        <li>{{recommendations.recommendation_1}}</li>
+        <li>{{recommendations.recommendation_2}}</li>
+      </ul>
+      
+      {{> button button_text="View Full Dashboard" button_url="{{product.dashboard_url}}" button_color="#2563eb"}}
+{{> footer}}

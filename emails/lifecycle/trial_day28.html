@@ -1,0 +1,22 @@
+{{> header}}
+      <h1 style="color: #2563eb; margin: 0 0 16px 0;">Last chance: Trial ends tomorrow</h1>
+      
+      <p>Hi {{user.first_name}},</p>
+      
+      <p>Your trial ends <strong>tomorrow</strong>. Upgrade now to keep:</p>
+      
+      <ul>
+        <li>All your workflows</li>
+        <li>Advanced features</li>
+        <li>Free consultation</li>
+      </ul>
+      
+      {{> button button_text="Upgrade Now" button_url="{{product.upgrade_url}}" button_color="#22c55e"}}
+      <p style="color: #666; font-size: 14px; text-align: center; margin-top: 8px;">(Takes 2 minutes)</p>
+      
+      <p>We're here to help:</p>
+      <ul>
+        <li><a href="{{urls.consultation_url}}" style="color: #2563eb;">Schedule a Call</a></li>
+        <li><a href="{{product.support_url}}" style="color: #2563eb;">Email Support</a></li>
+      </ul>
+{{> footer}}
