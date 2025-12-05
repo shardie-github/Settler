@@ -45,6 +45,8 @@ import { versionMiddleware } from "./middleware/versioning";
 import { v1Router } from "./routes/v1";
 import { v2Router } from "./routes/v2";
 import { reconciliationSummaryRouter } from "./routes/reconciliation-summary";
+import { edgeAiRouter } from "./routes/edge-ai";
+import { aiasRouter } from "./routes/aias";
 import { SecretsManager, REQUIRED_SECRETS } from "./infrastructure/security/SecretsManager";
 import { initializeTracing } from "./infrastructure/observability/tracing";
 import { compressionMiddleware, brotliCompressionMiddleware } from "./middleware/compression";
@@ -313,6 +315,16 @@ app.use("/api/v2", authMiddleware, v2Router);
 
 // Optimized reconciliation summary endpoint
 app.use("/api/v1/reconciliations", authMiddleware, reconciliationSummaryRouter);
+
+// Edge AI routes (public endpoints for node operations, authenticated by node_key)
+app.use("/api/edge-ai", edgeAiRouter);
+// Edge AI routes (requires auth for management)
+app.use("/api/v1/edge-ai", authMiddleware, edgeAiRouter);
+app.use("/api/v2/edge-ai", authMiddleware, edgeAiRouter);
+
+// AIAS Edge AI Accelerator Studio routes (requires auth)
+app.use("/api/v1/aias", authMiddleware, aiasRouter);
+app.use("/api/v2/aias", authMiddleware, aiasRouter);
 
 // Sentry error handler (before custom error handler)
 app.use(sentryErrorHandler());

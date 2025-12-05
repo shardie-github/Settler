@@ -36,6 +36,14 @@ export enum Permission {
   ADMIN_READ = 'admin:read',
   ADMIN_WRITE = 'admin:write',
   ADMIN_AUDIT = 'admin:audit',
+
+  // Edge AI
+  EDGE_NODES_READ = 'edge_nodes:read',
+  EDGE_NODES_WRITE = 'edge_nodes:write',
+  EDGE_NODES_DELETE = 'edge_nodes:delete',
+  EDGE_MODELS_READ = 'edge_models:read',
+  EDGE_MODELS_WRITE = 'edge_models:write',
+  EDGE_AIAS_ACCESS = 'edge_aias:access',
 }
 
 export const ROLE_PERMISSIONS: Record<UserRole, Permission[]> = {
@@ -57,6 +65,12 @@ export const ROLE_PERMISSIONS: Record<UserRole, Permission[]> = {
     Permission.TENANT_WRITE,
     Permission.TENANT_DELETE,
     Permission.TENANT_BILLING,
+    Permission.EDGE_NODES_READ,
+    Permission.EDGE_NODES_WRITE,
+    Permission.EDGE_NODES_DELETE,
+    Permission.EDGE_MODELS_READ,
+    Permission.EDGE_MODELS_WRITE,
+    Permission.EDGE_AIAS_ACCESS,
   ],
   [UserRole.ADMIN]: [
     Permission.JOBS_READ,
@@ -72,6 +86,11 @@ export const ROLE_PERMISSIONS: Record<UserRole, Permission[]> = {
     Permission.USERS_WRITE,
     Permission.TENANT_READ,
     Permission.TENANT_WRITE,
+    Permission.EDGE_NODES_READ,
+    Permission.EDGE_NODES_WRITE,
+    Permission.EDGE_MODELS_READ,
+    Permission.EDGE_MODELS_WRITE,
+    Permission.EDGE_AIAS_ACCESS,
   ],
   [UserRole.DEVELOPER]: [
     Permission.JOBS_READ,
@@ -82,6 +101,8 @@ export const ROLE_PERMISSIONS: Record<UserRole, Permission[]> = {
     Permission.WEBHOOKS_READ,
     Permission.WEBHOOKS_WRITE,
     Permission.USERS_READ,
+    Permission.EDGE_NODES_READ,
+    Permission.EDGE_MODELS_READ,
   ],
   [UserRole.VIEWER]: [
     Permission.JOBS_READ,
