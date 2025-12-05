@@ -49,7 +49,7 @@ export function MobileDashboard({
   }, [transactions, searchQuery]);
 
   return (
-    <ReconciliationDashboard {...(className !== undefined ? { className } : {})}>
+    <ReconciliationDashboard {...(className ? { className } : {})}>
       <div
         style={{
           padding: '1rem',
@@ -192,7 +192,7 @@ export function MobileDashboard({
             >
               <TransactionTable
                 transactions={filteredTransactions}
-                {...(onTransactionSelect !== undefined ? { onSelect: onTransactionSelect } : {})}
+                {...(onTransactionSelect ? { onSelect: onTransactionSelect } : {})}
               />
             </div>
           ) : (
@@ -224,7 +224,7 @@ export function MobileDashboard({
             >
               <ExceptionTable
                 exceptions={exceptions}
-                {...(onExceptionResolve !== undefined ? { onResolve: onExceptionResolve } : {})}
+                {...(onExceptionResolve ? { onResolve: onExceptionResolve } : {})}
               />
             </div>
           ) : (

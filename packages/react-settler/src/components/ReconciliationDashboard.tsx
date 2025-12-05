@@ -19,8 +19,8 @@ export function ReconciliationDashboard({
 }: ReconciliationDashboardProps) {
   return (
     <CompilationProvider 
-      {...(mode !== undefined ? { mode } : {})}
-      {...(config !== undefined ? { config } : {})}
+      {...(mode ? { mode } : {})}
+      {...(config ? { config } : {})}
     >
       <div className={className} data-reconciliation-dashboard>
         {children}
