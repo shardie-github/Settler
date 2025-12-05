@@ -1,13 +1,15 @@
 {
   "buildCommand": "npx turbo run build --filter=@settler/web...",
-  "installCommand": "npm ci",
+  "installCommand": "CXXFLAGS='-std=c++20' CCFLAGS='-std=c++20' npm ci",
   "framework": "nextjs",
   "regions": ["iad1"],
   "build": {
     "env": {
       "NODE_OPTIONS": "--max-old-space-size=8192",
       "PRISMA_CLIENT_ENGINE_TYPE": "binary",
-      "NEXT_TELEMETRY_DISABLED": "1"
+      "NEXT_TELEMETRY_DISABLED": "1",
+      "CXXFLAGS": "-std=c++20",
+      "CCFLAGS": "-std=c++20"
     }
   },
   "functions": {
