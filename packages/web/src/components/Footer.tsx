@@ -155,7 +155,6 @@ export function Footer() {
             </ul>
           </nav>
           </div>
-        </div>
 
         <div className="pt-8 border-t border-border flex flex-col md:flex-row justify-between items-center">
           <div className="text-sm text-muted-foreground mb-4 md:mb-0">
@@ -191,6 +190,7 @@ export function Footer() {
             </a>
           </nav>
         </div>
+      </div>
     </footer>
   );
 }
