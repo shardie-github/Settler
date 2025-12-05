@@ -191,7 +191,6 @@ export function Footer() {
             </a>
           </nav>
         </div>
-      </div>
     </footer>
   );
 }
