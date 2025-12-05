@@ -3,7 +3,7 @@
  * Search functionality for reconciliation data
  */
 
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { useCompilationContext } from '../context';
 import { useTelemetry } from '../hooks/useTelemetry';
 
@@ -28,7 +28,7 @@ export function SearchBar({
   const [debouncedQuery, setDebouncedQuery] = useState('');
 
   // Debounce search
-  React.useEffect(() => {
+  useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedQuery(query);
     }, debounceMs);
@@ -36,7 +36,7 @@ export function SearchBar({
     return () => clearTimeout(timer);
   }, [query, debounceMs]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (debouncedQuery !== query) {
       track('search.executed', { query: debouncedQuery, length: debouncedQuery.length });
       onSearch?.(debouncedQuery);
