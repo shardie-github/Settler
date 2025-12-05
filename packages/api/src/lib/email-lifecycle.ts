@@ -189,7 +189,7 @@ export async function sendTrialCaseStudyEmail(
       case_study: {
         similar_company: caseStudy.companyName,
         case_study_url: caseStudy.caseStudyUrl,
-        case_studies_url: `${urls?.docs_url || ''}/case-studies`,
+        case_studies_url: `${urls?.docs_url || 'https://docs.settler.dev'}/case-studies`,
       },
       product: urls,
       urls: urls,

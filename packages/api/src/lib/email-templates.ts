@@ -214,6 +214,7 @@ export function generatePlainText(html: string): string {
   const linkRegex = /<a[^>]+href=["']([^"']+)["'][^>]*>(.*?)<\/a>/gi;
   let match: RegExpExecArray | null;
   while ((match = linkRegex.exec(html)) !== null) {
+    if (!match || !match[1] || !match[2]) continue;
     const url = match[1];
     const linkText = match[2].replace(/<[^>]+>/g, '');
     text = text.replace(linkText, `${linkText} (${url})`);

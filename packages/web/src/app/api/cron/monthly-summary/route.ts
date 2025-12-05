@@ -29,7 +29,7 @@ export async function GET(request: NextRequest) {
     const supabase = await createAdminClient();
     
     // Get paid users
-    const { data: users, error } = await supabase.rpc('get_paid_users_for_monthly_summary' as any);
+    const { data: users, error } = await supabase.rpc('get_paid_users_for_monthly_summary' as any) as { data: any[] | null; error: any };
     
     if (error) {
       logError('Failed to fetch paid users', error);

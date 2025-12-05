@@ -168,7 +168,7 @@ export const validatedConfig = {
   dataRetention: {
     defaultDays: env.DATA_RETENTION_DAYS,
   },
-  allowedOrigins: env.ALLOWED_ORIGINS.split(',').map(o => o.trim()),
+  allowedOrigins: env.ALLOWED_ORIGINS.split(',').map((o: string) => o.trim()),
   logging: {
     level: env.LOG_LEVEL,
     samplingRate: env.LOG_SAMPLING_RATE,

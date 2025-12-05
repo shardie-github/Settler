@@ -29,7 +29,6 @@ export function WelcomeDashboard({
       });
 
       if (response.ok) {
-        setPreTestCompleted(true);
         setShowPreTest(false);
         // Personalize experience based on answers
       } else {
