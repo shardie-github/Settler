@@ -11,7 +11,6 @@ import { ArrowLeft, CheckCircle } from "lucide-react";
 import Link from "next/link";
 
 export default function NewEdgeNodePage() {
-  const router = useRouter();
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
     name: "",

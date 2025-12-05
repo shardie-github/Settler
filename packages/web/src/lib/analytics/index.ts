@@ -110,9 +110,9 @@ class Analytics {
 
     const errorMetadata: ErrorMetadata = {
       message: typeof error === 'string' ? error : error.message,
-      stack: typeof error === 'string' ? undefined : error.stack,
-      url: typeof window !== 'undefined' ? window.location.href : undefined,
-      userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : undefined,
+      ...(typeof error !== 'string' && error.stack ? { stack: error.stack } : {}),
+      ...(typeof window !== 'undefined' ? { url: window.location.href } : {}),
+      ...(typeof navigator !== 'undefined' ? { userAgent: navigator.userAgent } : {}),
       timestamp: new Date().toISOString(),
       ...metadata,
     };

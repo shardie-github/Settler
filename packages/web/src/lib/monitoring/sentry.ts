@@ -8,7 +8,7 @@ import { logger } from '../logging/logger';
 import { analytics } from '../analytics';
 
 interface SentryConfig {
-  dsn?: string;
+  dsn?: string | undefined;
   environment?: string;
   enabled: boolean;
 }
@@ -18,10 +18,11 @@ class SentryIntegration {
   private initialized = false;
 
   constructor() {
+    const dsn = process.env.NEXT_PUBLIC_SENTRY_DSN;
     this.config = {
-      dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
+      ...(dsn ? { dsn } : {}),
       environment: process.env.NODE_ENV || 'development',
-      enabled: process.env.NEXT_PUBLIC_ENABLE_SENTRY === 'true' && !!process.env.NEXT_PUBLIC_SENTRY_DSN,
+      enabled: process.env.NEXT_PUBLIC_ENABLE_SENTRY === 'true' && !!dsn,
     };
   }
 
@@ -35,7 +36,12 @@ class SentryIntegration {
 
     try {
       // Dynamic import to avoid bundling Sentry if not used
-      const Sentry = await import('@sentry/nextjs');
+      // @ts-ignore - @sentry/nextjs may not be installed
+      const Sentry = await import('@sentry/nextjs').catch(() => null);
+      
+      if (!Sentry || !this.config.dsn) {
+        return;
+      }
       
       Sentry.init({
         dsn: this.config.dsn,
@@ -60,9 +66,11 @@ class SentryIntegration {
    * Capture exception
    */
   captureException(error: Error, context?: Record<string, any>) {
+    const errorMetadata = context ? { ...context, message: error.message } : { message: error.message };
+    
     if (!this.config.enabled) {
       // Fallback to analytics if Sentry not enabled
-      analytics.trackError(error, context);
+      analytics.trackError(error, errorMetadata);
       return;
     }
 
@@ -76,10 +84,10 @@ class SentryIntegration {
         });
       } catch (err) {
         logger.warn('Failed to capture exception in Sentry', err instanceof Error ? err : new Error(String(err)));
-        analytics.trackError(error, context);
+        analytics.trackError(error, errorMetadata);
       }
     } else {
-      analytics.trackError(error, context);
+      analytics.trackError(error, errorMetadata);
     }
   }
 

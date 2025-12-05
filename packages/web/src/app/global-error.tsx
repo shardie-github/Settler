@@ -30,6 +30,7 @@ export default function GlobalError({
     analytics.trackError(error, {
       type: 'global_error',
       digest: error.digest,
+      message: error.message,
     });
   }, [error]);
 

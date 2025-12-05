@@ -40,7 +40,9 @@ class GA4Provider implements AnalyticsProvider {
 
     // Initialize gtag
     window.gtag = function() {
-      window.dataLayer.push(arguments);
+      if (window.dataLayer) {
+        window.dataLayer.push(arguments);
+      }
     };
 
     window.gtag('js', new Date());
@@ -84,7 +86,7 @@ class GA4Provider implements AnalyticsProvider {
     
     window.gtag('set', 'user_id', userId);
     if (traits) {
-      window.gtag('set', 'user_properties', traits);
+      window.gtag('set', 'user_properties', traits as Record<string, any>);
     }
   }
 
