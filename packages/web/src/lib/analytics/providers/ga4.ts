@@ -8,26 +8,11 @@ import type { AnalyticsProvider } from '../types';
 
 declare global {
   interface Window {
-    gtag?: {
-      (
-        command: 'config' | 'event',
-        targetId: string | Date,
-        config?: Record<string, any>
-      ): void;
-      (
-        command: 'set',
-        config: Record<string, any>
-      ): void;
-      (
-        command: 'set',
-        key: string,
-        value: any
-      ): void;
-      (
-        command: 'js',
-        date: Date
-      ): void;
-    };
+    gtag?: (
+      command: 'config' | 'event' | 'set' | 'js',
+      targetIdOrConfig: string | Date | Record<string, any>,
+      configOrValue?: Record<string, any> | any
+    ) => void;
     dataLayer?: any[];
   }
 }

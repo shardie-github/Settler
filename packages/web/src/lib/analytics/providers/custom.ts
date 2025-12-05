@@ -32,6 +32,8 @@ class CustomProvider implements AnalyticsProvider {
 
   private startFlushTimer() {
     if (this.config.flushInterval) {
+      // Clear any existing timer before starting a new one
+      this.stopFlushTimer();
       this.flushTimer = setInterval(() => {
         this.flush();
       }, this.config.flushInterval);
@@ -39,8 +41,9 @@ class CustomProvider implements AnalyticsProvider {
   }
 
   private stopFlushTimer() {
-    if (this.flushTimer) {
-      clearInterval(this.flushTimer);
+    const timer = this.flushTimer;
+    if (timer) {
+      clearInterval(timer);
       this.flushTimer = undefined;
     }
   }
