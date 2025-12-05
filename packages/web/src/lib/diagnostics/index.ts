@@ -36,7 +36,7 @@ class Diagnostics {
 
     this.addEvent(event);
     logger.error(`Fetch failed: ${url}`, error, metadata);
-    analytics.trackError(error, { type: 'fetch_failure', url, ...metadata });
+    analytics.trackError(error, { type: 'fetch_failure', url, message: error.message, ...metadata });
   }
 
   /**
@@ -58,7 +58,7 @@ class Diagnostics {
 
     this.addEvent(event);
     logger.error(`Component error: ${componentName}`, error, metadata);
-    analytics.trackError(error, { type: 'component_error', component: componentName, ...metadata });
+    analytics.trackError(error, { type: 'component_error', component: componentName, message: error.message, ...metadata });
   }
 
   /**
@@ -79,7 +79,7 @@ class Diagnostics {
 
     this.addEvent(event);
     logger.error('Hydration error', error, metadata);
-    analytics.trackError(error, { type: 'hydration_error', ...metadata });
+    analytics.trackError(error, { type: 'hydration_error', message: error.message, ...metadata });
   }
 
   /**
@@ -158,16 +158,17 @@ if (typeof window !== 'undefined') {
 
     const observer = new PerformanceObserver((list) => {
       for (const entry of list.getEntries()) {
-        // Only count if the entry doesn't have recent user input
-        if (!(entry as any).hadRecentInput) {
-          const firstSessionEntry = clsEntries[0];
-          const lastSessionEntry = clsEntries[clsEntries.length - 1];
+          // Only count if the entry doesn't have recent user input
+          if (!(entry as any).hadRecentInput) {
+            const firstSessionEntry = clsEntries[0];
 
-          // If the entry is the first one, or if it's been more than 1 second since the last entry
-          if (
-            !firstSessionEntry ||
-            entry.startTime - lastSessionEntry.startTime > 1000
-          ) {
+            // If the entry is the first one, or if it's been more than 1 second since the last entry
+            const lastEntry = clsEntries[clsEntries.length - 1];
+            if (
+              !firstSessionEntry ||
+              !lastEntry ||
+              entry.startTime - lastEntry.startTime > 1000
+            ) {
             clsEntries = [entry];
           } else {
             clsEntries.push(entry);

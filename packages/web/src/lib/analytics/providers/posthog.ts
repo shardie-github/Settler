@@ -10,7 +10,7 @@ declare global {
   interface Window {
     posthog?: {
       capture: (event: string, properties?: Record<string, any>) => void;
-      identify: (userId: string, properties?: Record<string, any>) => void;
+      identify: (userId: string | undefined, properties?: Record<string, any>) => void;
       reset: () => void;
       isFeatureEnabled: (key: string) => boolean;
       onFeatureFlags: (callback: () => void) => void;
@@ -83,6 +83,8 @@ class PostHogProvider implements AnalyticsProvider {
     
     // PostHog uses identify for setting user properties
     if (window.posthog.identify) {
+      // PostHog identify accepts userId as first param, properties as second
+      // If userId is not available, we can pass undefined
       window.posthog.identify(undefined, properties);
     }
   }

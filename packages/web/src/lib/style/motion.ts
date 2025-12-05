@@ -106,11 +106,9 @@ export function getTransitionStyles(
   transition: keyof typeof motionTransitions | CSSProperties
 ): CSSProperties {
   if (typeof transition === 'string' && transition in motionTransitions) {
+    const baseStyles = motionTransitions[transition];
     return {
-      ...motionTransitions[transition],
-      '@media (prefers-reduced-motion: reduce)': {
-        transitionDuration: '0.01ms',
-      },
+      ...baseStyles,
     } as CSSProperties;
   }
   

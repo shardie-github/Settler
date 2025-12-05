@@ -133,7 +133,7 @@ export default function ReactSettlerDemoPage() {
 
       <DataLoader
         query={jobsQuery}
-        isEmpty={(data) => data.length === 0}
+        isEmpty={(data) => !data || data.length === 0}
         errorComponent={(error) => (
           <ErrorState
             error={error}
@@ -147,7 +147,9 @@ export default function ReactSettlerDemoPage() {
           </div>
         }
       >
-        {(data) => (
+        {(data) => {
+          if (!data) return null;
+          return (
           <ReconciliationDashboard>
         {/* Metrics */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
@@ -216,8 +218,9 @@ export default function ReactSettlerDemoPage() {
             </pre>
           </div>
         </div>
-      </ReconciliationDashboard>
-        )}
+          </ReconciliationDashboard>
+          );
+        }}
       </DataLoader>
       </div>
       <Footer />

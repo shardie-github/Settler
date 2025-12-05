@@ -7,11 +7,9 @@
 'use client';
 
 import { useEffect } from 'react';
-import { ErrorBoundary as ReactErrorBoundary } from '@/components/ui/error-boundary';
 import { logger } from '@/lib/logging/logger';
 import { analytics } from '@/lib/analytics';
 import { EmptyState } from '@/components/ui/empty-state';
-import { Button } from '@/components/ui/button';
 
 export default function Error({
   error,
@@ -33,6 +31,7 @@ export default function Error({
     analytics.trackError(error, {
       type: 'global_error_boundary',
       digest: error.digest,
+      message: error.message,
     });
   }, [error]);
 
@@ -47,7 +46,6 @@ export default function Error({
       action={{
         label: 'Try again',
         onClick: reset,
-        variant: 'default',
       }}
     />
   );

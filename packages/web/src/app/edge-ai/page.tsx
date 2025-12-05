@@ -10,7 +10,6 @@ import {
   TrendingUp, 
   Activity,
   Brain,
-  Network,
   Lock,
   ExternalLink
 } from "lucide-react";

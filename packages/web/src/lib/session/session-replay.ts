@@ -22,12 +22,14 @@ class SessionReplay {
   constructor() {
     const provider = (process.env.NEXT_PUBLIC_SESSION_REPLAY_PROVIDER || 'none') as SessionReplayProvider;
     const enabled = process.env.NEXT_PUBLIC_ENABLE_SESSION_REPLAY === 'true';
+    const siteId = process.env.NEXT_PUBLIC_SESSION_REPLAY_SITE_ID;
+    const apiKey = process.env.NEXT_PUBLIC_SESSION_REPLAY_API_KEY;
 
     this.config = {
       provider,
       enabled,
-      siteId: process.env.NEXT_PUBLIC_SESSION_REPLAY_SITE_ID,
-      apiKey: process.env.NEXT_PUBLIC_SESSION_REPLAY_API_KEY,
+      ...(siteId ? { siteId } : {}),
+      ...(apiKey ? { apiKey } : {}),
     };
   }
 

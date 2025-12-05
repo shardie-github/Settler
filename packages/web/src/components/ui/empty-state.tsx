@@ -6,7 +6,7 @@
 
 'use client';
 
-import { Inbox, LucideIcon } from 'lucide-react';
+import { Inbox, AlertCircle, LucideIcon } from 'lucide-react';
 import { Button } from './button';
 import { cn } from '@/lib/utils';
 
@@ -15,6 +15,10 @@ export interface EmptyStateProps {
    * Icon to display
    */
   icon?: LucideIcon;
+  /**
+   * Icon variant (shortcut for common icons)
+   */
+  iconVariant?: 'inbox' | 'alert';
   /**
    * Title for the empty state
    */
@@ -42,13 +46,22 @@ export interface EmptyStateProps {
 }
 
 export function EmptyState({
-  icon: Icon = Inbox,
+  icon: Icon,
+  iconVariant,
   title = 'No data available',
   description,
   action,
   size = 'default',
   className,
 }: EmptyStateProps) {
+  // Determine icon based on iconVariant or provided icon
+  let FinalIcon = Icon;
+  if (!FinalIcon && iconVariant) {
+    FinalIcon = iconVariant === 'alert' ? AlertCircle : Inbox;
+  }
+  if (!FinalIcon) {
+    FinalIcon = Inbox;
+  }
   // Ensure title is a proper heading level
   const HeadingTag = size === 'lg' ? 'h2' : size === 'sm' ? 'h4' : 'h3';
   const sizeClasses = {
@@ -84,7 +97,7 @@ export function EmptyState({
       role="status"
       aria-live="polite"
     >
-      <Icon
+      <FinalIcon
         className={cn(
           'text-muted-foreground mb-4',
           currentSize.icon,

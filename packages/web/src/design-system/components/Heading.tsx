@@ -38,8 +38,6 @@ const Heading = React.forwardRef<HTMLHeadingElement, HeadingProps>(
     },
     ref
   ) => {
-    const Component = `h${level}` as keyof JSX.IntrinsicElements;
-    
     // Default size based on level if not specified
     const defaultSizes: Record<number, string> = {
       1: '4xl',
@@ -50,9 +48,9 @@ const Heading = React.forwardRef<HTMLHeadingElement, HeadingProps>(
       6: 'base',
     };
     
-    const sizeVariant = size || defaultSizes[level];
+    const sizeVariant: string = size || defaultSizes[level] || 'base';
     
-    const sizeClasses = {
+    const sizeClasses: Record<string, string> = {
       xs: 'text-xs',
       sm: 'text-sm',
       base: 'text-base',
@@ -64,7 +62,7 @@ const Heading = React.forwardRef<HTMLHeadingElement, HeadingProps>(
       '5xl': 'text-5xl',
     };
     
-    const weightClasses = {
+    const weightClasses: Record<string, string> = {
       normal: 'font-normal',
       medium: 'font-medium',
       semibold: 'font-semibold',
@@ -72,27 +70,40 @@ const Heading = React.forwardRef<HTMLHeadingElement, HeadingProps>(
       extrabold: 'font-extrabold',
     };
     
-    const alignClasses = {
+    const alignClasses: Record<string, string> = {
       left: 'text-left',
       center: 'text-center',
       right: 'text-right',
     };
 
-    return (
-      <Component
-        ref={ref}
-        className={cn(
-          'leading-tight tracking-tight',
-          sizeClasses[sizeVariant],
-          weightClasses[weight],
-          align && alignClasses[align],
-          className
-        )}
-        {...props}
-      >
-        {children}
-      </Component>
-    );
+    const componentProps = {
+      ref,
+      className: cn(
+        'leading-tight tracking-tight',
+        sizeClasses[sizeVariant] || sizeClasses.base,
+        weightClasses[weight],
+        align && alignClasses[align],
+        className
+      ),
+      ...props,
+    };
+
+    switch (level) {
+      case 1:
+        return <h1 {...componentProps}>{children}</h1>;
+      case 2:
+        return <h2 {...componentProps}>{children}</h2>;
+      case 3:
+        return <h3 {...componentProps}>{children}</h3>;
+      case 4:
+        return <h4 {...componentProps}>{children}</h4>;
+      case 5:
+        return <h5 {...componentProps}>{children}</h5>;
+      case 6:
+        return <h6 {...componentProps}>{children}</h6>;
+      default:
+        return <h1 {...componentProps}>{children}</h1>;
+    }
   }
 );
 Heading.displayName = 'Heading';

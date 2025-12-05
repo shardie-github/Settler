@@ -34,7 +34,8 @@ export function useAnalytics() {
   }, []);
 
   const trackError = useCallback((error: Error | string, metadata?: Record<string, any>) => {
-    analytics.trackError(error, metadata);
+    const errorMetadata = metadata ? { ...metadata, message: typeof error === 'string' ? error : error.message } : { message: typeof error === 'string' ? error : error.message };
+    analytics.trackError(error, errorMetadata);
   }, []);
 
   const identify = useCallback((userId: string, traits?: Record<string, any>) => {

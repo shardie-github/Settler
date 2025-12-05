@@ -21,7 +21,6 @@ class AppLogger implements Logger {
 
   private getMinLevel(): LogLevel {
     const envLevel = process.env.NEXT_PUBLIC_LOG_LEVEL?.toLowerCase();
-    const levels: LogLevel[] = ['debug', 'info', 'warn', 'error', 'critical'];
     return (envLevel as LogLevel) || (process.env.NODE_ENV === 'production' ? 'info' : 'debug');
   }
 
@@ -53,16 +52,16 @@ class AppLogger implements Logger {
       level,
       message,
       timestamp: new Date().toISOString(),
-      context,
+      ...(context ? { context } : {}),
       error: error ? {
         name: error.name,
         message: error.message,
         stack: error.stack,
       } as any : undefined,
-      userId: this.userId,
+      ...(this.userId ? { userId: this.userId } : {}),
       sessionId: this.sessionId,
-      url: typeof window !== 'undefined' ? window.location.href : undefined,
-      userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : undefined,
+      ...(typeof window !== 'undefined' ? { url: window.location.href } : {}),
+      ...(typeof navigator !== 'undefined' ? { userAgent: navigator.userAgent } : {}),
     };
   }
 
@@ -87,9 +86,10 @@ class AppLogger implements Logger {
         entry.error || new Error(entry.message),
         {
           level: entry.level,
-          context: entry.context,
-          sessionId: entry.sessionId,
-          userId: entry.userId,
+          message: entry.message,
+          ...(entry.context ? { context: entry.context } : {}),
+          ...(entry.sessionId ? { sessionId: entry.sessionId } : {}),
+          ...(entry.userId ? { userId: entry.userId } : {}),
         }
       );
     }

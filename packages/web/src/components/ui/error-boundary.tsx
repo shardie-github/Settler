@@ -1,8 +1,6 @@
 'use client';
 
 import * as React from 'react';
-import { Button } from './button';
-import { AlertCircle } from 'lucide-react';
 import { EmptyState } from './empty-state';
 import { logger } from '@/lib/logging/logger';
 import { analytics } from '@/lib/analytics';
@@ -29,7 +27,6 @@ const DefaultErrorFallback: React.FC<ErrorFallbackProps> = ({ error, resetError 
       action={{
         label: 'Try again',
         onClick: resetError,
-        variant: 'default',
       }}
     />
   );
@@ -50,7 +47,7 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
     return { hasError: true, error };
   }
 
-  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+  override componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
     const componentName = this.props.componentName || 'Unknown';
     
     // Log error
@@ -69,6 +66,7 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
       type: 'error_boundary',
       component: componentName,
       componentStack: errorInfo.componentStack,
+      message: error.message,
     });
 
     // Call custom error handler
@@ -79,7 +77,7 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
     this.setState({ hasError: false, error: null });
   };
 
-  render() {
+  override render() {
     if (this.state.hasError && this.state.error) {
       const Fallback = this.props.fallback || DefaultErrorFallback;
       return <Fallback error={this.state.error} resetError={this.resetError} />;
@@ -88,5 +86,3 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
     return this.props.children;
   }
 }
-
-export { ErrorBoundary };
