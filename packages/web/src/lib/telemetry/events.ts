@@ -38,7 +38,6 @@ export interface TelemetryEvent {
 class Telemetry {
   private scrollDepthTracked: Set<number> = new Set();
   private formStartTimes: Map<string, number> = new Map();
-  private clickTimestamps: Map<string, number[]> = new Map();
 
   /**
    * Track button click

@@ -299,7 +299,7 @@ export function useExperimentConversion(experimentKey: FlagKey) {
       planId: conversionName,
       planName: conversionName,
       billingCycle: 'monthly',
-      amount: properties?.value,
+      ...(properties?.value !== undefined ? { amount: properties.value } : {}),
     });
 
     // Also track with experiment context

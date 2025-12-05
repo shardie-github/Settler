@@ -186,9 +186,9 @@ function resolveExperiment(
 ): FlagResolutionResult {
   const variants = metadata.experimentVariants || ['control'];
   const split = metadata.experimentSplit || {};
-  const defaultVariant = typeof metadata.defaultValue === 'string' 
+  const defaultVariant: string | boolean = typeof metadata.defaultValue === 'string' 
     ? metadata.defaultValue 
-    : variants[0];
+    : (variants[0] || (typeof metadata.defaultValue === 'boolean' ? metadata.defaultValue : 'control'));
 
   if (!userContext?.userId) {
     // No user context, return default variant
@@ -216,7 +216,7 @@ function resolveExperiment(
   });
 
   return {
-    value: variant,
+    value: (variant || defaultVariant) as string | boolean,
     source: 'experiment',
     metadata,
   };

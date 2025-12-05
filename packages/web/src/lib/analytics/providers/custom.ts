@@ -16,7 +16,6 @@ interface CustomProviderConfig {
 class CustomProvider implements AnalyticsProvider {
   private config: CustomProviderConfig;
   private eventQueue: Array<{ type: string; data: any }> = [];
-  private flushTimer?: NodeJS.Timeout;
 
   constructor(config: CustomProviderConfig) {
     this.config = {
