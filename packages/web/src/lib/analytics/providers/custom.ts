@@ -38,6 +38,13 @@ class CustomProvider implements AnalyticsProvider {
     }
   }
 
+  private stopFlushTimer() {
+    if (this.flushTimer) {
+      clearInterval(this.flushTimer);
+      this.flushTimer = undefined;
+    }
+  }
+
   private async sendEvent(type: string, data: any) {
     try {
       const response = await fetch(this.config.endpoint, {
