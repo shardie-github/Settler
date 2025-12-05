@@ -21,7 +21,6 @@ class AppLogger implements Logger {
 
   private getMinLevel(): LogLevel {
     const envLevel = process.env.NEXT_PUBLIC_LOG_LEVEL?.toLowerCase();
-    const levels: LogLevel[] = ['debug', 'info', 'warn', 'error', 'critical'];
     return (envLevel as LogLevel) || (process.env.NODE_ENV === 'production' ? 'info' : 'debug');
   }
 
@@ -59,7 +58,7 @@ class AppLogger implements Logger {
         message: error.message,
         stack: error.stack,
       } as any : undefined,
-      userId: this.userId,
+      ...(this.userId ? { userId: this.userId } : {}),
       sessionId: this.sessionId,
       ...(typeof window !== 'undefined' ? { url: window.location.href } : {}),
       ...(typeof navigator !== 'undefined' ? { userAgent: navigator.userAgent } : {}),

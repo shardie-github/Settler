@@ -54,14 +54,12 @@ export function ErrorFallback({ error, retry, message }: FallbackProps) {
       iconVariant="alert"
       title="Something went wrong"
       description={message || error?.message || 'An error occurred while loading this content.'}
-      action={
-        retry
-          ? {
-              label: 'Try again',
-              onClick: handleRetry,
-            }
-          : undefined
-      }
+      {...(retry ? {
+        action: {
+          label: 'Try again',
+          onClick: handleRetry,
+        }
+      } : {})}
     />
   );
 }
@@ -86,7 +84,7 @@ export function EmptyFallback({
       iconVariant="inbox"
       title={title}
       description={description}
-      action={action}
+      {...(action ? { action } : {})}
     />
   );
 }
@@ -131,14 +129,12 @@ export function TimeoutFallback({ retry }: { retry?: () => void }) {
       iconVariant="alert"
       title="Request timed out"
       description="The request took too long to complete. Please check your connection and try again."
-      action={
-        retry
-          ? {
-              label: 'Retry',
-              onClick: handleRetry,
-            }
-          : undefined
-      }
+      {...(retry ? {
+        action: {
+          label: 'Retry',
+          onClick: handleRetry,
+        }
+      } : {})}
     />
   );
 }
@@ -159,14 +155,12 @@ export function NetworkErrorFallback({ retry }: { retry?: () => void }) {
       iconVariant="alert"
       title="Connection error"
       description="Unable to connect to the server. Please check your internet connection and try again."
-      action={
-        retry
-          ? {
-              label: 'Retry',
-              onClick: handleRetry,
-            }
-          : undefined
-      }
+      {...(retry ? {
+        action: {
+          label: 'Retry',
+          onClick: handleRetry,
+        }
+      } : {})}
     />
   );
 }

@@ -84,9 +84,9 @@ class GA4Provider implements AnalyticsProvider {
   identify(userId: string, traits?: Record<string, any>) {
     if (typeof window === 'undefined' || !window.gtag) return;
     
-    window.gtag('set', 'user_id', userId);
+    window.gtag('set', { user_id: userId });
     if (traits) {
-      window.gtag('set', 'user_properties', traits as Record<string, any>);
+      window.gtag('set', { user_properties: traits });
     }
   }
 

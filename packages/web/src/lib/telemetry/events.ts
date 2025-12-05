@@ -257,7 +257,6 @@ export const telemetry = new Telemetry();
 
 // Initialize scroll depth tracking
 if (typeof window !== 'undefined') {
-  let lastScrollY = 0;
   let ticking = false;
 
   const handleScroll = () => {

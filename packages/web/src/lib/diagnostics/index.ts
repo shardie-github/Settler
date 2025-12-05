@@ -158,18 +158,17 @@ if (typeof window !== 'undefined') {
 
     const observer = new PerformanceObserver((list) => {
       for (const entry of list.getEntries()) {
-        // Only count if the entry doesn't have recent user input
-        if (!(entry as any).hadRecentInput) {
-          const firstSessionEntry = clsEntries[0];
-          const lastSessionEntry = clsEntries[clsEntries.length - 1];
+          // Only count if the entry doesn't have recent user input
+          if (!(entry as any).hadRecentInput) {
+            const firstSessionEntry = clsEntries[0];
 
-          // If the entry is the first one, or if it's been more than 1 second since the last entry
-          const lastEntry = clsEntries[clsEntries.length - 1];
-          if (
-            !firstSessionEntry ||
-            !lastEntry ||
-            entry.startTime - lastEntry.startTime > 1000
-          ) {
+            // If the entry is the first one, or if it's been more than 1 second since the last entry
+            const lastEntry = clsEntries[clsEntries.length - 1];
+            if (
+              !firstSessionEntry ||
+              !lastEntry ||
+              entry.startTime - lastEntry.startTime > 1000
+            ) {
             clsEntries = [entry];
           } else {
             clsEntries.push(entry);

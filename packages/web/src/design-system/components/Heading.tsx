@@ -38,8 +38,6 @@ const Heading = React.forwardRef<HTMLHeadingElement, HeadingProps>(
     },
     ref
   ) => {
-    const Component = `h${level}` as keyof JSX.IntrinsicElements;
-    
     // Default size based on level if not specified
     const defaultSizes: Record<number, string> = {
       1: '4xl',
@@ -50,9 +48,9 @@ const Heading = React.forwardRef<HTMLHeadingElement, HeadingProps>(
       6: 'base',
     };
     
-    const sizeVariant = size || defaultSizes[level];
+    const sizeVariant: string = size || defaultSizes[level] || 'base';
     
-    const sizeClasses = {
+    const sizeClasses: Record<string, string> = {
       xs: 'text-xs',
       sm: 'text-sm',
       base: 'text-base',
@@ -64,7 +62,7 @@ const Heading = React.forwardRef<HTMLHeadingElement, HeadingProps>(
       '5xl': 'text-5xl',
     };
     
-    const weightClasses = {
+    const weightClasses: Record<string, string> = {
       normal: 'font-normal',
       medium: 'font-medium',
       semibold: 'font-semibold',
@@ -72,7 +70,7 @@ const Heading = React.forwardRef<HTMLHeadingElement, HeadingProps>(
       extrabold: 'font-extrabold',
     };
     
-    const alignClasses = {
+    const alignClasses: Record<string, string> = {
       left: 'text-left',
       center: 'text-center',
       right: 'text-right',
@@ -82,7 +80,7 @@ const Heading = React.forwardRef<HTMLHeadingElement, HeadingProps>(
       ref,
       className: cn(
         'leading-tight tracking-tight',
-        sizeClasses[sizeVariant],
+        sizeClasses[sizeVariant] || sizeClasses.base,
         weightClasses[weight],
         align && alignClasses[align],
         className

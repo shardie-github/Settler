@@ -24,7 +24,6 @@ class RouteMetricsCollector {
    * Start tracking a route transition
    */
   startTransition(route: string) {
-    this.currentRoute = route;
     this.metrics.set(route, {
       route,
       transitionStart: performance.now(),

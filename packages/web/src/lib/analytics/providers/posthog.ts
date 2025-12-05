@@ -83,8 +83,9 @@ class PostHogProvider implements AnalyticsProvider {
     
     // PostHog uses identify for setting user properties
     if (window.posthog.identify) {
-      const userId = window.posthog.get_distinct_id?.() || undefined;
-      window.posthog.identify(userId, properties);
+      // PostHog identify accepts userId as first param, properties as second
+      // If userId is not available, we can pass undefined
+      window.posthog.identify(undefined, properties);
     }
   }
 
