@@ -11,13 +11,17 @@ import {
   Activity,
   Brain,
   Network,
-  Lock
+  Lock,
+  ExternalLink
 } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Edge AI - Settler",
   description: "Dual-layer Cloud + Edge AI reconciliation platform for real-time, local processing with AI-powered matching",
 };
+
+// AIAS Edge Studio URL - external service for model optimization
+const AIAS_STUDIO_URL = process.env.NEXT_PUBLIC_AIAS_STUDIO_URL || 'https://aias.studio';
 
 export default function EdgeAIPage() {
   return (
@@ -133,8 +137,21 @@ export default function EdgeAIPage() {
               <CardTitle>AI-Optimized Models</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-sm text-gray-600">
-                Quantized models (int4/int8) optimized via AIAS Edge Studio for your specific device architecture.
+              <p className="text-sm text-gray-600 mb-3">
+                Quantized models (int4/int8) optimized via{' '}
+                <a 
+                  href={AIAS_STUDIO_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-semibold text-purple-600 hover:underline inline-flex items-center gap-1"
+                >
+                  AIAS Edge Studio
+                  <ExternalLink className="w-3 h-3" />
+                </a>
+                {' '}for your specific device architecture.
+              </p>
+              <p className="text-xs text-gray-500">
+                Model optimization powered by AIAS Edge Studio — a separate service for Edge AI model optimization
               </p>
             </CardContent>
           </Card>
@@ -208,16 +225,30 @@ export default function EdgeAIPage() {
             </Card>
           </Link>
 
-          <Link href="/edge-ai/models">
-            <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+          <a 
+            href={AIAS_STUDIO_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block"
+          >
+            <Card className="hover:shadow-lg transition-shadow cursor-pointer border-purple-200 hover:border-purple-400">
               <CardHeader>
-                <CardTitle className="text-lg">Model Optimization</CardTitle>
+                <CardTitle className="text-lg flex items-center gap-2">
+                  Model Optimization
+                  <ExternalLink className="w-4 h-4 text-purple-600" />
+                </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-sm text-gray-600">Optimize models via AIAS Edge Studio</p>
+                <p className="text-sm text-gray-600 mb-2">
+                  Optimize models via{' '}
+                  <span className="font-semibold text-purple-600">AIAS Edge Studio</span>
+                </p>
+                <p className="text-xs text-gray-500">
+                  External service for Edge AI model optimization
+                </p>
               </CardContent>
             </Card>
-          </Link>
+          </a>
 
           <Link href="/edge-ai/anomalies">
             <Card className="hover:shadow-lg transition-shadow cursor-pointer">

@@ -11,6 +11,7 @@ import { AnimatedPageWrapper } from "@/components/AnimatedPageWrapper";
 import { AnimatedHero } from "@/components/AnimatedHero";
 import { AnimatedPricingCard } from "@/components/AnimatedPricingCard";
 import { AnimatedFAQ } from "@/components/AnimatedFAQ";
+import { EdgeAIMarketingSection } from "@/components/EdgeAIMarketingSection";
 
 export default function Pricing() {
   const [billingCycle, setBillingCycle] = useState<'monthly' | 'annual'>('monthly');
@@ -54,6 +55,7 @@ export default function Pricing() {
         { text: 'Telemetry & analytics' },
         { text: 'Priority updates' },
         { text: 'Commercial License' },
+        { text: 'Edge AI (add-on available)' },
       ],
       cta: 'Start Free Trial',
       ctaLink: '/playground',
@@ -78,6 +80,7 @@ export default function Pricing() {
         { text: 'On-premise deployment' },
         { text: 'Dedicated account manager' },
         { text: 'Custom SLA' },
+        { text: 'Edge AI included' },
       ],
       cta: 'Contact Sales',
       ctaLink: '/enterprise',
@@ -206,6 +209,9 @@ export default function Pricing() {
 
       {/* Feature Comparison Table */}
       <FeatureComparison />
+
+      {/* Edge AI Section */}
+      <EdgeAIMarketingSection variant="default" />
 
       {/* FAQ Section */}
       <AnimatedFAQ faqs={faqs} />

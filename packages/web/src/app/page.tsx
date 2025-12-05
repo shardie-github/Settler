@@ -23,6 +23,7 @@ const NewsletterSignup = dynamic(() => import("@/components/NewsletterSignup").t
 const ConversionCTA = dynamic(() => import("@/components/ConversionCTA").then(mod => ({ default: mod.ConversionCTA })), { ssr: true });
 const AnimatedCodeBlock = dynamic(() => import("@/components/AnimatedCodeBlock").then(mod => ({ default: mod.AnimatedCodeBlock })), { ssr: false });
 const AnimatedStatCard = dynamic(() => import("@/components/AnimatedStatCard").then(mod => ({ default: mod.AnimatedStatCard })), { ssr: true });
+const EdgeAIMarketingSection = dynamic(() => import("@/components/EdgeAIMarketingSection").then(mod => ({ default: mod.EdgeAIMarketingSection })), { ssr: true });
 
 export default function Home() {
   const trackCTA = useTrackCTA();
@@ -352,6 +353,9 @@ const report = await client.jobs.run(job.id);
 
         {/* Social Proof / Testimonials */}
         <SocialProof />
+
+        {/* Edge AI Section */}
+        <EdgeAIMarketingSection variant="featured" />
 
         {/* Newsletter Signup */}
         <section className="py-20 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
