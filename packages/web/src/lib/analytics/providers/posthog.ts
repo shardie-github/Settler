@@ -10,7 +10,7 @@ declare global {
   interface Window {
     posthog?: {
       capture: (event: string, properties?: Record<string, any>) => void;
-      identify: (userId: string, properties?: Record<string, any>) => void;
+      identify: (userId: string | undefined, properties?: Record<string, any>) => void;
       reset: () => void;
       isFeatureEnabled: (key: string) => boolean;
       onFeatureFlags: (callback: () => void) => void;
