@@ -6,33 +6,3 @@ npm warn config       Default value does install optional deps unless otherwise 
 > @settler/edge-ai-core@1.0.0 typecheck
 > tsc --noEmit
 
-src/device-profiling.ts(63,5): error TS2375: Type '{ cpuModel: string | undefined; ramGb: number; }' is not assignable to type '{ cpuModel?: string; ramGb?: number; gpuModel?: string; }' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
-  Types of property 'cpuModel' are incompatible.
-    Type 'string | undefined' is not assignable to type 'string'.
-      Type 'undefined' is not assignable to type 'string'.
-src/device-profiling.ts(91,32): error TS6133: 'runtime' is declared but its value is never read.
-src/index.ts(21,1): error TS2308: Module './model-optimization' has already exported a member named 'QuantizationType'. Consider explicitly re-exporting to resolve the ambiguity.
-src/runtime-selector.ts(6,25): error TS6133: 'DeviceCapabilities' is declared but its value is never read.
-src/security.ts(45,26): error TS2769: No overload matches this call.
-  Overload 1 of 4, '(arrayBuffer: WithImplicitCoercion<ArrayBufferLike>, byteOffset?: number | undefined, length?: number | undefined): Buffer<ArrayBufferLike>', gave the following error.
-    Argument of type 'string | undefined' is not assignable to parameter of type 'WithImplicitCoercion<ArrayBufferLike>'.
-      Type 'undefined' is not assignable to type 'WithImplicitCoercion<ArrayBufferLike>'.
-  Overload 2 of 4, '(string: WithImplicitCoercion<string>, encoding?: BufferEncoding | undefined): Buffer<ArrayBuffer>', gave the following error.
-    Argument of type 'string | undefined' is not assignable to parameter of type 'WithImplicitCoercion<string>'.
-      Type 'undefined' is not assignable to type 'WithImplicitCoercion<string>'.
-src/security.ts(48,35): error TS2769: No overload matches this call.
-  Overload 1 of 4, '(data: ArrayBufferView<ArrayBufferLike>, inputEncoding: undefined, outputEncoding: Encoding): string', gave the following error.
-    Argument of type 'string | undefined' is not assignable to parameter of type 'ArrayBufferView<ArrayBufferLike>'.
-      Type 'undefined' is not assignable to type 'ArrayBufferView<ArrayBufferLike>'.
-  Overload 2 of 4, '(data: string, inputEncoding: Encoding | undefined, outputEncoding: Encoding): string', gave the following error.
-    Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
-      Type 'undefined' is not assignable to type 'string'.
-src/security.ts(49,3): error TS2322: Type 'string' is not assignable to type 'NonSharedBuffer & string'.
-  Type 'string' is not assignable to type 'NonSharedBuffer'.
-npm error Lifecycle script `typecheck` failed with error:
-npm error code 2
-npm error path /workspace/packages/edge-ai-core
-npm error workspace @settler/edge-ai-core@1.0.0
-npm error location /workspace/packages/edge-ai-core
-npm error command failed
-npm error command sh -c tsc --noEmit

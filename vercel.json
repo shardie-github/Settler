@@ -1,6 +1,6 @@
 {
   "buildCommand": "npx turbo run build --filter=@settler/web...",
-  "installCommand": "export CXXFLAGS='-std=c++20' CCFLAGS='-std=c++20' && npm ci",
+  "installCommand": "CXXFLAGS='-std=c++20' CCFLAGS='-std=c++20' npm ci",
   "framework": "nextjs",
   "regions": ["iad1"],
   "build": {
