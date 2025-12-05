@@ -33,10 +33,10 @@
       "@settler/sdk/*": ["../sdk/dist/*"],
       "@settler/types": ["../types/dist"],
       "@settler/types/*": ["../types/dist/*"],
-      "@settler/api": ["../api/src"],
-      "@settler/api/*": ["../api/src/*"]
+      "@settler/api": ["../api/dist"],
+      "@settler/api/*": ["../api/dist/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "../api/src/**/*.ts"],
-  "exclude": ["node_modules", "**/*.test.ts", "**/*.test.tsx", "**/*.spec.ts", "**/*.spec.tsx", "**/__tests__/**"]
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "exclude": ["node_modules", "**/*.test.ts", "**/*.test.tsx", "**/*.spec.ts", "**/*.spec.tsx", "**/__tests__/**", "../api"]
 }
