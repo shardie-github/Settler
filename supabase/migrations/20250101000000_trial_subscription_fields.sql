@@ -67,7 +67,7 @@ BEGIN
       -- Only send if we haven't sent this specific email type today
       p.last_email_type IS NULL 
       OR p.last_email_sent_at < NOW() - INTERVAL '1 day'
-      OR p.last_email_type != 'trial_day' || p_days_remaining::text
+      OR p.last_email_type != ('trial_day' || p_days_remaining::text)
     )
     AND (p.email_preferences->>'lifecycle_emails')::boolean IS NOT FALSE;
 END;
