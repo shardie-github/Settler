@@ -1,0 +1,20 @@
+{{> header}}
+      <h1 style="color: #2563eb; margin: 0 0 16px 0;">⏰ Your trial ends in 3 days</h1>
+      
+      <p>Hi {{user.first_name}},</p>
+      
+      <p>Your free trial ends on <strong>{{trial.trial_end_date}}</strong>. Don't lose access to:</p>
+      
+      <ul>
+        <li>Your personalized workflows</li>
+        <li>Advanced features you've been using</li>
+        <li>Free consultation (worth $200)</li>
+      </ul>
+      
+      <p>Lock in your account now—no charge until {{trial.charge_date}}:</p>
+      
+      {{> button button_text="Upgrade Now" button_url="{{product.upgrade_url}}" button_color="#2563eb"}}
+      
+      <p>Questions? Reply to this email or schedule a call:</p>
+      <p><a href="{{urls.consultation_url}}" style="color: #2563eb;">Schedule Consultation →</a></p>
+{{> footer}}

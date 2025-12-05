@@ -1,0 +1,16 @@
+{{> header}}
+      <h1 style="color: #2563eb; margin: 0 0 16px 0;">Final reminder: Trial ends today</h1>
+      
+      <p>Hi {{user.first_name}},</p>
+      
+      <p>Today is your last day of free trial access.</p>
+      
+      <p>Upgrade now to keep everything:</p>
+      
+      {{> button button_text="Upgrade Now" button_url="{{product.upgrade_url}}" button_color="#22c55e"}}
+      
+      <p>Or continue with free tier (limited features):</p>
+      <p><a href="{{urls.free_tier_info_url}}" style="color: #2563eb;">Stay on Free →</a></p>
+      
+      <p style="margin-top: 30px;">Thank you for trying Settler!</p>
+{{> footer}}

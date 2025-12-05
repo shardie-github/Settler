@@ -1,0 +1,27 @@
+{{> header}}
+      <h1 style="color: #2563eb; margin: 0 0 16px 0;">Great news, {{user.first_name}}! 🎉</h1>
+      
+      <p>We've analyzed your {{reconciliation.platform_name}} data and found some insights.</p>
+      
+      <div style="background-color: #f0fdf4; border-left: 4px solid #22c55e; padding: 16px; margin: 24px 0;">
+        <p style="margin: 0 0 8px 0;"><strong>Quick wins:</strong></p>
+        <ul style="margin: 8px 0 0 0; padding-left: 20px;">
+          <li>{{reconciliation.matched_count}} transactions matched automatically</li>
+          <li>{{reconciliation.unmatched_count}} potential issues flagged for review</li>
+          <li>{{reconciliation.time_saved}} hours saved vs manual matching</li>
+        </ul>
+      </div>
+      
+      {{> button button_text="View Full Report" button_url="{{reconciliation.report_url}}" button_color="#2563eb"}}
+      
+      <p><strong>What's next?</strong></p>
+      <ul>
+        <li>Try connecting another platform</li>
+        <li>Explore advanced matching rules</li>
+        <li>Schedule your free consultation (30 min)</li>
+      </ul>
+      
+      <p>Your trial ends in {{trial.days_remaining}} days. Want to unlock unlimited runs and advanced features?</p>
+      
+      {{> button button_text="Upgrade Now" button_url="{{product.upgrade_url}}" button_color="#22c55e"}}
+{{> footer}}

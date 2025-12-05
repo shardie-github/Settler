@@ -1,0 +1,39 @@
+{{> header}}
+      <h1 style="color: #2563eb; margin: 0 0 16px 0;">Here's what you're missing</h1>
+      
+      <p>Hi {{user.first_name}},</p>
+      
+      <p>Your trial ends in {{trial.days_remaining}} days. Here's what you'll lose access to:</p>
+      
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 24px 0;">
+        <div style="background-color: #fee2e2; border-left: 4px solid #ef4444; padding: 16px;">
+          <h3 style="margin-top: 0; color: #991b1b;">Free Tier (After Trial)</h3>
+          <ul style="padding-left: 20px;">
+            <li>❌ Limited to 1,000 reconciliations/month</li>
+            <li>❌ Basic cookbooks only</li>
+            <li>❌ No real-time webhooks</li>
+            <li>❌ No advanced analytics</li>
+            <li>❌ No consultation included</li>
+          </ul>
+        </div>
+        
+        <div style="background-color: #f0fdf4; border-left: 4px solid #22c55e; padding: 16px;">
+          <h3 style="margin-top: 0; color: #166534;">Paid Tier (What You Get)</h3>
+          <ul style="padding-left: 20px;">
+            <li>✅ Unlimited reconciliations</li>
+            <li>✅ Full cookbook library</li>
+            <li>✅ Real-time webhook reconciliation</li>
+            <li>✅ Advanced analytics & dashboards</li>
+            <li>✅ Free 30-minute consultation</li>
+            <li>✅ Priority support</li>
+          </ul>
+        </div>
+      </div>
+      
+      <p>Lock in your personalized system now:</p>
+      
+      {{> button button_text="Upgrade Now" button_url="{{product.upgrade_url}}" button_color="#2563eb"}}
+      
+      <p>Or continue with free tier:</p>
+      <p><a href="{{urls.free_tier_info_url}}" style="color: #2563eb;">Stay on Free →</a></p>
+{{> footer}}

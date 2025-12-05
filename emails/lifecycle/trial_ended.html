@@ -1,0 +1,36 @@
+{{> header}}
+      <h1 style="color: #2563eb; margin: 0 0 16px 0;">Your trial has ended</h1>
+      
+      <p>Hi {{user.first_name}},</p>
+      
+      <p>Your 30-day trial has ended. Thank you for trying Settler!</p>
+      
+      <p><strong>Choose your plan:</strong></p>
+      
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 24px 0;">
+        <div style="background-color: #f3f4f6; border: 2px solid #d1d5db; padding: 16px; border-radius: 8px;">
+          <h3 style="margin-top: 0;">Free Tier</h3>
+          <ul style="padding-left: 20px;">
+            <li>1,000 reconciliations/month</li>
+            <li>Basic features</li>
+            <li>Community support</li>
+          </ul>
+          <p><a href="{{urls.free_tier_url}}" style="color: #2563eb;">Continue Free →</a></p>
+        </div>
+        
+        <div style="background-color: #eff6ff; border: 2px solid #2563eb; padding: 16px; border-radius: 8px;">
+          <h3 style="margin-top: 0;">Paid Tier</h3>
+          <p style="font-size: 24px; font-weight: bold; margin: 8px 0;">$99/month</p>
+          <ul style="padding-left: 20px;">
+            <li>Unlimited reconciliations</li>
+            <li>All features unlocked</li>
+            <li>Free consultation included</li>
+            <li>Priority support</li>
+          </ul>
+          {{> button button_text="Upgrade to Paid" button_url="{{product.upgrade_url}}" button_color="#2563eb"}}
+        </div>
+      </div>
+      
+      <p>Questions? We're here to help:</p>
+      <p><a href="{{product.support_url}}" style="color: #2563eb;">Contact Support →</a></p>
+{{> footer}}

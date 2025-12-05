@@ -1,0 +1,24 @@
+{{> header}}
+      <h1 style="color: #2563eb; margin: 0 0 16px 0;">Welcome to Commercial! 🎉</h1>
+      
+      <p>Hi {{user.first_name}},</p>
+      
+      <p>Thank you for upgrading to Commercial. You now have:</p>
+      
+      <ul>
+        <li>✅ Unlimited reconciliations</li>
+        <li>✅ All advanced features unlocked</li>
+        <li>✅ Free 30-minute consultation (book now)</li>
+        <li>✅ Priority email support</li>
+        <li>✅ Full cookbook library</li>
+      </ul>
+      
+      {{> button button_text="Book Your Free Consultation" button_url="{{urls.consultation_url}}" button_color="#2563eb"}}
+      
+      <p><strong>Next steps:</strong></p>
+      <ul>
+        <li>Explore advanced features (real-time webhooks, multi-currency)</li>
+        <li>Try the full cookbook library</li>
+        <li>Set up scheduled reconciliations</li>
+      </ul>
+{{> footer}}

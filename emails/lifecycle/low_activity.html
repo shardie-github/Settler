@@ -1,0 +1,24 @@
+{{> header}}
+      <h1 style="color: #2563eb; margin: 0 0 16px 0;">We Miss You, {{user.first_name}}</h1>
+      
+      <p>Hi {{user.first_name}},</p>
+      
+      <p>We haven't seen you in a while. Here's what you might have missed:</p>
+      
+      <ul>
+        <li>New workflows and cookbooks</li>
+        <li>Platform updates and improvements</li>
+        <li>Best practices and tips</li>
+      </ul>
+      
+      <p><strong>Quick ways to get value:</strong></p>
+      <ul>
+        <li>Run a reconciliation job</li>
+        <li>Explore new cookbooks</li>
+        <li>Schedule a consultation</li>
+      </ul>
+      
+      {{> button button_text="Go to Dashboard" button_url="{{product.dashboard_url}}" button_color="#2563eb"}}
+      
+      <p>Questions? We're here to help.</p>
+{{> footer}}

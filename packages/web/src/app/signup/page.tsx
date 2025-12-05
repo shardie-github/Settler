@@ -102,10 +102,13 @@ export default function SignUpPage() {
         <div className="bg-white dark:bg-slate-800 rounded-lg shadow-lg p-8 border border-slate-200 dark:border-slate-700">
           <div className="text-center mb-8">
             <h1 className="text-3xl font-bold text-slate-900 dark:text-white mb-2">
-              Start Your 30-Day Free Trial
+              Start Your 30-Day Free Trial 🎉
             </h1>
-            <p className="text-slate-600 dark:text-slate-400">
-              Create your account and get full access for 30 days. No credit card required.
+            <p className="text-lg text-slate-600 dark:text-slate-400 mb-2">
+              Create your account and get full access for 30 days.
+            </p>
+            <p className="text-sm font-semibold text-green-600 dark:text-green-400">
+              ✓ No credit card required
             </p>
           </div>
 
@@ -125,16 +128,35 @@ export default function SignUpPage() {
         </div>
 
         {/* Trial Benefits Info */}
-        <div className="mt-8 bg-blue-50 dark:bg-blue-900/20 rounded-lg p-6 border border-blue-200 dark:border-blue-800">
-          <h3 className="text-sm font-semibold text-blue-900 dark:text-blue-300 mb-2">
-            What You Get in Your Free Trial
+        <div className="mt-8 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-lg p-6 border-2 border-blue-200 dark:border-blue-800">
+          <h3 className="text-base font-bold text-blue-900 dark:text-blue-300 mb-3">
+            ✨ What You Get in Your 30-Day Free Trial
           </h3>
-          <ul className="text-xs text-blue-800 dark:text-blue-400 space-y-1 list-disc list-inside">
-            <li>Full access to all features for 30 days</li>
-            <li>Unlimited transaction matching</li>
-            <li>All cookbooks and workflows</li>
-            <li>Free 30-minute consultation (worth $200)</li>
-            <li>No credit card required</li>
+          <ul className="text-sm text-blue-800 dark:text-blue-400 space-y-2">
+            <li className="flex items-start gap-2">
+              <span className="text-green-600 dark:text-green-400 font-bold">✓</span>
+              <span>Full access to all features (no limits)</span>
+            </li>
+            <li className="flex items-start gap-2">
+              <span className="text-green-600 dark:text-green-400 font-bold">✓</span>
+              <span>Unlimited transaction matching</span>
+            </li>
+            <li className="flex items-start gap-2">
+              <span className="text-green-600 dark:text-green-400 font-bold">✓</span>
+              <span>All cookbooks and workflows (10+ ready-to-use templates)</span>
+            </li>
+            <li className="flex items-start gap-2">
+              <span className="text-green-600 dark:text-green-400 font-bold">✓</span>
+              <span>Free 30-minute onboarding consultation (worth $200)</span>
+            </li>
+            <li className="flex items-start gap-2">
+              <span className="text-green-600 dark:text-green-400 font-bold">✓</span>
+              <span>Priority email support</span>
+            </li>
+            <li className="flex items-start gap-2">
+              <span className="text-green-600 dark:text-green-400 font-bold">✓</span>
+              <span className="font-semibold">No credit card required - start free, upgrade only if you love it</span>
+            </li>
           </ul>
         </div>
       </div>

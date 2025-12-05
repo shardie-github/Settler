@@ -1,0 +1,28 @@
+{{> header}}
+      <h1 style="color: #2563eb; margin: 0 0 16px 0;">You've been using Settler for a week! 🎉</h1>
+      
+      <p>Hi {{user.first_name}},</p>
+      
+      <p>Here's what you can unlock:</p>
+      
+      <div style="background-color: #fef3c7; border-left: 4px solid #f59e0b; padding: 16px; margin: 24px 0;">
+        <p style="margin: 0 0 8px 0;"><strong>🔒 Currently Gated (Available on Paid):</strong></p>
+        <ul style="margin: 8px 0 0 0; padding-left: 20px;">
+          <li>Real-time webhook reconciliation</li>
+          <li>Multi-currency with FX conversion</li>
+          <li>Advanced analytics and dashboards</li>
+          <li>Full cookbook library (10+ workflows)</li>
+          <li>Free 30-minute consultation</li>
+        </ul>
+      </div>
+      
+      <p>Try these features free for the rest of your trial:</p>
+      
+      {{> button button_text="Upgrade to Paid" button_url="{{product.upgrade_url}}" button_color="#2563eb"}}
+      <p style="color: #666; font-size: 14px; text-align: center; margin-top: 8px;">(No charge until trial ends)</p>
+      
+      <p>Or continue with free features:</p>
+      <p><a href="{{product.dashboard_url}}" style="color: #2563eb;">Keep Using Free Tier →</a></p>
+      
+      <p>Your trial ends in {{trial.days_remaining}} days.</p>
+{{> footer}}

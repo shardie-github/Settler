@@ -8,6 +8,8 @@ import { Navigation } from "@/components/Navigation";
 import { Footer } from "@/components/Footer";
 import { AnimatedPageWrapper } from "@/components/AnimatedPageWrapper";
 import { AnimatedCodeBlock } from "@/components/AnimatedCodeBlock";
+import { PlanFeatureGate, TeaserContent } from "@/components/PlanFeatureGate";
+import { isContentGated } from "@/config/plans";
 import Link from "next/link";
 import { 
   ShoppingCart, 
@@ -24,6 +26,8 @@ import {
 
 export default function Cookbooks() {
   const [selectedCookbook, setSelectedCookbook] = useState<string | null>(null);
+  // In production, get from user context/auth
+  const userPlan: 'free' | 'trial' | 'commercial' | 'enterprise' = 'free';
 
   const cookbooks = [
     {
@@ -496,46 +500,96 @@ async function createJobWithRetry(config: any, maxRetries = 3) {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredCookbooks.map((cookbook) => {
               const Icon = cookbook.icon;
+              const isGated = isContentGated(userPlan, cookbook.id, 'cookbook');
+              
               return (
-                <Card
+                <PlanFeatureGate
                   key={cookbook.id}
-                  className="h-full cursor-pointer bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 transition-all duration-200 hover:shadow-lg hover:border-blue-300 dark:hover:border-blue-700"
-                  onClick={() => setSelectedCookbook(cookbook.id)}
-                >
-                  <div className="flex flex-col h-full">
-                    <div className={`w-10 h-10 rounded-lg bg-gradient-to-br ${cookbook.gradient} p-2.5 mb-4 flex items-center justify-center`}>
-                      <Icon className="w-5 h-5 text-white" />
-                    </div>
-                    <div className="flex items-center gap-2 mb-2">
-                      <Badge variant="outline" className="text-xs">
-                        {cookbook.category}
-                      </Badge>
-                      <Badge variant="outline" className="text-xs">
-                        {cookbook.difficulty}
-                      </Badge>
-                    </div>
-                    <h3 className="text-lg font-semibold mb-2 text-slate-900 dark:text-white">
-                      {cookbook.title}
-                    </h3>
-                    <p className="text-slate-600 dark:text-slate-400 mb-4 flex-grow text-sm leading-relaxed">
-                      {cookbook.description}
-                    </p>
-                    <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 mb-2">
-                      <span>⏱️ {cookbook.timeToImplement}</span>
-                      <span>{cookbook.adapters.join(' → ')}</span>
-                    </div>
-                    <Button
-                      variant="ghost"
-                      className="w-full text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setSelectedCookbook(cookbook.id);
-                      }}
+                  userPlan={userPlan}
+                  contentId={cookbook.id}
+                  contentType="cookbook"
+                  title="Upgrade to Unlock This Cookbook"
+                  description="This advanced cookbook is available on Commercial plans. Start your 30-day free trial to access it."
+                  teaserContent={
+                    <Card
+                      className="h-full cursor-pointer bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 transition-all duration-200 hover:shadow-lg hover:border-blue-300 dark:hover:border-blue-700"
+                      onClick={() => !isGated && setSelectedCookbook(cookbook.id)}
                     >
-                      View Recipe →
-                    </Button>
-                  </div>
-                </Card>
+                      <div className="flex flex-col h-full">
+                        <div className={`w-10 h-10 rounded-lg bg-gradient-to-br ${cookbook.gradient} p-2.5 mb-4 flex items-center justify-center`}>
+                          <Icon className="w-5 h-5 text-white" />
+                        </div>
+                        <div className="flex items-center gap-2 mb-2">
+                          <Badge variant="outline" className="text-xs">
+                            {cookbook.category}
+                          </Badge>
+                          <Badge variant="outline" className="text-xs">
+                            {cookbook.difficulty}
+                          </Badge>
+                        </div>
+                        <h3 className="text-lg font-semibold mb-2 text-slate-900 dark:text-white">
+                          {cookbook.title}
+                        </h3>
+                        <p className="text-slate-600 dark:text-slate-400 mb-4 flex-grow text-sm leading-relaxed">
+                          {cookbook.description}
+                        </p>
+                        <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 mb-2">
+                          <span>⏱️ {cookbook.timeToImplement}</span>
+                          <span>{cookbook.adapters.join(' → ')}</span>
+                        </div>
+                        <Button
+                          variant="ghost"
+                          className="w-full text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            if (!isGated) setSelectedCookbook(cookbook.id);
+                          }}
+                        >
+                          View Recipe →
+                        </Button>
+                      </div>
+                    </Card>
+                  }
+                >
+                  <Card
+                    className="h-full cursor-pointer bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 transition-all duration-200 hover:shadow-lg hover:border-blue-300 dark:hover:border-blue-700"
+                    onClick={() => setSelectedCookbook(cookbook.id)}
+                  >
+                    <div className="flex flex-col h-full">
+                      <div className={`w-10 h-10 rounded-lg bg-gradient-to-br ${cookbook.gradient} p-2.5 mb-4 flex items-center justify-center`}>
+                        <Icon className="w-5 h-5 text-white" />
+                      </div>
+                      <div className="flex items-center gap-2 mb-2">
+                        <Badge variant="outline" className="text-xs">
+                          {cookbook.category}
+                        </Badge>
+                        <Badge variant="outline" className="text-xs">
+                          {cookbook.difficulty}
+                        </Badge>
+                      </div>
+                      <h3 className="text-lg font-semibold mb-2 text-slate-900 dark:text-white">
+                        {cookbook.title}
+                      </h3>
+                      <p className="text-slate-600 dark:text-slate-400 mb-4 flex-grow text-sm leading-relaxed">
+                        {cookbook.description}
+                      </p>
+                      <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 mb-2">
+                        <span>⏱️ {cookbook.timeToImplement}</span>
+                        <span>{cookbook.adapters.join(' → ')}</span>
+                      </div>
+                      <Button
+                        variant="ghost"
+                        className="w-full text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setSelectedCookbook(cookbook.id);
+                        }}
+                      >
+                        View Recipe →
+                      </Button>
+                    </div>
+                  </Card>
+                </PlanFeatureGate>
               );
             })}
           </div>
