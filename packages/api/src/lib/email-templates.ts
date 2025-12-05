@@ -163,7 +163,7 @@ function loadTemplateWithComponents(templateName: string): string {
     // Replace component includes
     template = template.replace(/\{\{>\s*header\s*\}\}/g, header);
     template = template.replace(/\{\{>\s*footer\s*\}\}/g, footer);
-    template = template.replace(/\{\{>\s*button\s+([^}]+)\}\}/g, (match, params) => {
+    template = template.replace(/\{\{>\s*button\s+([^}]+)\}\}/g, (_match, params) => {
       // Parse button parameters (simplified)
       const buttonData: Record<string, string> = {};
       params.split(/\s+/).forEach((param: string) => {
@@ -212,8 +212,9 @@ export function generatePlainText(html: string): string {
   
   // Extract links and add them as text
   const linkRegex = /<a[^>]+href=["']([^"']+)["'][^>]*>(.*?)<\/a>/gi;
-  let match;
+  let match: RegExpExecArray | null;
   while ((match = linkRegex.exec(html)) !== null) {
+    if (!match || !match[1] || !match[2]) continue;
     const url = match[1];
     const linkText = match[2].replace(/<[^>]+>/g, '');
     text = text.replace(linkText, `${linkText} (${url})`);

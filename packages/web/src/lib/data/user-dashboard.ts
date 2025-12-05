@@ -64,7 +64,7 @@ export async function getUserDashboardData(): Promise<UserDashboardData | null> 
       .from('profiles')
       .select('*')
       .eq('id', authUser.id)
-      .single();
+      .single() as { data: any; error: any };
 
     if (profileError || !profile) {
       return null;
@@ -79,15 +79,15 @@ export async function getUserDashboardData(): Promise<UserDashboardData | null> 
     const isFirstVisit = (activityCount || 0) === 0;
 
     // Get usage stats (in production, calculate from actual usage)
-    const planType = (profile.plan_type as any) || 'free';
+    const planType = (profile?.plan_type as any) || 'free';
     const usage = {
       reconciliations: {
         current: 0, // Calculate from reconciliation jobs
-        limit: planType === 'trial' || planType === 'commercial' ? 'unlimited' : 1000,
+        limit: (planType === 'trial' || planType === 'commercial' ? 'unlimited' : 1000) as number | 'unlimited',
       },
       playgroundRuns: {
         current: 0, // Calculate from playground usage
-        limit: planType === 'trial' || planType === 'commercial' ? 'unlimited' : 3,
+        limit: (planType === 'trial' || planType === 'commercial' ? 'unlimited' : 3) as number | 'unlimited',
       },
     };
 
@@ -104,14 +104,14 @@ export async function getUserDashboardData(): Promise<UserDashboardData | null> 
 
     return {
       user: {
-        id: profile.id,
-        email: profile.email,
-        firstName: profile.name?.split(' ')[0],
+        id: profile?.id || '',
+        email: profile?.email || '',
+        firstName: profile?.name?.split(' ')[0],
         planType: planType,
-        trialEndDate: profile.trial_end_date,
-        industry: profile.industry,
-        companyName: profile.company_name,
-        preTestCompleted: profile.pre_test_completed || false,
+        trialEndDate: profile?.trial_end_date,
+        industry: profile?.industry,
+        companyName: profile?.company_name,
+        preTestCompleted: profile?.pre_test_completed || false,
       },
       usage,
       recentJobs,
@@ -143,8 +143,8 @@ export async function savePreTestAnswers(answers: Record<string, any>): Promise<
         pre_test_answers: answers,
         industry: answers.industry,
         updated_at: new Date().toISOString(),
-      })
-      .eq('id', user.id);
+      } as any)
+      .eq('id', user.id) as { error: any };
 
     if (error) {
       return { success: false, error: error.message };

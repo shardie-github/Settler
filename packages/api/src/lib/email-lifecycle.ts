@@ -4,9 +4,9 @@
  * Sends lifecycle emails for trial, paid, and retention
  */
 
-import { sendEmail, EmailTemplate } from './email';
+import { sendEmail } from './email';
 import { renderEmailTemplate, generatePlainText, getDefaultUrls, EmailTemplateData } from './email-templates';
-import { logInfo, logError } from '../utils/logger';
+import { logError } from '../utils/logger';
 
 /**
  * User data for lifecycle emails
@@ -38,12 +38,13 @@ export async function sendTrialWelcomeEmail(
 ): Promise<{ id: string } | null> {
   try {
     const urls = getDefaultUrls();
+    const firstName = user.firstName || user.email.split('@')[0] || 'User';
     const data: EmailTemplateData = {
       user: {
-        first_name: user.firstName || user.email.split('@')[0],
+        first_name: firstName,
         email: user.email,
-        industry: user.industry,
-        company_name: user.companyName,
+        ...(user.industry && { industry: user.industry }),
+        ...(user.companyName && { company_name: user.companyName }),
         plan_type: user.planType || 'trial',
       },
       trial: {
@@ -88,14 +89,15 @@ export async function sendTrialValueEmail(
 ): Promise<{ id: string } | null> {
   try {
     const urls = getDefaultUrls();
+    const firstName = user.firstName || user.email.split('@')[0] || 'User';
     const data: EmailTemplateData = {
       user: {
-        first_name: user.firstName || user.email.split('@')[0],
+        first_name: firstName,
         email: user.email,
       },
       trial: {
         days_remaining: trialData.daysRemaining,
-      },
+      } as EmailTemplateData['trial'],
       reconciliation: {
         platform_name: reconciliationData.platformName,
         matched_count: reconciliationData.matchedCount,
@@ -132,14 +134,15 @@ export async function sendTrialGatedFeaturesEmail(
 ): Promise<{ id: string } | null> {
   try {
     const urls = getDefaultUrls();
+    const firstName = user.firstName || user.email.split('@')[0] || 'User';
     const data: EmailTemplateData = {
       user: {
-        first_name: user.firstName || user.email.split('@')[0],
+        first_name: firstName,
         email: user.email,
       },
       trial: {
         days_remaining: trialData.daysRemaining,
-      },
+      } as EmailTemplateData['trial'],
       product: urls,
       urls: urls,
     };
@@ -173,19 +176,20 @@ export async function sendTrialCaseStudyEmail(
 ): Promise<{ id: string } | null> {
   try {
     const urls = getDefaultUrls();
+    const firstName = user.firstName || user.email.split('@')[0] || 'User';
     const data: EmailTemplateData = {
       user: {
-        first_name: user.firstName || user.email.split('@')[0],
+        first_name: firstName,
         email: user.email,
-        industry: user.industry,
+        ...(user.industry && { industry: user.industry }),
       },
       trial: {
         days_remaining: trialData.daysRemaining,
-      },
+      } as EmailTemplateData['trial'],
       case_study: {
         similar_company: caseStudy.companyName,
         case_study_url: caseStudy.caseStudyUrl,
-        case_studies_url: `${urls.docs_url}/case-studies`,
+        case_studies_url: `${urls?.docs_url || 'https://docs.settler.dev'}/case-studies`,
       },
       product: urls,
       urls: urls,
@@ -216,14 +220,15 @@ export async function sendTrialComparisonEmail(
 ): Promise<{ id: string } | null> {
   try {
     const urls = getDefaultUrls();
+    const firstName = user.firstName || user.email.split('@')[0] || 'User';
     const data: EmailTemplateData = {
       user: {
-        first_name: user.firstName || user.email.split('@')[0],
+        first_name: firstName,
         email: user.email,
       },
       trial: {
         days_remaining: trialData.daysRemaining,
-      },
+      } as EmailTemplateData['trial'],
       product: urls,
       urls: urls,
     };
@@ -254,16 +259,17 @@ export async function sendTrialUrgencyEmail(
 ): Promise<{ id: string } | null> {
   try {
     const urls = getDefaultUrls();
+    const firstName = user.firstName || user.email.split('@')[0] || 'User';
     const data: EmailTemplateData = {
       user: {
-        first_name: user.firstName || user.email.split('@')[0],
+        first_name: firstName,
         email: user.email,
       },
       trial: {
         trial_end_date: trialData.trialEndDate,
         days_remaining: trialData.daysRemaining,
         charge_date: new Date(new Date(trialData.trialEndDate).getTime() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-      },
+      } as EmailTemplateData['trial'],
       product: urls,
       urls: urls,
     };
@@ -299,9 +305,10 @@ export async function sendTrialEndedEmail(
 ): Promise<{ id: string } | null> {
   try {
     const urls = getDefaultUrls();
+    const firstName = user.firstName || user.email.split('@')[0] || 'User';
     const data: EmailTemplateData = {
       user: {
-        first_name: user.firstName || user.email.split('@')[0],
+        first_name: firstName,
         email: user.email,
       },
       product: urls,
@@ -332,9 +339,10 @@ export async function sendPaidWelcomeEmail(
 ): Promise<{ id: string } | null> {
   try {
     const urls = getDefaultUrls();
+    const firstName = user.firstName || user.email.split('@')[0] || 'User';
     const data: EmailTemplateData = {
       user: {
-        first_name: user.firstName || user.email.split('@')[0],
+        first_name: firstName,
         email: user.email,
       },
       product: urls,
@@ -376,9 +384,10 @@ export async function sendMonthlySummaryEmail(
   try {
     const urls = getDefaultUrls();
     const month = new Date().toLocaleString('en-US', { month: 'long' });
+    const firstName = user.firstName || user.email.split('@')[0] || 'User';
     const data: EmailTemplateData = {
       user: {
-        first_name: user.firstName || user.email.split('@')[0],
+        first_name: firstName,
         email: user.email,
       },
       monthly: {
@@ -391,10 +400,10 @@ export async function sendMonthlySummaryEmail(
         jobs_created: metrics.jobsCreated,
       },
       recommendations: {
-        top_insight_1: metrics.topInsight1,
-        top_insight_2: metrics.topInsight2,
-        recommendation_1: metrics.recommendation1,
-        recommendation_2: metrics.recommendation2,
+        ...(metrics.topInsight1 && { top_insight_1: metrics.topInsight1 }),
+        ...(metrics.topInsight2 && { top_insight_2: metrics.topInsight2 }),
+        ...(metrics.recommendation1 && { recommendation_1: metrics.recommendation1 }),
+        ...(metrics.recommendation2 && { recommendation_2: metrics.recommendation2 }),
       },
       product: urls,
       urls: urls,
@@ -424,9 +433,10 @@ export async function sendLowActivityEmail(
 ): Promise<{ id: string } | null> {
   try {
     const urls = getDefaultUrls();
+    const firstName = user.firstName || user.email.split('@')[0] || 'User';
     const data: EmailTemplateData = {
       user: {
-        first_name: user.firstName || user.email.split('@')[0],
+        first_name: firstName,
         email: user.email,
       },
       product: urls,

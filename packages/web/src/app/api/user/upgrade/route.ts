@@ -4,6 +4,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+// @ts-ignore - API package types not available in web package
 import { sendPaidWelcomeEmail, LifecycleUser } from '@/../../api/src/lib/email-lifecycle';
 
 export async function POST(request: NextRequest) {
@@ -28,8 +29,8 @@ export async function POST(request: NextRequest) {
         plan_type: planType,
         subscription_start_date: new Date().toISOString(),
         updated_at: new Date().toISOString(),
-      })
-      .eq('id', user.id);
+      } as any)
+      .eq('id', user.id) as { error: any };
 
     if (updateError) {
       return NextResponse.json({ error: updateError.message }, { status: 400 });
@@ -40,7 +41,7 @@ export async function POST(request: NextRequest) {
       .from('profiles')
       .select('*')
       .eq('id', user.id)
-      .single();
+      .single() as { data: any | null; error: any };
 
     // Send paid welcome email
     if (profile) {

@@ -19,7 +19,6 @@ export function WelcomeDashboard({
   onComplete 
 }: WelcomeDashboardProps) {
   const [showPreTest, setShowPreTest] = useState(false);
-  const [preTestCompleted, setPreTestCompleted] = useState(false);
 
   const handlePreTestComplete = async (answers: PreTestAnswers) => {
     try {
@@ -30,7 +29,6 @@ export function WelcomeDashboard({
       });
 
       if (response.ok) {
-        setPreTestCompleted(true);
         setShowPreTest(false);
         // Personalize experience based on answers
       } else {

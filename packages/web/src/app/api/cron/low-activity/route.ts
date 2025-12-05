@@ -6,6 +6,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { createAdminClient } from '@/lib/supabase/server';
+// @ts-ignore - API package types not available in web package
 import { sendLowActivityEmail, LifecycleUser } from '@/../../api/src/lib/email-lifecycle';
 
 const logInfo = (message: string, meta?: Record<string, unknown>) => {
@@ -29,7 +30,7 @@ export async function GET(request: NextRequest) {
     const supabase = await createAdminClient();
     
     // Get inactive users (7+ days)
-    const { data: users, error } = await supabase.rpc('get_inactive_users', { p_days_inactive: 7 });
+    const { data: users, error } = await supabase.rpc('get_inactive_users', { p_days_inactive: 7 } as any) as { data: any[] | null; error: any };
     
     if (error) {
       logError('Failed to fetch inactive users', error);
@@ -42,14 +43,14 @@ export async function GET(request: NextRequest) {
       emails: [] as string[],
     };
 
-    for (const user of users || []) {
+    for (const user of (Array.isArray(users) ? users : []) || []) {
       try {
         // Skip if we sent a low activity email in the last 14 days
         const { data: profile } = await supabase
           .from('profiles')
           .select('last_email_sent_at, last_email_type')
           .eq('id', user.id)
-          .single();
+          .single() as { data: any | null; error: any };
 
         if (profile?.last_email_type === 'low_activity' && profile?.last_email_sent_at) {
           const daysSinceLastEmail = Math.floor(
@@ -73,7 +74,7 @@ export async function GET(request: NextRequest) {
         await supabase.rpc('update_email_sent', {
           p_user_id: user.id,
           p_email_type: 'low_activity',
-        });
+        } as any);
 
         results.processed++;
         results.emails.push(user.email);

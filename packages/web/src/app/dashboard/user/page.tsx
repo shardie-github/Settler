@@ -42,8 +42,8 @@ async function UserDashboardContent() {
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-slate-900 dark:via-slate-800 dark:to-black">
         <Navigation />
         <WelcomeDashboard
-          userName={data.user.firstName}
-          trialEndDate={data.user.trialEndDate}
+          userName={data.user.firstName || undefined}
+          trialEndDate={data.user.trialEndDate || undefined}
         />
         <Footer />
       </div>

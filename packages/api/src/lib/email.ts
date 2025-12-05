@@ -50,17 +50,17 @@ export async function sendEmail(template: EmailTemplate): Promise<{ id: string }
       subject: template.subject,
       html: template.html,
       text: template.text,
-      reply_to: template.replyTo,
+      ...(template.replyTo && { reply_to: template.replyTo }),
       tags: template.tags,
-    });
+    } as any);
 
     logInfo('Email sent successfully', {
-      emailId: result.id,
+      emailId: result.data?.id || 'unknown',
       to: template.to,
       subject: template.subject,
     });
 
-    return { id: result.id || 'unknown' };
+    return { id: result.data?.id || 'unknown' };
   } catch (error: any) {
     logError('Failed to send email', error, {
       to: template.to,
@@ -185,7 +185,7 @@ export async function sendWelcomeEmail(
     return sendTrialWelcomeEmail(
       {
         email,
-        firstName: userName,
+        firstName: userName || email.split('@')[0] || 'User',
         planType: 'trial',
       },
       {

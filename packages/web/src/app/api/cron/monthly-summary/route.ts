@@ -6,6 +6,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { createAdminClient } from '@/lib/supabase/server';
+// @ts-ignore - API package types not available in web package
 import { sendMonthlySummaryEmail, LifecycleUser } from '@/../../api/src/lib/email-lifecycle';
 
 const logInfo = (message: string, meta?: Record<string, unknown>) => {
@@ -29,7 +30,7 @@ export async function GET(request: NextRequest) {
     const supabase = await createAdminClient();
     
     // Get paid users
-    const { data: users, error } = await supabase.rpc('get_paid_users_for_monthly_summary');
+    const { data: users, error } = await supabase.rpc('get_paid_users_for_monthly_summary' as any) as { data: any[] | null; error: any };
     
     if (error) {
       logError('Failed to fetch paid users', error);
@@ -42,12 +43,12 @@ export async function GET(request: NextRequest) {
       emails: [] as string[],
     };
 
-    // Calculate last month's date range
-    const now = new Date();
-    const lastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
-    const lastMonthEnd = new Date(now.getFullYear(), now.getMonth(), 0);
+    // Calculate last month's date range (unused but kept for future use)
+    // const now = new Date();
+    // const lastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+    // const lastMonthEnd = new Date(now.getFullYear(), now.getMonth(), 0);
 
-    for (const user of users || []) {
+    for (const user of (Array.isArray(users) ? users : []) || []) {
       try {
         // In production, calculate actual metrics from reconciliation jobs
         // For now, use placeholder metrics
@@ -75,7 +76,7 @@ export async function GET(request: NextRequest) {
         await supabase.rpc('update_email_sent', {
           p_user_id: user.id,
           p_email_type: 'monthly_summary',
-        });
+        } as any);
 
         results.processed++;
         results.emails.push(user.email);
