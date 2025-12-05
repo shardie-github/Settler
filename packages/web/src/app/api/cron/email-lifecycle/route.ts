@@ -7,6 +7,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { createAdminClient } from '@/lib/supabase/server';
+// @ts-ignore - API package types not available in web package
 import {
   sendTrialGatedFeaturesEmail,
   sendTrialCaseStudyEmail,

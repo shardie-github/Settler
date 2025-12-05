@@ -163,7 +163,7 @@ function loadTemplateWithComponents(templateName: string): string {
     // Replace component includes
     template = template.replace(/\{\{>\s*header\s*\}\}/g, header);
     template = template.replace(/\{\{>\s*footer\s*\}\}/g, footer);
-    template = template.replace(/\{\{>\s*button\s+([^}]+)\}\}/g, (match, params) => {
+    template = template.replace(/\{\{>\s*button\s+([^}]+)\}\}/g, (_match, params) => {
       // Parse button parameters (simplified)
       const buttonData: Record<string, string> = {};
       params.split(/\s+/).forEach((param: string) => {

@@ -4,6 +4,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+// @ts-ignore - API package types not available in web package
 import { sendPaidWelcomeEmail, LifecycleUser } from '@/../../api/src/lib/email-lifecycle';
 
 export async function POST(request: NextRequest) {
