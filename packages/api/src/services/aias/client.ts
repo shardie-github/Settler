@@ -1,6 +1,14 @@
 /**
  * AIAS Edge AI Accelerator Studio API Client
- * Handles model upload, optimization, benchmarking, and export workflows
+ * 
+ * IMPORTANT: This is an API client for AIAS. Settler.dev integrates with AIAS
+ * via HTTP API calls, NOT direct code dependencies. This ensures:
+ * - Product independence
+ * - Separate versioning
+ * - Independent deployment
+ * - Future exit strategy protection
+ * 
+ * Handles model upload, optimization, benchmarking, and export workflows via AIAS API.
  */
 
 import { config } from "../../config";

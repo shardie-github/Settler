@@ -1,3 +1,12 @@
+/**
+ * Settler.dev Edge AI Routes
+ * 
+ * NOTE: This is Settler.dev's Edge AI implementation. It uses:
+ * - Shared edge-ai-core module for technical components
+ * - AIAS API for model optimization (not direct code)
+ * - Independent branding, pricing, and UI
+ */
+
 import { Router, Response } from "express";
 import { z } from "zod";
 import { validateRequest } from "../middleware/validation";
@@ -12,6 +21,8 @@ import { trackEventAsync } from "../utils/event-tracker";
 import { v4 as uuidv4 } from "uuid";
 import bcrypt from "bcrypt";
 import crypto from "crypto";
+// Import shared edge-ai-core utilities (brand-neutral)
+import { generateNodeKey, hashNodeKey, generateEnrollmentKey } from "@settler/edge-ai-core";
 
 const router = Router();
 
@@ -130,7 +141,8 @@ const deviceProfileSchema = z.object({
 // ============================================================================
 
 async function authenticateEdgeNode(nodeKey: string): Promise<{ nodeId: string; tenantId: string } | null> {
-  const nodeKeyHash = crypto.createHash('sha256').update(nodeKey).digest('hex');
+  // Use shared edge-ai-core utility
+  const nodeKeyHash = hashNodeKey(nodeKey);
   
   const result = await query<{ id: string; tenant_id: string }>(
     `SELECT id, tenant_id FROM edge_nodes 
@@ -154,12 +166,9 @@ async function authenticateEdgeNode(nodeKey: string): Promise<{ nodeId: string; 
   };
 }
 
-function generateNodeKey(): string {
-  return `sk_edge_${crypto.randomBytes(32).toString('base64url')}`;
-}
-
+// Use shared edge-ai-core utilities instead of local implementations
 function hashKey(key: string): string {
-  return crypto.createHash('sha256').update(key).digest('hex');
+  return hashNodeKey(key);
 }
 
 // ============================================================================
@@ -178,9 +187,10 @@ router.post(
     const { name, device_type, device_os, device_arch, capabilities, location, metadata } = req.body;
     const tenantId = req.tenantId!;
 
+    // Use shared edge-ai-core utilities
     const nodeKey = generateNodeKey();
     const nodeKeyHash = hashKey(nodeKey);
-    const enrollmentKey = crypto.randomBytes(32).toString('base64url');
+    const enrollmentKey = generateEnrollmentKey();
     const enrollmentKeyHash = await bcrypt.hash(enrollmentKey, 10);
 
     const result = await query<{ id: string }>(
@@ -261,6 +271,7 @@ router.post(
       return sendError(res, "Invalid enrollment key", 401);
     }
 
+    // Use shared edge-ai-core utilities
     const nodeKey = generateNodeKey();
     const nodeKeyHash = hashKey(nodeKey);
 
