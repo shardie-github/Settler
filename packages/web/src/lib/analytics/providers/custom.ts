@@ -136,6 +136,11 @@ class CustomProvider implements AnalyticsProvider {
   init() {
     // Custom provider doesn't need initialization
   }
+
+  destroy() {
+    // Clean up timer on destroy
+    this.stopFlushTimer();
+  }
 }
 
 export const createCustomProvider = (config: CustomProviderConfig): CustomProvider => {
