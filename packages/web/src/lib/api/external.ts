@@ -5,7 +5,7 @@
  * without lying or embellishing. Uses demo/fallback data when APIs are unavailable.
  */
 
-interface GitHubRepoStats {
+export interface GitHubRepoStats {
   stars: number;
   forks: number;
   watchers: number;
@@ -13,7 +13,7 @@ interface GitHubRepoStats {
   lastUpdated: string;
 }
 
-interface NPMStats {
+export interface NPMStats {
   downloads: number;
   version: string;
   lastUpdated: string;
@@ -109,10 +109,19 @@ export async function getNPMStats(
 }
 
 /**
+ * Combined external metrics response
+ */
+export interface ExternalMetrics {
+  github: GitHubRepoStats;
+  npm: NPMStats;
+  timestamp: string;
+}
+
+/**
  * Get combined external metrics
  * Aggregates data from multiple sources for dashboard display
  */
-export async function getExternalMetrics() {
+export async function getExternalMetrics(): Promise<ExternalMetrics> {
   const [githubStats, npmStats] = await Promise.all([
     getGitHubStats(),
     getNPMStats(),
