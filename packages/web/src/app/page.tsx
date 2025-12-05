@@ -38,38 +38,38 @@ export default function Home() {
   const features = [
     {
       icon: Zap,
-      title: "5-Minute Integration",
-      description: "Get started in minutes with our simple API. No complex setup required.",
+      title: "Save 10+ Hours Per Week",
+      description: "Stop manual matching. Get accurate results automatically in minutes, not hours.",
       gradient: "from-electric-cyan to-electric-blue",
     },
     {
       icon: Lock,
-      title: "Enterprise Security",
-      description: "SOC 2 Type II, GDPR, and PCI-DSS compliant. Your data is always secure.",
+      title: "Bank-Level Security",
+      description: "Your data is protected with enterprise-grade security and compliance standards.",
       gradient: "from-electric-purple to-electric-indigo",
     },
     {
       icon: Rocket,
-      title: "Real-Time Processing",
-      description: "Reconcile transactions in real-time with webhook support and instant updates.",
+      title: "See Results Instantly",
+      description: "Match transactions in real-time. Get instant updates as data flows in.",
       gradient: "from-electric-neon to-electric-cyan",
     },
     {
       icon: Target,
-      title: "99.7% Accuracy",
-      description: "Advanced matching algorithms ensure high accuracy with confidence scoring.",
+      title: "99.7% Accurate - No More Manual Errors",
+      description: "Advanced matching catches every transaction. Eliminate human error completely.",
       gradient: "from-electric-blue to-electric-purple",
     },
     {
       icon: Plug,
-      title: "50+ Integrations",
-      description: "Pre-built adapters for Stripe, Shopify, QuickBooks, PayPal, and more.",
+      title: "Works with Your Existing Tools",
+      description: "Connect Shopify, Stripe, QuickBooks, PayPal, and 50+ other platforms instantly.",
       gradient: "from-electric-indigo to-electric-neon",
     },
     {
       icon: BarChart3,
-      title: "Complete Visibility",
-      description: "Full audit trails, detailed reports, and real-time dashboards.",
+      title: "See Every Transaction Matched",
+      description: "Full visibility into all matches, mismatches, and insights. Complete audit trail included.",
       gradient: "from-electric-cyan to-electric-purple",
     }
   ];
@@ -151,13 +151,13 @@ const report = await client.jobs.run(job.id);
                 className="mb-6 glass-strong text-blue-600 dark:text-electric-cyan border-blue-300 dark:border-electric-cyan/30 hover:border-blue-400 dark:hover:border-electric-cyan/50 transition-all duration-200"
                 aria-label="Product category"
               >
-                Reconciliation-as-a-Service API
+                Automatic Transaction Matching
               </Badge>
               
               <TextRevealHeading
                 as="h1"
                 id="hero-heading"
-                text="Make Reconciliation As Simple As Email"
+                text="Stop Wasting Hours on Manual Financial Matching"
                 className="text-5xl md:text-7xl lg:text-8xl font-bold mb-6 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 dark:from-electric-cyan dark:via-electric-purple dark:to-electric-blue bg-clip-text text-transparent"
                 delay={0.1}
                 staggerDelay={0.02}
@@ -165,7 +165,7 @@ const report = await client.jobs.run(job.id);
               />
               
               <TextReveal
-                text="Automate financial data reconciliation across fragmented SaaS and e-commerce ecosystems. One API. All platforms. Real-time."
+                text="Automatically match transactions between any platforms. Get accurate results in minutes, not hours. No manual work required."
                 className="text-xl md:text-2xl text-slate-700 dark:text-slate-300 mb-8 max-w-3xl mx-auto"
                 delay={0.4}
                 staggerDelay={0.01}
@@ -181,10 +181,10 @@ const report = await client.jobs.run(job.id);
                   size="lg" 
                   asChild 
                   className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 dark:from-electric-cyan dark:to-electric-blue dark:hover:from-electric-cyan/90 dark:hover:to-electric-blue/90 text-white px-8 py-6 text-lg shadow-lg hover:shadow-blue-500/50 dark:hover:shadow-electric-cyan/50 transition-all duration-200 transform hover:scale-105 focus:ring-2 focus:ring-blue-500 dark:focus:ring-electric-cyan focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-slate-900"
-                  onClick={() => trackCTA('Start Free Trial', { location: 'hero' })}
+                  onClick={() => trackCTA('Start 30-Day Free Trial', { location: 'hero' })}
                 >
-                  <Link href="/playground" aria-label="Start free trial of Settler">
-                    Start Free Trial
+                  <Link href="/signup" aria-label="Start 30-day free trial of Settler">
+                    Start 30-Day Free Trial
                   </Link>
                 </Button>
                 <Button 
@@ -375,10 +375,10 @@ const report = await client.jobs.run(job.id);
           <div className="max-w-4xl mx-auto relative z-10">
             <SpotlightCard className="p-12 text-center">
               <ConversionCTA
-                title="Ready to Automate Your Reconciliation?"
-                description="Join thousands of companies using Settler to automate their financial operations. Start free, no credit card required."
-                primaryAction="Start Free Trial"
-                primaryLink="/playground"
+                title="Ready to Stop Wasting Hours on Manual Matching?"
+                description="Join thousands of companies saving 10+ hours per week. Start your 30-day free trial—no credit card required."
+                primaryAction="Start 30-Day Free Trial"
+                primaryLink="/signup"
                 secondaryAction="View Pricing"
                 secondaryLink="/pricing"
                 variant="gradient"

@@ -152,6 +152,13 @@
 3. [Sales Funnel](./SALES_FUNNEL.md)
 4. [OSS vs Commercial](./packages/react-settler/docs/OSS_VS_COMMERCIAL.md)
 
+### Marketing & Conversion
+1. [Content Audit](./docs/content_audit.md) - Content clarity and jargon audit
+2. [Funnel Strategy](./docs/funnel_strategy.md) - Free trial → paid conversion funnel
+3. [Trial Cadence](./docs/trial_to_paid_cadence.md) - 30-day trial email and in-app touchpoints
+4. [Implementation Notes](./docs/implementation_notes.md) - Technical implementation details
+5. [Executive Summary](./docs/summary_for_founder.md) - High-level overview for founder
+
 ### Legal/Compliance
 1. [Terms of Service](./LEGAL/TERMS_OF_SERVICE.md)
 2. [Commercial License](./LEGAL/COMMERCIAL_LICENSE.md)
@@ -161,6 +168,7 @@
 1. [Business Strategy](./INTERNAL/BUSINESS_STRATEGY.md) (Confidential)
 2. [Terminology Guide](./TERMINOLOGY.md)
 3. [Sales Funnel](./SALES_FUNNEL.md)
+4. [Conversion Optimization Summary](./docs/summary_for_founder.md) - Marketing site optimization overview
 
 ## ✅ Consistency Checklist
 

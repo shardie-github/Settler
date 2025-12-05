@@ -24,13 +24,12 @@ export default function Docs() {
           <div>
             <h3 className="text-2xl font-bold mb-4 text-slate-900 dark:text-white">Introduction</h3>
             <p className="text-slate-600 dark:text-slate-300 mb-4">
-              Settler is a Reconciliation-as-a-Service API that automates financial and event data reconciliation 
-              across fragmented SaaS and e-commerce ecosystems. With Settler, you can reconcile transactions, 
-              orders, and events between any two platforms in real-time.
+              Settler automatically matches transactions between any two platforms—Shopify to Stripe, QuickBooks to PayPal, and more. 
+              No manual work required. Get accurate results in minutes, not hours.
             </p>
             <p className="text-slate-600 dark:text-slate-300 mb-4">
-              Our API-first approach means you can integrate reconciliation into your existing workflows without 
-              building custom infrastructure or maintaining complex matching logic.
+              Our simple API lets you connect your existing tools and start matching transactions immediately. 
+              No complex setup or custom infrastructure needed.
             </p>
             <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4 mb-4">
               <p className="text-sm text-blue-800 dark:text-blue-200">
@@ -288,9 +287,9 @@ console.log(\`Matched: \${report.summary.matched}/\${report.summary.total}\`);`}
         <div className="max-w-4xl mx-auto">
           <ConversionCTA
             title="Ready to Get Started?"
-            description="Try Settler in our interactive playground. No signup required."
-            primaryAction="Try Playground"
-            primaryLink="/playground"
+            description="Start your 30-day free trial and get full access to all features. No credit card required."
+            primaryAction="Start 30-Day Free Trial"
+            primaryLink="/signup"
             secondaryAction="View Pricing"
             secondaryLink="/pricing"
             variant="gradient"

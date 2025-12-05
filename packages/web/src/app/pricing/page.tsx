@@ -19,24 +19,22 @@ export default function Pricing() {
   const plans = [
     {
       name: 'Free',
-      tagline: 'Perfect for getting started',
+      tagline: 'Perfect for small businesses',
       price: '$0',
       period: 'forever',
-      description: 'Open source components and basic features',
+      description: 'Basic features for small transaction volumes',
       features: [
-        { text: '1,000 reconciliations/month' },
-        { text: '2 platform adapters' },
-        { text: '7-day log retention' },
+        { text: 'Up to 1,000 transactions/month (perfect for small businesses)' },
+        { text: 'Connect 2 platforms (e.g., Shopify + Stripe)' },
+        { text: 'Basic matching and reports' },
+        { text: '7-day transaction history' },
         { text: 'Community support' },
-        { text: 'MIT License (OSS)' },
-        { text: 'Basic components' },
-        { text: 'Security basics' },
-        { text: 'Mobile & accessibility' },
+        { text: 'Basic cookbooks and workflows' },
       ],
       cta: 'Get Started',
-      ctaLink: '/playground',
+      ctaLink: '/signup',
       popular: false,
-      badge: 'OSS',
+      badge: 'Free Forever',
     },
     {
       name: 'Commercial',
@@ -44,21 +42,21 @@ export default function Pricing() {
       price: billingCycle === 'monthly' ? '$99' : '$990',
       period: billingCycle === 'monthly' ? '/month' : '/year',
       originalPrice: billingCycle === 'annual' ? '$1,188' : null,
-      description: 'Platform integrations and advanced features',
+      description: 'Everything you need to scale your operations',
       features: [
-        { text: '100,000 reconciliations/month' },
-        { text: 'Unlimited adapters' },
-        { text: '30-day log retention' },
-        { text: 'Email support' },
-        { text: 'Platform integrations (Shopify, Stripe, MCP)' },
-        { text: 'Virtualization' },
-        { text: 'Telemetry & analytics' },
-        { text: 'Priority updates' },
-        { text: 'Commercial License' },
-        { text: 'Edge AI (add-on available)' },
+        { text: 'Up to 100,000 transactions/month (handles most businesses)' },
+        { text: 'Connect unlimited platforms' },
+        { text: 'All advanced features unlocked' },
+        { text: 'Real-time webhook reconciliation' },
+        { text: 'Advanced analytics and dashboards' },
+        { text: 'Full cookbook library (10+ workflows)' },
+        { text: '30-day transaction history' },
+        { text: 'Free 30-minute onboarding consultation' },
+        { text: 'Email support with priority response' },
+        { text: 'Edge AI available (add-on)' },
       ],
-      cta: 'Start Free Trial',
-      ctaLink: '/playground',
+      cta: 'Start 30-Day Free Trial',
+      ctaLink: '/signup',
       popular: true,
       badge: 'Most Popular',
     },
@@ -91,9 +89,9 @@ export default function Pricing() {
 
   const faqs = [
     {
-      question: "What's the difference between OSS and Commercial?",
+      question: "What's the difference between Free and Commercial?",
       answer:
-        'OSS (Open Source) is free forever with MIT license, includes basic components and core protocol. Commercial adds platform integrations (Shopify, Stripe, MCP), virtualization, telemetry, and requires a subscription.',
+        'Free tier is perfect for small businesses with up to 1,000 transactions per month. Commercial unlocks unlimited transactions, all advanced features, real-time webhooks, and includes a free 30-minute consultation.',
     },
     {
       question: 'Can I switch plans later?',
@@ -108,7 +106,7 @@ export default function Pricing() {
     {
       question: 'Is there a free trial?',
       answer:
-        'Yes! All paid plans include a 14-day free trial. No credit card required to start.',
+        'Yes! Start your 30-day free trial with full access to all features. No credit card required. Cancel anytime during the trial.',
     },
   ];
 
@@ -119,8 +117,8 @@ export default function Pricing() {
       {/* Hero Section */}
       <AnimatedHero
         badge="Simple, Transparent Pricing"
-        title="Choose Your Plan"
-        description="Start free, scale as you grow. All plans include our core reconciliation engine."
+        title="Start Your 30-Day Free Trial"
+        description="Try everything free for 30 days. No credit card required. Cancel anytime."
       />
 
       {/* Billing Toggle */}

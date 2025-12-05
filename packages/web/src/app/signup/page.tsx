@@ -102,10 +102,10 @@ export default function SignUpPage() {
         <div className="bg-white dark:bg-slate-800 rounded-lg shadow-lg p-8 border border-slate-200 dark:border-slate-700">
           <div className="text-center mb-8">
             <h1 className="text-3xl font-bold text-slate-900 dark:text-white mb-2">
-              Join the Community
+              Start Your 30-Day Free Trial
             </h1>
             <p className="text-slate-600 dark:text-slate-400">
-              Create your account to participate in the ecosystem
+              Create your account and get full access for 30 days. No credit card required.
             </p>
           </div>
 
@@ -124,14 +124,18 @@ export default function SignUpPage() {
           </div>
         </div>
 
-        {/* Data Flow Info */}
+        {/* Trial Benefits Info */}
         <div className="mt-8 bg-blue-50 dark:bg-blue-900/20 rounded-lg p-6 border border-blue-200 dark:border-blue-800">
           <h3 className="text-sm font-semibold text-blue-900 dark:text-blue-300 mb-2">
-            Data Flow
+            What You Get in Your Free Trial
           </h3>
-          <p className="text-xs text-blue-800 dark:text-blue-400">
-            Form → Server Action → Supabase (RLS Check) → Profile Created → Activity Logged
-          </p>
+          <ul className="text-xs text-blue-800 dark:text-blue-400 space-y-1 list-disc list-inside">
+            <li>Full access to all features for 30 days</li>
+            <li>Unlimited transaction matching</li>
+            <li>All cookbooks and workflows</li>
+            <li>Free 30-minute consultation (worth $200)</li>
+            <li>No credit card required</li>
+          </ul>
         </div>
       </div>
 
