@@ -36,7 +36,7 @@ class Analytics {
           case 'posthog':
             provider = createPostHogProvider();
             break;
-          case 'custom':
+          case 'custom': {
             const customEndpoint = process.env.NEXT_PUBLIC_ANALYTICS_ENDPOINT;
             if (customEndpoint) {
               provider = createCustomProvider({
@@ -47,6 +47,7 @@ class Analytics {
               });
             }
             break;
+          }
         }
 
         if (provider) {

@@ -29,7 +29,7 @@ function MobileDashboard({ transactions, exceptions, onTransactionSelect, onExce
             tx.provider.toLowerCase().includes(query) ||
             tx.providerTransactionId.toLowerCase().includes(query));
     }, [transactions, searchQuery]);
-    return ((0, jsx_runtime_1.jsx)(ReconciliationDashboard_1.ReconciliationDashboard, { ...(className !== undefined ? { className } : {}), children: (0, jsx_runtime_1.jsxs)("div", { style: {
+    return ((0, jsx_runtime_1.jsx)(ReconciliationDashboard_1.ReconciliationDashboard, { ...(className ? { className } : {}), children: (0, jsx_runtime_1.jsxs)("div", { style: {
                 padding: '1rem',
                 maxWidth: '100%',
                 backgroundColor: '#fff'
@@ -83,7 +83,7 @@ function MobileDashboard({ transactions, exceptions, onTransactionSelect, onExce
                             border: '1px solid #e5e7eb',
                             borderRadius: '8px',
                             overflow: 'hidden'
-                        }, children: (0, jsx_runtime_1.jsx)(TransactionTable_1.TransactionTable, { transactions: filteredTransactions, ...(onTransactionSelect !== undefined ? { onSelect: onTransactionSelect } : {}) }) })) : ((0, jsx_runtime_1.jsx)("div", { style: {
+                        }, children: (0, jsx_runtime_1.jsx)(TransactionTable_1.TransactionTable, { transactions: filteredTransactions, ...(onTransactionSelect ? { onSelect: onTransactionSelect } : {}) }) })) : ((0, jsx_runtime_1.jsx)("div", { style: {
                             padding: '3rem 1rem',
                             textAlign: 'center',
                             color: '#6b7280'
@@ -91,7 +91,7 @@ function MobileDashboard({ transactions, exceptions, onTransactionSelect, onExce
                             border: '1px solid #e5e7eb',
                             borderRadius: '8px',
                             overflow: 'hidden'
-                        }, children: (0, jsx_runtime_1.jsx)(ExceptionTable_1.ExceptionTable, { exceptions: exceptions, ...(onExceptionResolve !== undefined ? { onResolve: onExceptionResolve } : {}) }) })) : ((0, jsx_runtime_1.jsx)("div", { style: {
+                        }, children: (0, jsx_runtime_1.jsx)(ExceptionTable_1.ExceptionTable, { exceptions: exceptions, ...(onExceptionResolve ? { onResolve: onExceptionResolve } : {}) }) })) : ((0, jsx_runtime_1.jsx)("div", { style: {
                             padding: '3rem 1rem',
                             textAlign: 'center',
                             color: '#6b7280'

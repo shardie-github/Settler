@@ -6,18 +6,3 @@ npm warn config       Default value does install optional deps unless otherwise 
 > @settler/web@1.0.0 typecheck
 > tsc --noEmit
 
-src/app/docs/page.tsx(12,1): error TS6133: 'AnimatedCodeBlock' is declared but its value is never read.
-src/app/docs/page.tsx(17,10): error TS6133: 'isVisible' is declared but its value is never read.
-src/app/docs/page.tsx(23,13): error TS18048: 'entry' is possibly 'undefined'.
-src/app/docs/page.tsx(250,9): error TS6133: 'installationCode' is declared but its value is never read.
-src/app/docs/page.tsx(259,9): error TS6133: 'nodejsCode' is declared but its value is never read.
-src/app/docs/page.tsx(265,9): error TS6133: 'reactCode' is declared but its value is never read.
-src/app/docs/page.tsx(275,9): error TS6133: 'apiExampleCode' is declared but its value is never read.
-src/app/docs/page.tsx(293,9): error TS6133: 'ecommerceCode' is declared but its value is never read.
-npm error Lifecycle script `typecheck` failed with error:
-npm error code 2
-npm error path /workspace/packages/web
-npm error workspace @settler/web@1.0.0
-npm error location /workspace/packages/web
-npm error command failed
-npm error command sh -c tsc --noEmit

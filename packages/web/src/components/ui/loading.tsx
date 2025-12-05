@@ -84,12 +84,12 @@ export interface SkeletonProps extends React.HTMLAttributes<HTMLDivElement> {
   /**
    * Width variant
    */
-  width?: 'full' | 'sm' | 'md' | 'lg' | 'xl' | string;
+  width?: string;
   
   /**
    * Height variant
    */
-  height?: 'sm' | 'md' | 'lg' | 'xl' | string;
+  height?: string;
   
   /**
    * Shape variant
