@@ -49,6 +49,8 @@ export function EmptyState({
   size = 'default',
   className,
 }: EmptyStateProps) {
+  // Ensure title is a proper heading level
+  const HeadingTag = size === 'lg' ? 'h2' : size === 'sm' ? 'h4' : 'h3';
   const sizeClasses = {
     sm: {
       container: 'py-8',
@@ -90,18 +92,18 @@ export function EmptyState({
         )}
         aria-hidden="true"
       />
-      <h3
+      <HeadingTag
         className={cn(
           'font-semibold text-foreground mb-2 text-center',
           currentSize.title
         )}
       >
         {title}
-      </h3>
+      </HeadingTag>
       {description && (
         <p
           className={cn(
-            'text-muted-foreground text-center mb-6 max-w-md',
+            'text-muted-foreground text-center mb-6 max-w-md mx-auto',
             currentSize.description
           )}
         >

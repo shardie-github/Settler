@@ -18,7 +18,12 @@
     "filter": "Filter",
     "sort": "Sort",
     "actions": "Actions",
-    "more": "More"
+    "more": "More",
+    "retry": "Retry",
+    "refresh": "Refresh",
+    "continue": "Continue",
+    "skip": "Skip",
+    "done": "Done"
   },
   "navigation": {
     "home": "Home",
@@ -29,7 +34,9 @@
     "community": "Community",
     "support": "Support",
     "playground": "Playground",
-    "getStarted": "Get Started"
+    "getStarted": "Get Started",
+    "dashboard": "Dashboard",
+    "settings": "Settings"
   },
   "forms": {
     "required": "This field is required",
@@ -40,23 +47,38 @@
     "passwordMismatch": "Passwords do not match",
     "submit": "Submit",
     "submitting": "Submitting...",
-    "reset": "Reset"
+    "reset": "Reset",
+    "saving": "Saving...",
+    "saved": "Saved",
+    "loading": "Loading form...",
+    "optional": "Optional"
   },
   "errors": {
     "generic": "Something went wrong. Please try again.",
-    "network": "Network error. Please check your connection.",
+    "network": "Network error. Please check your connection and try again.",
     "notFound": "The requested resource was not found.",
     "unauthorized": "You are not authorized to access this resource.",
     "forbidden": "Access forbidden.",
     "serverError": "Server error. Please try again later.",
     "tryAgain": "Try Again",
-    "contactSupport": "Contact Support"
+    "contactSupport": "Contact Support",
+    "connectionError": "Connection error. Please check your internet connection.",
+    "timeout": "Request timed out. Please try again.",
+    "validationError": "Please check your input and try again."
   },
   "emptyStates": {
     "noData": "No data available",
     "noResults": "No results found",
     "noItems": "No items",
-    "createFirst": "Create your first item to get started"
+    "createFirst": "Create your first item to get started",
+    "noProjects": "No projects yet",
+    "noProjectsDescription": "Create your first project to start reconciling transactions",
+    "noIntegrations": "No integrations connected",
+    "noIntegrationsDescription": "Connect your first integration to start processing transactions",
+    "noTransactions": "No transactions found",
+    "noTransactionsDescription": "Transactions will appear here once processing begins",
+    "noMatches": "No matches found",
+    "noMatchesDescription": "Try adjusting your filters or search terms"
   },
   "buttons": {
     "create": "Create",
@@ -68,6 +90,46 @@
     "view": "View",
     "viewDashboard": "View Dashboard",
     "getStarted": "Get Started",
-    "learnMore": "Learn More"
+    "learnMore": "Learn More",
+    "createProject": "Create Project",
+    "addIntegration": "Add Integration",
+    "discardChanges": "Discard Changes",
+    "deleteProject": "Delete Project",
+    "removeIntegration": "Remove Integration",
+    "startFreeTrial": "Start Free Trial",
+    "viewDocumentation": "View Documentation",
+    "clearFilters": "Clear Filters",
+    "goHome": "Go Home"
+  },
+  "loading": {
+    "loadingProjects": "Loading projects...",
+    "loadingTransactions": "Loading transactions...",
+    "loadingIntegrations": "Loading integrations...",
+    "processing": "Processing...",
+    "savingChanges": "Saving changes...",
+    "syncingData": "Syncing data...",
+    "thisMayTakeAMoment": "This may take a few moments"
+  },
+  "success": {
+    "projectCreated": "Project created successfully",
+    "changesSaved": "Changes saved",
+    "integrationConnected": "Integration connected",
+    "projectDeleted": "Project deleted",
+    "integrationRemoved": "Integration removed"
+  },
+  "tooltips": {
+    "deleteProject": "Delete this project permanently",
+    "refreshView": "Refresh the current view",
+    "exportData": "Export data as CSV",
+    "editProject": "Edit project settings",
+    "viewDetails": "View detailed information"
+  },
+  "modals": {
+    "deleteProjectTitle": "Delete Project",
+    "deleteProjectDescription": "This will permanently delete the project and all associated data. This action cannot be undone.",
+    "discardChangesTitle": "Discard Changes",
+    "discardChangesDescription": "You have unsaved changes. Are you sure you want to discard them?",
+    "removeIntegrationTitle": "Remove Integration",
+    "removeIntegrationDescription": "This will disconnect the integration and stop processing transactions."
   }
 }
