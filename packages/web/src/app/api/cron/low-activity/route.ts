@@ -6,8 +6,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { createAdminClient } from '@/lib/supabase/server';
-// @ts-ignore - API package types not available in web package
-import { sendLowActivityEmail, LifecycleUser } from '@/../../api/src/lib/email-lifecycle';
+import { sendLowActivityEmail, LifecycleUser } from '@settler/api/lib/email-lifecycle';
 
 const logInfo = (message: string, meta?: Record<string, unknown>) => {
   console.log(`[INFO] ${message}`, meta || '');
