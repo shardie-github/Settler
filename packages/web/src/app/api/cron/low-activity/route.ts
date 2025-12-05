@@ -29,7 +29,7 @@ export async function GET(request: NextRequest) {
     const supabase = await createAdminClient();
     
     // Get inactive users (7+ days)
-    const { data: users, error } = await supabase.rpc('get_inactive_users', { p_days_inactive: 7 });
+    const { data: users, error } = await supabase.rpc('get_inactive_users', { p_days_inactive: 7 } as any);
     
     if (error) {
       logError('Failed to fetch inactive users', error);
@@ -42,7 +42,7 @@ export async function GET(request: NextRequest) {
       emails: [] as string[],
     };
 
-    for (const user of users || []) {
+    for (const user of (Array.isArray(users) ? users : []) || []) {
       try {
         // Skip if we sent a low activity email in the last 14 days
         const { data: profile } = await supabase
@@ -73,7 +73,7 @@ export async function GET(request: NextRequest) {
         await supabase.rpc('update_email_sent', {
           p_user_id: user.id,
           p_email_type: 'low_activity',
-        });
+        } as any);
 
         results.processed++;
         results.emails.push(user.email);

@@ -8,7 +8,7 @@ import { Navigation } from "@/components/Navigation";
 import { Footer } from "@/components/Footer";
 import { AnimatedPageWrapper } from "@/components/AnimatedPageWrapper";
 import { AnimatedCodeBlock } from "@/components/AnimatedCodeBlock";
-import { PlanFeatureGate, TeaserContent } from "@/components/PlanFeatureGate";
+import { PlanFeatureGate } from "@/components/PlanFeatureGate";
 import { isContentGated } from "@/config/plans";
 import Link from "next/link";
 import { 

@@ -28,7 +28,7 @@ export async function POST(request: NextRequest) {
         plan_type: planType,
         subscription_start_date: new Date().toISOString(),
         updated_at: new Date().toISOString(),
-      })
+      } as any)
       .eq('id', user.id);
 
     if (updateError) {

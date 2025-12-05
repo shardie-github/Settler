@@ -160,6 +160,9 @@ export function PreTestQuestionnaire({ onComplete, onSkip, className }: PreTestQ
   };
 
   const currentQ = questions[currentQuestion];
+  if (!currentQ) {
+    return null;
+  }
   const currentAnswer = answers[currentQ.id as keyof PreTestAnswers];
 
   return (

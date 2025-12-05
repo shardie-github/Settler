@@ -46,7 +46,7 @@ export async function GET(request: NextRequest) {
 
     // Process Day 7 emails
     const day7Result = await supabase.rpc('get_trial_users_for_email', { p_days_remaining: 7 });
-    if (day7Result.data) {
+    if (day7Result.data && Array.isArray(day7Result.data)) {
       for (const user of day7Result.data) {
         try {
           const trialData: TrialData = {
@@ -69,7 +69,7 @@ export async function GET(request: NextRequest) {
           await supabase.rpc('update_email_sent', {
             p_user_id: user.id,
             p_email_type: 'trial_day7',
-          });
+          } as any);
 
           results.processed++;
           results.emails.push(user.email);
@@ -82,7 +82,7 @@ export async function GET(request: NextRequest) {
 
     // Process Day 14 emails
     const day14Result = await supabase.rpc('get_trial_users_for_email', { p_days_remaining: 14 });
-    if (day14Result.data) {
+    if (day14Result.data && Array.isArray(day14Result.data)) {
       for (const user of day14Result.data) {
         try {
           const trialData: TrialData = {
@@ -107,7 +107,7 @@ export async function GET(request: NextRequest) {
           await supabase.rpc('update_email_sent', {
             p_user_id: user.id,
             p_email_type: 'trial_day14',
-          });
+          } as any);
 
           results.processed++;
           results.emails.push(user.email);
@@ -120,7 +120,7 @@ export async function GET(request: NextRequest) {
 
     // Process Day 21 emails (9 days remaining)
     const day21Result = await supabase.rpc('get_trial_users_for_email', { p_days_remaining: 9 });
-    if (day21Result.data) {
+    if (day21Result.data && Array.isArray(day21Result.data)) {
       for (const user of day21Result.data) {
         try {
           const trialData: TrialData = {
@@ -142,7 +142,7 @@ export async function GET(request: NextRequest) {
           await supabase.rpc('update_email_sent', {
             p_user_id: user.id,
             p_email_type: 'trial_day21',
-          });
+          } as any);
 
           results.processed++;
           results.emails.push(user.email);
@@ -160,7 +160,7 @@ export async function GET(request: NextRequest) {
         p_days_remaining: daysRemaining 
       });
       
-      if (result.data) {
+      if (result.data && Array.isArray(result.data)) {
         for (const user of result.data) {
           try {
             const trialData: TrialData = {
@@ -182,7 +182,7 @@ export async function GET(request: NextRequest) {
             await supabase.rpc('update_email_sent', {
               p_user_id: user.id,
               p_email_type: `trial_day${day}`,
-            });
+            } as any);
 
             results.processed++;
             results.emails.push(user.email);
@@ -196,7 +196,7 @@ export async function GET(request: NextRequest) {
 
     // Process Day 30 (trial ended)
     const day30Result = await supabase.rpc('get_trial_users_for_email', { p_days_remaining: 0 });
-    if (day30Result.data) {
+    if (day30Result.data && Array.isArray(day30Result.data)) {
       for (const user of day30Result.data) {
         try {
           const lifecycleUser: LifecycleUser = {
@@ -212,14 +212,14 @@ export async function GET(request: NextRequest) {
           // Update plan to free if not upgraded
           await supabase
             .from('profiles')
-            .update({ plan_type: 'free' })
+            .update({ plan_type: 'free' } as any)
             .eq('id', user.id)
             .eq('plan_type', 'trial');
           
           await supabase.rpc('update_email_sent', {
             p_user_id: user.id,
             p_email_type: 'trial_ended',
-          });
+          } as any);
 
           results.processed++;
           results.emails.push(user.email);
