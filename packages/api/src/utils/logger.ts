@@ -29,7 +29,7 @@ const traceContextFormat = winston.format((info: any) => {
     ...info,
     ...traceContext,
   };
-})();
+});
 
 const logFormat = winston.format.combine(
   traceContextFormat,

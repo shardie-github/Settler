@@ -7,7 +7,6 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { createAdminClient } from '@/lib/supabase/server';
-// @ts-ignore - API package types not available in web package
 import {
   sendTrialGatedFeaturesEmail,
   sendTrialCaseStudyEmail,
@@ -16,7 +15,7 @@ import {
   sendTrialEndedEmail,
   LifecycleUser,
   TrialData,
-} from '@/../../api/src/lib/email-lifecycle';
+} from '@settler/api/lib/email-lifecycle';
 
 // Simple logger for web package
 const logInfo = (message: string, meta?: Record<string, unknown>) => {

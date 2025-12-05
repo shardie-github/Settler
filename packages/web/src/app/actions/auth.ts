@@ -101,7 +101,7 @@ export async function signUpUser(
 
     // 4. Send welcome email (trial welcome)
     try {
-      const { sendTrialWelcomeEmail } = await import('@/../../api/src/lib/email-lifecycle' as any);
+      const { sendTrialWelcomeEmail } = await import('@settler/api/lib/email-lifecycle');
       await sendTrialWelcomeEmail(
         {
           email: authData.user.email!,
