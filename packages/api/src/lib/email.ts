@@ -185,7 +185,7 @@ export async function sendWelcomeEmail(
     return sendTrialWelcomeEmail(
       {
         email,
-        firstName: userName,
+        firstName: userName || email.split('@')[0] || 'User',
         planType: 'trial',
       },
       {

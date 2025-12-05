@@ -212,7 +212,7 @@ export function generatePlainText(html: string): string {
   
   // Extract links and add them as text
   const linkRegex = /<a[^>]+href=["']([^"']+)["'][^>]*>(.*?)<\/a>/gi;
-  let match;
+  let match: RegExpExecArray | null;
   while ((match = linkRegex.exec(html)) !== null) {
     const url = match[1];
     const linkText = match[2].replace(/<[^>]+>/g, '');

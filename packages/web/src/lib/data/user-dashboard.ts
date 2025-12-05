@@ -83,11 +83,11 @@ export async function getUserDashboardData(): Promise<UserDashboardData | null> 
     const usage = {
       reconciliations: {
         current: 0, // Calculate from reconciliation jobs
-        limit: planType === 'trial' || planType === 'commercial' ? 'unlimited' : 1000,
+        limit: (planType === 'trial' || planType === 'commercial' ? 'unlimited' : 1000) as number | 'unlimited',
       },
       playgroundRuns: {
         current: 0, // Calculate from playground usage
-        limit: planType === 'trial' || planType === 'commercial' ? 'unlimited' : 3,
+        limit: (planType === 'trial' || planType === 'commercial' ? 'unlimited' : 3) as number | 'unlimited',
       },
     };
 
@@ -143,7 +143,7 @@ export async function savePreTestAnswers(answers: Record<string, any>): Promise<
         pre_test_answers: answers,
         industry: answers.industry,
         updated_at: new Date().toISOString(),
-      })
+      } as any)
       .eq('id', user.id);
 
     if (error) {

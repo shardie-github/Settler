@@ -23,7 +23,7 @@ function getTraceContext(): { trace_id?: string; span_id?: string } {
 }
 
 // Custom format that adds trace context
-const traceContextFormat = winston.format((info) => {
+const traceContextFormat = winston.format((info: any) => {
   const traceContext = getTraceContext();
   return {
     ...info,
@@ -49,7 +49,8 @@ export const logger = winston.createLogger({
     new winston.transports.Console({
       format: winston.format.combine(
         winston.format.colorize(),
-        winston.format.printf(({ timestamp, level, message, trace_id, span_id, tenant_id, ...meta }) => {
+        winston.format.printf((info: any) => {
+          const { timestamp, level, message, trace_id, span_id, tenant_id, ...meta } = info;
           const metaStr = Object.keys(meta).length ? JSON.stringify(redact(meta)) : '';
           const traceInfo = trace_id && typeof trace_id === 'string' ? `[trace_id=${trace_id.substring(0, 16)}]` : '';
           const spanInfo = span_id && typeof span_id === 'string' ? `[span_id=${span_id.substring(0, 16)}]` : '';
