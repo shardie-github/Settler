@@ -9,6 +9,20 @@ import { renderEmailTemplate, generatePlainText, getDefaultUrls, EmailTemplateDa
 import { logError } from '../utils/logger';
 
 /**
+ * Helper to create EmailTemplateData with proper optional property handling
+ */
+function createEmailData(base: Partial<EmailTemplateData>): EmailTemplateData {
+  const urls = getDefaultUrls();
+  const data: EmailTemplateData = { ...base };
+  
+  // Always include product and urls since getDefaultUrls() always returns a value
+  data.product = urls as EmailTemplateData['product'];
+  data.urls = urls as EmailTemplateData['urls'];
+  
+  return data;
+}
+
+/**
  * User data for lifecycle emails
  */
 export interface LifecycleUser {
@@ -37,9 +51,23 @@ export async function sendTrialWelcomeEmail(
   trialData: TrialData
 ): Promise<{ id: string } | null> {
   try {
-    const urls = getDefaultUrls();
     const firstName = user.firstName || user.email.split('@')[0] || 'User';
-    const data: EmailTemplateData = {
+    const trialEnd = new Date(trialData.trialEndDate);
+    const chargeDate = isNaN(trialEnd.getTime()) 
+      ? undefined 
+      : new Date(trialEnd.getTime() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+    
+    const trial: EmailTemplateData['trial'] = {
+      trial_end_date: trialData.trialEndDate,
+      trial_start_date: trialData.trialStartDate,
+      days_remaining: trialData.daysRemaining,
+    };
+    
+    if (chargeDate) {
+      trial.charge_date = chargeDate;
+    }
+    
+    const data = createEmailData({
       user: {
         first_name: firstName,
         email: user.email,
@@ -47,27 +75,8 @@ export async function sendTrialWelcomeEmail(
         ...(user.companyName && { company_name: user.companyName }),
         plan_type: user.planType || 'trial',
       },
-      trial: (() => {
-        const trialEnd = new Date(trialData.trialEndDate);
-        const chargeDate = isNaN(trialEnd.getTime()) 
-          ? undefined 
-          : new Date(trialEnd.getTime() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
-        
-        const trial: EmailTemplateData['trial'] = {
-          trial_end_date: trialData.trialEndDate,
-          trial_start_date: trialData.trialStartDate,
-          days_remaining: trialData.daysRemaining,
-        };
-        
-        if (chargeDate) {
-          trial.charge_date = chargeDate;
-        }
-        
-        return trial;
-      })(),
-      product: urls,
-      urls: urls,
-    };
+      trial,
+    });
     
     const html = await renderEmailTemplate('trial_welcome', data);
     const text = generatePlainText(html);
@@ -100,9 +109,8 @@ export async function sendTrialValueEmail(
   }
 ): Promise<{ id: string } | null> {
   try {
-    const urls = getDefaultUrls();
     const firstName = user.firstName || user.email.split('@')[0] || 'User';
-    const data: EmailTemplateData = {
+    const data = createEmailData({
       user: {
         first_name: firstName,
         email: user.email,
@@ -117,9 +125,7 @@ export async function sendTrialValueEmail(
         time_saved: reconciliationData.timeSaved,
         report_url: reconciliationData.reportUrl,
       },
-      product: urls,
-      urls: urls,
-    };
+    });
     
     const html = await renderEmailTemplate('trial_day2', data);
     const text = generatePlainText(html);
@@ -155,8 +161,6 @@ export async function sendTrialGatedFeaturesEmail(
       trial: {
         days_remaining: trialData.daysRemaining,
       },
-      product: urls,
-      urls: urls,
     };
     
     const html = await renderEmailTemplate('trial_day7', data);
@@ -203,8 +207,6 @@ export async function sendTrialCaseStudyEmail(
         case_study_url: caseStudy.caseStudyUrl,
         case_studies_url: `${urls?.docs_url || 'https://docs.settler.dev'}/case-studies`,
       },
-      product: urls,
-      urls: urls,
     };
     
     const html = await renderEmailTemplate('trial_day14', data);
@@ -241,8 +243,6 @@ export async function sendTrialComparisonEmail(
       trial: {
         days_remaining: trialData.daysRemaining,
       },
-      product: urls,
-      urls: urls,
     };
     
     const html = await renderEmailTemplate('trial_day21', data);
@@ -294,8 +294,6 @@ export async function sendTrialUrgencyEmail(
         
         return trial;
       })(),
-      product: urls,
-      urls: urls,
     };
     
     const templateName = `trial_day${day}`;
@@ -335,8 +333,6 @@ export async function sendTrialEndedEmail(
         first_name: firstName,
         email: user.email,
       },
-      product: urls,
-      urls: urls,
     };
     
     const html = await renderEmailTemplate('trial_ended', data);
@@ -369,8 +365,6 @@ export async function sendPaidWelcomeEmail(
         first_name: firstName,
         email: user.email,
       },
-      product: urls,
-      urls: urls,
     };
     
     const html = await renderEmailTemplate('paid_welcome', data);
@@ -429,8 +423,6 @@ export async function sendMonthlySummaryEmail(
         ...(metrics.recommendation1 && { recommendation_1: metrics.recommendation1 }),
         ...(metrics.recommendation2 && { recommendation_2: metrics.recommendation2 }),
       },
-      product: urls,
-      urls: urls,
     };
     
     const html = await renderEmailTemplate('monthly_summary', data);
@@ -463,8 +455,6 @@ export async function sendLowActivityEmail(
         first_name: firstName,
         email: user.email,
       },
-      product: urls,
-      urls: urls,
     };
     
     const html = await renderEmailTemplate('low_activity', data);

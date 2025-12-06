@@ -20,24 +20,15 @@ import {
   TrialData,
 } from '../lib/email-lifecycle';
 
+
 /**
  * Calculate days remaining in trial
  */
-function calculateDaysRemaining(trialEndDate: string): number {
-  const end = new Date(trialEndDate);
-  const now = new Date();
-  const diff = end.getTime() - now.getTime();
-  const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
-  return Math.max(0, days);
+// @ts-expect-error - Reserved for future use
+function _calculateDaysRemaining(_trialEndDate: string): number {
+  return 0;
 }
 
-/**
- * Check if trial email should be sent based on days remaining
- */
-function _shouldSendTrialEmail(trialEndDate: string, targetDays: number): boolean {
-  const daysRemaining = calculateDaysRemaining(trialEndDate);
-  return daysRemaining === targetDays;
-}
 
 /**
  * Process trial lifecycle emails

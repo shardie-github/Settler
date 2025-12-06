@@ -11,7 +11,6 @@
  * Handles model upload, optimization, benchmarking, and export workflows via AIAS API.
  */
 
-import { config } from "../../config";
 import { logInfo, logError } from "../../utils/logger";
 
 export interface AIASConfig {
@@ -88,11 +87,16 @@ export class AIASClient {
     };
 
     try {
-      const response = await fetch(url, {
+      const fetchOptions: RequestInit = {
         method,
         headers: requestHeaders,
-        body: body ? JSON.stringify(body) : undefined,
-      });
+      };
+      
+      if (body) {
+        fetchOptions.body = JSON.stringify(body);
+      }
+      
+      const response = await fetch(url, fetchOptions);
 
       if (!response.ok) {
         const errorText = await response.text();
@@ -176,16 +180,36 @@ export class AIASClient {
       `/v1/jobs/${jobId}`
     );
 
-    return {
-      status: response.status as 'pending' | 'running' | 'completed' | 'failed',
-      progress: response.progress,
-      result: response.result as {
+    const status: {
+      status: 'pending' | 'running' | 'completed' | 'failed';
+      progress?: number;
+      result?: {
         modelId: string;
         optimizedModelUrl: string;
         benchmarkResults: BenchmarkResult;
-      } | undefined,
-      error: response.error,
+      };
+      error?: string;
+    } = {
+      status: response.status as 'pending' | 'running' | 'completed' | 'failed',
     };
+    
+    if (response.progress !== undefined) {
+      status.progress = response.progress;
+    }
+    
+    if (response.result !== undefined) {
+      status.result = response.result as {
+        modelId: string;
+        optimizedModelUrl: string;
+        benchmarkResults: BenchmarkResult;
+      };
+    }
+    
+    if (response.error !== undefined) {
+      status.error = response.error;
+    }
+    
+    return status;
   }
 
   /**
@@ -319,10 +343,11 @@ export function getAIASClient(): AIASClient {
     if (!apiKey) {
       throw new Error('AIAS_API_KEY environment variable is required');
     }
-    aiasClientInstance = new AIASClient({
-      apiKey,
-      baseUrl: process.env.AIAS_BASE_URL,
-    });
+    const config: AIASConfig = { apiKey };
+    if (process.env.AIAS_BASE_URL) {
+      config.baseUrl = process.env.AIAS_BASE_URL;
+    }
+    aiasClientInstance = new AIASClient(config);
   }
   return aiasClientInstance;
 }
