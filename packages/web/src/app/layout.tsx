@@ -11,6 +11,7 @@ import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { ErrorBoundary } from "@/components/ui/error-boundary";
 import { QueryProvider } from "@/lib/providers/query-provider";
+import { ThemeInitializer } from "@/components/ThemeInitializer";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -121,20 +122,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <OrganizationSchema />
         <WebSiteSchema />
         <SoftwareApplicationSchema />
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              (function() {
-                const theme = localStorage.getItem('theme') || 'light';
-                if (theme === 'dark') {
-                  document.documentElement.classList.add('dark');
-                }
-              })();
-            `,
-          }}
-        />
       </head>
       <body>
+        <ThemeInitializer />
         <ErrorBoundary componentName="RootLayout">
           <QueryProvider>
             <SmoothScroll>{children}</SmoothScroll>

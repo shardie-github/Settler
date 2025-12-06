@@ -12,31 +12,38 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Navigation } from "@/components/Navigation";
 import { Footer } from "@/components/Footer";
-import { UserPlus } from "lucide-react";
-import { redirect } from "next/navigation";
+import { UserPlus, AlertCircle } from "lucide-react";
 import Link from "next/link";
+import { useActionState } from "react";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 function SignUpForm() {
-  async function handleSubmit(formData: FormData) {
-    "use server";
+  const router = useRouter();
+  const [state, formAction, isPending] = useActionState(
+    async (_prevState: { error?: string } | null, formData: FormData) => {
+      const email = formData.get("email") as string;
+      const password = formData.get("password") as string;
+      const name = formData.get("name") as string;
 
-    const email = formData.get("email") as string;
-    const password = formData.get("password") as string;
-    const name = formData.get("name") as string;
+      if (!email || !password) {
+        return { error: "Email and password are required" };
+      }
 
-    if (!email || !password) {
-      return;
-    }
+      const result = await signUpUser(email, password, name);
 
-    const result = await signUpUser(email, password, name);
+      if (result.success) {
+        router.push("/dashboard");
+        return null;
+      }
 
-    if (result.success) {
-      redirect("/dashboard");
-    }
-  }
+      return { error: result.error || "Failed to create account" };
+    },
+    null
+  );
 
   return (
-    <form action={handleSubmit} className="space-y-6">
+    <form action={formAction} className="space-y-6" noValidate>
       <div>
         <Label htmlFor="name" className="mb-2 block">
           Name (Optional)
@@ -55,6 +62,8 @@ function SignUpForm() {
           placeholder="you@example.com"
           required
           className="w-full"
+          aria-describedby={state?.error ? "email-error" : undefined}
+          aria-invalid={state?.error ? "true" : "false"}
         />
       </div>
 
@@ -70,18 +79,45 @@ function SignUpForm() {
           required
           minLength={8}
           className="w-full"
+          aria-describedby="password-help password-error"
+          aria-invalid={state?.error ? "true" : "false"}
         />
-        <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+        <p id="password-help" className="text-xs text-slate-500 dark:text-slate-400 mt-1">
           Must be at least 8 characters
         </p>
       </div>
 
+      {state?.error && (
+        <div
+          id="form-error"
+          className="flex items-center gap-2 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-md"
+          role="alert"
+          aria-live="polite"
+        >
+          <AlertCircle className="w-5 h-5 text-red-600 dark:text-red-400 flex-shrink-0" aria-hidden="true" />
+          <p id="password-error" className="text-sm text-red-800 dark:text-red-200">
+            {state.error}
+          </p>
+        </div>
+      )}
+
       <Button
         type="submit"
-        className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 dark:from-electric-cyan dark:to-electric-blue dark:hover:from-electric-cyan/90 dark:hover:to-electric-blue/90"
+        disabled={isPending}
+        className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 dark:from-electric-cyan dark:to-electric-blue dark:hover:from-electric-cyan/90 dark:hover:to-electric-blue/90 disabled:opacity-50 disabled:cursor-not-allowed"
+        aria-busy={isPending}
       >
-        <UserPlus className="w-4 h-4 mr-2" />
-        Create Account
+        {isPending ? (
+          <>
+            <span className="animate-spin mr-2">⏳</span>
+            Creating Account...
+          </>
+        ) : (
+          <>
+            <UserPlus className="w-4 h-4 mr-2" />
+            Create Account
+          </>
+        )}
       </Button>
     </form>
   );
