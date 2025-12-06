@@ -88,7 +88,7 @@ export const plans: Record<PlanType, Plan> = {
         runsPerDay: "unlimited", // Unlimited during trial
         advancedFeatures: true,
       },
-      consulting: true, // Free consultation included
+      consulting: false, // Self-service onboarding with guides
       emailAnalysis: {
         enabled: true,
         reportsPerMonth: "unlimited",
@@ -121,7 +121,7 @@ export const plans: Record<PlanType, Plan> = {
         runsPerDay: "unlimited",
         advancedFeatures: true,
       },
-      consulting: true, // 30-minute onboarding included
+      consulting: false, // Self-service onboarding with enhanced guides
       emailAnalysis: {
         enabled: true,
         reportsPerMonth: "unlimited",

@@ -149,7 +149,7 @@ export function WelcomeDashboard({ userName, trialEndDate, onComplete }: Welcome
               </li>
               <li className="flex items-center gap-2">
                 <Sparkles className="w-4 h-4 text-green-600" />
-                Free 30-minute consultation (worth $200)
+                Comprehensive onboarding guide and tutorials
               </li>
               <li className="flex items-center gap-2">
                 <Sparkles className="w-4 h-4 text-green-600" />
@@ -181,7 +181,7 @@ export function WelcomeDashboard({ userName, trialEndDate, onComplete }: Welcome
               </li>
               <li className="flex items-center gap-2">
                 <CheckCircle2 className="w-4 h-4 text-blue-600" />
-                Free 30-minute consultation included
+                Enhanced onboarding guides and examples
               </li>
               <li className="flex items-center gap-2">
                 <CheckCircle2 className="w-4 h-4 text-blue-600" />

@@ -141,7 +141,7 @@ export default function SignUpPage() {
             </li>
             <li className="flex items-start gap-2">
               <span className="text-green-600 dark:text-green-400 font-bold">✓</span>
-              <span>Free 30-minute onboarding consultation (worth $200)</span>
+              <span>Comprehensive onboarding guide and step-by-step tutorials</span>
             </li>
             <li className="flex items-start gap-2">
               <span className="text-green-600 dark:text-green-400 font-bold">✓</span>

@@ -174,7 +174,7 @@ const report = await client.jobs.run(job.id);
                 className="mb-6 glass-strong text-blue-600 dark:text-electric-cyan border-blue-300 dark:border-electric-cyan/30 hover:border-blue-400 dark:hover:border-electric-cyan/50 transition-all duration-200"
                 aria-label="Product category"
               >
-                Automatic Transaction Matching
+                API-First Financial Reconciliation
               </Badge>
 
               <TextRevealHeading

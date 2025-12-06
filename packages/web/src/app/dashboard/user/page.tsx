@@ -153,14 +153,32 @@ async function UserDashboardContent() {
           </CardHeader>
           <CardContent>
             {data.recentJobs.length === 0 ? (
-              <EmptyState
-                title="No jobs yet"
-                description="Create your first reconciliation job to get started"
-                action={{
-                  label: "Create Job",
-                  onClick: () => (window.location.href = "/playground"),
-                }}
-              />
+              <div className="space-y-4">
+                <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-6">
+                  <h3 className="font-semibold text-blue-900 dark:text-blue-300 mb-2">
+                    🚀 Get Started with Your First Reconciliation
+                  </h3>
+                  <p className="text-sm text-blue-800 dark:text-blue-400 mb-4">
+                    Create your first reconciliation job in just a few minutes. Our step-by-step guide will walk you through the process.
+                  </p>
+                  <div className="flex flex-col sm:flex-row gap-3">
+                    <Button asChild className="bg-blue-600 hover:bg-blue-700">
+                      <Link href="/playground">Start Onboarding</Link>
+                    </Button>
+                    <Button asChild variant="outline">
+                      <Link href="/docs/getting-started">View Guide</Link>
+                    </Button>
+                  </div>
+                </div>
+                <EmptyState
+                  title="No jobs yet"
+                  description="Create your first reconciliation job to get started"
+                  action={{
+                    label: "Create Job",
+                    onClick: () => (window.location.href = "/playground"),
+                  }}
+                />
+              </div>
             ) : (
               <div className="space-y-4">
                 {data.recentJobs.map((job) => (
