@@ -6,6 +6,8 @@
  * → Profile Page Reload (Server Component Fetch)
  */
 
+"use client";
+
 import { signUpUser } from "@/app/actions/auth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
