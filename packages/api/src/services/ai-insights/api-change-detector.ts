@@ -174,8 +174,11 @@ export async function generateChangeReport(
   };
 
   for (const change of report.changes) {
-    if (change && change.type && byType[change.type]) {
-      byType[change.type].push(change);
+    if (change && change.type) {
+      const typeKey = change.type;
+      if (byType[typeKey]) {
+        byType[typeKey]!.push(change);
+      }
     }
   }
 
