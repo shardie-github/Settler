@@ -9,7 +9,7 @@
 
 import { ReactNode } from "react";
 import { Loader2, AlertCircle, Inbox } from "lucide-react";
-import { Skeleton, SkeletonCard, SkeletonText } from "./skeleton";
+import { SkeletonCard } from "./skeleton";
 
 export interface DataLoaderProps<T> {
   /**

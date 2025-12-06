@@ -18,7 +18,7 @@ import { Activity, TrendingUp, Clock, CheckCircle2, AlertCircle } from "lucide-r
 import Link from "next/link";
 import { UsageUpgradeBanner } from "@/components/UsageUpgradeBanner";
 import { OnboardingProgressClient } from "@/components/OnboardingProgressClient";
-import { Skeleton, SkeletonCard, SkeletonText } from "@/components/ui/skeleton";
+import { SkeletonCard } from "@/components/ui/skeleton";
 
 // Force dynamic rendering
 export const dynamic = "force-dynamic";
