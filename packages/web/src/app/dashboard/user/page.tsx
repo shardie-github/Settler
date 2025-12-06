@@ -4,7 +4,7 @@
  * Shows user's reconciliation data, trial status, usage stats, and personalized recommendations
  */
 
-import { Suspense } from "react";
+import { Suspense, use } from "react";
 import { redirect } from "next/navigation";
 import { Navigation } from "@/components/Navigation";
 import { Footer } from "@/components/Footer";
@@ -16,6 +16,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Activity, TrendingUp, Clock, CheckCircle2, AlertCircle } from "lucide-react";
 import Link from "next/link";
+import { UsageUpgradeBanner } from "@/components/UsageUpgradeBanner";
+import { OnboardingProgressClient } from "@/components/OnboardingProgressClient";
+import { UpgradeButton } from "@/components/UpgradeButton";
 
 // Force dynamic rendering
 export const dynamic = "force-dynamic";
@@ -27,8 +30,8 @@ async function fetchUserDashboard(): Promise<UserDashboardData | null> {
   return getUserDashboardData();
 }
 
-async function UserDashboardContent() {
-  const data = await fetchUserDashboard();
+function UserDashboardContent() {
+  const data = use(fetchUserDashboard());
 
   // Redirect to signup if not authenticated
   if (!data) {
@@ -55,6 +58,14 @@ async function UserDashboardContent() {
       <Navigation />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 pt-24">
+        {/* Usage Upgrade Banner */}
+        <UsageUpgradeBanner
+          currentUsage={data.usage.reconciliations.current}
+          limit={data.usage.reconciliations.limit}
+          planType={data.user.planType}
+          metricType="reconciliations"
+        />
+
         {/* Trial Countdown Banner */}
         {data.user.planType === "trial" && data.user.trialEndDate && (
           <TrialCountdownBanner
@@ -62,6 +73,11 @@ async function UserDashboardContent() {
             userPlan={data.user.planType}
           />
         )}
+
+        {/* Onboarding Progress */}
+        <div className="mb-8">
+          <OnboardingProgressClient />
+        </div>
 
         {/* Usage Limits */}
         <div className="grid md:grid-cols-2 gap-4 mb-8">

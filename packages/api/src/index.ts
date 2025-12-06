@@ -44,6 +44,7 @@ import { processPendingWebhooks } from "./utils/webhook-queue";
 import { initializeScheduledJobs, shutdownScheduler } from "./infrastructure/jobs/scheduler";
 import { processOnboardingEmails } from "./services/email/onboarding-sequence";
 import { checkSystemHealth } from "./services/alerts/manager";
+import { checkUsageQuota, trackUsageAfterOperation } from "./middleware/usage-quota";
 import { versionMiddleware } from "./middleware/versioning";
 import { v1Router } from "./routes/v1";
 import { v2Router } from "./routes/v2";
@@ -223,6 +224,10 @@ app.use("/api", versionMiddleware);
 app.use("/api/v1", idempotencyMiddleware());
 app.use("/api/v2", idempotencyMiddleware());
 
+// Usage quota checking (before rate limiting)
+app.use("/api/v1", authMiddleware, checkUsageQuota);
+app.use("/api/v2", authMiddleware, checkUsageQuota);
+
 // Rate limiting per API key
 app.use("/api/v1", authMiddleware, rateLimitMiddleware());
 app.use("/api/v2", authMiddleware, rateLimitMiddleware());
@@ -315,6 +320,10 @@ app.use("/api/v2/notifications", authMiddleware, notificationsRouter);
 // Usage tracking routes (requires auth)
 app.use("/api/v1/usage", authMiddleware, usageRouter);
 app.use("/api/v2/usage", authMiddleware, usageRouter);
+
+// User routes (requires auth)
+import userRouter from "./routes/user";
+app.use("/api/user", authMiddleware, userRouter);
 
 // Batch processing routes (requires auth)
 app.use("/api/v1/batch", authMiddleware, batchRouter);

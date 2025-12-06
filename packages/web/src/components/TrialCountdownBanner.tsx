@@ -1,130 +1,87 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Banner } from "@/components/ui/banner";
 import { Button } from "@/components/ui/button";
-import { AlertCircle, Clock } from "lucide-react";
+import { formatDistanceToNow } from "date-fns";
 import Link from "next/link";
-import { cn } from "@/lib/utils";
+import { AlertTriangle } from "lucide-react";
 
 interface TrialCountdownBannerProps {
   trialEndDate: string;
-  userPlan?: "free" | "trial" | "commercial" | "enterprise";
-  className?: string;
+  userPlan: string;
 }
 
 export function TrialCountdownBanner({
   trialEndDate,
-  userPlan = "trial",
-  className,
+  userPlan,
 }: TrialCountdownBannerProps) {
-  const [daysRemaining, setDaysRemaining] = useState<number>(0);
-  const [isExpired, setIsExpired] = useState(false);
-
-  useEffect(() => {
-    const calculateDaysRemaining = () => {
-      const end = new Date(trialEndDate);
-      const now = new Date();
-      const diff = end.getTime() - now.getTime();
-      const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
-
-      if (days <= 0) {
-        setIsExpired(true);
-        return 0;
-      }
-
-      return days;
-    };
-
-    setDaysRemaining(calculateDaysRemaining());
-
-    // Update every hour
-    const interval = setInterval(
-      () => {
-        setDaysRemaining(calculateDaysRemaining());
-      },
-      60 * 60 * 1000
-    );
-
-    return () => clearInterval(interval);
-  }, [trialEndDate]);
-
-  // Only show for trial users
   if (userPlan !== "trial") {
     return null;
   }
 
-  if (isExpired) {
+  const endDate = new Date(trialEndDate);
+  const now = new Date();
+  const daysRemaining = Math.ceil(
+    (endDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)
+  );
+
+  if (daysRemaining < 0) {
     return (
-      <div
-        className={cn("bg-red-50 dark:bg-red-900/20 border-l-4 border-red-500 p-4 mb-6", className)}
-      >
-        <div className="flex items-center justify-between">
+      <Banner variant="warning" className="border-red-500 bg-red-50 dark:bg-red-900/20 mb-6">
+        <div className="flex items-center justify-between w-full">
           <div className="flex items-center gap-3">
-            <AlertCircle className="w-5 h-5 text-red-600 dark:text-red-400" />
+            <AlertTriangle className="w-5 h-5 text-red-600" />
             <div>
-              <p className="font-semibold text-red-900 dark:text-red-300">Your trial has ended</p>
-              <p className="text-sm text-red-700 dark:text-red-400">
-                Upgrade to keep using all features
+              <p className="font-semibold text-red-900 dark:text-red-100">
+                Your trial has ended
+              </p>
+              <p className="text-sm text-red-800 dark:text-red-200">
+                Upgrade now to keep access to all features
               </p>
             </div>
           </div>
-          <Button asChild size="sm" className="bg-red-600 hover:bg-red-700">
+          <Button size="sm" asChild className="bg-red-600 hover:bg-red-700">
             <Link href="/pricing">Upgrade Now</Link>
           </Button>
         </div>
-      </div>
+      </Banner>
     );
   }
 
-  const getUrgencyLevel = () => {
-    if (daysRemaining <= 3) return "high";
-    if (daysRemaining <= 7) return "medium";
-    return "low";
-  };
-
-  const urgency = getUrgencyLevel();
-
-  const styles = {
-    high: "bg-red-50 dark:bg-red-900/20 border-red-500 text-red-900 dark:text-red-300",
-    medium: "bg-amber-50 dark:bg-amber-900/20 border-amber-500 text-amber-900 dark:text-amber-300",
-    low: "bg-blue-50 dark:bg-blue-900/20 border-blue-500 text-blue-900 dark:text-blue-300",
-  };
-
-  return (
-    <div className={cn("border-l-4 p-4 mb-6", styles[urgency], className)}>
-      <div className="flex items-center justify-between flex-wrap gap-4">
-        <div className="flex items-center gap-3">
-          <Clock
-            className={cn(
-              "w-5 h-5",
-              urgency === "high" && "text-red-600 dark:text-red-400",
-              urgency === "medium" && "text-amber-600 dark:text-amber-400",
-              urgency === "low" && "text-blue-600 dark:text-blue-400"
-            )}
-          />
-          <div>
-            <p className="font-semibold">
-              {daysRemaining === 1
-                ? "Your trial ends tomorrow"
-                : `Your trial ends in ${daysRemaining} days`}
-            </p>
-            <p className="text-sm opacity-80">
-              Upgrade to unlock all features and keep your workflows
-            </p>
+  // Show upgrade CTA at 7 days or less
+  if (daysRemaining <= 7) {
+    return (
+      <Banner
+        variant="warning"
+        className="border-amber-500 bg-amber-50 dark:bg-amber-900/20 mb-6"
+      >
+        <div className="flex items-center justify-between w-full">
+          <div className="flex items-center gap-3">
+            <AlertTriangle className="w-5 h-5 text-amber-600" />
+            <div>
+              <p className="font-semibold text-amber-900 dark:text-amber-100">
+                {daysRemaining} {daysRemaining === 1 ? "day" : "days"} left in your trial
+              </p>
+              <p className="text-sm text-amber-800 dark:text-amber-200">
+                Upgrade now to keep unlimited access to all features
+              </p>
+            </div>
           </div>
+          <Button size="sm" asChild className="bg-amber-600 hover:bg-amber-700">
+            <Link href="/pricing">Upgrade to Keep Access</Link>
+          </Button>
         </div>
-        <Button
-          asChild
-          size="sm"
-          className={cn(
-            urgency === "high" && "bg-red-600 hover:bg-red-700",
-            urgency === "medium" && "bg-amber-600 hover:bg-amber-700",
-            urgency === "low" && "bg-blue-600 hover:bg-blue-700"
-          )}
-        >
-          <Link href="/pricing">Upgrade Now</Link>
-        </Button>
+      </Banner>
+    );
+  }
+
+  // Standard countdown for more than 7 days
+  return (
+    <Banner variant="info" className="mb-6">
+      <div className="flex items-center gap-2">
+        <span className="font-semibold">Trial ends in:</span>
+        <span>{formatDistanceToNow(endDate, { addSuffix: false })}</span>
       </div>
-    </div>
+    </Banner>
   );
 }

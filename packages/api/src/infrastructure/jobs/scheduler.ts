@@ -11,6 +11,7 @@ import { cleanupOldData } from "../../jobs/data-retention";
 import { processTrialLifecycleEmails, processMonthlySummaryEmails, processLowActivityEmails } from "../../jobs/email-scheduler";
 import { syncFXRatesJob } from "../../jobs/fx-rate-sync";
 import { processPendingWebhooks } from "../../utils/webhook-queue";
+import { processLifecycleEmails } from "../../services/email/lifecycle-sequences";
 
 // Redis connection for BullMQ
 const redisConnection = new Redis({
@@ -86,6 +87,11 @@ const jobHandlers: Record<string, () => Promise<void>> = {
     logInfo("Starting system health check");
     await checkSystemHealth();
     logInfo("System health check completed");
+  },
+  "lifecycle-emails": async () => {
+    logInfo("Starting lifecycle email sequence");
+    await processLifecycleEmails();
+    logInfo("Lifecycle email sequence completed");
   },
 };
 
@@ -223,6 +229,19 @@ export async function initializeScheduledJobs(): Promise<void> {
           tz: "UTC",
         },
         jobId: "system-health-recurring",
+      }
+    );
+
+    // Lifecycle emails: Daily at 11 AM UTC
+    await jobQueue.add(
+      "lifecycle-emails",
+      {},
+      {
+        repeat: {
+          pattern: "0 11 * * *", // Daily at 11 AM
+          tz: "UTC",
+        },
+        jobId: "lifecycle-emails-daily",
       }
     );
 
