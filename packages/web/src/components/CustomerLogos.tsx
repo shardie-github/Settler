@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { useEffect, useRef, useState } from 'react';
-import { cn } from '@/lib/utils';
+import { useEffect, useRef, useState } from "react";
+import { cn } from "@/lib/utils";
 
 export function CustomerLogos() {
   const [isVisible, setIsVisible] = useState(false);
@@ -31,23 +31,20 @@ export function CustomerLogos() {
 
   // Placeholder logos - in production, these would be actual customer logos
   const logos = [
-    { name: 'TechCorp', logo: '🏢' },
-    { name: 'StartupXYZ', logo: '🚀' },
-    { name: 'EcomPlus', logo: '🛒' },
-    { name: 'FinanceApp', logo: '💰' },
-    { name: 'RetailPro', logo: '🏪' },
-    { name: 'SaaSCo', logo: '☁️' },
+    { name: "TechCorp", logo: "🏢" },
+    { name: "StartupXYZ", logo: "🚀" },
+    { name: "EcomPlus", logo: "🛒" },
+    { name: "FinanceApp", logo: "💰" },
+    { name: "RetailPro", logo: "🏪" },
+    { name: "SaaSCo", logo: "☁️" },
   ];
 
   const prefersReducedMotion =
-    typeof window !== 'undefined' &&
-    window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   return (
     <div ref={containerRef} className="py-12" role="region" aria-label="Customer logos">
-      <p className="text-center text-sm text-muted-foreground mb-8">
-        Trusted by leading companies
-      </p>
+      <p className="text-center text-sm text-muted-foreground mb-8">Trusted by leading companies</p>
       <div
         className="flex flex-wrap items-center justify-center gap-8"
         role="list"
@@ -57,17 +54,17 @@ export function CustomerLogos() {
           <div
             key={index}
             className={cn(
-              'flex items-center justify-center w-24 h-24',
-              'bg-card rounded-lg border border-border shadow-sm',
-              'transition-all duration-500',
+              "flex items-center justify-center w-24 h-24",
+              "bg-card rounded-lg border border-border shadow-sm",
+              "transition-all duration-500",
               isVisible
-                ? 'opacity-100 translate-y-0 scale-100'
-                : 'opacity-0 translate-y-4 scale-95',
-              'hover:opacity-100 hover:grayscale-0 hover:scale-110 hover:shadow-lg',
-              !prefersReducedMotion && 'opacity-60 grayscale'
+                ? "opacity-100 translate-y-0 scale-100"
+                : "opacity-0 translate-y-4 scale-95",
+              "hover:opacity-100 hover:grayscale-0 hover:scale-110 hover:shadow-lg",
+              !prefersReducedMotion && "opacity-60 grayscale"
             )}
             style={{
-              transitionDelay: prefersReducedMotion ? '0ms' : `${index * 100}ms`,
+              transitionDelay: prefersReducedMotion ? "0ms" : `${index * 100}ms`,
             }}
             role="listitem"
             aria-label={`${company.name} logo`}

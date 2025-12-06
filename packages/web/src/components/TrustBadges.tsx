@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from "react";
 
 export function TrustBadges() {
   const [isVisible, setIsVisible] = useState(false);
@@ -29,15 +29,14 @@ export function TrustBadges() {
   }, []);
 
   const badges = [
-    { name: 'SOC 2 Type II', icon: '🔒' },
-    { name: 'GDPR Compliant', icon: '🛡️' },
-    { name: 'PCI-DSS Ready', icon: '💳' },
-    { name: '99.99% Uptime', icon: '⚡' },
+    { name: "SOC 2 Type II", icon: "🔒" },
+    { name: "GDPR Compliant", icon: "🛡️" },
+    { name: "PCI-DSS Ready", icon: "💳" },
+    { name: "99.99% Uptime", icon: "⚡" },
   ];
 
   const prefersReducedMotion =
-    typeof window !== 'undefined' &&
-    window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   return (
     <div
@@ -52,14 +51,13 @@ export function TrustBadges() {
           className={`
             flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 shadow-sm
             transition-all duration-500
-            ${isVisible
-              ? 'opacity-100 translate-y-0 scale-100'
-              : 'opacity-0 translate-y-4 scale-95'
+            ${
+              isVisible ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-4 scale-95"
             }
             hover:shadow-lg hover:scale-105
           `}
           style={{
-            transitionDelay: prefersReducedMotion ? '0ms' : `${index * 100}ms`,
+            transitionDelay: prefersReducedMotion ? "0ms" : `${index * 100}ms`,
           }}
           role="listitem"
           aria-label={badge.name}

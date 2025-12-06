@@ -12,7 +12,7 @@ export interface LifecycleUser {
     lastName?: string;
     industry?: string;
     companyName?: string;
-    planType?: 'free' | 'trial' | 'commercial' | 'enterprise';
+    planType?: "free" | "trial" | "commercial" | "enterprise";
 }
 /**
  * Trial data

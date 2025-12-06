@@ -1,14 +1,20 @@
 /**
  * Analytics Abstraction Layer
- * 
+ *
  * Unified interface for analytics providers with support for multiple providers.
  */
 
-import type { AnalyticsProvider, AnalyticsProviderType, PageViewProperties, EventProperties, ErrorMetadata } from './types';
-import { vercelProvider } from './providers/vercel';
-import { createGA4Provider } from './providers/ga4';
-import { createPostHogProvider } from './providers/posthog';
-import { createCustomProvider } from './providers/custom';
+import type {
+  AnalyticsProvider,
+  AnalyticsProviderType,
+  PageViewProperties,
+  EventProperties,
+  ErrorMetadata,
+} from "./types";
+import { vercelProvider } from "./providers/vercel";
+import { createGA4Provider } from "./providers/ga4";
+import { createPostHogProvider } from "./providers/posthog";
+import { createCustomProvider } from "./providers/custom";
 
 class Analytics {
   private providers: AnalyticsProvider[] = [];
@@ -18,7 +24,7 @@ class Analytics {
    * Initialize analytics with configured providers
    */
   init() {
-    if (this.initialized || typeof window === 'undefined') return;
+    if (this.initialized || typeof window === "undefined") return;
 
     const providerTypes = this.getProviderTypes();
 
@@ -27,22 +33,22 @@ class Analytics {
         let provider: AnalyticsProvider | null = null;
 
         switch (type) {
-          case 'vercel':
+          case "vercel":
             provider = vercelProvider;
             break;
-          case 'ga4':
+          case "ga4":
             provider = createGA4Provider();
             break;
-          case 'posthog':
+          case "posthog":
             provider = createPostHogProvider();
             break;
-          case 'custom': {
+          case "custom": {
             const customEndpoint = process.env.NEXT_PUBLIC_ANALYTICS_ENDPOINT;
             if (customEndpoint) {
               provider = createCustomProvider({
                 endpoint: customEndpoint,
                 headers: {
-                  Authorization: `Bearer ${process.env.NEXT_PUBLIC_ANALYTICS_TOKEN || ''}`,
+                  Authorization: `Bearer ${process.env.NEXT_PUBLIC_ANALYTICS_TOKEN || ""}`,
                 },
               });
             }
@@ -66,11 +72,11 @@ class Analytics {
    * Get enabled provider types from environment
    */
   private getProviderTypes(): AnalyticsProviderType[] {
-    const providersEnv = process.env.NEXT_PUBLIC_ANALYTICS_PROVIDERS || 'vercel';
-    const providers = providersEnv.split(',').map((p) => p.trim()) as AnalyticsProviderType[];
-    
+    const providersEnv = process.env.NEXT_PUBLIC_ANALYTICS_PROVIDERS || "vercel";
+    const providers = providersEnv.split(",").map((p) => p.trim()) as AnalyticsProviderType[];
+
     // Filter out 'none'
-    return providers.filter((p) => p !== 'none');
+    return providers.filter((p) => p !== "none");
   }
 
   /**
@@ -83,7 +89,7 @@ class Analytics {
       try {
         provider.trackPageView(route, properties);
       } catch (error) {
-        console.warn('Failed to track page view:', error);
+        console.warn("Failed to track page view:", error);
       }
     });
   }
@@ -98,7 +104,7 @@ class Analytics {
       try {
         provider.trackEvent(name, payload);
       } catch (error) {
-        console.warn('Failed to track event:', error);
+        console.warn("Failed to track event:", error);
       }
     });
   }
@@ -110,10 +116,10 @@ class Analytics {
     if (!this.initialized) this.init();
 
     const errorMetadata: ErrorMetadata = {
-      message: typeof error === 'string' ? error : error.message,
-      ...(typeof error !== 'string' && error.stack ? { stack: error.stack } : {}),
-      ...(typeof window !== 'undefined' ? { url: window.location.href } : {}),
-      ...(typeof navigator !== 'undefined' ? { userAgent: navigator.userAgent } : {}),
+      message: typeof error === "string" ? error : error.message,
+      ...(typeof error !== "string" && error.stack ? { stack: error.stack } : {}),
+      ...(typeof window !== "undefined" ? { url: window.location.href } : {}),
+      ...(typeof navigator !== "undefined" ? { userAgent: navigator.userAgent } : {}),
       timestamp: new Date().toISOString(),
       ...metadata,
     };
@@ -122,7 +128,7 @@ class Analytics {
       try {
         provider.trackError(error, errorMetadata);
       } catch (err) {
-        console.warn('Failed to track error:', err);
+        console.warn("Failed to track error:", err);
       }
     });
   }
@@ -137,7 +143,7 @@ class Analytics {
       try {
         provider.identify?.(userId, traits);
       } catch (error) {
-        console.warn('Failed to identify user:', error);
+        console.warn("Failed to identify user:", error);
       }
     });
   }
@@ -152,7 +158,7 @@ class Analytics {
       try {
         provider.setUserProperties?.(properties);
       } catch (error) {
-        console.warn('Failed to set user properties:', error);
+        console.warn("Failed to set user properties:", error);
       }
     });
   }
@@ -166,7 +172,7 @@ class Analytics {
         try {
           return provider.flush?.();
         } catch (error) {
-          console.warn('Failed to flush analytics:', error);
+          console.warn("Failed to flush analytics:", error);
         }
       })
     );
@@ -187,9 +193,15 @@ class Analytics {
 export const analytics = new Analytics();
 
 // Initialize on client-side
-if (typeof window !== 'undefined') {
+if (typeof window !== "undefined") {
   analytics.init();
 }
 
 // Export types
-export type { AnalyticsProvider, AnalyticsProviderType, PageViewProperties, EventProperties, ErrorMetadata };
+export type {
+  AnalyticsProvider,
+  AnalyticsProviderType,
+  PageViewProperties,
+  EventProperties,
+  ErrorMetadata,
+};

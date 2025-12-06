@@ -65,11 +65,11 @@ function createEmailData(base) {
  */
 async function sendTrialWelcomeEmail(user, trialData) {
     try {
-        const firstName = user.firstName || user.email.split('@')[0] || 'User';
+        const firstName = user.firstName || user.email.split("@")[0] || "User";
         const trialEnd = new Date(trialData.trialEndDate);
         const chargeDate = isNaN(trialEnd.getTime())
             ? undefined
-            : new Date(trialEnd.getTime() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+            : new Date(trialEnd.getTime() + 30 * 24 * 60 * 60 * 1000).toISOString().split("T")[0];
         const trial = {
             trial_end_date: trialData.trialEndDate,
             trial_start_date: trialData.trialStartDate,
@@ -84,22 +84,22 @@ async function sendTrialWelcomeEmail(user, trialData) {
                 email: user.email,
                 ...(user.industry && { industry: user.industry }),
                 ...(user.companyName && { company_name: user.companyName }),
-                plan_type: user.planType || 'trial',
+                plan_type: user.planType || "trial",
             },
             trial,
         });
-        const html = await (0, email_templates_1.renderEmailTemplate)('trial_welcome', data);
+        const html = await (0, email_templates_1.renderEmailTemplate)("trial_welcome", data);
         const text = (0, email_templates_1.generatePlainText)(html);
         return (0, email_1.sendEmail)({
             to: user.email,
-            subject: 'Welcome to Settler! 🎉',
+            subject: "Welcome to Settler! 🎉",
             html,
             text,
-            tags: [{ name: 'email_type', value: 'trial_welcome' }],
+            tags: [{ name: "email_type", value: "trial_welcome" }],
         });
     }
     catch (error) {
-        (0, logger_1.logError)('Failed to send trial welcome email', error, { user: user.email });
+        (0, logger_1.logError)("Failed to send trial welcome email", error, { user: user.email });
         return null;
     }
 }
@@ -108,7 +108,7 @@ async function sendTrialWelcomeEmail(user, trialData) {
  */
 async function sendTrialValueEmail(user, trialData, reconciliationData) {
     try {
-        const firstName = user.firstName || user.email.split('@')[0] || 'User';
+        const firstName = user.firstName || user.email.split("@")[0] || "User";
         const data = createEmailData({
             user: {
                 first_name: firstName,
@@ -125,18 +125,18 @@ async function sendTrialValueEmail(user, trialData, reconciliationData) {
                 report_url: reconciliationData.reportUrl,
             },
         });
-        const html = await (0, email_templates_1.renderEmailTemplate)('trial_day2', data);
+        const html = await (0, email_templates_1.renderEmailTemplate)("trial_day2", data);
         const text = (0, email_templates_1.generatePlainText)(html);
         return (0, email_1.sendEmail)({
             to: user.email,
-            subject: 'Your first reconciliation is ready! 🎉',
+            subject: "Your first reconciliation is ready! 🎉",
             html,
             text,
-            tags: [{ name: 'email_type', value: 'trial_value' }],
+            tags: [{ name: "email_type", value: "trial_value" }],
         });
     }
     catch (error) {
-        (0, logger_1.logError)('Failed to send trial value email', error, { user: user.email });
+        (0, logger_1.logError)("Failed to send trial value email", error, { user: user.email });
         return null;
     }
 }
@@ -145,7 +145,7 @@ async function sendTrialValueEmail(user, trialData, reconciliationData) {
  */
 async function sendTrialGatedFeaturesEmail(user, trialData) {
     try {
-        const firstName = user.firstName || user.email.split('@')[0] || 'User';
+        const firstName = user.firstName || user.email.split("@")[0] || "User";
         const data = {
             user: {
                 first_name: firstName,
@@ -155,18 +155,18 @@ async function sendTrialGatedFeaturesEmail(user, trialData) {
                 days_remaining: trialData.daysRemaining,
             },
         };
-        const html = await (0, email_templates_1.renderEmailTemplate)('trial_day7', data);
+        const html = await (0, email_templates_1.renderEmailTemplate)("trial_day7", data);
         const text = (0, email_templates_1.generatePlainText)(html);
         return (0, email_1.sendEmail)({
             to: user.email,
-            subject: 'Unlock advanced features (still free for 23 days)',
+            subject: "Unlock advanced features (still free for 23 days)",
             html,
             text,
-            tags: [{ name: 'email_type', value: 'trial_gated_features' }],
+            tags: [{ name: "email_type", value: "trial_gated_features" }],
         });
     }
     catch (error) {
-        (0, logger_1.logError)('Failed to send trial gated features email', error, { user: user.email });
+        (0, logger_1.logError)("Failed to send trial gated features email", error, { user: user.email });
         return null;
     }
 }
@@ -176,7 +176,7 @@ async function sendTrialGatedFeaturesEmail(user, trialData) {
 async function sendTrialCaseStudyEmail(user, trialData, caseStudy) {
     try {
         const urls = (0, email_templates_1.getDefaultUrls)();
-        const firstName = user.firstName || user.email.split('@')[0] || 'User';
+        const firstName = user.firstName || user.email.split("@")[0] || "User";
         const data = {
             user: {
                 first_name: firstName,
@@ -189,21 +189,21 @@ async function sendTrialCaseStudyEmail(user, trialData, caseStudy) {
             case_study: {
                 similar_company: caseStudy.companyName,
                 case_study_url: caseStudy.caseStudyUrl,
-                case_studies_url: `${urls?.docs_url || 'https://docs.settler.dev'}/case-studies`,
+                case_studies_url: `${urls?.docs_url || "https://docs.settler.dev"}/case-studies`,
             },
         };
-        const html = await (0, email_templates_1.renderEmailTemplate)('trial_day14', data);
+        const html = await (0, email_templates_1.renderEmailTemplate)("trial_day14", data);
         const text = (0, email_templates_1.generatePlainText)(html);
         return (0, email_1.sendEmail)({
             to: user.email,
             subject: `How ${caseStudy.companyName} saved 15 hours/week with Settler`,
             html,
             text,
-            tags: [{ name: 'email_type', value: 'trial_case_study' }],
+            tags: [{ name: "email_type", value: "trial_case_study" }],
         });
     }
     catch (error) {
-        (0, logger_1.logError)('Failed to send trial case study email', error, { user: user.email });
+        (0, logger_1.logError)("Failed to send trial case study email", error, { user: user.email });
         return null;
     }
 }
@@ -212,7 +212,7 @@ async function sendTrialCaseStudyEmail(user, trialData, caseStudy) {
  */
 async function sendTrialComparisonEmail(user, trialData) {
     try {
-        const firstName = user.firstName || user.email.split('@')[0] || 'User';
+        const firstName = user.firstName || user.email.split("@")[0] || "User";
         const data = {
             user: {
                 first_name: firstName,
@@ -222,18 +222,18 @@ async function sendTrialComparisonEmail(user, trialData) {
                 days_remaining: trialData.daysRemaining,
             },
         };
-        const html = await (0, email_templates_1.renderEmailTemplate)('trial_day21', data);
+        const html = await (0, email_templates_1.renderEmailTemplate)("trial_day21", data);
         const text = (0, email_templates_1.generatePlainText)(html);
         return (0, email_1.sendEmail)({
             to: user.email,
             subject: "Here's what you're missing (9 days left)",
             html,
             text,
-            tags: [{ name: 'email_type', value: 'trial_comparison' }],
+            tags: [{ name: "email_type", value: "trial_comparison" }],
         });
     }
     catch (error) {
-        (0, logger_1.logError)('Failed to send trial comparison email', error, { user: user.email });
+        (0, logger_1.logError)("Failed to send trial comparison email", error, { user: user.email });
         return null;
     }
 }
@@ -242,7 +242,7 @@ async function sendTrialComparisonEmail(user, trialData) {
  */
 async function sendTrialUrgencyEmail(user, trialData, day) {
     try {
-        const firstName = user.firstName || user.email.split('@')[0] || 'User';
+        const firstName = user.firstName || user.email.split("@")[0] || "User";
         const data = {
             user: {
                 first_name: firstName,
@@ -252,7 +252,7 @@ async function sendTrialUrgencyEmail(user, trialData, day) {
                 const trialEnd = new Date(trialData.trialEndDate);
                 const chargeDate = isNaN(trialEnd.getTime())
                     ? undefined
-                    : new Date(trialEnd.getTime() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+                    : new Date(trialEnd.getTime() + 30 * 24 * 60 * 60 * 1000).toISOString().split("T")[0];
                 const trial = {
                     trial_end_date: trialData.trialEndDate,
                     days_remaining: trialData.daysRemaining,
@@ -267,20 +267,20 @@ async function sendTrialUrgencyEmail(user, trialData, day) {
         const html = await (0, email_templates_1.renderEmailTemplate)(templateName, data);
         const text = (0, email_templates_1.generatePlainText)(html);
         const subjects = {
-            27: '⏰ Your trial ends in 3 days',
-            28: 'Last chance: Trial ends tomorrow',
-            29: 'Final reminder: Trial ends today',
+            27: "⏰ Your trial ends in 3 days",
+            28: "Last chance: Trial ends tomorrow",
+            29: "Final reminder: Trial ends today",
         };
         return (0, email_1.sendEmail)({
             to: user.email,
             subject: subjects[day],
             html,
             text,
-            tags: [{ name: 'email_type', value: `trial_urgency_day${day}` }],
+            tags: [{ name: "email_type", value: `trial_urgency_day${day}` }],
         });
     }
     catch (error) {
-        (0, logger_1.logError)('Failed to send trial urgency email', error, { user: user.email, day });
+        (0, logger_1.logError)("Failed to send trial urgency email", error, { user: user.email, day });
         return null;
     }
 }
@@ -289,25 +289,25 @@ async function sendTrialUrgencyEmail(user, trialData, day) {
  */
 async function sendTrialEndedEmail(user) {
     try {
-        const firstName = user.firstName || user.email.split('@')[0] || 'User';
+        const firstName = user.firstName || user.email.split("@")[0] || "User";
         const data = {
             user: {
                 first_name: firstName,
                 email: user.email,
             },
         };
-        const html = await (0, email_templates_1.renderEmailTemplate)('trial_ended', data);
+        const html = await (0, email_templates_1.renderEmailTemplate)("trial_ended", data);
         const text = (0, email_templates_1.generatePlainText)(html);
         return (0, email_1.sendEmail)({
             to: user.email,
-            subject: 'Your trial has ended - Choose your plan',
+            subject: "Your trial has ended - Choose your plan",
             html,
             text,
-            tags: [{ name: 'email_type', value: 'trial_ended' }],
+            tags: [{ name: "email_type", value: "trial_ended" }],
         });
     }
     catch (error) {
-        (0, logger_1.logError)('Failed to send trial ended email', error, { user: user.email });
+        (0, logger_1.logError)("Failed to send trial ended email", error, { user: user.email });
         return null;
     }
 }
@@ -316,25 +316,25 @@ async function sendTrialEndedEmail(user) {
  */
 async function sendPaidWelcomeEmail(user) {
     try {
-        const firstName = user.firstName || user.email.split('@')[0] || 'User';
+        const firstName = user.firstName || user.email.split("@")[0] || "User";
         const data = {
             user: {
                 first_name: firstName,
                 email: user.email,
             },
         };
-        const html = await (0, email_templates_1.renderEmailTemplate)('paid_welcome', data);
+        const html = await (0, email_templates_1.renderEmailTemplate)("paid_welcome", data);
         const text = (0, email_templates_1.generatePlainText)(html);
         return (0, email_1.sendEmail)({
             to: user.email,
-            subject: 'Welcome to Commercial! 🎉',
+            subject: "Welcome to Commercial! 🎉",
             html,
             text,
-            tags: [{ name: 'email_type', value: 'paid_welcome' }],
+            tags: [{ name: "email_type", value: "paid_welcome" }],
         });
     }
     catch (error) {
-        (0, logger_1.logError)('Failed to send paid welcome email', error, { user: user.email });
+        (0, logger_1.logError)("Failed to send paid welcome email", error, { user: user.email });
         return null;
     }
 }
@@ -343,8 +343,8 @@ async function sendPaidWelcomeEmail(user) {
  */
 async function sendMonthlySummaryEmail(user, metrics) {
     try {
-        const month = new Date().toLocaleString('en-US', { month: 'long' });
-        const firstName = user.firstName || user.email.split('@')[0] || 'User';
+        const month = new Date().toLocaleString("en-US", { month: "long" });
+        const firstName = user.firstName || user.email.split("@")[0] || "User";
         const data = {
             user: {
                 first_name: firstName,
@@ -366,18 +366,18 @@ async function sendMonthlySummaryEmail(user, metrics) {
                 ...(metrics.recommendation2 && { recommendation_2: metrics.recommendation2 }),
             },
         };
-        const html = await (0, email_templates_1.renderEmailTemplate)('monthly_summary', data);
+        const html = await (0, email_templates_1.renderEmailTemplate)("monthly_summary", data);
         const text = (0, email_templates_1.generatePlainText)(html);
         return (0, email_1.sendEmail)({
             to: user.email,
-            subject: `${user.firstName || 'You'}, your ${month} summary`,
+            subject: `${user.firstName || "You"}, your ${month} summary`,
             html,
             text,
-            tags: [{ name: 'email_type', value: 'monthly_summary' }],
+            tags: [{ name: "email_type", value: "monthly_summary" }],
         });
     }
     catch (error) {
-        (0, logger_1.logError)('Failed to send monthly summary email', error, { user: user.email });
+        (0, logger_1.logError)("Failed to send monthly summary email", error, { user: user.email });
         return null;
     }
 }
@@ -386,25 +386,25 @@ async function sendMonthlySummaryEmail(user, metrics) {
  */
 async function sendLowActivityEmail(user) {
     try {
-        const firstName = user.firstName || user.email.split('@')[0] || 'User';
+        const firstName = user.firstName || user.email.split("@")[0] || "User";
         const data = {
             user: {
                 first_name: firstName,
                 email: user.email,
             },
         };
-        const html = await (0, email_templates_1.renderEmailTemplate)('low_activity', data);
+        const html = await (0, email_templates_1.renderEmailTemplate)("low_activity", data);
         const text = (0, email_templates_1.generatePlainText)(html);
         return (0, email_1.sendEmail)({
             to: user.email,
-            subject: `${user.firstName || 'We'} miss you`,
+            subject: `${user.firstName || "We"} miss you`,
             html,
             text,
-            tags: [{ name: 'email_type', value: 'low_activity' }],
+            tags: [{ name: "email_type", value: "low_activity" }],
         });
     }
     catch (error) {
-        (0, logger_1.logError)('Failed to send low activity email', error, { user: user.email });
+        (0, logger_1.logError)("Failed to send low activity email", error, { user: user.email });
         return null;
     }
 }

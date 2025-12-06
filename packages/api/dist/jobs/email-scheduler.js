@@ -23,7 +23,7 @@ function _calculateDaysRemaining(_trialEndDate) {
  */
 async function processTrialLifecycleEmails() {
     try {
-        (0, logger_1.logInfo)('Processing trial lifecycle emails');
+        (0, logger_1.logInfo)("Processing trial lifecycle emails");
         // In production, fetch users from database
         // For now, this is a placeholder structure
         // const users = await getTrialUsers();
@@ -43,14 +43,14 @@ async function processTrialLifecycleEmails() {
         //     trialEndDate: user.trialEndDate,
         //     daysRemaining: calculateDaysRemaining(user.trialEndDate),
         //   };
-        //   
+        //
         //   const lifecycleUser: LifecycleUser = {
         //     email: user.email,
         //     firstName: user.firstName,
         //     industry: user.industry,
         //     planType: 'trial',
         //   };
-        //   
+        //
         //   // Send appropriate email based on days remaining
         //   if (shouldSendTrialEmail(trialData.trialEndDate, 7)) {
         //     await sendTrialGatedFeaturesEmail(lifecycleUser, trialData);
@@ -71,10 +71,10 @@ async function processTrialLifecycleEmails() {
         //     await sendTrialEndedEmail(lifecycleUser);
         //   }
         // }
-        (0, logger_1.logInfo)('Trial lifecycle emails processed');
+        (0, logger_1.logInfo)("Trial lifecycle emails processed");
     }
     catch (error) {
-        (0, logger_1.logError)('Failed to process trial lifecycle emails', error);
+        (0, logger_1.logError)("Failed to process trial lifecycle emails", error);
     }
 }
 /**
@@ -83,7 +83,7 @@ async function processTrialLifecycleEmails() {
  */
 async function processMonthlySummaryEmails() {
     try {
-        (0, logger_1.logInfo)('Processing monthly summary emails');
+        (0, logger_1.logInfo)("Processing monthly summary emails");
         // In production, fetch paid users from database
         // For each user, calculate metrics and send email
         // Example:
@@ -92,10 +92,10 @@ async function processMonthlySummaryEmails() {
         //   const metrics = await calculateUserMetrics(user.id, lastMonth);
         //   await sendMonthlySummaryEmail(user, metrics);
         // }
-        (0, logger_1.logInfo)('Monthly summary emails processed');
+        (0, logger_1.logInfo)("Monthly summary emails processed");
     }
     catch (error) {
-        (0, logger_1.logError)('Failed to process monthly summary emails', error);
+        (0, logger_1.logError)("Failed to process monthly summary emails", error);
     }
 }
 /**
@@ -104,16 +104,16 @@ async function processMonthlySummaryEmails() {
  */
 async function processLowActivityEmails() {
     try {
-        (0, logger_1.logInfo)('Processing low activity emails');
+        (0, logger_1.logInfo)("Processing low activity emails");
         // In production, find users inactive for 7+ days
         // const inactiveUsers = await getInactiveUsers(7);
         // for (const user of inactiveUsers) {
         //   await sendLowActivityEmail(user);
         // }
-        (0, logger_1.logInfo)('Low activity emails processed');
+        (0, logger_1.logInfo)("Low activity emails processed");
     }
     catch (error) {
-        (0, logger_1.logError)('Failed to process low activity emails', error);
+        (0, logger_1.logError)("Failed to process low activity emails", error);
     }
 }
 /**
@@ -130,6 +130,6 @@ function setupEmailScheduler() {
     // cron.schedule('0 9 * * *', processTrialLifecycleEmails); // Daily at 9 AM
     // cron.schedule('0 9 1 * *', processMonthlySummaryEmails); // 1st of month at 9 AM
     // cron.schedule('0 10 * * *', processLowActivityEmails); // Daily at 10 AM
-    (0, logger_1.logInfo)('Email scheduler setup complete');
+    (0, logger_1.logInfo)("Email scheduler setup complete");
 }
 //# sourceMappingURL=email-scheduler.js.map

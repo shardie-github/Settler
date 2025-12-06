@@ -23,6 +23,7 @@ This document serves as a comprehensive index of all materials required for Seed
 ### 1.1 Corporate Formation & Structure
 
 **Required Documents:**
+
 - [ ] Certificate of Incorporation (Delaware C-Corp)
 - [ ] Certificate of Good Standing (current, within 30 days)
 - [ ] Bylaws (current version)
@@ -41,6 +42,7 @@ This document serves as a comprehensive index of all materials required for Seed
 ### 1.2 Capitalization Table
 
 **Required Documents:**
+
 - [ ] Current cap table (fully diluted, showing all equity holders)
 - [ ] Cap table history (all previous rounds, if any)
 - [ ] Stock option pool details (authorized, issued, reserved, available)
@@ -53,6 +55,7 @@ This document serves as a comprehensive index of all materials required for Seed
 **Last Updated:** [Date]
 
 **Key Metrics:**
+
 - Total shares outstanding: [Number]
 - Option pool size: [Number] shares ([X]%)
 - Fully diluted ownership: [Breakdown by holder]
@@ -62,6 +65,7 @@ This document serves as a comprehensive index of all materials required for Seed
 ### 1.3 Intellectual Property (IP)
 
 **Required Documents:**
+
 - [ ] IP Assignment Agreements (all founders and employees)
 - [ ] Patent applications (if any)
 - [ ] Trademark registrations and applications
@@ -76,6 +80,7 @@ This document serves as a comprehensive index of all materials required for Seed
 **Last Updated:** [Date]
 
 **IP Inventory:**
+
 - Code repositories: [List with ownership verification]
 - Design assets: [List with ownership verification]
 - Documentation: [List with ownership verification]
@@ -86,6 +91,7 @@ This document serves as a comprehensive index of all materials required for Seed
 ### 1.4 Employment & Contractor Agreements
 
 **Required Documents:**
+
 - [ ] Employment agreements (all employees, including founders)
 - [ ] Contractor/consultant agreements
 - [ ] Non-compete agreements (if applicable)
@@ -100,6 +106,7 @@ This document serves as a comprehensive index of all materials required for Seed
 **Last Updated:** [Date]
 
 **Key Terms:**
+
 - Founder vesting: 4-year vest, 1-year cliff (standard)
 - Employee vesting: [Standard terms]
 - Non-compete: [Yes/No, applicable states]
@@ -109,6 +116,7 @@ This document serves as a comprehensive index of all materials required for Seed
 ### 1.5 Advisory Board & Key Relationships
 
 **Required Documents:**
+
 - [ ] Advisory board agreements (all advisors)
 - [ ] Advisor equity grants (if applicable)
 - [ ] Strategic partnership agreements
@@ -120,6 +128,7 @@ This document serves as a comprehensive index of all materials required for Seed
 **Last Updated:** [Date]
 
 **Advisory Board:**
+
 - [Advisor 1]: [Name, Title, Company] - [Domain expertise]
 - [Advisor 2]: [Name, Title, Company] - [Domain expertise]
 - [Advisor 3]: [Name, Title, Company] - [Domain expertise]
@@ -129,6 +138,7 @@ This document serves as a comprehensive index of all materials required for Seed
 ### 1.6 Legal Compliance & Regulatory
 
 **Required Documents:**
+
 - [ ] Business licenses and permits
 - [ ] Tax identification numbers (EIN, state tax IDs)
 - [ ] Compliance certifications (SOC 2, GDPR, PCI-DSS status)
@@ -143,6 +153,7 @@ This document serves as a comprehensive index of all materials required for Seed
 **Last Updated:** [Date]
 
 **Compliance Status:**
+
 - SOC 2 Type II: [ ] In Progress (target: Month 9) | [ ] Not Started
 - GDPR: [ ] Compliant | [ ] In Progress
 - PCI-DSS: [ ] Compliant | [ ] In Progress
@@ -155,6 +166,7 @@ This document serves as a comprehensive index of all materials required for Seed
 ### 2.1 Historical Financials
 
 **Required Documents:**
+
 - [ ] Financial statements (P&L, Balance Sheet, Cash Flow) - all periods since inception
 - [ ] Bank statements (last 12 months)
 - [ ] Credit card statements (business accounts, last 12 months)
@@ -167,6 +179,7 @@ This document serves as a comprehensive index of all materials required for Seed
 **Last Updated:** [Date]
 
 **Financial Summary:**
+
 - Total revenue (YTD): $[Amount]
 - Total expenses (YTD): $[Amount]
 - Current cash balance: $[Amount]
@@ -178,6 +191,7 @@ This document serves as a comprehensive index of all materials required for Seed
 ### 2.2 Financial Projections
 
 **Required Documents:**
+
 - [ ] 3-year financial model (bottom-up, with assumptions)
 - [ ] Monthly cash flow projections (next 24 months)
 - [ ] Scenario analysis (Base Case, Best Case, Worst Case)
@@ -190,6 +204,7 @@ This document serves as a comprehensive index of all materials required for Seed
 **Last Updated:** [Date]
 
 **Key Assumptions:**
+
 - Average customer value: $[Amount]/month
 - Customer acquisition cost (CAC): $[Amount]
 - Lifetime value (LTV): $[Amount]
@@ -202,6 +217,7 @@ This document serves as a comprehensive index of all materials required for Seed
 ### 2.3 Accounting & Tax
 
 **Required Documents:**
+
 - [ ] Chart of accounts
 - [ ] Accounting policies and procedures
 - [ ] Tax returns (all years)
@@ -221,6 +237,7 @@ This document serves as a comprehensive index of all materials required for Seed
 ### 3.1 Technical Architecture
 
 **Required Documents:**
+
 - [ ] System architecture diagram
 - [ ] Infrastructure documentation (hosting, CDN, databases)
 - [ ] Security architecture and threat model
@@ -234,6 +251,7 @@ This document serves as a comprehensive index of all materials required for Seed
 **Last Updated:** [Date]
 
 **Technical Stack:**
+
 - Backend: [List]
 - Frontend: [List]
 - Database: [List]
@@ -245,6 +263,7 @@ This document serves as a comprehensive index of all materials required for Seed
 ### 3.2 Code Quality & Security
 
 **Required Documents:**
+
 - [ ] Code quality report (SonarQube, CodeClimate, etc.)
 - [ ] Security audit report (OWASP Top 10 compliance)
 - [ ] Penetration testing report (if completed)
@@ -258,6 +277,7 @@ This document serves as a comprehensive index of all materials required for Seed
 **Last Updated:** [Date]
 
 **Quality Metrics:**
+
 - Code coverage: [X]%
 - Security vulnerabilities: [Number] (High: [X], Medium: [X], Low: [X])
 - Technical debt: [Assessment]
@@ -267,6 +287,7 @@ This document serves as a comprehensive index of all materials required for Seed
 ### 3.3 Product Documentation
 
 **Required Documents:**
+
 - [ ] Product roadmap (18-24 months)
 - [ ] Feature specifications (core features)
 - [ ] User documentation and help center
@@ -284,6 +305,7 @@ This document serves as a comprehensive index of all materials required for Seed
 ### 3.4 Data & Privacy
 
 **Required Documents:**
+
 - [ ] Data privacy policy
 - [ ] Data processing agreements (templates)
 - [ ] GDPR compliance documentation
@@ -302,6 +324,7 @@ This document serves as a comprehensive index of all materials required for Seed
 ### 4.1 Market Analysis
 
 **Required Documents:**
+
 - [ ] Market sizing analysis (TAM/SAM/SOM)
 - [ ] Competitive analysis (detailed competitive matrix)
 - [ ] Industry research reports (third-party sources)
@@ -313,6 +336,7 @@ This document serves as a comprehensive index of all materials required for Seed
 **Last Updated:** [Date]
 
 **Market Metrics:**
+
 - TAM: $[Amount] (Total Addressable Market)
 - SAM: $[Amount] (Serviceable Addressable Market)
 - SOM: $[Amount] (Serviceable Obtainable Market)
@@ -323,6 +347,7 @@ This document serves as a comprehensive index of all materials required for Seed
 ### 4.2 Go-to-Market Strategy
 
 **Required Documents:**
+
 - [ ] GTM plan (18-24 months)
 - [ ] Sales process documentation
 - [ ] Marketing strategy and channels
@@ -339,6 +364,7 @@ This document serves as a comprehensive index of all materials required for Seed
 ### 4.3 Traction & Customer Validation
 
 **Required Documents:**
+
 - [ ] Customer list (with revenue, if applicable)
 - [ ] Customer testimonials and case studies
 - [ ] Letters of Intent (LOIs) from potential customers
@@ -352,6 +378,7 @@ This document serves as a comprehensive index of all materials required for Seed
 **Last Updated:** [Date]
 
 **Traction Metrics:**
+
 - Total users: [Number]
 - Paying customers: [Number]
 - MRR: $[Amount]
@@ -364,6 +391,7 @@ This document serves as a comprehensive index of all materials required for Seed
 ### 4.4 Team & Hiring
 
 **Required Documents:**
+
 - [ ] Team bios and resumes (all employees)
 - [ ] Organizational chart
 - [ ] 18-Month Post-Funding Hiring Roadmap (see separate document)
@@ -376,6 +404,7 @@ This document serves as a comprehensive index of all materials required for Seed
 **Last Updated:** [Date]
 
 **Current Team:**
+
 - [Founder 1]: [Name, Title] - [Background]
 - [Founder 2]: [Name, Title] - [Background]
 - [Employee 1]: [Name, Title] - [Background]
@@ -388,6 +417,7 @@ This document serves as a comprehensive index of all materials required for Seed
 ### 5.1 Pitch Materials
 
 **Required Documents:**
+
 - [ ] Seed Round Pitch Deck (see separate document)
 - [ ] Executive summary (1-2 page)
 - [ ] Product demo video
@@ -403,6 +433,7 @@ This document serves as a comprehensive index of all materials required for Seed
 ### 5.2 Term Sheet & Legal
 
 **Required Documents:**
+
 - [ ] Term sheet (when received)
 - [ ] Legal opinion (from company counsel)
 - [ ] Investor rights agreement (template)
@@ -420,6 +451,7 @@ This document serves as a comprehensive index of all materials required for Seed
 ### 6.1 Operations & Processes
 
 **Required Documents:**
+
 - [ ] Standard Operating Procedures (SOPs) - 5 core procedures
   - [ ] Sales SOP
   - [ ] Customer Success SOP
@@ -439,6 +471,7 @@ This document serves as a comprehensive index of all materials required for Seed
 ### 6.2 Metrics & Reporting
 
 **Required Documents:**
+
 - [ ] Key Performance Indicators (KPIs) dashboard
 - [ ] Unit economics dashboard (LTV:CAC, NRR, Churn)
 - [ ] Monthly investor update template
@@ -449,6 +482,7 @@ This document serves as a comprehensive index of all materials required for Seed
 **Last Updated:** [Date]
 
 **Key Metrics:**
+
 - MRR: $[Amount]
 - ARR: $[Amount]
 - LTV:CAC: [X]:1
@@ -463,6 +497,7 @@ This document serves as a comprehensive index of all materials required for Seed
 ### 7.1 Risk Assessment
 
 **Required Documents:**
+
 - [ ] Risk register (comprehensive risk matrix)
 - [ ] Risk mitigation plans
 - [ ] Business continuity plan
@@ -474,6 +509,7 @@ This document serves as a comprehensive index of all materials required for Seed
 **Last Updated:** [Date]
 
 **Key Risks Identified:**
+
 - [Risk 1]: [Description] - [Mitigation]
 - [Risk 2]: [Description] - [Mitigation]
 - [Risk 3]: [Description] - [Mitigation]
@@ -483,6 +519,7 @@ This document serves as a comprehensive index of all materials required for Seed
 ## Document Checklist Summary
 
 ### Overall Status
+
 - **Corporate & Legal:** [ ] Complete | [ ] In Progress | [ ] Not Started
 - **Financial:** [ ] Complete | [ ] In Progress | [ ] Not Started
 - **Technical & Product:** [ ] Complete | [ ] In Progress | [ ] Not Started
@@ -492,6 +529,7 @@ This document serves as a comprehensive index of all materials required for Seed
 - **Risk Management:** [ ] Complete | [ ] In Progress | [ ] Not Started
 
 ### Critical Path Items (Must Complete Before Fundraising)
+
 1. [ ] Corporate formation (Delaware C-Corp)
 2. [ ] Cap table finalized
 3. [ ] IP assignments complete (all founders/employees)
@@ -505,12 +543,14 @@ This document serves as a comprehensive index of all materials required for Seed
 ## VDR Access Instructions
 
 **For Investors:**
+
 1. Request VDR access via [email/contact]
 2. Sign NDA (if not already executed)
 3. Receive VDR link and credentials
 4. Access expires [X] days after term sheet expiration (if not executed)
 
 **For Company:**
+
 - Maintain audit log of all VDR access
 - Update documents as they become available
 - Notify investors of significant updates
@@ -521,24 +561,28 @@ This document serves as a comprehensive index of all materials required for Seed
 ## Red Flag Mitigation Checklist
 
 ### Financial Red Flags
+
 - [ ] Transparent about burn rate and runway
 - [ ] Clear path to positive unit economics documented
 - [ ] All financial assumptions validated and sourced
 - [ ] No undisclosed liabilities or obligations
 
 ### Technical Red Flags
+
 - [ ] Security audit complete (or in progress with timeline)
 - [ ] Tech debt management plan documented
 - [ ] Clear roadmap for future security certifications (SOC 2)
 - [ ] Code quality metrics meet industry standards
 
 ### Legal Red Flags
+
 - [ ] Clean title for all IP (no disputes)
 - [ ] No founder non-competes or legal conflicts
 - [ ] All employment agreements in place
 - [ ] No pending litigation or regulatory issues
 
 ### Market Red Flags
+
 - [ ] Valuation based on validated traction, not hype
 - [ ] Clear market opportunity (TAM >$1B)
 - [ ] Defensible competitive position
@@ -561,4 +605,4 @@ This document serves as a comprehensive index of all materials required for Seed
 
 ---
 
-*This index should be updated regularly as documents are completed and added to the VDR. All team members should be aware of their responsibilities for document preparation and updates.*
+_This index should be updated regularly as documents are completed and added to the VDR. All team members should be aware of their responsibilities for document preparation and updates._

@@ -5,9 +5,11 @@
 The following GitHub Actions workflows have been created to automatically handle migrations and setup when PRs are merged to main:
 
 ### 1. `post-merge-validation.yml`
+
 **Purpose:** Comprehensive validation and automated migrations
 
 **Features:**
+
 - Validates environment schema
 - Type checks, lints, formats code
 - Builds application
@@ -18,9 +20,11 @@ The following GitHub Actions workflows have been created to automatically handle
 **Triggers:** Push to main
 
 ### 2. `auto-migrate-on-merge.yml`
+
 **Purpose:** Detect and run migrations automatically
 
 **Features:**
+
 - Detects migration files in PR
 - Automatically runs migrations if detected
 - Creates migration summary
@@ -28,9 +32,11 @@ The following GitHub Actions workflows have been created to automatically handle
 **Triggers:** PR merged to main
 
 ### 3. `migration-safety-check.yml`
+
 **Purpose:** Safety checks for migration files in PRs
 
 **Features:**
+
 - Checks migration syntax
 - Tests migrations on clean database
 - Verifies rollback capability
@@ -38,9 +44,11 @@ The following GitHub Actions workflows have been created to automatically handle
 **Triggers:** PR with migration files
 
 ### 4. `deploy-production.yml` (Enhanced)
+
 **Purpose:** Production deployment with migrations
 
 **Features:**
+
 - Runs tests
 - Builds application
 - **Runs database migrations**
@@ -66,11 +74,13 @@ The following GitHub Actions workflows have been created to automatically handle
 Go to **Settings → Secrets and variables → Actions** and add:
 
 **Required:**
+
 - `DATABASE_URL` - Production database
 - `JWT_SECRET` - Production JWT secret
 - `ENCRYPTION_KEY` - Production encryption key
 
 **Optional:**
+
 - `VERCEL_TOKEN`, `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID` - For Vercel deployment
 - `SNYK_TOKEN` - For security scanning
 
@@ -85,13 +95,13 @@ Go to **Settings → Secrets and variables → Actions** and add:
 
 When a PR is merged to main:
 
-1. **Validation runs (type check, lint, format, build)
-2.Migration detection checks for new migration files
-3.If migrations found:
+1. \*\*Validation runs (type check, lint, format, build)
+   2.Migration detection checks for new migration files
+   3.If migrations found:
    - Staging migrations run automatically
    - Production migrations require approval
-4.Deployment happens automatically
-5.Health checks verify everything works
+     4.Deployment happens automatically
+     5.Health checks verify everything works
 
 ## 🎯 Key Features
 
@@ -110,6 +120,7 @@ When a PR is merged to main:
 ## 🚀 Ready to Use
 
 Once GitHub environments and secrets are configured, the workflows will automatically:
+
 - Run migrations when PRs with migration files are merged
 - Deploy to production
 - Verify everything works

@@ -22,6 +22,7 @@
 ## ✅ Feature Consistency
 
 ### OSS Features (Free)
+
 - [ ] Core protocol types
 - [ ] Basic components (Dashboard, TransactionTable, ExceptionTable, MetricCard, RuleSet, MatchRule)
 - [ ] Config compiler
@@ -32,6 +33,7 @@
 - [ ] Testing utilities
 
 ### Commercial Features ($99/month)
+
 - [ ] MCP Server Integration
 - [ ] Shopify App Integration
 - [ ] Stripe Connect Integration
@@ -42,6 +44,7 @@
 - [ ] Advanced Export
 
 ### Enterprise Features (Custom)
+
 - [ ] SSO Integration
 - [ ] RBAC
 - [ ] Custom Integrations
@@ -91,6 +94,7 @@
 ## 📋 Files to Check
 
 ### Root Level
+
 - [ ] README.md
 - [ ] BUSINESS_MODEL.md
 - [ ] SALES_FUNNEL.md
@@ -98,14 +102,17 @@
 - [ ] DOCUMENTATION_INDEX.md
 
 ### Legal
+
 - [ ] LEGAL/TERMS_OF_SERVICE.md
 - [ ] LEGAL/COMMERCIAL_LICENSE.md
 - [ ] LEGAL/PRIVACY_POLICY.md
 
 ### Internal
+
 - [ ] INTERNAL/BUSINESS_STRATEGY.md
 
 ### React.Settler
+
 - [ ] packages/react-settler/README.md
 - [ ] packages/react-settler/docs/PRICING.md
 - [ ] packages/react-settler/docs/OSS_VS_COMMERCIAL.md
@@ -116,6 +123,7 @@
 - [ ] packages/react-settler/docs/ACCESSIBILITY.md
 
 ### Protocol
+
 - [ ] packages/protocol/README.md
 - [ ] packages/protocol/PROTOCOL.md
 

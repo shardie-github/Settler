@@ -3,11 +3,11 @@
  * Wires up event handlers to update projections
  */
 
-import { IEventBus } from '../../infrastructure/events/IEventBus';
-import { IEventStore } from '../../infrastructure/eventsourcing/EventStore';
-import { ReconciliationProjectionHandlers } from '../cqrs/projections/ReconciliationProjections';
-import { EventEnvelope } from '../../domain/eventsourcing/EventEnvelope';
-import { DomainEvent } from '../../domain/events/DomainEvent';
+import { IEventBus } from "../../infrastructure/events/IEventBus";
+import { IEventStore } from "../../infrastructure/eventsourcing/EventStore";
+import { ReconciliationProjectionHandlers } from "../cqrs/projections/ReconciliationProjections";
+import { EventEnvelope } from "../../domain/eventsourcing/EventEnvelope";
+import { DomainEvent } from "../../domain/events/DomainEvent";
 
 export class EventProjectionService {
   private projectionHandlers: ReconciliationProjectionHandlers;
@@ -22,13 +22,13 @@ export class EventProjectionService {
 
   private setupEventHandlers(): void {
     // Subscribe to domain events from event bus
-    this.eventBus.subscribe('reconciliation.started', async (event: DomainEvent) => {
+    this.eventBus.subscribe("reconciliation.started", async (event: DomainEvent) => {
       // Fetch full event from event store
       const events = await this.eventStore.getEvents(
         (event as any).reconciliationId,
-        'reconciliation'
+        "reconciliation"
       );
-      const startedEvent = events.find((e) => e.event_type === 'ReconciliationStarted');
+      const startedEvent = events.find((e) => e.event_type === "ReconciliationStarted");
       if (startedEvent) {
         await this.projectionHandlers.handleReconciliationStarted(event);
       }
@@ -43,25 +43,25 @@ export class EventProjectionService {
    */
   async processEvent(eventEnvelope: EventEnvelope): Promise<void> {
     switch (eventEnvelope.event_type) {
-      case 'ReconciliationStarted':
+      case "ReconciliationStarted":
         await this.projectionHandlers.handleReconciliationStarted(eventEnvelope as any);
         break;
-      case 'OrdersFetched':
+      case "OrdersFetched":
         await this.projectionHandlers.handleOrdersFetched(eventEnvelope);
         break;
-      case 'PaymentsFetched':
+      case "PaymentsFetched":
         await this.projectionHandlers.handlePaymentsFetched(eventEnvelope);
         break;
-      case 'RecordMatched':
+      case "RecordMatched":
         await this.projectionHandlers.handleRecordMatched(eventEnvelope);
         break;
-      case 'RecordUnmatched':
+      case "RecordUnmatched":
         await this.projectionHandlers.handleRecordUnmatched(eventEnvelope);
         break;
-      case 'ReconciliationCompleted':
+      case "ReconciliationCompleted":
         await this.projectionHandlers.handleReconciliationCompleted(eventEnvelope);
         break;
-      case 'ReconciliationFailed':
+      case "ReconciliationFailed":
         await this.projectionHandlers.handleReconciliationFailed(eventEnvelope);
         break;
     }

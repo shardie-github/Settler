@@ -32,14 +32,14 @@ function getCompressionRatio(originalType, quantizedType) {
  */
 function estimateAccuracyImpact(quantization) {
     switch (quantization) {
-        case 'fp32':
-            return 'low';
-        case 'fp16':
-            return 'low';
-        case 'int8':
-            return 'medium';
-        case 'int4':
-            return 'high';
+        case "fp32":
+            return "low";
+        case "fp16":
+            return "low";
+        case "int8":
+            return "medium";
+        case "int4":
+            return "high";
     }
 }
 //# sourceMappingURL=quantization.js.map

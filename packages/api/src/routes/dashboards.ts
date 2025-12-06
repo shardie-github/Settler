@@ -35,7 +35,9 @@ router.get(
         endDate?: string;
       };
 
-      const start = startDate ? new Date(startDate) : new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+      const start = startDate
+        ? new Date(startDate)
+        : new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
       const end = endDate ? new Date(endDate) : new Date();
 
       // Signup funnel
@@ -123,7 +125,7 @@ router.get(
             p75_hours: 0,
             p95_hours: 0,
           },
-          activationByChannel: activationByChannel.map(c => ({
+          activationByChannel: activationByChannel.map((c) => ({
             channel: c.channel,
             signups: parseInt(c.signups),
             activated: parseInt(c.activated),
@@ -132,7 +134,9 @@ router.get(
         },
       });
     } catch (error: unknown) {
-      handleRouteError(res, error, "Failed to get activation dashboard", 500, { userId: req.userId });
+      handleRouteError(res, error, "Failed to get activation dashboard", 500, {
+        userId: req.userId,
+      });
     }
   }
 );
@@ -150,7 +154,9 @@ router.get(
         endDate?: string;
       };
 
-      const start = startDate ? new Date(startDate) : new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+      const start = startDate
+        ? new Date(startDate)
+        : new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
       const end = endDate ? new Date(endDate) : new Date();
 
       // Reconciliation volume
@@ -228,22 +234,22 @@ router.get(
 
       res.json({
         data: {
-          reconciliationVolume: reconciliationVolume.map(v => ({
-            date: v.date.toISOString().split('T')[0],
+          reconciliationVolume: reconciliationVolume.map((v) => ({
+            date: v.date.toISOString().split("T")[0],
             count: parseInt(v.count),
             adapterCombination: v.adapter_combination,
           })),
-          accuracyTrends: accuracyTrends.map(t => ({
-            date: t.date.toISOString().split('T')[0],
+          accuracyTrends: accuracyTrends.map((t) => ({
+            date: t.date.toISOString().split("T")[0],
             avgAccuracy: t.avg_accuracy,
             jobType: t.job_type,
           })),
-          errorRate: errorRate.map(e => ({
+          errorRate: errorRate.map((e) => ({
             errorType: e.error_type,
             count: parseInt(e.count),
             percentage: e.percentage,
           })),
-          exceptionRate: exceptionRate.map(e => ({
+          exceptionRate: exceptionRate.map((e) => ({
             reason: e.reason,
             count: parseInt(e.count),
             percentage: e.percentage,
@@ -301,7 +307,9 @@ router.get(
         endDate?: string;
       };
 
-      const start = startDate ? new Date(startDate) : new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+      const start = startDate
+        ? new Date(startDate)
+        : new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
       const end = endDate ? new Date(endDate) : new Date();
 
       // Support ticket volume (if tracking)
@@ -341,8 +349,8 @@ router.get(
 
       res.json({
         data: {
-          ticketVolume: ticketVolume.map(t => ({
-            date: t.date.toISOString().split('T')[0],
+          ticketVolume: ticketVolume.map((t) => ({
+            date: t.date.toISOString().split("T")[0],
             category: t.category,
             count: parseInt(t.count),
           })),

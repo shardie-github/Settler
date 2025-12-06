@@ -18,15 +18,15 @@ class ShopifyStripeReconciliationSaga {
         this.shopifyAdapter = shopifyAdapter;
         this.stripeAdapter = stripeAdapter;
         // Initialize circuit breakers
-        this.shopifyCircuitBreaker = (0, circuit_breaker_1.createCircuitBreaker)(async (options) => this.shopifyAdapter.fetch(options), { name: 'shopify-api' });
-        this.stripeCircuitBreaker = (0, circuit_breaker_1.createCircuitBreaker)(async (options) => this.stripeAdapter.fetch(options), { name: 'stripe-api' });
+        this.shopifyCircuitBreaker = (0, circuit_breaker_1.createCircuitBreaker)(async (options) => this.shopifyAdapter.fetch(options), { name: "shopify-api" });
+        this.stripeCircuitBreaker = (0, circuit_breaker_1.createCircuitBreaker)(async (options) => this.stripeAdapter.fetch(options), { name: "stripe-api" });
     }
     /**
      * Create saga definition
      */
     createDefinition() {
         return {
-            type: 'shopify_stripe_monthly_reconciliation',
+            type: "shopify_stripe_monthly_reconciliation",
             steps: [
                 this.createFetchShopifyOrdersStep(),
                 this.createFetchStripePaymentsStep(),
@@ -43,7 +43,7 @@ class ShopifyStripeReconciliationSaga {
      */
     createFetchShopifyOrdersStep() {
         return {
-            name: 'fetch_shopify_orders',
+            name: "fetch_shopify_orders",
             timeoutMs: 60000, // 1 minute timeout
             retryable: true,
             maxRetries: 3,
@@ -63,7 +63,7 @@ class ShopifyStripeReconciliationSaga {
                     // Emit OrdersFetched event
                     const event = ReconciliationEvents_1.ReconciliationEvents.OrdersFetched(reconciliationId, {
                         reconciliation_id: reconciliationId,
-                        source: 'shopify',
+                        source: "shopify",
                         count: orders.length,
                         orders: orders.map((order) => ({
                             id: order.id,
@@ -88,7 +88,7 @@ class ShopifyStripeReconciliationSaga {
                     return {
                         success: false,
                         error: {
-                            type: error.name || 'FetchError',
+                            type: error.name || "FetchError",
                             message: error.message,
                             retryable: true,
                         },
@@ -106,7 +106,7 @@ class ShopifyStripeReconciliationSaga {
      */
     createFetchStripePaymentsStep() {
         return {
-            name: 'fetch_stripe_payments',
+            name: "fetch_stripe_payments",
             timeoutMs: 60000,
             retryable: true,
             maxRetries: 3,
@@ -125,7 +125,7 @@ class ShopifyStripeReconciliationSaga {
                     // Emit PaymentsFetched event
                     const event = ReconciliationEvents_1.ReconciliationEvents.PaymentsFetched(reconciliationId, {
                         reconciliation_id: reconciliationId,
-                        source: 'stripe',
+                        source: "stripe",
                         count: payments.length,
                         payments: payments.map((payment) => ({
                             id: payment.id,
@@ -149,7 +149,7 @@ class ShopifyStripeReconciliationSaga {
                     return {
                         success: false,
                         error: {
-                            type: error.name || 'FetchError',
+                            type: error.name || "FetchError",
                             message: error.message,
                             retryable: true,
                         },
@@ -167,7 +167,7 @@ class ShopifyStripeReconciliationSaga {
      */
     createMatchingStep() {
         return {
-            name: 'perform_matching',
+            name: "perform_matching",
             timeoutMs: 300000, // 5 minutes for large datasets
             retryable: false, // Matching is idempotent but expensive
             execute: async (state) => {
@@ -188,8 +188,7 @@ class ShopifyStripeReconciliationSaga {
                             const dateDiff = Math.abs(new Date(order.date).getTime() - new Date(payment.date).getTime());
                             const dateMatch = dateDiff < 24 * 60 * 60 * 1000; // Within 24 hours
                             // Also check metadata for order_id match
-                            const metadataMatch = payment.metadata?.order_id === order.id ||
-                                payment.referenceId === order.id;
+                            const metadataMatch = payment.metadata?.order_id === order.id || payment.referenceId === order.id;
                             return amountMatch && (dateMatch || metadataMatch);
                         });
                         if (match) {
@@ -199,7 +198,7 @@ class ShopifyStripeReconciliationSaga {
                                 amount: order.amount,
                                 currency: order.currency,
                                 confidence: 1.0,
-                                matched_fields: ['amount', 'date', 'metadata'],
+                                matched_fields: ["amount", "date", "metadata"],
                             });
                             // Emit RecordMatched event
                             const matchEvent = ReconciliationEvents_1.ReconciliationEvents.RecordMatched(reconciliationId, {
@@ -210,7 +209,7 @@ class ShopifyStripeReconciliationSaga {
                                 amount: order.amount,
                                 currency: order.currency,
                                 confidence: 1.0,
-                                matched_fields: ['amount', 'date', 'metadata'],
+                                matched_fields: ["amount", "date", "metadata"],
                                 matched_at: new Date().toISOString(),
                             }, state.tenantId, state.correlationId);
                             await this.eventStore.append(matchEvent);
@@ -220,7 +219,7 @@ class ShopifyStripeReconciliationSaga {
                                 source_id: order.id,
                                 amount: order.amount,
                                 currency: order.currency,
-                                reason: 'No matching payment found',
+                                reason: "No matching payment found",
                             });
                             // Emit RecordUnmatched event
                             const unmatchedEvent = ReconciliationEvents_1.ReconciliationEvents.RecordUnmatched(reconciliationId, {
@@ -228,7 +227,7 @@ class ShopifyStripeReconciliationSaga {
                                 source_id: order.id,
                                 amount: order.amount,
                                 currency: order.currency,
-                                reason: 'No matching payment found',
+                                reason: "No matching payment found",
                                 unmatched_at: new Date().toISOString(),
                             }, state.tenantId, state.correlationId);
                             await this.eventStore.append(unmatchedEvent);
@@ -242,14 +241,14 @@ class ShopifyStripeReconciliationSaga {
                                 target_id: payment.id,
                                 amount: payment.amount,
                                 currency: payment.currency,
-                                reason: 'No matching order found',
+                                reason: "No matching order found",
                             });
                             const unmatchedEvent = ReconciliationEvents_1.ReconciliationEvents.RecordUnmatched(reconciliationId, {
                                 reconciliation_id: reconciliationId,
                                 target_id: payment.id,
                                 amount: payment.amount,
                                 currency: payment.currency,
-                                reason: 'No matching order found',
+                                reason: "No matching order found",
                                 unmatched_at: new Date().toISOString(),
                             }, state.tenantId, state.correlationId);
                             await this.eventStore.append(unmatchedEvent);
@@ -269,7 +268,7 @@ class ShopifyStripeReconciliationSaga {
                     return {
                         success: false,
                         error: {
-                            type: error.name || 'MatchingError',
+                            type: error.name || "MatchingError",
                             message: error.message,
                             retryable: false,
                         },
@@ -283,7 +282,7 @@ class ShopifyStripeReconciliationSaga {
      */
     createPersistResultsStep() {
         return {
-            name: 'persist_results',
+            name: "persist_results",
             timeoutMs: 30000,
             retryable: true,
             maxRetries: 3,
@@ -303,7 +302,7 @@ class ShopifyStripeReconciliationSaga {
                     return {
                         success: false,
                         error: {
-                            type: error.name || 'PersistenceError',
+                            type: error.name || "PersistenceError",
                             message: error.message,
                             retryable: true,
                         },
@@ -321,7 +320,7 @@ class ShopifyStripeReconciliationSaga {
      */
     createNotifyWebhooksStep() {
         return {
-            name: 'notify_webhooks',
+            name: "notify_webhooks",
             timeoutMs: 30000,
             retryable: true,
             maxRetries: 3,
@@ -341,7 +340,7 @@ class ShopifyStripeReconciliationSaga {
                     return {
                         success: false,
                         error: {
-                            type: error.name || 'WebhookError',
+                            type: error.name || "WebhookError",
                             message: error.message,
                             retryable: true,
                         },
@@ -366,9 +365,7 @@ class ShopifyStripeReconciliationSaga {
         const unmatchedSource = unmatched.filter((u) => u.source_id).length;
         const unmatchedTarget = unmatched.filter((u) => u.target_id).length;
         const totalRecords = orders.length + payments.length;
-        const accuracy = totalRecords > 0
-            ? (matched.length / totalRecords) * 100
-            : 100;
+        const accuracy = totalRecords > 0 ? (matched.length / totalRecords) * 100 : 100;
         const completedEvent = ReconciliationEvents_1.ReconciliationEvents.ReconciliationCompleted(reconciliationId, {
             reconciliation_id: reconciliationId,
             summary: {
@@ -393,7 +390,7 @@ class ShopifyStripeReconciliationSaga {
         const failedEvent = ReconciliationEvents_1.ReconciliationEvents.ReconciliationFailed(reconciliationId, {
             reconciliation_id: reconciliationId,
             error: {
-                type: error.name || 'UnknownError',
+                type: error.name || "UnknownError",
                 message: error.message,
                 ...(error.stack ? { stack: error.stack } : {}),
             },

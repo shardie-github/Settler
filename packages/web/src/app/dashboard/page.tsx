@@ -1,10 +1,10 @@
 /**
  * Dashboard Router
- * 
+ *
  * Routes to user dashboard if authenticated, otherwise shows public dashboard
  */
 
-import { redirect } from 'next/navigation';
+import { redirect } from "next/navigation";
 
 // In production, check authentication and route accordingly
 // For now, redirect to user dashboard
@@ -17,7 +17,7 @@ export default function DashboardPage() {
   //   // Show public dashboard
   //   return <PublicDashboard />;
   // }
-  
+
   // Temporary: redirect to user dashboard
-  redirect('/dashboard/user');
+  redirect("/dashboard/user");
 }

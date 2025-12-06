@@ -122,8 +122,18 @@ console.log(report.data.summary);
 ```typescript
 const job = await settler.jobs.create({
   name: "Order Payment Reconciliation",
-  source: { adapter: "shopify", config: { /* ... */ } },
-  target: { adapter: "stripe", config: { /* ... */ } },
+  source: {
+    adapter: "shopify",
+    config: {
+      /* ... */
+    },
+  },
+  target: {
+    adapter: "stripe",
+    config: {
+      /* ... */
+    },
+  },
   rules: {
     matching: [
       { field: "order_id", type: "exact" },
@@ -145,11 +155,31 @@ const job = await settler.jobs.create({
 const job = await settler.jobs.create({
   name: "Multi-Payment Reconciliation",
   sources: [
-    { adapter: "stripe", config: { /* ... */ } },
-    { adapter: "paypal", config: { /* ... */ } },
-    { adapter: "square", config: { /* ... */ } },
+    {
+      adapter: "stripe",
+      config: {
+        /* ... */
+      },
+    },
+    {
+      adapter: "paypal",
+      config: {
+        /* ... */
+      },
+    },
+    {
+      adapter: "square",
+      config: {
+        /* ... */
+      },
+    },
   ],
-  target: { adapter: "quickbooks", config: { /* ... */ } },
+  target: {
+    adapter: "quickbooks",
+    config: {
+      /* ... */
+    },
+  },
   rules: {
     matching: [
       { field: "transaction_id", type: "fuzzy", threshold: 0.8 },
@@ -170,8 +200,18 @@ const job = await settler.jobs.create({
 ```typescript
 const job = await settler.jobs.create({
   name: "Payment to Accounting Sync",
-  source: { adapter: "stripe", config: { /* ... */ } },
-  target: { adapter: "quickbooks", config: { /* ... */ } },
+  source: {
+    adapter: "stripe",
+    config: {
+      /* ... */
+    },
+  },
+  target: {
+    adapter: "quickbooks",
+    config: {
+      /* ... */
+    },
+  },
   rules: {
     matching: [
       { field: "invoice_id", type: "exact" },
@@ -191,6 +231,7 @@ const job = await settler.jobs.create({
 ## Supported Platforms
 
 ### Payment Processors
+
 - ✅ Stripe
 - ✅ PayPal
 - ✅ Square
@@ -198,18 +239,21 @@ const job = await settler.jobs.create({
 - ✅ Braintree
 
 ### E-commerce Platforms
+
 - ✅ Shopify
 - ✅ WooCommerce
 - ✅ BigCommerce
 - ✅ Magento
 
 ### Accounting Systems
+
 - ✅ QuickBooks
 - ✅ Xero
 - ✅ NetSuite
 - ✅ Sage
 
 ### More Coming Soon
+
 We're adding new adapters every month. [Request an adapter →](https://settler.io/adapters/request)
 
 ---
@@ -217,27 +261,35 @@ We're adding new adapters every month. [Request an adapter →](https://settler.
 ## Features
 
 ### 🔌 15+ Built-in Adapters
+
 Connect to Stripe, Shopify, QuickBooks, PayPal, and more with one line of code.
 
 ### ⚡ Real-Time Processing
+
 Webhook-driven reconciliation as events happen—no polling required.
 
 ### 🎯 Smart Matching
+
 Exact, fuzzy, and custom matching rules. Handle edge cases automatically.
 
 ### 🔄 Automatic Retries
+
 Built-in exponential backoff and error handling. Never lose a transaction.
 
 ### 📊 Rich Reports
+
 JSON, CSV, and PDF exports with detailed insights and audit trails.
 
 ### 🔐 Enterprise Security
+
 SOC 2 Type II ready, GDPR compliant, PCI-DSS ready. Compliance built-in.
 
 ### 📈 Scales Automatically
+
 Handle millions of transactions without infrastructure management.
 
 ### 🛠️ TypeScript First
+
 Full type safety and IntelliSense support. Works with your existing stack.
 
 ---

@@ -1,18 +1,18 @@
-'use client';
+"use client";
 
-import { ReactNode } from 'react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import Link from 'next/link';
-import { Lock, Sparkles } from 'lucide-react';
-import { PlanType, isContentGated } from '@/config/plans';
+import { ReactNode } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import Link from "next/link";
+import { Lock, Sparkles } from "lucide-react";
+import { PlanType, isContentGated } from "@/config/plans";
 
 interface PlanFeatureGateProps {
   children: ReactNode;
   userPlan?: PlanType;
   contentId: string;
-  contentType: 'cookbook' | 'doc' | 'feature';
+  contentType: "cookbook" | "doc" | "feature";
   title?: string;
   description?: string;
   teaserContent?: ReactNode;
@@ -21,13 +21,13 @@ interface PlanFeatureGateProps {
 
 export function PlanFeatureGate({
   children,
-  userPlan = 'free',
+  userPlan = "free",
   contentId,
   contentType,
   title,
   description,
   teaserContent,
-  upgradeLink = '/pricing',
+  upgradeLink = "/pricing",
 }: PlanFeatureGateProps) {
   const isGated = isContentGated(userPlan, contentId, contentType);
 
@@ -38,11 +38,7 @@ export function PlanFeatureGate({
   return (
     <div className="relative">
       {/* Teaser Content */}
-      {teaserContent && (
-        <div className="mb-4 opacity-75">
-          {teaserContent}
-        </div>
-      )}
+      {teaserContent && <div className="mb-4 opacity-75">{teaserContent}</div>}
 
       {/* Gated Overlay */}
       <Card className="border-2 border-dashed border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/50">
@@ -54,17 +50,16 @@ export function PlanFeatureGate({
             </Badge>
           </div>
           <CardTitle className="text-xl text-slate-900 dark:text-white">
-            {title || 'Upgrade to Unlock'}
+            {title || "Upgrade to Unlock"}
           </CardTitle>
           <CardDescription className="text-slate-600 dark:text-slate-400">
-            {description || 'This feature is available on paid plans. Start your 30-day free trial to access it.'}
+            {description ||
+              "This feature is available on paid plans. Start your 30-day free trial to access it."}
           </CardDescription>
         </CardHeader>
         <CardContent className="text-center space-y-4">
           <div className="space-y-2">
-            <p className="text-sm text-slate-600 dark:text-slate-400">
-              With a paid plan, you get:
-            </p>
+            <p className="text-sm text-slate-600 dark:text-slate-400">With a paid plan, you get:</p>
             <ul className="text-sm text-slate-700 dark:text-slate-300 space-y-1 text-left max-w-md mx-auto">
               <li className="flex items-center gap-2">
                 <Sparkles className="w-4 h-4 text-blue-600 dark:text-electric-cyan" />
@@ -90,18 +85,10 @@ export function PlanFeatureGate({
               size="lg"
               className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white"
             >
-              <Link href={upgradeLink}>
-                Start 30-Day Free Trial
-              </Link>
+              <Link href={upgradeLink}>Start 30-Day Free Trial</Link>
             </Button>
-            <Button
-              asChild
-              variant="outline"
-              size="lg"
-            >
-              <Link href="/pricing">
-                View Pricing
-              </Link>
+            <Button asChild variant="outline" size="lg">
+              <Link href="/pricing">View Pricing</Link>
             </Button>
           </div>
         </CardContent>
@@ -116,14 +103,14 @@ export function PlanFeatureGate({
  */
 interface TeaserContentProps {
   children: ReactNode;
-  blurIntensity?: 'light' | 'medium' | 'heavy';
+  blurIntensity?: "light" | "medium" | "heavy";
 }
 
-export function TeaserContent({ children, blurIntensity = 'medium' }: TeaserContentProps) {
+export function TeaserContent({ children, blurIntensity = "medium" }: TeaserContentProps) {
   const blurClass = {
-    light: 'blur-sm',
-    medium: 'blur-md',
-    heavy: 'blur-lg',
+    light: "blur-sm",
+    medium: "blur-md",
+    heavy: "blur-lg",
   }[blurIntensity];
 
   return (

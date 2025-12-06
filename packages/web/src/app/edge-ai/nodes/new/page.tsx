@@ -5,7 +5,13 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { ArrowLeft, CheckCircle } from "lucide-react";
 import Link from "next/link";
 
@@ -23,7 +29,7 @@ export default function NewEdgeNodePage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     // In production, call API
     // For now, simulate enrollment
     setTimeout(() => {
@@ -84,9 +90,7 @@ export default function NewEdgeNodePage() {
       <Card>
         <CardHeader>
           <CardTitle>Enroll New Edge Node</CardTitle>
-          <CardDescription>
-            Connect a new edge node to your Settler account
-          </CardDescription>
+          <CardDescription>Connect a new edge node to your Settler account</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-6">

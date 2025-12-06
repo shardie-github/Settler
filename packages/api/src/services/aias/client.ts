@@ -1,13 +1,13 @@
 /**
  * AIAS Edge AI Accelerator Studio API Client
- * 
+ *
  * IMPORTANT: This is an API client for AIAS. Settler.dev integrates with AIAS
  * via HTTP API calls, NOT direct code dependencies. This ensures:
  * - Product independence
  * - Separate versioning
  * - Independent deployment
  * - Future exit strategy protection
- * 
+ *
  * Handles model upload, optimization, benchmarking, and export workflows via AIAS API.
  */
 
@@ -20,17 +20,17 @@ export interface AIASConfig {
 
 export interface ModelUploadRequest {
   modelName: string;
-  modelType: 'matching' | 'anomaly_detection' | 'schema_inference' | 'pii_detection';
+  modelType: "matching" | "anomaly_detection" | "schema_inference" | "pii_detection";
   modelFile: Buffer | string; // Base64 encoded or file path
-  format: 'onnx' | 'tensorrt' | 'executorch' | 'tflite' | 'pytorch';
+  format: "onnx" | "tensorrt" | "executorch" | "tflite" | "pytorch";
   metadata?: Record<string, unknown>;
 }
 
 export interface ModelOptimizationRequest {
   modelId: string;
   targetDevices: string[]; // ['x86_64', 'arm64', 'armv7']
-  quantization: 'int4' | 'int8' | 'fp16' | 'fp32';
-  optimizationLevel: 'speed' | 'balanced' | 'accuracy';
+  quantization: "int4" | "int8" | "fp16" | "fp32";
+  optimizationLevel: "speed" | "balanced" | "accuracy";
 }
 
 export interface BenchmarkRequest {
@@ -54,7 +54,7 @@ export interface BenchmarkResult {
 
 export interface ExportRequest {
   modelId: string;
-  format: 'docker' | 'wasm' | 'apk' | 'onnx' | 'tensorrt';
+  format: "docker" | "wasm" | "apk" | "onnx" | "tensorrt";
   targetDevice?: string;
 }
 
@@ -70,7 +70,7 @@ export class AIASClient {
 
   constructor(config: AIASConfig) {
     this.apiKey = config.apiKey;
-    this.baseUrl = config.baseUrl || process.env.AIAS_BASE_URL || 'https://api.aias.studio';
+    this.baseUrl = config.baseUrl || process.env.AIAS_BASE_URL || "https://api.aias.studio";
   }
 
   private async request<T>(
@@ -81,8 +81,8 @@ export class AIASClient {
   ): Promise<T> {
     const url = `${this.baseUrl}${endpoint}`;
     const requestHeaders: Record<string, string> = {
-      'Authorization': `Bearer ${this.apiKey}`,
-      'Content-Type': 'application/json',
+      Authorization: `Bearer ${this.apiKey}`,
+      "Content-Type": "application/json",
       ...headers,
     };
 
@@ -91,11 +91,11 @@ export class AIASClient {
         method,
         headers: requestHeaders,
       };
-      
+
       if (body) {
         fetchOptions.body = JSON.stringify(body);
       }
-      
+
       const response = await fetch(url, fetchOptions);
 
       if (!response.ok) {
@@ -103,9 +103,9 @@ export class AIASClient {
         throw new Error(`AIAS API error: ${response.status} ${errorText}`);
       }
 
-      return await response.json() as T;
+      return (await response.json()) as T;
     } catch (error) {
-      logError('AIAS API request failed', error as Error, {
+      logError("AIAS API request failed", error as Error, {
         method,
         endpoint,
       });
@@ -117,15 +117,16 @@ export class AIASClient {
    * Upload a model to AIAS for optimization
    */
   async uploadModel(request: ModelUploadRequest): Promise<{ jobId: string; modelId: string }> {
-    logInfo('Uploading model to AIAS', { modelName: request.modelName });
+    logInfo("Uploading model to AIAS", { modelName: request.modelName });
 
-    const modelData = typeof request.modelFile === 'string'
-      ? request.modelFile
-      : request.modelFile.toString('base64');
+    const modelData =
+      typeof request.modelFile === "string"
+        ? request.modelFile
+        : request.modelFile.toString("base64");
 
     const response = await this.request<{ jobId: string; modelId: string }>(
-      'POST',
-      '/v1/models/upload',
+      "POST",
+      "/v1/models/upload",
       {
         model_name: request.modelName,
         model_type: request.modelType,
@@ -142,10 +143,10 @@ export class AIASClient {
    * Request model optimization
    */
   async optimizeModel(request: ModelOptimizationRequest): Promise<{ jobId: string }> {
-    logInfo('Requesting model optimization', { modelId: request.modelId });
+    logInfo("Requesting model optimization", { modelId: request.modelId });
 
     const response = await this.request<{ jobId: string }>(
-      'POST',
+      "POST",
       `/v1/models/${request.modelId}/optimize`,
       {
         target_devices: request.targetDevices,
@@ -161,7 +162,7 @@ export class AIASClient {
    * Get optimization job status
    */
   async getOptimizationStatus(jobId: string): Promise<{
-    status: 'pending' | 'running' | 'completed' | 'failed';
+    status: "pending" | "running" | "completed" | "failed";
     progress?: number;
     result?: {
       modelId: string;
@@ -175,13 +176,10 @@ export class AIASClient {
       progress?: number;
       result?: unknown;
       error?: string;
-    }>(
-      'GET',
-      `/v1/jobs/${jobId}`
-    );
+    }>("GET", `/v1/jobs/${jobId}`);
 
     const status: {
-      status: 'pending' | 'running' | 'completed' | 'failed';
+      status: "pending" | "running" | "completed" | "failed";
       progress?: number;
       result?: {
         modelId: string;
@@ -190,13 +188,13 @@ export class AIASClient {
       };
       error?: string;
     } = {
-      status: response.status as 'pending' | 'running' | 'completed' | 'failed',
+      status: response.status as "pending" | "running" | "completed" | "failed",
     };
-    
+
     if (response.progress !== undefined) {
       status.progress = response.progress;
     }
-    
+
     if (response.result !== undefined) {
       status.result = response.result as {
         modelId: string;
@@ -204,11 +202,11 @@ export class AIASClient {
         benchmarkResults: BenchmarkResult;
       };
     }
-    
+
     if (response.error !== undefined) {
       status.error = response.error;
     }
-    
+
     return status;
   }
 
@@ -216,10 +214,10 @@ export class AIASClient {
    * Run benchmark on a model
    */
   async benchmarkModel(request: BenchmarkRequest): Promise<{ jobId: string }> {
-    logInfo('Requesting model benchmark', { modelId: request.modelId });
+    logInfo("Requesting model benchmark", { modelId: request.modelId });
 
     const response = await this.request<{ jobId: string }>(
-      'POST',
+      "POST",
       `/v1/models/${request.modelId}/benchmark`,
       {
         device_profile: request.deviceProfile,
@@ -234,10 +232,7 @@ export class AIASClient {
    * Get benchmark results
    */
   async getBenchmarkResults(jobId: string): Promise<BenchmarkResult> {
-    const response = await this.request<BenchmarkResult>(
-      'GET',
-      `/v1/jobs/${jobId}/results`
-    );
+    const response = await this.request<BenchmarkResult>("GET", `/v1/jobs/${jobId}/results`);
 
     return response;
   }
@@ -246,10 +241,10 @@ export class AIASClient {
    * Export optimized model
    */
   async exportModel(request: ExportRequest): Promise<ExportResult> {
-    logInfo('Requesting model export', { modelId: request.modelId, format: request.format });
+    logInfo("Requesting model export", { modelId: request.modelId, format: request.format });
 
     const response = await this.request<ExportResult>(
-      'POST',
+      "POST",
       `/v1/models/${request.modelId}/export`,
       {
         format: request.format,
@@ -263,25 +258,26 @@ export class AIASClient {
   /**
    * List available models
    */
-  async listModels(): Promise<Array<{
-    id: string;
-    name: string;
-    type: string;
-    format: string;
-    createdAt: string;
-  }>> {
-    const response = await this.request<Array<{
+  async listModels(): Promise<
+    Array<{
       id: string;
       name: string;
       type: string;
       format: string;
-      created_at: string;
-    }>>(
-      'GET',
-      '/v1/models'
-    );
+      createdAt: string;
+    }>
+  > {
+    const response = await this.request<
+      Array<{
+        id: string;
+        name: string;
+        type: string;
+        format: string;
+        created_at: string;
+      }>
+    >("GET", "/v1/models");
 
-    return response.map(m => ({
+    return response.map((m) => ({
       id: m.id,
       name: m.name,
       type: m.type,
@@ -308,10 +304,7 @@ export class AIASClient {
       format: string;
       metadata: Record<string, unknown>;
       created_at: string;
-    }>(
-      'GET',
-      `/v1/models/${modelId}`
-    );
+    }>("GET", `/v1/models/${modelId}`);
 
     return {
       id: response.id,
@@ -327,10 +320,7 @@ export class AIASClient {
    * Delete a model
    */
   async deleteModel(modelId: string): Promise<void> {
-    await this.request<void>(
-      'DELETE',
-      `/v1/models/${modelId}`
-    );
+    await this.request<void>("DELETE", `/v1/models/${modelId}`);
   }
 }
 
@@ -339,9 +329,9 @@ let aiasClientInstance: AIASClient | null = null;
 
 export function getAIASClient(): AIASClient {
   if (!aiasClientInstance) {
-    const apiKey = process.env.AIAS_API_KEY || '';
+    const apiKey = process.env.AIAS_API_KEY || "";
     if (!apiKey) {
-      throw new Error('AIAS_API_KEY environment variable is required');
+      throw new Error("AIAS_API_KEY environment variable is required");
     }
     const config: AIASConfig = { apiKey };
     if (process.env.AIAS_BASE_URL) {

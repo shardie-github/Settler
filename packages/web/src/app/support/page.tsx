@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -13,217 +13,233 @@ import { FAQSchema } from "@/components/StructuredData";
 import Link from "next/link";
 
 export default function Support() {
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
 
   const supportOptions = [
     {
-      icon: '📚',
-      title: 'Documentation',
-      description: 'Comprehensive guides, API reference, and tutorials',
-      link: '/docs',
-      linkText: 'Browse Docs',
-      tier: 'All Plans',
+      icon: "📚",
+      title: "Documentation",
+      description: "Comprehensive guides, API reference, and tutorials",
+      link: "/docs",
+      linkText: "Browse Docs",
+      tier: "All Plans",
     },
     {
-      icon: '📖',
-      title: 'Cookbooks & Examples',
-      description: 'Pre-built workflows and code examples for common use cases',
-      link: '/cookbooks',
-      linkText: 'View Cookbooks',
-      tier: 'All Plans',
+      icon: "📖",
+      title: "Cookbooks & Examples",
+      description: "Pre-built workflows and code examples for common use cases",
+      link: "/cookbooks",
+      linkText: "View Cookbooks",
+      tier: "All Plans",
     },
     {
-      icon: '💬',
-      title: 'Community Support',
-      description: 'Get help from our community on Discord and GitHub',
-      link: 'https://discord.gg/settler',
-      linkText: 'Join Discord',
+      icon: "💬",
+      title: "Community Support",
+      description: "Get help from our community on Discord and GitHub",
+      link: "https://discord.gg/settler",
+      linkText: "Join Discord",
       external: true,
-      tier: 'All Plans',
+      tier: "All Plans",
     },
     {
-      icon: '🎮',
-      title: 'Interactive Playground',
-      description: 'Test the API and see examples in action',
-      link: '/playground',
-      linkText: 'Try Playground',
-      tier: 'All Plans',
+      icon: "🎮",
+      title: "Interactive Playground",
+      description: "Test the API and see examples in action",
+      link: "/playground",
+      linkText: "Try Playground",
+      tier: "All Plans",
     },
     {
-      icon: '📧',
-      title: 'Email Support',
-      description: 'Get help via email (response within 24 hours)',
-      link: 'mailto:support@settler.dev',
-      linkText: 'Email Us',
+      icon: "📧",
+      title: "Email Support",
+      description: "Get help via email (response within 24 hours)",
+      link: "mailto:support@settler.dev",
+      linkText: "Email Us",
       external: true,
-      tier: 'Commercial+',
+      tier: "Commercial+",
     },
     {
-      icon: '🚀',
-      title: 'Priority Support',
-      description: '24/7 support with SLA guarantees and dedicated account manager',
-      link: '/enterprise',
-      linkText: 'Learn More',
-      tier: 'Enterprise',
+      icon: "🚀",
+      title: "Priority Support",
+      description: "24/7 support with SLA guarantees and dedicated account manager",
+      link: "/enterprise",
+      linkText: "Learn More",
+      tier: "Enterprise",
     },
   ];
 
   const supportTiers = [
     {
-      tier: 'OSS / Free',
+      tier: "OSS / Free",
       features: [
-        'Documentation & Guides',
-        'Community Support (Discord, GitHub)',
-        'Cookbooks & Examples',
-        'Interactive Playground',
+        "Documentation & Guides",
+        "Community Support (Discord, GitHub)",
+        "Cookbooks & Examples",
+        "Interactive Playground",
       ],
-      responseTime: 'Community response',
+      responseTime: "Community response",
     },
     {
-      tier: 'Commercial',
+      tier: "Commercial",
       features: [
-        'Everything in OSS',
-        'Email Support (24 hour response)',
-        'Technical Integration Help',
-        'Bug Reports & Feature Requests',
+        "Everything in OSS",
+        "Email Support (24 hour response)",
+        "Technical Integration Help",
+        "Bug Reports & Feature Requests",
       ],
-      responseTime: '24 hours',
+      responseTime: "24 hours",
     },
     {
-      tier: 'Enterprise',
+      tier: "Enterprise",
       features: [
-        'Everything in Commercial',
-        '24/7 Priority Support',
-        'Dedicated Account Manager',
-        'SLA Guarantees (<4hr response)',
-        'Phone Support',
-        'Custom Integration Support',
+        "Everything in Commercial",
+        "24/7 Priority Support",
+        "Dedicated Account Manager",
+        "SLA Guarantees (<4hr response)",
+        "Phone Support",
+        "Custom Integration Support",
       ],
-      responseTime: '<4 hours (P1)',
+      responseTime: "<4 hours (P1)",
     },
   ];
 
   const escalationLevels = [
     {
-      level: 'Level 1',
-      name: 'Support Bot / Self-Service',
-      includes: ['Documentation', 'Community', 'Knowledge Base', 'Automated Responses'],
+      level: "Level 1",
+      name: "Support Bot / Self-Service",
+      includes: ["Documentation", "Community", "Knowledge Base", "Automated Responses"],
     },
     {
-      level: 'Level 2',
-      name: 'Support Engineer',
-      includes: ['Email Support', 'Technical Questions', 'Integration Help'],
+      level: "Level 2",
+      name: "Support Engineer",
+      includes: ["Email Support", "Technical Questions", "Integration Help"],
     },
     {
-      level: 'Level 3',
-      name: 'Senior Support Engineer',
-      includes: ['Complex Issues', 'Performance Problems', 'Advanced Integration'],
+      level: "Level 3",
+      name: "Senior Support Engineer",
+      includes: ["Complex Issues", "Performance Problems", "Advanced Integration"],
     },
     {
-      level: 'Level 4',
-      name: 'Engineering Team',
-      includes: ['Bugs', 'Feature Requests', 'Infrastructure Issues'],
+      level: "Level 4",
+      name: "Engineering Team",
+      includes: ["Bugs", "Feature Requests", "Infrastructure Issues"],
     },
     {
-      level: 'Level 5',
-      name: 'Leadership',
-      includes: ['Critical Incidents', 'Security Issues', 'Customer Escalations'],
+      level: "Level 5",
+      name: "Leadership",
+      includes: ["Critical Incidents", "Security Issues", "Customer Escalations"],
     },
   ];
 
   const severityLevels = [
     {
-      severity: 'P0: Critical',
-      description: 'System down, data breach, complete service outage',
-      responseTime: '15 minutes',
-      resolutionTime: '4 hours',
+      severity: "P0: Critical",
+      description: "System down, data breach, complete service outage",
+      responseTime: "15 minutes",
+      resolutionTime: "4 hours",
     },
     {
-      severity: 'P1: High',
-      description: 'Major feature broken, high error rate, multiple customers affected',
-      responseTime: '1 hour',
-      resolutionTime: '24 hours',
+      severity: "P1: High",
+      description: "Major feature broken, high error rate, multiple customers affected",
+      responseTime: "1 hour",
+      resolutionTime: "24 hours",
     },
     {
-      severity: 'P2: Medium',
-      description: 'Minor feature broken, moderate error rate, single customer affected',
-      responseTime: '4 hours',
-      resolutionTime: '72 hours',
+      severity: "P2: Medium",
+      description: "Minor feature broken, moderate error rate, single customer affected",
+      responseTime: "4 hours",
+      resolutionTime: "72 hours",
     },
     {
-      severity: 'P3: Low',
-      description: 'Documentation issues, UI improvements, feature requests',
-      responseTime: '24 hours',
-      resolutionTime: '7 days',
+      severity: "P3: Low",
+      description: "Documentation issues, UI improvements, feature requests",
+      responseTime: "24 hours",
+      resolutionTime: "7 days",
     },
   ];
 
   const faqs = [
     {
-      question: 'How do I get started with Settler?',
-      answer: 'Get started in under 5 minutes! Install the SDK with `npm install @settler/sdk`, get your API key from the dashboard, and create your first reconciliation job. Check out our quickstart guide in the documentation or try the interactive playground to see it in action.',
+      question: "How do I get started with Settler?",
+      answer:
+        "Get started in under 5 minutes! Install the SDK with `npm install @settler/sdk`, get your API key from the dashboard, and create your first reconciliation job. Check out our quickstart guide in the documentation or try the interactive playground to see it in action.",
     },
     {
-      question: 'What platforms does Settler support?',
-      answer: 'Settler supports 50+ platforms including Stripe, Shopify, QuickBooks, PayPal, Square, Amazon Pay, and many more. We have pre-built adapters for the most popular platforms, and you can easily build custom adapters for any platform with our adapter SDK.',
+      question: "What platforms does Settler support?",
+      answer:
+        "Settler supports 50+ platforms including Stripe, Shopify, QuickBooks, PayPal, Square, Amazon Pay, and many more. We have pre-built adapters for the most popular platforms, and you can easily build custom adapters for any platform with our adapter SDK.",
     },
     {
-      question: 'Is there a free tier?',
-      answer: 'Yes! Our OSS (Open Source) tier is free forever with 1,000 reconciliations per month, access to 2 adapters, and 7-day log retention. Perfect for getting started and small projects. Check out our pricing page for full details on all tiers.',
+      question: "Is there a free tier?",
+      answer:
+        "Yes! Our OSS (Open Source) tier is free forever with 1,000 reconciliations per month, access to 2 adapters, and 7-day log retention. Perfect for getting started and small projects. Check out our pricing page for full details on all tiers.",
     },
     {
-      question: 'How accurate is the reconciliation?',
-      answer: 'Settler achieves 99.7% accuracy with our advanced matching algorithms, confidence scoring, and fuzzy matching capabilities. We use multiple matching strategies including exact matching, fuzzy matching, and date range matching to ensure high accuracy even with imperfect data.',
+      question: "How accurate is the reconciliation?",
+      answer:
+        "Settler achieves 99.7% accuracy with our advanced matching algorithms, confidence scoring, and fuzzy matching capabilities. We use multiple matching strategies including exact matching, fuzzy matching, and date range matching to ensure high accuracy even with imperfect data.",
     },
     {
-      question: 'Can I use Settler on-premise?',
-      answer: 'Yes! Enterprise plans include on-premise deployment options for maximum security and compliance. We provide Docker containers and deployment guides. Contact our sales team at enterprise@settler.dev to discuss your requirements.',
+      question: "Can I use Settler on-premise?",
+      answer:
+        "Yes! Enterprise plans include on-premise deployment options for maximum security and compliance. We provide Docker containers and deployment guides. Contact our sales team at enterprise@settler.dev to discuss your requirements.",
     },
     {
-      question: 'What security certifications do you have?',
-      answer: 'We\'re SOC 2 Type II certified, GDPR compliant, and PCI-DSS ready. All data is encrypted at rest and in transit using AES-256-GCM. Enterprise customers get additional security features including SSO, RBAC, and dedicated security reviews.',
+      question: "What security certifications do you have?",
+      answer:
+        "We're SOC 2 Type II certified, GDPR compliant, and PCI-DSS ready. All data is encrypted at rest and in transit using AES-256-GCM. Enterprise customers get additional security features including SSO, RBAC, and dedicated security reviews.",
     },
     {
-      question: 'How do I handle unmatched records?',
-      answer: 'Settler provides a comprehensive exception queue where you can review unmatched records, see confidence scores, and manually resolve discrepancies. You can also configure automatic retry rules and webhook notifications for unmatched records.',
+      question: "How do I handle unmatched records?",
+      answer:
+        "Settler provides a comprehensive exception queue where you can review unmatched records, see confidence scores, and manually resolve discrepancies. You can also configure automatic retry rules and webhook notifications for unmatched records.",
     },
     {
-      question: 'What happens if my reconciliation job fails?',
-      answer: 'Settler automatically retries failed jobs with exponential backoff. You\'ll receive webhook notifications for failures, and all errors are logged with detailed information. Check the job logs via the API or dashboard to diagnose issues.',
+      question: "What happens if my reconciliation job fails?",
+      answer:
+        "Settler automatically retries failed jobs with exponential backoff. You'll receive webhook notifications for failures, and all errors are logged with detailed information. Check the job logs via the API or dashboard to diagnose issues.",
     },
     {
-      question: 'Can I reconcile multiple currencies?',
-      answer: 'Yes! Settler supports multi-currency reconciliation with automatic currency conversion using real-time exchange rates. You can configure currency matching rules and tolerance levels for each currency pair.',
+      question: "Can I reconcile multiple currencies?",
+      answer:
+        "Yes! Settler supports multi-currency reconciliation with automatic currency conversion using real-time exchange rates. You can configure currency matching rules and tolerance levels for each currency pair.",
     },
     {
-      question: 'How do webhooks work?',
-      answer: 'Settler sends webhooks for key events like reconciliation completion, job failures, and unmatched records. Webhooks are signed with HMAC for security verification. Failed webhook deliveries are automatically retried up to 5 times with exponential backoff.',
+      question: "How do webhooks work?",
+      answer:
+        "Settler sends webhooks for key events like reconciliation completion, job failures, and unmatched records. Webhooks are signed with HMAC for security verification. Failed webhook deliveries are automatically retried up to 5 times with exponential backoff.",
     },
     {
-      question: 'What is the API rate limit?',
-      answer: 'Rate limits vary by plan. OSS tier: 100 requests/minute. Commercial: 1,000 requests/minute. Enterprise: Custom limits. All responses include rate limit headers (X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset) so you can implement proper backoff strategies.',
+      question: "What is the API rate limit?",
+      answer:
+        "Rate limits vary by plan. OSS tier: 100 requests/minute. Commercial: 1,000 requests/minute. Enterprise: Custom limits. All responses include rate limit headers (X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset) so you can implement proper backoff strategies.",
     },
     {
-      question: 'How do I build a custom adapter?',
-      answer: 'Custom adapters are built using our adapter SDK. Each adapter implements a simple interface to fetch and normalize data from your platform. Check out our adapter documentation and examples in the cookbooks section.',
+      question: "How do I build a custom adapter?",
+      answer:
+        "Custom adapters are built using our adapter SDK. Each adapter implements a simple interface to fetch and normalize data from your platform. Check out our adapter documentation and examples in the cookbooks section.",
     },
     {
-      question: 'What data retention policies do you have?',
-      answer: 'Data retention varies by plan: OSS (7 days), Commercial (30 days), Enterprise (custom, up to 7 years). You can export all data via the API at any time. Enterprise customers can configure custom retention policies.',
+      question: "What data retention policies do you have?",
+      answer:
+        "Data retention varies by plan: OSS (7 days), Commercial (30 days), Enterprise (custom, up to 7 years). You can export all data via the API at any time. Enterprise customers can configure custom retention policies.",
     },
     {
-      question: 'How do I integrate Settler with my existing systems?',
-      answer: 'Settler is API-first and integrates easily with any system. Use our REST API, TypeScript/JavaScript SDK, or CLI. We provide webhooks for real-time updates and detailed documentation with integration recipes for common patterns.',
+      question: "How do I integrate Settler with my existing systems?",
+      answer:
+        "Settler is API-first and integrates easily with any system. Use our REST API, TypeScript/JavaScript SDK, or CLI. We provide webhooks for real-time updates and detailed documentation with integration recipes for common patterns.",
     },
     {
-      question: 'What kind of support do you offer?',
-      answer: 'OSS tier: Community support via Discord and GitHub. Commercial: Email support with 24-hour response time. Enterprise: 24/7 priority support with SLA guarantees, dedicated account manager, and phone support. See the support tiers section above for details.',
+      question: "What kind of support do you offer?",
+      answer:
+        "OSS tier: Community support via Discord and GitHub. Commercial: Email support with 24-hour response time. Enterprise: 24/7 priority support with SLA guarantees, dedicated account manager, and phone support. See the support tiers section above for details.",
     },
   ];
 
-  const filteredFaqs = faqs.filter(faq =>
-    faq.question.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    faq.answer.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredFaqs = faqs.filter(
+    (faq) =>
+      faq.question.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      faq.answer.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
@@ -239,12 +255,12 @@ export default function Support() {
       />
 
       {/* Support Options */}
-      <section
-        className="py-20 px-4 sm:px-6 lg:px-8"
-        aria-labelledby="support-options-heading"
-      >
+      <section className="py-20 px-4 sm:px-6 lg:px-8" aria-labelledby="support-options-heading">
         <div className="max-w-7xl mx-auto">
-          <h2 id="support-options-heading" className="text-3xl md:text-4xl font-bold text-center mb-4 text-slate-900 dark:text-white">
+          <h2
+            id="support-options-heading"
+            className="text-3xl md:text-4xl font-bold text-center mb-4 text-slate-900 dark:text-white"
+          >
             Support Channels
           </h2>
           <p className="text-center text-slate-600 dark:text-slate-300 mb-12 max-w-2xl mx-auto">
@@ -297,9 +313,7 @@ export default function Support() {
                       variant="outline"
                       className="w-full border-slate-300 dark:border-slate-700"
                     >
-                      <Link href={option.link}>
-                        {option.linkText} →
-                      </Link>
+                      <Link href={option.link}>{option.linkText} →</Link>
                     </Button>
                   )}
                 </CardContent>
@@ -315,7 +329,10 @@ export default function Support() {
         aria-labelledby="support-tiers-heading"
       >
         <div className="max-w-7xl mx-auto">
-          <h2 id="support-tiers-heading" className="text-3xl md:text-4xl font-bold text-center mb-4 text-slate-900 dark:text-white">
+          <h2
+            id="support-tiers-heading"
+            className="text-3xl md:text-4xl font-bold text-center mb-4 text-slate-900 dark:text-white"
+          >
             Support Tiers
           </h2>
           <p className="text-center text-slate-600 dark:text-slate-300 mb-12 max-w-2xl mx-auto">
@@ -326,7 +343,7 @@ export default function Support() {
               <Card
                 key={index}
                 className={`bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 transition-all duration-200 hover:shadow-lg ${
-                  tier.tier === 'Enterprise' ? 'ring-2 ring-blue-500' : ''
+                  tier.tier === "Enterprise" ? "ring-2 ring-blue-500" : ""
                 }`}
               >
                 <CardHeader>
@@ -340,7 +357,10 @@ export default function Support() {
                 <CardContent>
                   <ul className="space-y-2">
                     {tier.features.map((feature, idx) => (
-                      <li key={idx} className="flex items-start text-sm text-slate-600 dark:text-slate-300">
+                      <li
+                        key={idx}
+                        className="flex items-start text-sm text-slate-600 dark:text-slate-300"
+                      >
                         <span className="mr-2 text-green-500">✓</span>
                         {feature}
                       </li>
@@ -354,12 +374,12 @@ export default function Support() {
       </section>
 
       {/* Escalation Matrix */}
-      <section
-        className="py-20 px-4 sm:px-6 lg:px-8"
-        aria-labelledby="escalation-heading"
-      >
+      <section className="py-20 px-4 sm:px-6 lg:px-8" aria-labelledby="escalation-heading">
         <div className="max-w-7xl mx-auto">
-          <h2 id="escalation-heading" className="text-3xl md:text-4xl font-bold text-center mb-4 text-slate-900 dark:text-white">
+          <h2
+            id="escalation-heading"
+            className="text-3xl md:text-4xl font-bold text-center mb-4 text-slate-900 dark:text-white"
+          >
             Support Escalation
           </h2>
           <p className="text-center text-slate-600 dark:text-slate-300 mb-12 max-w-2xl mx-auto">
@@ -401,7 +421,10 @@ export default function Support() {
         aria-labelledby="severity-heading"
       >
         <div className="max-w-4xl mx-auto">
-          <h2 id="severity-heading" className="text-3xl md:text-4xl font-bold text-center mb-4 text-slate-900 dark:text-white">
+          <h2
+            id="severity-heading"
+            className="text-3xl md:text-4xl font-bold text-center mb-4 text-slate-900 dark:text-white"
+          >
             Issue Severity & Response Times
           </h2>
           <p className="text-center text-slate-600 dark:text-slate-300 mb-12">
@@ -419,12 +442,8 @@ export default function Support() {
                       {severity.severity}
                     </CardTitle>
                     <div className="flex gap-4 text-sm">
-                      <Badge variant="outline">
-                        Response: {severity.responseTime}
-                      </Badge>
-                      <Badge variant="outline">
-                        Resolution: {severity.resolutionTime}
-                      </Badge>
+                      <Badge variant="outline">Response: {severity.responseTime}</Badge>
+                      <Badge variant="outline">Resolution: {severity.resolutionTime}</Badge>
                     </div>
                   </div>
                   <CardDescription className="text-slate-600 dark:text-slate-300">

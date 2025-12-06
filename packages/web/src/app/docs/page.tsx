@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -13,35 +13,48 @@ import { AnimatedSidebar } from "@/components/AnimatedSidebar";
 import Link from "next/link";
 
 export default function Docs() {
-  const [activeSection, setActiveSection] = useState('getting-started');
+  const [activeSection, setActiveSection] = useState("getting-started");
 
   const sections = [
     {
-      id: 'getting-started',
-      title: 'Getting Started',
+      id: "getting-started",
+      title: "Getting Started",
       content: (
         <div className="space-y-6">
           <div>
             <h3 className="text-2xl font-bold mb-4 text-slate-900 dark:text-white">Introduction</h3>
             <p className="text-slate-600 dark:text-slate-300 mb-4">
-              Settler automatically matches transactions between any two platforms—Shopify to Stripe, QuickBooks to PayPal, and more. 
-              No manual work required. Get accurate results in minutes, not hours.
+              Settler automatically matches transactions between any two platforms—Shopify to
+              Stripe, QuickBooks to PayPal, and more. No manual work required. Get accurate results
+              in minutes, not hours.
             </p>
             <p className="text-slate-600 dark:text-slate-300 mb-4">
-              Our simple API lets you connect your existing tools and start matching transactions immediately. 
-              No complex setup or custom infrastructure needed.
+              Our simple API lets you connect your existing tools and start matching transactions
+              immediately. No complex setup or custom infrastructure needed.
             </p>
             <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4 mb-4">
               <p className="text-sm text-blue-800 dark:text-blue-200">
-                <strong>💡 Pro Tip:</strong> Try our <Link href="/playground" className="underline hover:text-blue-600 dark:hover:text-blue-300">interactive playground</Link> to test the API without signing up, or explore our <Link href="/cookbooks" className="underline hover:text-blue-600 dark:hover:text-blue-300">cookbooks</Link> for ready-to-use examples.
+                <strong>💡 Pro Tip:</strong> Try our{" "}
+                <Link
+                  href="/playground"
+                  className="underline hover:text-blue-600 dark:hover:text-blue-300"
+                >
+                  interactive playground
+                </Link>{" "}
+                to test the API without signing up, or explore our{" "}
+                <Link
+                  href="/cookbooks"
+                  className="underline hover:text-blue-600 dark:hover:text-blue-300"
+                >
+                  cookbooks
+                </Link>{" "}
+                for ready-to-use examples.
               </p>
             </div>
           </div>
           <div>
             <h3 className="text-2xl font-bold mb-4 text-slate-900 dark:text-white">Quick Start</h3>
-            <p className="text-slate-600 dark:text-slate-300 mb-4">
-              Get started in 5 minutes:
-            </p>
+            <p className="text-slate-600 dark:text-slate-300 mb-4">Get started in 5 minutes:</p>
             <div className="bg-slate-900 dark:bg-slate-800 rounded-lg p-6 overflow-x-auto mb-4">
               <pre className="text-green-400 text-sm">
                 <code>{`# Install the SDK
@@ -55,19 +68,29 @@ pnpm add @settler/sdk`}</code>
               </pre>
             </div>
             <p className="text-slate-600 dark:text-slate-300 text-sm">
-              Need help? Check out our <Link href="/support" className="text-blue-600 dark:text-blue-400 hover:underline">support page</Link> or <Link href="/community" className="text-blue-600 dark:text-blue-400 hover:underline">join our community</Link>.
+              Need help? Check out our{" "}
+              <Link href="/support" className="text-blue-600 dark:text-blue-400 hover:underline">
+                support page
+              </Link>{" "}
+              or{" "}
+              <Link href="/community" className="text-blue-600 dark:text-blue-400 hover:underline">
+                join our community
+              </Link>
+              .
             </p>
           </div>
         </div>
       ),
     },
     {
-      id: 'installation',
-      title: 'Installation',
+      id: "installation",
+      title: "Installation",
       content: (
         <div className="space-y-6">
           <div>
-            <h3 className="text-2xl font-bold mb-4 text-slate-900 dark:text-white">Node.js / TypeScript</h3>
+            <h3 className="text-2xl font-bold mb-4 text-slate-900 dark:text-white">
+              Node.js / TypeScript
+            </h3>
             <div className="bg-slate-900 dark:bg-slate-800 rounded-lg p-6 overflow-x-auto mb-4">
               <pre className="text-green-400 text-sm">
                 <code>{`import { Settler } from '@settler/sdk';
@@ -98,8 +121,8 @@ function MyComponent() {
       ),
     },
     {
-      id: 'api-reference',
-      title: 'API Reference',
+      id: "api-reference",
+      title: "API Reference",
       content: (
         <div className="space-y-6">
           <div>
@@ -108,7 +131,9 @@ function MyComponent() {
               <Card className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800">
                 <CardHeader>
                   <div className="flex items-center gap-2">
-                    <Badge className="bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300">POST</Badge>
+                    <Badge className="bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300">
+                      POST
+                    </Badge>
                     <CardTitle className="text-lg">/api/v1/jobs</CardTitle>
                   </div>
                   <CardDescription>Create a new reconciliation job</CardDescription>
@@ -140,7 +165,9 @@ function MyComponent() {
               <Card className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800">
                 <CardHeader>
                   <div className="flex items-center gap-2">
-                    <Badge className="bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300">GET</Badge>
+                    <Badge className="bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300">
+                      GET
+                    </Badge>
                     <CardTitle className="text-lg">/api/v1/jobs/:id</CardTitle>
                   </div>
                   <CardDescription>Get reconciliation job details</CardDescription>
@@ -157,7 +184,9 @@ console.log(job.status); // 'pending' | 'running' | 'completed' | 'failed'`}</co
               <Card className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800">
                 <CardHeader>
                   <div className="flex items-center gap-2">
-                    <Badge className="bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300">GET</Badge>
+                    <Badge className="bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300">
+                      GET
+                    </Badge>
                     <CardTitle className="text-lg">/api/v1/reports/:jobId</CardTitle>
                   </div>
                   <CardDescription>Get reconciliation report</CardDescription>
@@ -184,12 +213,14 @@ console.log(report.summary);
       ),
     },
     {
-      id: 'examples',
-      title: 'Examples',
+      id: "examples",
+      title: "Examples",
       content: (
         <div className="space-y-6">
           <div>
-            <h3 className="text-2xl font-bold mb-4 text-slate-900 dark:text-white">E-commerce Reconciliation</h3>
+            <h3 className="text-2xl font-bold mb-4 text-slate-900 dark:text-white">
+              E-commerce Reconciliation
+            </h3>
             <div className="bg-slate-900 dark:bg-slate-800 rounded-lg p-6 overflow-x-auto">
               <pre className="text-green-400 text-sm">
                 <code>{`// Reconcile Shopify orders with Stripe payments
@@ -229,7 +260,7 @@ console.log(\`Matched: \${report.summary.matched}/\${report.summary.total}\`);`}
     },
   ];
 
-  const activeContent = sections.find(s => s.id === activeSection)?.content;
+  const activeContent = sections.find((s) => s.id === activeSection)?.content;
 
   return (
     <AnimatedPageWrapper aria-label="Documentation page">
@@ -243,10 +274,7 @@ console.log(\`Matched: \${report.summary.matched}/\${report.summary.total}\`);`}
       />
 
       {/* Documentation Content */}
-      <section
-        className="py-12 px-4 sm:px-6 lg:px-8"
-        aria-labelledby="docs-content-heading"
-      >
+      <section className="py-12 px-4 sm:px-6 lg:px-8" aria-labelledby="docs-content-heading">
         <div className="max-w-7xl mx-auto">
           <h2 id="docs-content-heading" className="sr-only">
             Documentation Content
@@ -266,9 +294,7 @@ console.log(\`Matched: \${report.summary.matched}/\${report.summary.total}\`);`}
                 role="article"
                 aria-labelledby={`section-${activeSection}`}
               >
-                <CardContent className="p-8">
-                  {activeContent}
-                </CardContent>
+                <CardContent className="p-8">{activeContent}</CardContent>
               </Card>
             </div>
           </div>

@@ -33,9 +33,7 @@ class SnapshotService {
      */
     async createSnapshot(aggregateId, aggregateType, snapshotData, eventId) {
         const latestSnapshot = await this.eventStore.getLatestSnapshot(aggregateId, aggregateType);
-        const nextVersion = latestSnapshot
-            ? latestSnapshot.snapshot_version + 1
-            : 1;
+        const nextVersion = latestSnapshot ? latestSnapshot.snapshot_version + 1 : 1;
         const snapshot = {
             aggregate_id: aggregateId,
             aggregate_type: aggregateType,

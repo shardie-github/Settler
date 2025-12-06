@@ -5,22 +5,26 @@
 ## 📚 Quick Links
 
 ### For Developers
+
 - [Getting Started](./README.md#how-to-try-it) - Quick start guide
 - [API Documentation](./docs/api.md) - Complete API reference
 - [React.Settler Guide](./packages/react-settler/README.md) - React component library
 - [Protocol Specification](./packages/protocol/PROTOCOL.md) - Protocol types
 
 ### For Business
+
 - [Business Model](./BUSINESS_MODEL.md) - Revenue model and strategy
 - [Pricing](./packages/react-settler/docs/PRICING.md) - Feature tiers and pricing
 - [Sales Funnel](./SALES_FUNNEL.md) - Customer acquisition strategy
 
 ### For Legal
+
 - [Terms of Service](./LEGAL/TERMS_OF_SERVICE.md) - Service terms
 - [Commercial License](./LEGAL/COMMERCIAL_LICENSE.md) - Commercial license terms
 - [Privacy Policy](./LEGAL/PRIVACY_POLICY.md) - Privacy and data handling
 
 ### For Internal
+
 - [Business Strategy](./INTERNAL/BUSINESS_STRATEGY.md) - Internal strategy (confidential)
 - [Terminology Guide](./TERMINOLOGY.md) - Consistent terminology
 
@@ -29,6 +33,7 @@
 ### Root Documentation
 
 #### Getting Started
+
 - **[README.md](./README.md)** - Main project README
   - What Settler does
   - Quick start guide
@@ -36,6 +41,7 @@
   - Troubleshooting
 
 #### Business & Strategy
+
 - **[BUSINESS_MODEL.md](./BUSINESS_MODEL.md)** - Complete business model
   - Revenue streams
   - Pricing strategy
@@ -55,6 +61,7 @@
   - Consistent usage
 
 #### Legal Documents
+
 - **[LEGAL/TERMS_OF_SERVICE.md](./LEGAL/TERMS_OF_SERVICE.md)** - Terms of Service
   - Service terms
   - License tiers
@@ -74,6 +81,7 @@
   - User rights
 
 #### Internal Documents
+
 - **[INTERNAL/BUSINESS_STRATEGY.md](./INTERNAL/BUSINESS_STRATEGY.md)** - Internal strategy (confidential)
   - Go-to-market strategy
   - Financial projections
@@ -83,6 +91,7 @@
 ### React.Settler Documentation
 
 #### Main Documentation
+
 - **[packages/react-settler/README.md](./packages/react-settler/README.md)** - Main README
   - Overview
   - Quick start
@@ -90,6 +99,7 @@
   - Documentation links
 
 #### Guides
+
 - **[packages/react-settler/docs/PRICING.md](./packages/react-settler/docs/PRICING.md)** - Pricing guide
   - License tiers
   - Feature comparison
@@ -138,6 +148,7 @@
 ## 🎯 Documentation by Audience
 
 ### Developers
+
 1. [README.md](./README.md) - Start here
 2. [React.Settler README](./packages/react-settler/README.md)
 3. [API Documentation](./docs/api.md)
@@ -147,12 +158,14 @@
 7. [Testing Guide](./packages/react-settler/docs/TESTING.md)
 
 ### Business/Product
+
 1. [Business Model](./BUSINESS_MODEL.md)
 2. [Pricing Guide](./packages/react-settler/docs/PRICING.md)
 3. [Sales Funnel](./SALES_FUNNEL.md)
 4. [OSS vs Commercial](./packages/react-settler/docs/OSS_VS_COMMERCIAL.md)
 
 ### Marketing & Conversion
+
 1. [Content Audit](./docs/content_audit.md) - Content clarity and jargon audit
 2. [Funnel Strategy](./docs/funnel_strategy.md) - Free trial → paid conversion funnel
 3. [Trial Cadence](./docs/trial_to_paid_cadence.md) - 30-day trial email and in-app touchpoints
@@ -160,11 +173,13 @@
 5. [Executive Summary](./docs/summary_for_founder.md) - High-level overview for founder
 
 ### Legal/Compliance
+
 1. [Terms of Service](./LEGAL/TERMS_OF_SERVICE.md)
 2. [Commercial License](./LEGAL/COMMERCIAL_LICENSE.md)
 3. [Privacy Policy](./LEGAL/PRIVACY_POLICY.md)
 
 ### Internal Team
+
 1. [Business Strategy](./INTERNAL/BUSINESS_STRATEGY.md) (Confidential)
 2. [Terminology Guide](./TERMINOLOGY.md)
 3. [Sales Funnel](./SALES_FUNNEL.md)
@@ -184,16 +199,19 @@ All documentation follows these standards:
 ## 📝 Documentation Standards
 
 ### Naming Conventions
+
 - **Products:** "Settler API" (not "Settler SaaS"), "React.Settler" (with dot)
 - **Tiers:** "OSS tier", "Commercial tier", "Enterprise tier"
 - **Pricing:** "$99/month" (not "$99/mo" or "$99 per month")
 
 ### License References
+
 - **OSS:** "MIT License" or "Free Forever"
 - **Commercial:** "Commercial License" (requires subscription)
 - **Enterprise:** "Enterprise Agreement" (custom contract)
 
 ### Feature References
+
 - **OSS Features:** "Core protocol", "basic components", "security basics"
 - **Commercial Features:** "Platform integrations", "virtualization", "telemetry"
 - **Enterprise Features:** "SSO", "RBAC", "white-label"

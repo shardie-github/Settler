@@ -11,6 +11,7 @@ RESEND_FROM_NAME=Settler
 ```
 
 **For Production (after domain verification):**
+
 ```bash
 RESEND_FROM_EMAIL=noreply@yourdomain.com
 ```
@@ -42,10 +43,12 @@ The email service (`packages/api/src/lib/email.ts`) includes:
 ## Domain Verification (Production)
 
 **For Development:**
+
 - Use `onboarding@resend.dev` (no verification needed)
 - Works immediately
 
 **For Production:**
+
 1. Go to [resend.com/domains](https://resend.com/domains)
 2. Add your domain (e.g., `settler.dev`)
 3. Add DNS records (TXT, MX) as instructed
@@ -59,13 +62,13 @@ The email service (`packages/api/src/lib/email.ts`) includes:
 After setting the variable, test email sending:
 
 ```typescript
-import { sendVerificationEmail } from '@/lib/email';
+import { sendVerificationEmail } from "@/lib/email";
 
 // Test email
 await sendVerificationEmail(
-  'test@example.com',
-  'https://your-app.com/verify?token=abc123',
-  'Test User'
+  "test@example.com",
+  "https://your-app.com/verify?token=abc123",
+  "Test User"
 );
 ```
 

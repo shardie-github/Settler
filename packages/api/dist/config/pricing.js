@@ -18,7 +18,7 @@ var PricingTier;
 exports.PRICING_TIERS = {
     [PricingTier.SAAS_ONLY]: {
         tier: PricingTier.SAAS_ONLY,
-        name: 'SaaS Only',
+        name: "SaaS Only",
         monthlyPrice: 99,
         features: {
             edgeNodes: 0,
@@ -35,7 +35,7 @@ exports.PRICING_TIERS = {
     },
     [PricingTier.EDGE_STARTER]: {
         tier: PricingTier.EDGE_STARTER,
-        name: 'Edge Starter',
+        name: "Edge Starter",
         monthlyPrice: 299,
         features: {
             edgeNodes: 1,
@@ -47,7 +47,7 @@ exports.PRICING_TIERS = {
             customModels: false,
             onPremDeployment: false,
             dedicatedSupport: false,
-            sla: '99.5%',
+            sla: "99.5%",
         },
         perNodePrice: 0, // Included
         perVolumePrice: 0.01, // $0.01 per 1000 reconciliations over limit
@@ -55,7 +55,7 @@ exports.PRICING_TIERS = {
     },
     [PricingTier.EDGE_PRO]: {
         tier: PricingTier.EDGE_PRO,
-        name: 'Edge Pro',
+        name: "Edge Pro",
         monthlyPrice: 999,
         features: {
             edgeNodes: 5,
@@ -67,7 +67,7 @@ exports.PRICING_TIERS = {
             customModels: false,
             onPremDeployment: false,
             dedicatedSupport: true,
-            sla: '99.9%',
+            sla: "99.9%",
         },
         perNodePrice: 100, // $100 per additional node
         perVolumePrice: 0.005, // $0.005 per 1000 reconciliations over limit
@@ -75,7 +75,7 @@ exports.PRICING_TIERS = {
     },
     [PricingTier.ENTERPRISE_EDGE]: {
         tier: PricingTier.ENTERPRISE_EDGE,
-        name: 'Enterprise Edge',
+        name: "Enterprise Edge",
         monthlyPrice: 4999,
         features: {
             edgeNodes: null, // Unlimited
@@ -87,7 +87,7 @@ exports.PRICING_TIERS = {
             customModels: true,
             onPremDeployment: true,
             dedicatedSupport: true,
-            sla: '99.99%',
+            sla: "99.99%",
         },
         perNodePrice: 0, // Included
         perVolumePrice: 0, // Included
@@ -106,12 +106,14 @@ function calculateMonthlyRevenue(tier, edgeNodes, reconciliations, optimizations
         revenue += overage * (config.perNodePrice || 0);
     }
     // Reconciliation volume overage
-    if (config.features.monthlyReconciliations !== null && reconciliations > config.features.monthlyReconciliations) {
+    if (config.features.monthlyReconciliations !== null &&
+        reconciliations > config.features.monthlyReconciliations) {
         const overage = reconciliations - config.features.monthlyReconciliations;
         revenue += (overage / 1000) * (config.perVolumePrice || 0);
     }
     // Optimization overage
-    if (config.features.modelOptimizations !== null && optimizations > config.features.modelOptimizations) {
+    if (config.features.modelOptimizations !== null &&
+        optimizations > config.features.modelOptimizations) {
         const overage = optimizations - config.features.modelOptimizations;
         revenue += overage * (config.perOptimizationPrice || 0);
     }
@@ -128,7 +130,7 @@ function hasFeature(tier, feature) {
  */
 function getFeatureLimit(tier, feature) {
     const value = exports.PRICING_TIERS[tier].features[feature];
-    if (typeof value === 'number') {
+    if (typeof value === "number") {
         return value;
     }
     return null;

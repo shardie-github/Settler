@@ -37,8 +37,8 @@ export function validateModelVersion(version: ModelVersion): boolean {
  * Compare model versions
  */
 export function compareVersions(v1: string, v2: string): number {
-  const parts1 = v1.split('.').map(Number);
-  const parts2 = v2.split('.').map(Number);
+  const parts1 = v1.split(".").map(Number);
+  const parts2 = v2.split(".").map(Number);
 
   for (let i = 0; i < Math.max(parts1.length, parts2.length); i++) {
     const part1 = parts1[i] || 0;
@@ -53,9 +53,6 @@ export function compareVersions(v1: string, v2: string): number {
 /**
  * Check if version update is available
  */
-export function isUpdateAvailable(
-  currentVersion: string,
-  latestVersion: string
-): boolean {
+export function isUpdateAvailable(currentVersion: string, latestVersion: string): boolean {
   return compareVersions(latestVersion, currentVersion) > 0;
 }

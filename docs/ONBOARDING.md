@@ -15,21 +15,25 @@ Welcome to Settler! This guide will help you get started with reconciliation in 
 ### Step 2: Install the SDK
 
 **TypeScript/JavaScript:**
+
 ```bash
 npm install @settler/sdk
 ```
 
 **Python:**
+
 ```bash
 pip install settler-sdk
 ```
 
 **Ruby:**
+
 ```bash
 gem install settler-sdk
 ```
 
 **Go:**
+
 ```bash
 go get github.com/settler/settler-go
 ```
@@ -37,6 +41,7 @@ go get github.com/settler/settler-go
 ### Step 3: Create Your First Reconciliation Job
 
 **TypeScript Example:**
+
 ```typescript
 import Settler from "@settler/sdk";
 
@@ -162,15 +167,18 @@ const job = await client.jobs.create({
 ### Common Issues
 
 **Issue: "Invalid API key"**
+
 - Verify your API key is correct
 - Check that you're using the correct environment (production vs. development)
 
 **Issue: "Adapter connection failed"**
+
 - Verify your adapter credentials are correct
 - Check network connectivity to the adapter's API
 - Review adapter-specific requirements in [Adapter Guide](./adapters.md)
 
 **Issue: "No matches found"**
+
 - Review your matching rules
 - Check that source and target data formats match
 - Verify date ranges and filters

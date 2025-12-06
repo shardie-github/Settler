@@ -117,9 +117,9 @@ if (config_1.config.features.enableRequestTimeout) {
 }
 // Trace ID middleware
 app.use((req, res, next) => {
-    const traceId = req.headers['x-trace-id'] || (0, uuid_1.v4)();
+    const traceId = req.headers["x-trace-id"] || (0, uuid_1.v4)();
     req.traceId = traceId;
-    res.setHeader('X-Trace-Id', traceId);
+    res.setHeader("X-Trace-Id", traceId);
     next();
 });
 // Global IP-based rate limiting (backup)
@@ -133,10 +133,10 @@ const ipLimiter = (0, express_rate_limit_1.default)({
 app.use("/api/", ipLimiter);
 // Body parsing with size and depth limits
 function countDepth(obj, current = 0) {
-    if (typeof obj !== 'object' || obj === null || Array.isArray(obj)) {
+    if (typeof obj !== "object" || obj === null || Array.isArray(obj)) {
         return current;
     }
-    const depths = Object.values(obj).map(v => countDepth(v, current + 1));
+    const depths = Object.values(obj).map((v) => countDepth(v, current + 1));
     return Math.max(current, ...depths);
 }
 app.use(express_1.default.json({
@@ -146,11 +146,11 @@ app.use(express_1.default.json({
             const parsed = JSON.parse(buf.toString());
             const depth = countDepth(parsed);
             if (depth > 20) {
-                throw new Error('JSON depth exceeds maximum of 20 levels');
+                throw new Error("JSON depth exceeds maximum of 20 levels");
             }
         }
         catch (error) {
-            if (error instanceof Error && error.message.includes('depth')) {
+            if (error instanceof Error && error.message.includes("depth")) {
                 throw error;
             }
             // Ignore JSON parse errors, let express handle them
@@ -164,13 +164,13 @@ app.use(express_1.default.urlencoded({ extended: true, limit: "1mb" }));
 app.use(input_sanitization_1.sanitizeInput);
 app.use(input_sanitization_1.sanitizeUrlParams);
 // Validate secrets at startup (production and preview)
-if (config_1.config.nodeEnv === 'production' || config_1.config.nodeEnv === 'preview') {
+if (config_1.config.nodeEnv === "production" || config_1.config.nodeEnv === "preview") {
     try {
         SecretsManager_1.SecretsManager.validateSecrets(SecretsManager_1.REQUIRED_SECRETS);
     }
     catch (error) {
-        const message = error instanceof Error ? error.message : 'Unknown error';
-        console.error('Secret validation failed:', message);
+        const message = error instanceof Error ? error.message : "Unknown error";
+        console.error("Secret validation failed:", message);
         process.exit(1);
     }
 }
@@ -291,29 +291,29 @@ async function startServer() {
         // Run startup validations
         const validation = await (0, startup_validation_1.validateStartup)();
         if (!validation.passed) {
-            (0, logger_1.logError)('Startup validation failed', undefined, { validation });
-            if (config_1.config.nodeEnv === 'production') {
+            (0, logger_1.logError)("Startup validation failed", undefined, { validation });
+            if (config_1.config.nodeEnv === "production") {
                 process.exit(1);
             }
             else {
-                (0, logger_1.logWarn)('Continuing despite validation failures (non-production mode)');
+                (0, logger_1.logWarn)("Continuing despite validation failures (non-production mode)");
             }
         }
         await (0, db_1.initDatabase)();
-        (0, logger_1.logInfo)('Database initialized');
+        (0, logger_1.logInfo)("Database initialized");
         // Start background jobs
         (0, data_retention_1.startDataRetentionJob)();
         (0, materialized_view_refresh_1.startMaterializedViewRefreshJob)();
         // Process pending webhooks every minute
         const webhookInterval = setInterval(() => {
-            (0, webhook_queue_1.processPendingWebhooks)().catch(error => {
-                (0, logger_1.logError)('Failed to process pending webhooks', error);
+            (0, webhook_queue_1.processPendingWebhooks)().catch((error) => {
+                (0, logger_1.logError)("Failed to process pending webhooks", error);
             });
         }, 60000);
         // Register webhook interval cleanup
         (0, graceful_shutdown_1.registerShutdownHandler)(async () => {
             clearInterval(webhookInterval);
-            (0, logger_1.logInfo)('Webhook processing stopped');
+            (0, logger_1.logInfo)("Webhook processing stopped");
         });
         const httpServer = (0, http_1.createServer)(app);
         // Initialize WebSocket server
@@ -325,13 +325,13 @@ async function startServer() {
         (0, graceful_shutdown_1.setupSignalHandlers)(server, {
             timeout: 30000, // 30 seconds
             onShutdown: async () => {
-                (0, logger_1.logInfo)('Custom shutdown tasks completed');
+                (0, logger_1.logInfo)("Custom shutdown tasks completed");
             },
         });
         return server;
     }
     catch (error) {
-        console.error('Failed to start server:', error);
+        console.error("Failed to start server:", error);
         process.exit(1);
     }
 }

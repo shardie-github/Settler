@@ -8,15 +8,19 @@
 ## Issues Found and Fixed
 
 ### 1. Missing `@settler/types` Dependency
+
 **Problem:** The web package imports `MatchingRule` from `@settler/types` but it wasn't listed as a dependency.
 
 **Fix:**
+
 - ✅ Added `"@settler/types": "*"` to `packages/web/package.json` dependencies
 
 ### 2. Missing TypeScript Path Mapping
+
 **Problem:** TypeScript couldn't resolve `@settler/types` during typechecking.
 
 **Fix:**
+
 - ✅ Added path mapping in `packages/web/tsconfig.json`:
   ```json
   "@settler/types": ["../types/dist"],
@@ -24,9 +28,11 @@
   ```
 
 ### 3. Missing Next.js Transpilation
+
 **Problem:** Next.js needs to transpile workspace packages.
 
 **Fix:**
+
 - ✅ Added `@settler/types` to `transpilePackages` in `packages/web/next.config.js`
 
 ---
@@ -34,12 +40,14 @@
 ## Package Dependencies Verified
 
 ### Web Package Dependencies (All Present):
+
 - ✅ `@settler/sdk` - Used in multiple components
 - ✅ `@settler/react-settler` - Used in react-settler-demo page
 - ✅ `@settler/protocol` - Used in SecureMobileApp component
 - ✅ `@settler/types` - Used in RulesEditor component (was missing, now fixed)
 
 ### Package Structure Verified:
+
 - ✅ `@settler/protocol` - Has dist/ folder, exports correct
 - ✅ `@settler/sdk` - Has dist/ folder, exports correct
 - ✅ `@settler/react-settler` - Has dist/src/ folder (structure preserved)
@@ -50,16 +58,19 @@
 ## Build Configuration
 
 ### Vercel Build Command:
+
 ```json
 "buildCommand": "cd ../.. && npx turbo run build --filter=@settler/web..."
 ```
 
 This ensures:
+
 1. Turbo builds all dependencies first (`@settler/protocol`, `@settler/types`, `@settler/sdk`, `@settler/react-settler`)
 2. Then builds `@settler/web`
 3. Dependencies are built in correct order based on package dependencies
 
 ### Prebuild Script:
+
 ```json
 "prebuild": "cd ../.. && npx turbo run build --filter=^@settler/web"
 ```
@@ -71,6 +82,7 @@ The `^` prefix means "build dependencies of this package, but not the package it
 ## TypeScript Configuration
 
 ### Path Mappings (packages/web/tsconfig.json):
+
 ```json
 {
   "@settler/react-settler": ["../react-settler/dist/src"],
@@ -91,6 +103,7 @@ These paths allow TypeScript to resolve workspace packages during development an
 ## Next.js Configuration
 
 ### TranspilePackages (packages/web/next.config.js):
+
 ```javascript
 transpilePackages: [
   '@settler/sdk',

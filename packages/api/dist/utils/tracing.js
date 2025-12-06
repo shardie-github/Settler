@@ -8,6 +8,7 @@ exports.createChildSpan = createChildSpan;
 exports.endSpan = endSpan;
 exports.trace = trace;
 const uuid_1 = require("uuid");
+const logger_1 = require("./logger");
 const traceContexts = new Map();
 function getTraceContext(req) {
     const traceId = req.traceId || (0, uuid_1.v4)();
@@ -25,7 +26,7 @@ function getParentTraceContext(spanId) {
 function createChildSpan(parentSpanId) {
     const parent = traceContexts.get(parentSpanId);
     if (!parent) {
-        throw new Error('Parent span not found');
+        throw new Error("Parent span not found");
     }
     const childSpan = {
         traceId: parent.traceId,
@@ -47,27 +48,25 @@ async function trace(name, operation, context) {
         const result = await operation();
         const duration = Date.now() - startTime;
         // Log trace (in production, send to tracing backend)
-        console.log(JSON.stringify({
+        (0, logger_1.logInfo)("Trace completed", {
             traceId,
             spanId,
             name,
             duration,
-            status: 'success',
-            timestamp: new Date().toISOString(),
-        }));
+            status: "success",
+        });
         return result;
     }
     catch (error) {
         const duration = Date.now() - startTime;
-        console.log(JSON.stringify({
+        (0, logger_1.logInfo)("Trace failed", {
             traceId,
             spanId,
             name,
             duration,
-            status: 'error',
+            status: "error",
             error: error.message,
-            timestamp: new Date().toISOString(),
-        }));
+        });
         throw error;
     }
 }

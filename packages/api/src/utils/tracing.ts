@@ -1,9 +1,9 @@
 // Basic distributed tracing implementation
 // For production, use OpenTelemetry SDK
 
-import { v4 as uuidv4 } from 'uuid';
-import { AuthRequest } from '../middleware/auth';
-// Config import removed - not used in this file
+import { v4 as uuidv4 } from "uuid";
+import { AuthRequest } from "../middleware/auth";
+import { logInfo } from "./logger";
 
 export interface TraceContext {
   traceId: string;
@@ -33,7 +33,7 @@ export function getParentTraceContext(spanId: string): TraceContext | null {
 export function createChildSpan(parentSpanId: string): TraceContext {
   const parent = traceContexts.get(parentSpanId);
   if (!parent) {
-    throw new Error('Parent span not found');
+    throw new Error("Parent span not found");
   }
 
   const childSpan: TraceContext = {
@@ -65,28 +65,26 @@ export async function trace<T>(
     const duration = Date.now() - startTime;
 
     // Log trace (in production, send to tracing backend)
-    console.log(JSON.stringify({
+    logInfo("Trace completed", {
       traceId,
       spanId,
       name,
       duration,
-      status: 'success',
-      timestamp: new Date().toISOString(),
-    }));
+      status: "success",
+    });
 
     return result;
   } catch (error: any) {
     const duration = Date.now() - startTime;
 
-    console.log(JSON.stringify({
+    logInfo("Trace failed", {
       traceId,
       spanId,
       name,
       duration,
-      status: 'error',
+      status: "error",
       error: error.message,
-      timestamp: new Date().toISOString(),
-    }));
+    });
 
     throw error;
   }

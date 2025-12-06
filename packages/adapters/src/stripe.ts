@@ -20,7 +20,7 @@ export class StripeAdapter implements Adapter {
     const listParams: { created?: { gte: number; lte: number }; limit: number } = {
       limit: 100,
     };
-    
+
     if (dateRange?.start && dateRange?.end) {
       listParams.created = {
         gte: Math.floor(dateRange.start.getTime() / 1000),

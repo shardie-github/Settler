@@ -3,6 +3,7 @@
 ## Issue
 
 The current environment cannot connect to your Supabase database because:
+
 - The database hostname resolves to IPv6 only
 - This environment doesn't have IPv6 connectivity
 
@@ -13,6 +14,7 @@ The current environment cannot connect to your Supabase database because:
 1. **Clone/access this repository on your local machine**
 
 2. **Set up environment:**
+
    ```bash
    cp .env.template .env
    # Edit .env and add:
@@ -20,6 +22,7 @@ The current environment cannot connect to your Supabase database because:
    ```
 
 3. **Install dependencies:**
+
    ```bash
    npm install
    ```
@@ -68,13 +71,14 @@ psql "postgresql://postgres:XoogH4uSsWQ3mhFD@db.johfcvvmtfiomzxipspz.supabase.co
 - ✅ 16+ database tables
 - ✅ 50+ indexes
 - ✅ 10+ functions
-- ✅ 20+ triggers  
+- ✅ 20+ triggers
 - ✅ Row Level Security policies
 - ✅ Seed data (tenant, user, API keys)
 
 ## Verification
 
 After migrations, check in Supabase Dashboard:
+
 - **Table Editor** - Should see all tables created
 - **SQL Editor** - Run `SELECT * FROM tenants;` to verify seed data
 

@@ -9,6 +9,7 @@ REDIS_URL="rediss://default:AVtkAAIncDJjZmUxNTlhNmMyMjI0YmNjYTk5YjY4YzI2YzEyZjUy
 ```
 
 This single URL works for:
+
 - ✅ BullMQ job queues (TCP connection)
 - ✅ Caching operations
 - ✅ Rate limiting
@@ -29,6 +30,7 @@ UPSTASH_REDIS_REST_TOKEN=AVtkAAIncDJjZmUxNTlhNmMyMjI0YmNjYTk5YjY4YzI2YzEyZjUyN3A
 ```
 
 **That's it!** The `REDIS_URL` is all you need. The code will automatically:
+
 - Use TLS (the `rediss://` protocol indicates secure connection)
 - Connect to the correct host and port
 - Authenticate with the password
@@ -40,6 +42,7 @@ UPSTASH_REDIS_REST_TOKEN=AVtkAAIncDJjZmUxNTlhNmMyMjI0YmNjYTk5YjY4YzI2YzEyZjUyN3A
 ## Testing
 
 After setting variables, your app will automatically test the connection on startup. Check logs for:
+
 - ✅ "Redis connected successfully"
 - ❌ "Redis connection failed" (if TCP details are wrong)
 

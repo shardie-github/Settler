@@ -4,13 +4,13 @@
  * Future-forward: AI-powered examples, instant reconciliation, visual match visualization
  */
 
-import React, { useState, useEffect } from 'react';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Badge } from '@/components/ui/badge';
-import { Play, BarChart3, CheckCircle2, AlertTriangle } from '@/lib/lucide-react';
-import { CodeBlock } from '@/components/ui/code-block';
+import React, { useState, useEffect } from "react";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Badge } from "@/components/ui/badge";
+import { Play, BarChart3, CheckCircle2, AlertTriangle } from "@/lib/lucide-react";
+import { CodeBlock } from "@/components/ui/code-block";
 
 interface PlaygroundExample {
   id: string;
@@ -56,7 +56,7 @@ export function Playground() {
   const [selectedExample, setSelectedExample] = useState<PlaygroundExample | null>(null);
   const [result, setResult] = useState<ReconciliationResult | null>(null);
   const [loading, setLoading] = useState(false);
-  const [activeTab, setActiveTab] = useState<'examples' | 'custom' | 'results'>('examples');
+  const [activeTab, setActiveTab] = useState<"examples" | "custom" | "results">("examples");
 
   useEffect(() => {
     loadExamples();
@@ -64,14 +64,14 @@ export function Playground() {
 
   const loadExamples = async () => {
     try {
-      const response = await fetch('/api/v1/playground/examples');
+      const response = await fetch("/api/v1/playground/examples");
       const data = await response.json();
       setExamples(data.data || []);
       if (data.data?.length > 0) {
         setSelectedExample(data.data[0]);
       }
     } catch (error) {
-      console.error('Failed to load examples:', error);
+      console.error("Failed to load examples:", error);
     }
   };
 
@@ -80,9 +80,9 @@ export function Playground() {
 
     setLoading(true);
     try {
-      const response = await fetch('/api/v1/playground/reconcile', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const response = await fetch("/api/v1/playground/reconcile", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           sourceAdapter: selectedExample.sourceAdapter,
           sourceData: selectedExample.sourceData,
@@ -93,9 +93,9 @@ export function Playground() {
       });
       const data = await response.json();
       setResult(data.data || null);
-      setActiveTab('results');
+      setActiveTab("results");
     } catch (error) {
-      console.error('Failed to run reconciliation:', error);
+      console.error("Failed to run reconciliation:", error);
     } finally {
       setLoading(false);
     }
@@ -110,7 +110,11 @@ export function Playground() {
         </p>
       </div>
 
-      <Tabs value={activeTab} onValueChange={(v: string) => setActiveTab(v as typeof activeTab)} className="space-y-4">
+      <Tabs
+        value={activeTab}
+        onValueChange={(v: string) => setActiveTab(v as typeof activeTab)}
+        className="space-y-4"
+      >
         <TabsList className="grid w-full grid-cols-3">
           <TabsTrigger value="examples">Examples</TabsTrigger>
           <TabsTrigger value="custom">Custom</TabsTrigger>
@@ -123,7 +127,7 @@ export function Playground() {
               <Card
                 key={example.id}
                 className={`cursor-pointer transition-all ${
-                  selectedExample?.id === example.id ? 'border-primary ring-2 ring-primary' : ''
+                  selectedExample?.id === example.id ? "border-primary ring-2 ring-primary" : ""
                 }`}
                 onClick={() => setSelectedExample(example)}
               >
@@ -164,19 +168,28 @@ export function Playground() {
               <CardContent className="space-y-4">
                 <div>
                   <h4 className="font-semibold mb-2">Source Data</h4>
-                  <CodeBlock language="json" code={JSON.stringify(selectedExample.sourceData, null, 2)} />
+                  <CodeBlock
+                    language="json"
+                    code={JSON.stringify(selectedExample.sourceData, null, 2)}
+                  />
                 </div>
                 <div>
                   <h4 className="font-semibold mb-2">Target Data</h4>
-                  <CodeBlock language="json" code={JSON.stringify(selectedExample.targetData, null, 2)} />
+                  <CodeBlock
+                    language="json"
+                    code={JSON.stringify(selectedExample.targetData, null, 2)}
+                  />
                 </div>
                 <div>
                   <h4 className="font-semibold mb-2">Matching Rules</h4>
-                  <CodeBlock language="json" code={JSON.stringify(selectedExample.rules, null, 2)} />
+                  <CodeBlock
+                    language="json"
+                    code={JSON.stringify(selectedExample.rules, null, 2)}
+                  />
                 </div>
                 <Button onClick={runReconciliation} disabled={loading} className="w-full">
                   <Play className="w-4 h-4 mr-2" />
-                  {loading ? 'Running...' : 'Run Reconciliation'}
+                  {loading ? "Running..." : "Run Reconciliation"}
                 </Button>
               </CardContent>
             </Card>
@@ -188,15 +201,16 @@ export function Playground() {
             <CardHeader>
               <CardTitle>Custom Reconciliation</CardTitle>
               <p className="text-sm text-muted-foreground">
-                Build your own reconciliation scenario. Sign up to save and run real reconciliations.
+                Build your own reconciliation scenario. Sign up to save and run real
+                reconciliations.
               </p>
             </CardHeader>
             <CardContent>
               <p className="text-muted-foreground text-center py-8">
-                Custom playground builder coming soon. Try the examples above or{' '}
+                Custom playground builder coming soon. Try the examples above or{" "}
                 <a href="/signup" className="text-primary underline">
                   sign up
-                </a>{' '}
+                </a>{" "}
                 to create your own reconciliations.
               </p>
             </CardContent>
@@ -243,11 +257,16 @@ export function Playground() {
                   <CardContent>
                     <div className="space-y-2">
                       {result.matches.map((match, i) => (
-                        <div key={i} className="flex items-center justify-between p-2 border rounded">
+                        <div
+                          key={i}
+                          className="flex items-center justify-between p-2 border rounded"
+                        >
                           <div>
-                            <p className="font-mono text-sm">{match.sourceId} → {match.targetId}</p>
+                            <p className="font-mono text-sm">
+                              {match.sourceId} → {match.targetId}
+                            </p>
                           </div>
-                          <Badge variant="secondary">{(match.confidence).toFixed(1)}%</Badge>
+                          <Badge variant="secondary">{match.confidence.toFixed(1)}%</Badge>
                         </div>
                       ))}
                     </div>
@@ -267,7 +286,9 @@ export function Playground() {
                         <div key={i} className="p-2 border rounded">
                           <div className="flex items-center justify-between mb-1">
                             <p className="font-mono text-sm">{exception.sourceId}</p>
-                            <Badge variant={exception.severity === 'high' ? 'destructive' : 'secondary'}>
+                            <Badge
+                              variant={exception.severity === "high" ? "destructive" : "secondary"}
+                            >
                               {exception.severity}
                             </Badge>
                           </div>

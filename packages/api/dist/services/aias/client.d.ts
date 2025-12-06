@@ -16,16 +16,16 @@ export interface AIASConfig {
 }
 export interface ModelUploadRequest {
     modelName: string;
-    modelType: 'matching' | 'anomaly_detection' | 'schema_inference' | 'pii_detection';
+    modelType: "matching" | "anomaly_detection" | "schema_inference" | "pii_detection";
     modelFile: Buffer | string;
-    format: 'onnx' | 'tensorrt' | 'executorch' | 'tflite' | 'pytorch';
+    format: "onnx" | "tensorrt" | "executorch" | "tflite" | "pytorch";
     metadata?: Record<string, unknown>;
 }
 export interface ModelOptimizationRequest {
     modelId: string;
     targetDevices: string[];
-    quantization: 'int4' | 'int8' | 'fp16' | 'fp32';
-    optimizationLevel: 'speed' | 'balanced' | 'accuracy';
+    quantization: "int4" | "int8" | "fp16" | "fp32";
+    optimizationLevel: "speed" | "balanced" | "accuracy";
 }
 export interface BenchmarkRequest {
     modelId: string;
@@ -46,7 +46,7 @@ export interface BenchmarkResult {
 }
 export interface ExportRequest {
     modelId: string;
-    format: 'docker' | 'wasm' | 'apk' | 'onnx' | 'tensorrt';
+    format: "docker" | "wasm" | "apk" | "onnx" | "tensorrt";
     targetDevice?: string;
 }
 export interface ExportResult {
@@ -76,7 +76,7 @@ export declare class AIASClient {
      * Get optimization job status
      */
     getOptimizationStatus(jobId: string): Promise<{
-        status: 'pending' | 'running' | 'completed' | 'failed';
+        status: "pending" | "running" | "completed" | "failed";
         progress?: number;
         result?: {
             modelId: string;

@@ -1,4 +1,5 @@
 # Settler Revenue + Narrative Engine
+
 ## Unified Revenue Storyboard
 
 **Generated:** January 2026  
@@ -10,6 +11,7 @@
 ## Executive Summary
 
 This document synthesizes Settler's complete Revenue + Narrative Engine, combining:
+
 - **Pricing Strategy** (Task A): Tiered SaaS model ($49-$999+/mo) with 4 packages
 - **Investor Narrative** (Task B): 6-chapter story from problem to $15M Series A ask
 - **Experiments** (Task C): 5 parallel A/B tests with success metrics
@@ -30,21 +32,25 @@ This document synthesizes Settler's complete Revenue + Narrative Engine, combini
 ✅ **Cohesion Verified:** All outputs align across tasks
 
 **Pricing Consistency:**
+
 - Deck pricing (Slide 8) matches pricing-models.yaml: Free ($0), Starter ($49), Growth ($299), Enterprise (custom)
 - Experiments test pricing variants without conflicting with core model
 - Investor narrative references pricing model accurately
 
 **Narrative Consistency:**
+
 - Problem statement consistent across deck (Slide 2) and investor narrative (Chapter 1)
 - Traction metrics align: 50+ beta users, 95%+ accuracy, <100ms latency
 - Market sizing consistent: $20B SAM, $2.3B SOM, 12% YoY growth
 
 **Experiment Alignment:**
+
 - Tests validate pricing model assumptions (hybrid vs pure usage, gateway limits)
 - Success metrics (LTV/CAC >3x) align with investor narrative (12x LTV:CAC target)
 - Implementation timeline (90-day tests) fits go-to-market strategy
 
 **Asset Consistency:**
+
 - Deck slides match narrative chapters
 - One-pager condenses deck into single page
 - Copy library (elevator pitch, Twitter thread) aligns with narrative
@@ -58,12 +64,14 @@ This document synthesizes Settler's complete Revenue + Narrative Engine, combini
 ### 1. PRICING ENGINE (Task A + C)
 
 **Packages:**
+
 - **Free:** $0/month, 1K transactions/month, 2 gateways
 - **Starter:** $49/month, 10K transactions/month, 3 gateways
 - **Growth:** $299/month, 100K transactions/month, 10 gateways
 - **Enterprise:** Custom ($999+/month), unlimited, all features
 
 **Experiments:**
+
 1. Pure Usage vs Hybrid (exp_001): 90-day test, 1,000 users
 2. Gateway Limits (exp_002): 60-day test, 400 users
 3. Pricing Display (exp_003): 90-day test, 600 users
@@ -71,11 +79,13 @@ This document synthesizes Settler's complete Revenue + Narrative Engine, combini
 5. Per-Workspace Pricing (exp_005): 90-day test, 300 users
 
 **Success Metrics:**
+
 - **North Star:** LTV/CAC >3x within 90 days
 - **Guardrails:** Activation >40%, Week 1 retention >70%, Conversion >5%, Churn <5%
 - **Learning:** Price sensitivity by segment, gateway drop-off rates, time to first reconciliation
 
 **Implementation:**
+
 - Feature flags: LaunchDarkly or Redis-based
 - Analytics: Mixpanel or Amplitude
 - Sample sizes: 300-2,000 users per experiment
@@ -86,6 +96,7 @@ This document synthesizes Settler's complete Revenue + Narrative Engine, combini
 ### 2. INVESTOR NARRATIVE (Task B + D1)
 
 **15-Slide Deck Structure:**
+
 1. Title + Tagline + Ask
 2. Problem ($88B reconciliation nightmare)
 3. Why Existing Solutions Fail
@@ -103,6 +114,7 @@ This document synthesizes Settler's complete Revenue + Narrative Engine, combini
 15. Thank You/Contact
 
 **Narrative Arc:**
+
 - **Chapter 1:** Problem ($88B reconciliation nightmare)
 - **Chapter 2:** Solution (Settler: Ledger accuracy as API)
 - **Chapter 3:** Traction (Early signals: 50+ beta users)
@@ -111,6 +123,7 @@ This document synthesizes Settler's complete Revenue + Narrative Engine, combini
 - **Chapter 6:** Ask (Why now → $3M ARR trajectory → $15M Series A)
 
 **Persona Variants:**
+
 - **Angels:** Technical wedge validation + founder story
 - **Seed VCs:** Market size + team + early metrics
 - **Payments Strategics:** Partnership economics + distribution
@@ -122,21 +135,25 @@ This document synthesizes Settler's complete Revenue + Narrative Engine, combini
 ### 3. PARTNER ECONOMICS (Task B variant + pricing)
 
 **Distribution Channels:**
+
 - Marketplace listing (Shopify App Store, Stripe Partner Directory)
 - Co-sell program (20% revenue share)
 - Technical integration (webhooks, adapters)
 
 **Partner Value:**
+
 - Increases customer retention on payment platforms
 - Increases platform stickiness
 - Reduces churn
 
 **Economics:**
+
 - Revenue share: 20% of Settler revenue for referred customers
 - Typical customer: $50/month = $10/month partner revenue
 - Co-marketing opportunities
 
 **Target Partners:**
+
 - Payment platforms: Stripe, PayPal, Square
 - E-commerce platforms: Shopify, WooCommerce
 - Accounting software: QuickBooks, Xero, NetSuite
@@ -148,30 +165,36 @@ This document synthesizes Settler's complete Revenue + Narrative Engine, combini
 **90-Day Test Calendar:**
 
 **Month 1:**
+
 - Launch exp_001 (Pure Usage vs Hybrid) at 10% traffic
 - Launch exp_004 (Free Tier vs Trial) at 10% traffic
 
 **Month 2:**
+
 - Scale exp_001 to 50% traffic
 - Scale exp_004 to 50% traffic
 - Launch exp_002 (Gateway Limits) at 50% traffic
 
 **Month 3:**
+
 - Scale exp_001 to 100%, analyze results
 - Launch exp_003 (Pricing Display) at 50% traffic
 - Scale exp_004 to 100%, analyze results
 
 **Month 4:**
+
 - Analyze exp_002, decide on winner
 - Scale exp_003 to 100%, analyze results
 - Launch exp_005 (Per-Workspace) at 50% traffic
 
 **Month 5-6:**
+
 - Analyze exp_003, decide on winner
 - Scale exp_005 to 100%, analyze results
 - Design new experiments based on learnings
 
 **Success Criteria:**
+
 - Statistical significance (p < 0.05)
 - Practical significance (10%+ improvement)
 - Guardrail compliance (activation >40%, retention >70%)
@@ -429,5 +452,5 @@ This Revenue Storyboard synthesizes:
 
 ---
 
-*Last Updated: January 2026*  
-*Status: Complete - Ready for Activation*
+_Last Updated: January 2026_  
+_Status: Complete - Ready for Activation_

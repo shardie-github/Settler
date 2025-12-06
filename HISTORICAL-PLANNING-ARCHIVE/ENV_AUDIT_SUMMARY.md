@@ -20,6 +20,7 @@ A comprehensive, non-destructive audit of environment variables and secrets acro
 ## Deliverables
 
 ### 1. Environment Variable Schema (`config/env.schema.ts`)
+
 - **60+ environment variables** documented with:
   - Type definitions
   - Validation rules
@@ -28,6 +29,7 @@ A comprehensive, non-destructive audit of environment variables and secrets acro
   - Format specifications
 
 ### 2. Validation Script (`scripts/check-env.ts`)
+
 - Automated environment variable validation
 - Platform-specific checks
 - Hardcoded secret detection
@@ -35,12 +37,14 @@ A comprehensive, non-destructive audit of environment variables and secrets acro
 - Usage: `tsx scripts/check-env.ts --env=production`
 
 ### 3. Updated `.env.example`
+
 - Comprehensive template with all variables
 - Clear categorization and warnings
 - Platform-specific notes
 - Security best practices
 
 ### 4. Comprehensive Audit Report (`ENVIRONMENT_SECRETS_AUDIT_REPORT.md`)
+
 - Complete environment surface map
 - Status matrix for all variables
 - Platform-specific analysis
@@ -48,12 +52,14 @@ A comprehensive, non-destructive audit of environment variables and secrets acro
 - Recommendations
 
 ### 5. Manual Checklist (`MANUAL_SECRETS_CHECKLIST.md`)
+
 - Step-by-step configuration guide
 - Platform-by-platform instructions
 - Verification steps
 - Troubleshooting guide
 
 ### 6. CI Integration (`.github/workflows/ci.yml`)
+
 - Automated schema validation
 - Environment variable checks
 - Non-blocking validation (warnings only)
@@ -63,12 +69,14 @@ A comprehensive, non-destructive audit of environment variables and secrets acro
 ## Key Findings
 
 ### ✅ Strengths
+
 - Comprehensive environment variable validation using `envalid`
 - Secrets management infrastructure (`SecretsManager`)
 - Proper `.gitignore` patterns
 - Well-structured configuration files
 
 ### ⚠️ Gaps Identified
+
 - **12 critical secrets** need to be configured in production:
   - Supabase (URL, anon key, service role key)
   - Upstash Redis (URL, token)
@@ -104,21 +112,22 @@ A comprehensive, non-destructive audit of environment variables and secrets acro
 
 ## Status Matrix Summary
 
-| Category | Total | OK | Missing | Warnings |
-|----------|-------|----|---------|----------|
-| **Core** | 4 | 3 | 0 | 1 |
-| **Database** | 11 | 7 | 3 | 1 |
-| **Redis** | 9 | 6 | 2 | 1 |
-| **Security** | 7 | 4 | 2 | 1 |
-| **Observability** | 6 | 4 | 1 | 1 |
-| **CI/CD** | 6 | 1 | 3 | 2 |
-| **Total** | **60+** | **~40** | **~12** | **~8** |
+| Category          | Total   | OK      | Missing | Warnings |
+| ----------------- | ------- | ------- | ------- | -------- |
+| **Core**          | 4       | 3       | 0       | 1        |
+| **Database**      | 11      | 7       | 3       | 1        |
+| **Redis**         | 9       | 6       | 2       | 1        |
+| **Security**      | 7       | 4       | 2       | 1        |
+| **Observability** | 6       | 4       | 1       | 1        |
+| **CI/CD**         | 6       | 1       | 3       | 2        |
+| **Total**         | **60+** | **~40** | **~12** | **~8**   |
 
 ---
 
 ## Next Steps
 
 ### Immediate (Before Production)
+
 1. ✅ Follow `MANUAL_SECRETS_CHECKLIST.md` to configure all secrets
 2. ✅ Generate secure random secrets for JWT and encryption
 3. ✅ Configure Vercel environment variables
@@ -127,12 +136,14 @@ A comprehensive, non-destructive audit of environment variables and secrets acro
 6. ✅ Set up Sentry (optional but recommended)
 
 ### Short-Term
+
 1. ✅ Run validation script: `tsx scripts/check-env.ts --env=production`
 2. ✅ Test deployment to preview environment
 3. ✅ Monitor logs for missing/invalid env vars
 4. ✅ Restrict CORS (`ALLOWED_ORIGINS`) in production
 
 ### Long-Term
+
 1. Set up secret rotation process
 2. Add scope validation (prevent server secrets in client code)
 3. Update Turborepo config for env var cache invalidation
@@ -143,6 +154,7 @@ A comprehensive, non-destructive audit of environment variables and secrets acro
 ## Files Created/Modified
 
 ### Created
+
 - `config/env.schema.ts` - Canonical environment variable schema
 - `scripts/check-env.ts` - Validation script
 - `ENVIRONMENT_SECRETS_AUDIT_REPORT.md` - Comprehensive audit report
@@ -150,6 +162,7 @@ A comprehensive, non-destructive audit of environment variables and secrets acro
 - `ENV_AUDIT_SUMMARY.md` - This summary
 
 ### Modified
+
 - `.env.example` - Updated with all variables and documentation
 - `.github/workflows/ci.yml` - Added environment validation step
 
@@ -158,6 +171,7 @@ A comprehensive, non-destructive audit of environment variables and secrets acro
 ## Usage
 
 ### Validate Environment Locally
+
 ```bash
 # Check production environment
 tsx scripts/check-env.ts --env=production
@@ -170,9 +184,11 @@ tsx scripts/check-env.ts --env=production --json
 ```
 
 ### Configure Secrets
+
 Follow the step-by-step guide in `MANUAL_SECRETS_CHECKLIST.md`
 
 ### Review Full Report
+
 See `ENVIRONMENT_SECRETS_AUDIT_REPORT.md` for complete analysis
 
 ---
@@ -180,12 +196,14 @@ See `ENVIRONMENT_SECRETS_AUDIT_REPORT.md` for complete analysis
 ## Security Notes
 
 ✅ **Safe Practices Implemented:**
+
 - No real secrets in code
 - Proper `.gitignore` patterns
 - Server-only scope for sensitive keys
 - Validation prevents hardcoded secrets
 
 ⚠️ **Reminders:**
+
 - Never commit `.env` files
 - Never expose `SUPABASE_SERVICE_ROLE_KEY` to client
 - Restrict `ALLOWED_ORIGINS` in production (not `*`)

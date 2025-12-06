@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
@@ -56,13 +56,15 @@ console.log("Report:", report.data.summary);
 //   accuracy: 0.987
 // }`);
 
-  const [output, setOutput] = useState<string>("// Click 'Run Code' to execute and see results here");
+  const [output, setOutput] = useState<string>(
+    "// Click 'Run Code' to execute and see results here"
+  );
   const [isRunning, setIsRunning] = useState(false);
 
   const handleRun = async () => {
     setIsRunning(true);
     setOutput("// Running...\n");
-    
+
     // Simulate API call (in production, this would call your backend)
     await new Promise<void>((resolve) => {
       setTimeout(() => {
@@ -132,10 +134,7 @@ console.log("Report:", report.data.summary);
             className={`
               bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 mb-6
               transition-all duration-700
-              ${isVisible
-                ? 'opacity-100 translate-y-0'
-                : 'opacity-0 translate-y-8'
-              }
+              ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}
             `}
             role="region"
             aria-labelledby="api-config-heading"
@@ -165,9 +164,9 @@ console.log("Report:", report.data.summary);
                   onClick={handleRun}
                   disabled={isRunning}
                   className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-8 transition-all transform hover:scale-105 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-                  aria-label={isRunning ? 'Running code' : 'Run code'}
+                  aria-label={isRunning ? "Running code" : "Run code"}
                 >
-                  {isRunning ? 'Running...' : 'Run Code'}
+                  {isRunning ? "Running..." : "Run Code"}
                 </Button>
               </div>
             </CardContent>
@@ -178,12 +177,9 @@ console.log("Report:", report.data.summary);
             className={`
               grid grid-cols-1 lg:grid-cols-2 gap-6
               transition-all duration-700
-              ${isVisible
-                ? 'opacity-100 translate-y-0'
-                : 'opacity-0 translate-y-8'
-              }
+              ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}
             `}
-            style={{ transitionDelay: '200ms' }}
+            style={{ transitionDelay: "200ms" }}
           >
             {/* Code Editor */}
             <Card
@@ -252,12 +248,9 @@ console.log("Report:", report.data.summary);
             className={`
               mt-8
               transition-all duration-700
-              ${isVisible
-                ? 'opacity-100 translate-y-0'
-                : 'opacity-0 translate-y-8'
-              }
+              ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}
             `}
-            style={{ transitionDelay: '400ms' }}
+            style={{ transitionDelay: "400ms" }}
           >
             <Card
               className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 transition-all duration-300 hover:shadow-lg"

@@ -1,12 +1,17 @@
 /**
  * Lifecycle Email Functions
- * 
+ *
  * Sends lifecycle emails for trial, paid, and retention
  */
 
-import { sendEmail } from './email';
-import { renderEmailTemplate, generatePlainText, getDefaultUrls, EmailTemplateData } from './email-templates';
-import { logError } from '../utils/logger';
+import { sendEmail } from "./email";
+import {
+  renderEmailTemplate,
+  generatePlainText,
+  getDefaultUrls,
+  EmailTemplateData,
+} from "./email-templates";
+import { logError } from "../utils/logger";
 
 /**
  * Helper to create EmailTemplateData with proper optional property handling
@@ -14,9 +19,9 @@ import { logError } from '../utils/logger';
 function createEmailData(base: Partial<EmailTemplateData>): EmailTemplateData {
   const urls = getDefaultUrls();
   const data: EmailTemplateData = { ...base };
-  
+
   // Conditionally add product properties only if defined
-  const product: EmailTemplateData['product'] = {};
+  const product: EmailTemplateData["product"] = {};
   if (urls?.product_name !== undefined) product.product_name = urls.product_name;
   if (urls?.upgrade_url !== undefined) product.upgrade_url = urls.upgrade_url;
   if (urls?.dashboard_url !== undefined) product.dashboard_url = urls.dashboard_url;
@@ -25,19 +30,19 @@ function createEmailData(base: Partial<EmailTemplateData>): EmailTemplateData {
   if (urls?.docs_url !== undefined) product.docs_url = urls.docs_url;
   if (urls?.playground_url !== undefined) product.playground_url = urls.playground_url;
   if (urls?.cookbooks_url !== undefined) product.cookbooks_url = urls.cookbooks_url;
-  
+
   // Conditionally add urls properties only if defined
-  const urlsData: EmailTemplateData['urls'] = {};
+  const urlsData: EmailTemplateData["urls"] = {};
   if (urls?.profile_setup_url !== undefined) urlsData.profile_setup_url = urls.profile_setup_url;
   if (urls?.demo_url !== undefined) urlsData.demo_url = urls.demo_url;
   if (urls?.free_tier_url !== undefined) urlsData.free_tier_url = urls.free_tier_url;
   if (urls?.free_tier_info_url !== undefined) urlsData.free_tier_info_url = urls.free_tier_info_url;
   if (urls?.consultation_url !== undefined) urlsData.consultation_url = urls.consultation_url;
   if (urls?.insights_url !== undefined) urlsData.insights_url = urls.insights_url;
-  
+
   data.product = product;
   data.urls = urlsData;
-  
+
   return data;
 }
 
@@ -50,7 +55,7 @@ export interface LifecycleUser {
   lastName?: string;
   industry?: string;
   companyName?: string;
-  planType?: 'free' | 'trial' | 'commercial' | 'enterprise';
+  planType?: "free" | "trial" | "commercial" | "enterprise";
 }
 
 /**
@@ -70,45 +75,45 @@ export async function sendTrialWelcomeEmail(
   trialData: TrialData
 ): Promise<{ id: string } | null> {
   try {
-    const firstName = user.firstName || user.email.split('@')[0] || 'User';
+    const firstName = user.firstName || user.email.split("@")[0] || "User";
     const trialEnd = new Date(trialData.trialEndDate);
-    const chargeDate = isNaN(trialEnd.getTime()) 
-      ? undefined 
-      : new Date(trialEnd.getTime() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
-    
-    const trial: EmailTemplateData['trial'] = {
+    const chargeDate = isNaN(trialEnd.getTime())
+      ? undefined
+      : new Date(trialEnd.getTime() + 30 * 24 * 60 * 60 * 1000).toISOString().split("T")[0];
+
+    const trial: EmailTemplateData["trial"] = {
       trial_end_date: trialData.trialEndDate,
       trial_start_date: trialData.trialStartDate,
       days_remaining: trialData.daysRemaining,
     };
-    
+
     if (chargeDate) {
       trial.charge_date = chargeDate;
     }
-    
+
     const data = createEmailData({
       user: {
         first_name: firstName,
         email: user.email,
         ...(user.industry && { industry: user.industry }),
         ...(user.companyName && { company_name: user.companyName }),
-        plan_type: user.planType || 'trial',
+        plan_type: user.planType || "trial",
       },
       trial,
     });
-    
-    const html = await renderEmailTemplate('trial_welcome', data);
+
+    const html = await renderEmailTemplate("trial_welcome", data);
     const text = generatePlainText(html);
-    
+
     return sendEmail({
       to: user.email,
-      subject: 'Welcome to Settler! 🎉',
+      subject: "Welcome to Settler! 🎉",
       html,
       text,
-      tags: [{ name: 'email_type', value: 'trial_welcome' }],
+      tags: [{ name: "email_type", value: "trial_welcome" }],
     });
   } catch (error) {
-    logError('Failed to send trial welcome email', error as Error, { user: user.email });
+    logError("Failed to send trial welcome email", error as Error, { user: user.email });
     return null;
   }
 }
@@ -128,7 +133,7 @@ export async function sendTrialValueEmail(
   }
 ): Promise<{ id: string } | null> {
   try {
-    const firstName = user.firstName || user.email.split('@')[0] || 'User';
+    const firstName = user.firstName || user.email.split("@")[0] || "User";
     const data = createEmailData({
       user: {
         first_name: firstName,
@@ -145,19 +150,19 @@ export async function sendTrialValueEmail(
         report_url: reconciliationData.reportUrl,
       },
     });
-    
-    const html = await renderEmailTemplate('trial_day2', data);
+
+    const html = await renderEmailTemplate("trial_day2", data);
     const text = generatePlainText(html);
-    
+
     return sendEmail({
       to: user.email,
-      subject: 'Your first reconciliation is ready! 🎉',
+      subject: "Your first reconciliation is ready! 🎉",
       html,
       text,
-      tags: [{ name: 'email_type', value: 'trial_value' }],
+      tags: [{ name: "email_type", value: "trial_value" }],
     });
   } catch (error) {
-    logError('Failed to send trial value email', error as Error, { user: user.email });
+    logError("Failed to send trial value email", error as Error, { user: user.email });
     return null;
   }
 }
@@ -170,7 +175,7 @@ export async function sendTrialGatedFeaturesEmail(
   trialData: TrialData
 ): Promise<{ id: string } | null> {
   try {
-    const firstName = user.firstName || user.email.split('@')[0] || 'User';
+    const firstName = user.firstName || user.email.split("@")[0] || "User";
     const data: EmailTemplateData = {
       user: {
         first_name: firstName,
@@ -180,19 +185,19 @@ export async function sendTrialGatedFeaturesEmail(
         days_remaining: trialData.daysRemaining,
       },
     };
-    
-    const html = await renderEmailTemplate('trial_day7', data);
+
+    const html = await renderEmailTemplate("trial_day7", data);
     const text = generatePlainText(html);
-    
+
     return sendEmail({
       to: user.email,
-      subject: 'Unlock advanced features (still free for 23 days)',
+      subject: "Unlock advanced features (still free for 23 days)",
       html,
       text,
-      tags: [{ name: 'email_type', value: 'trial_gated_features' }],
+      tags: [{ name: "email_type", value: "trial_gated_features" }],
     });
   } catch (error) {
-    logError('Failed to send trial gated features email', error as Error, { user: user.email });
+    logError("Failed to send trial gated features email", error as Error, { user: user.email });
     return null;
   }
 }
@@ -210,7 +215,7 @@ export async function sendTrialCaseStudyEmail(
 ): Promise<{ id: string } | null> {
   try {
     const urls = getDefaultUrls();
-    const firstName = user.firstName || user.email.split('@')[0] || 'User';
+    const firstName = user.firstName || user.email.split("@")[0] || "User";
     const data: EmailTemplateData = {
       user: {
         first_name: firstName,
@@ -223,22 +228,22 @@ export async function sendTrialCaseStudyEmail(
       case_study: {
         similar_company: caseStudy.companyName,
         case_study_url: caseStudy.caseStudyUrl,
-        case_studies_url: `${urls?.docs_url || 'https://docs.settler.dev'}/case-studies`,
+        case_studies_url: `${urls?.docs_url || "https://docs.settler.dev"}/case-studies`,
       },
     };
-    
-    const html = await renderEmailTemplate('trial_day14', data);
+
+    const html = await renderEmailTemplate("trial_day14", data);
     const text = generatePlainText(html);
-    
+
     return sendEmail({
       to: user.email,
       subject: `How ${caseStudy.companyName} saved 15 hours/week with Settler`,
       html,
       text,
-      tags: [{ name: 'email_type', value: 'trial_case_study' }],
+      tags: [{ name: "email_type", value: "trial_case_study" }],
     });
   } catch (error) {
-    logError('Failed to send trial case study email', error as Error, { user: user.email });
+    logError("Failed to send trial case study email", error as Error, { user: user.email });
     return null;
   }
 }
@@ -251,7 +256,7 @@ export async function sendTrialComparisonEmail(
   trialData: TrialData
 ): Promise<{ id: string } | null> {
   try {
-    const firstName = user.firstName || user.email.split('@')[0] || 'User';
+    const firstName = user.firstName || user.email.split("@")[0] || "User";
     const data: EmailTemplateData = {
       user: {
         first_name: firstName,
@@ -261,19 +266,19 @@ export async function sendTrialComparisonEmail(
         days_remaining: trialData.daysRemaining,
       },
     };
-    
-    const html = await renderEmailTemplate('trial_day21', data);
+
+    const html = await renderEmailTemplate("trial_day21", data);
     const text = generatePlainText(html);
-    
+
     return sendEmail({
       to: user.email,
       subject: "Here's what you're missing (9 days left)",
       html,
       text,
-      tags: [{ name: 'email_type', value: 'trial_comparison' }],
+      tags: [{ name: "email_type", value: "trial_comparison" }],
     });
   } catch (error) {
-    logError('Failed to send trial comparison email', error as Error, { user: user.email });
+    logError("Failed to send trial comparison email", error as Error, { user: user.email });
     return null;
   }
 }
@@ -287,7 +292,7 @@ export async function sendTrialUrgencyEmail(
   day: 27 | 28 | 29
 ): Promise<{ id: string } | null> {
   try {
-    const firstName = user.firstName || user.email.split('@')[0] || 'User';
+    const firstName = user.firstName || user.email.split("@")[0] || "User";
     const data: EmailTemplateData = {
       user: {
         first_name: firstName,
@@ -295,42 +300,42 @@ export async function sendTrialUrgencyEmail(
       },
       trial: (() => {
         const trialEnd = new Date(trialData.trialEndDate);
-        const chargeDate = isNaN(trialEnd.getTime()) 
-          ? undefined 
-          : new Date(trialEnd.getTime() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
-        
-        const trial: EmailTemplateData['trial'] = {
+        const chargeDate = isNaN(trialEnd.getTime())
+          ? undefined
+          : new Date(trialEnd.getTime() + 30 * 24 * 60 * 60 * 1000).toISOString().split("T")[0];
+
+        const trial: EmailTemplateData["trial"] = {
           trial_end_date: trialData.trialEndDate,
           days_remaining: trialData.daysRemaining,
         };
-        
+
         if (chargeDate) {
           trial.charge_date = chargeDate;
         }
-        
+
         return trial;
       })(),
     };
-    
+
     const templateName = `trial_day${day}`;
     const html = await renderEmailTemplate(templateName, data);
     const text = generatePlainText(html);
-    
+
     const subjects = {
-      27: '⏰ Your trial ends in 3 days',
-      28: 'Last chance: Trial ends tomorrow',
-      29: 'Final reminder: Trial ends today',
+      27: "⏰ Your trial ends in 3 days",
+      28: "Last chance: Trial ends tomorrow",
+      29: "Final reminder: Trial ends today",
     };
-    
+
     return sendEmail({
       to: user.email,
       subject: subjects[day],
       html,
       text,
-      tags: [{ name: 'email_type', value: `trial_urgency_day${day}` }],
+      tags: [{ name: "email_type", value: `trial_urgency_day${day}` }],
     });
   } catch (error) {
-    logError('Failed to send trial urgency email', error as Error, { user: user.email, day });
+    logError("Failed to send trial urgency email", error as Error, { user: user.email, day });
     return null;
   }
 }
@@ -338,30 +343,28 @@ export async function sendTrialUrgencyEmail(
 /**
  * Send trial ended email (Day 30)
  */
-export async function sendTrialEndedEmail(
-  user: LifecycleUser
-): Promise<{ id: string } | null> {
+export async function sendTrialEndedEmail(user: LifecycleUser): Promise<{ id: string } | null> {
   try {
-    const firstName = user.firstName || user.email.split('@')[0] || 'User';
+    const firstName = user.firstName || user.email.split("@")[0] || "User";
     const data: EmailTemplateData = {
       user: {
         first_name: firstName,
         email: user.email,
       },
     };
-    
-    const html = await renderEmailTemplate('trial_ended', data);
+
+    const html = await renderEmailTemplate("trial_ended", data);
     const text = generatePlainText(html);
-    
+
     return sendEmail({
       to: user.email,
-      subject: 'Your trial has ended - Choose your plan',
+      subject: "Your trial has ended - Choose your plan",
       html,
       text,
-      tags: [{ name: 'email_type', value: 'trial_ended' }],
+      tags: [{ name: "email_type", value: "trial_ended" }],
     });
   } catch (error) {
-    logError('Failed to send trial ended email', error as Error, { user: user.email });
+    logError("Failed to send trial ended email", error as Error, { user: user.email });
     return null;
   }
 }
@@ -369,30 +372,28 @@ export async function sendTrialEndedEmail(
 /**
  * Send paid welcome email
  */
-export async function sendPaidWelcomeEmail(
-  user: LifecycleUser
-): Promise<{ id: string } | null> {
+export async function sendPaidWelcomeEmail(user: LifecycleUser): Promise<{ id: string } | null> {
   try {
-    const firstName = user.firstName || user.email.split('@')[0] || 'User';
+    const firstName = user.firstName || user.email.split("@")[0] || "User";
     const data: EmailTemplateData = {
       user: {
         first_name: firstName,
         email: user.email,
       },
     };
-    
-    const html = await renderEmailTemplate('paid_welcome', data);
+
+    const html = await renderEmailTemplate("paid_welcome", data);
     const text = generatePlainText(html);
-    
+
     return sendEmail({
       to: user.email,
-      subject: 'Welcome to Commercial! 🎉',
+      subject: "Welcome to Commercial! 🎉",
       html,
       text,
-      tags: [{ name: 'email_type', value: 'paid_welcome' }],
+      tags: [{ name: "email_type", value: "paid_welcome" }],
     });
   } catch (error) {
-    logError('Failed to send paid welcome email', error as Error, { user: user.email });
+    logError("Failed to send paid welcome email", error as Error, { user: user.email });
     return null;
   }
 }
@@ -414,8 +415,8 @@ export async function sendMonthlySummaryEmail(
   }
 ): Promise<{ id: string } | null> {
   try {
-    const month = new Date().toLocaleString('en-US', { month: 'long' });
-    const firstName = user.firstName || user.email.split('@')[0] || 'User';
+    const month = new Date().toLocaleString("en-US", { month: "long" });
+    const firstName = user.firstName || user.email.split("@")[0] || "User";
     const data: EmailTemplateData = {
       user: {
         first_name: firstName,
@@ -437,19 +438,19 @@ export async function sendMonthlySummaryEmail(
         ...(metrics.recommendation2 && { recommendation_2: metrics.recommendation2 }),
       },
     };
-    
-    const html = await renderEmailTemplate('monthly_summary', data);
+
+    const html = await renderEmailTemplate("monthly_summary", data);
     const text = generatePlainText(html);
-    
+
     return sendEmail({
       to: user.email,
-      subject: `${user.firstName || 'You'}, your ${month} summary`,
+      subject: `${user.firstName || "You"}, your ${month} summary`,
       html,
       text,
-      tags: [{ name: 'email_type', value: 'monthly_summary' }],
+      tags: [{ name: "email_type", value: "monthly_summary" }],
     });
   } catch (error) {
-    logError('Failed to send monthly summary email', error as Error, { user: user.email });
+    logError("Failed to send monthly summary email", error as Error, { user: user.email });
     return null;
   }
 }
@@ -457,30 +458,28 @@ export async function sendMonthlySummaryEmail(
 /**
  * Send low activity nudge email
  */
-export async function sendLowActivityEmail(
-  user: LifecycleUser
-): Promise<{ id: string } | null> {
+export async function sendLowActivityEmail(user: LifecycleUser): Promise<{ id: string } | null> {
   try {
-    const firstName = user.firstName || user.email.split('@')[0] || 'User';
+    const firstName = user.firstName || user.email.split("@")[0] || "User";
     const data: EmailTemplateData = {
       user: {
         first_name: firstName,
         email: user.email,
       },
     };
-    
-    const html = await renderEmailTemplate('low_activity', data);
+
+    const html = await renderEmailTemplate("low_activity", data);
     const text = generatePlainText(html);
-    
+
     return sendEmail({
       to: user.email,
-      subject: `${user.firstName || 'We'} miss you`,
+      subject: `${user.firstName || "We"} miss you`,
       html,
       text,
-      tags: [{ name: 'email_type', value: 'low_activity' }],
+      tags: [{ name: "email_type", value: "low_activity" }],
     });
   } catch (error) {
-    logError('Failed to send low activity email', error as Error, { user: user.email });
+    logError("Failed to send low activity email", error as Error, { user: user.email });
     return null;
   }
 }

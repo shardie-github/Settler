@@ -18,52 +18,53 @@ const crypto_1 = __importDefault(require("crypto"));
  * Generate secure node key
  */
 function generateNodeKey() {
-    return `sk_edge_${crypto_1.default.randomBytes(32).toString('base64url')}`;
+    return `sk_edge_${crypto_1.default.randomBytes(32).toString("base64url")}`;
 }
 /**
  * Hash node key for storage
  */
 function hashNodeKey(key) {
-    return crypto_1.default.createHash('sha256').update(key).digest('hex');
+    return crypto_1.default.createHash("sha256").update(key).digest("hex");
 }
 /**
  * Generate enrollment key
  */
 function generateEnrollmentKey() {
-    return crypto_1.default.randomBytes(32).toString('base64url');
+    return crypto_1.default.randomBytes(32).toString("base64url");
 }
 /**
  * Encrypt sensitive data
  */
 function encrypt(data, key) {
     const iv = crypto_1.default.randomBytes(16);
-    const cipher = crypto_1.default.createCipheriv('aes-256-cbc', Buffer.from(key, 'hex'), iv);
-    let encrypted = cipher.update(data, 'utf8', 'hex');
-    encrypted += cipher.final('hex');
-    return iv.toString('hex') + ':' + encrypted;
+    const cipher = crypto_1.default.createCipheriv("aes-256-cbc", Buffer.from(key, "hex"), iv);
+    let encrypted = cipher.update(data, "utf8", "hex");
+    encrypted += cipher.final("hex");
+    return iv.toString("hex") + ":" + encrypted;
 }
 /**
  * Decrypt sensitive data
  */
 function decrypt(encrypted, key) {
-    const parts = encrypted.split(':');
+    const parts = encrypted.split(":");
     if (parts.length < 2 || !parts[0] || !parts[1]) {
-        throw new Error('Invalid encrypted data format');
+        throw new Error("Invalid encrypted data format");
     }
-    const iv = Buffer.from(parts[0], 'hex');
+    const iv = Buffer.from(parts[0], "hex");
     const encryptedData = parts[1];
-    const decipher = crypto_1.default.createDecipheriv('aes-256-cbc', Buffer.from(key, 'hex'), iv);
-    let decrypted = decipher.update(encryptedData, 'hex', 'utf8');
-    decrypted += decipher.final('utf8');
+    const decipher = crypto_1.default.createDecipheriv("aes-256-cbc", Buffer.from(key, "hex"), iv);
+    let decrypted = decipher.update(encryptedData, "hex", "utf8");
+    decrypted += decipher.final("utf8");
     return decrypted;
 }
 /**
  * Generate PII token
  */
 function generatePIIToken(value, piiType) {
-    const hash = crypto_1.default.createHash('sha256')
+    const hash = crypto_1.default
+        .createHash("sha256")
         .update(`${piiType}:${value}`)
-        .digest('hex')
+        .digest("hex")
         .substring(0, 16);
     return `[REDACTED_${piiType.toUpperCase()}_${hash}]`;
 }

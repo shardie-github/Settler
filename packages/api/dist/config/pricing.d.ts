@@ -36,11 +36,11 @@ export declare function calculateMonthlyRevenue(tier: PricingTier, edgeNodes: nu
 /**
  * Check if a feature is available for a tier
  */
-export declare function hasFeature(tier: PricingTier, feature: keyof PricingTierConfig['features']): boolean;
+export declare function hasFeature(tier: PricingTier, feature: keyof PricingTierConfig["features"]): boolean;
 /**
  * Get feature limit for a tier
  */
-export declare function getFeatureLimit(tier: PricingTier, feature: keyof PricingTierConfig['features']): number | null;
+export declare function getFeatureLimit(tier: PricingTier, feature: keyof PricingTierConfig["features"]): number | null;
 /**
  * Financial model assumptions
  */

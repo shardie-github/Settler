@@ -8,6 +8,7 @@
 ## Executive Summary
 
 This document outlines a 30-day trial cadence with strategic email and in-app touchpoints designed to:
+
 1. Activate users quickly (Day 0-2)
 2. Demonstrate value (Day 2-7)
 3. Introduce gated features (Day 7-14)
@@ -21,6 +22,7 @@ This document outlines a 30-day trial cadence with strategic email and in-app to
 ### Trial Length: 30 Days
 
 ### Activation Requirements:
+
 - Email address (required)
 - Basic firmographic info (optional but encouraged):
   - Company name
@@ -76,6 +78,7 @@ This document outlines a 30-day trial cadence with strategic email and in-app to
 **Email Subject:** "Welcome! Here's how to get value in 10 minutes"
 
 **Email Content:**
+
 ```
 Hi [Name],
 
@@ -104,6 +107,7 @@ Settler Team
 ```
 
 **In-App:**
+
 - Welcome modal with same quick start steps
 - Persistent banner: "Complete your profile to unlock personalized features"
 - Dashboard shows: "Days remaining: 30"
@@ -119,6 +123,7 @@ Settler Team
 **Email Subject:** "Your first reconciliation is ready! 🎉"
 
 **Email Content:**
+
 ```
 Hi [Name],
 
@@ -141,6 +146,7 @@ Your trial ends in 28 days. Want to unlock unlimited runs and advanced features?
 ```
 
 **In-App:**
+
 - Notification: "Your first reconciliation is complete!"
 - Dashboard highlight: Results summary
 - Banner: "Unlock unlimited runs and advanced features" → Upgrade CTA
@@ -156,6 +162,7 @@ Your trial ends in 28 days. Want to unlock unlimited runs and advanced features?
 **Email Subject:** "Unlock advanced features (still free for 23 days)"
 
 **Email Content:**
+
 ```
 Hi [Name],
 
@@ -178,6 +185,7 @@ Your trial ends in 23 days.
 ```
 
 **In-App:**
+
 - Banner: "Unlock advanced features" (shows blurred preview of gated content)
 - Gated cookbook cards: "Upgrade to view full recipe"
 - Dashboard: "Trial ends in 23 days"
@@ -193,6 +201,7 @@ Your trial ends in 23 days.
 **Email Subject:** "How [Company] saved 15 hours/week with Settler"
 
 **Email Content:**
+
 ```
 Hi [Name],
 
@@ -214,6 +223,7 @@ Or continue exploring:
 ```
 
 **In-App:**
+
 - Featured case study card on dashboard
 - "See how others succeed" section
 - Upgrade prompt: "Get similar results"
@@ -229,6 +239,7 @@ Or continue exploring:
 **Email Subject:** "Here's what you're missing (9 days left)"
 
 **Email Content:**
+
 ```
 Hi [Name],
 
@@ -257,6 +268,7 @@ Or continue with free tier:
 ```
 
 **In-App:**
+
 - Side-by-side comparison table
 - Usage stats: "You've used X of 1,000 free reconciliations"
 - Upgrade prompt with comparison
@@ -272,6 +284,7 @@ Or continue with free tier:
 **Email Subject (Day 27):** "Your trial ends in 3 days ⏰"
 
 **Email Content:**
+
 ```
 Hi [Name],
 
@@ -291,6 +304,7 @@ Questions? Reply to this email or schedule a call:
 **Email Subject (Day 28):** "Last chance: Trial ends tomorrow"
 
 **Email Content:**
+
 ```
 Hi [Name],
 
@@ -309,6 +323,7 @@ We're here to help:
 **Email Subject (Day 29):** "Final reminder: Trial ends today"
 
 **Email Content:**
+
 ```
 Hi [Name],
 
@@ -324,6 +339,7 @@ Thank you for trying Settler!
 ```
 
 **In-App:**
+
 - Persistent banner: "Trial ends in X days - Upgrade now"
 - Modal on Day 29: "Last chance to upgrade"
 - Dashboard: Countdown timer
@@ -339,6 +355,7 @@ Thank you for trying Settler!
 **Email Subject:** "Your trial has ended - Choose your plan"
 
 **Email Content:**
+
 ```
 Hi [Name],
 
@@ -365,6 +382,7 @@ Questions? We're here to help:
 ```
 
 **In-App:**
+
 - Access to free features only
 - Upgrade prompts on gated content
 - "Upgrade to unlock" CTAs throughout

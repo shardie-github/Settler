@@ -7,9 +7,11 @@ React.Settler now has a clear, strategic separation between OSS (free) and comme
 ## 🎯 Business Model
 
 ### OSS Tier: Free Forever
+
 **Goal:** Drive adoption, build community, establish industry standard
 
 **Includes:**
+
 - ✅ Core protocol types
 - ✅ Basic components (Dashboard, TransactionTable, ExceptionTable, MetricCard, RuleSet, MatchRule)
 - ✅ Config compiler
@@ -22,9 +24,11 @@ React.Settler now has a clear, strategic separation between OSS (free) and comme
 **Value:** Everything needed to build reconciliation UIs with great DX
 
 ### Commercial Tier: $99/month
+
 **Goal:** Monetize advanced integrations and enterprise features
 
 **Includes:**
+
 - ✅ MCP Server Integration
 - ✅ Shopify App Integration
 - ✅ Stripe Connect Integration
@@ -37,9 +41,11 @@ React.Settler now has a clear, strategic separation between OSS (free) and comme
 **Value:** Platform integrations save weeks of development time
 
 ### Enterprise Tier: Custom Pricing
+
 **Goal:** High-value custom solutions for large organizations
 
 **Includes:**
+
 - ✅ SSO Integration
 - ✅ RBAC
 - ✅ Custom Integrations
@@ -53,16 +59,19 @@ React.Settler now has a clear, strategic separation between OSS (free) and comme
 ## 💰 Financial Model
 
 ### Revenue Streams
+
 1. **Commercial Subscriptions**: $99/month = $1,188/year per customer
 2. **Enterprise Contracts**: $5K-$50K+/year per customer
 3. **Professional Services**: Optional implementation/consulting
 
 ### Unit Economics
+
 - **OSS**: $0 revenue, drives adoption
 - **Commercial**: $1,188/year per customer
 - **Enterprise**: $5K-$50K+/year per customer
 
 ### Growth Strategy
+
 - **Year 1**: Focus on OSS adoption (target: 1,000+ GitHub stars)
 - **Year 2**: Convert 5-10% of OSS users to Commercial (50-100 customers = $60K-$120K ARR)
 - **Year 3**: Land 5-10 Enterprise customers ($25K-$500K ARR)
@@ -70,6 +79,7 @@ React.Settler now has a clear, strategic separation between OSS (free) and comme
 ## 🔧 Implementation
 
 ### Licensing System
+
 - ✅ `setLicense()` - Set license configuration
 - ✅ `hasFeature()` - Check feature availability
 - ✅ `useFeatureGate()` - React hook for feature gating
@@ -77,6 +87,7 @@ React.Settler now has a clear, strategic separation between OSS (free) and comme
 - ✅ Feature flags for all commercial features
 
 ### Commercial Features Protected
+
 - ✅ MCP Integration - Requires commercial license
 - ✅ Shopify Integration - Shows upgrade prompt
 - ✅ Stripe Integration - Shows upgrade prompt
@@ -86,6 +97,7 @@ React.Settler now has a clear, strategic separation between OSS (free) and comme
 - ✅ Audit Logging - Warns if not licensed
 
 ### Upgrade Flow
+
 1. Developer uses OSS features (free)
 2. Hits commercial feature (sees upgrade prompt)
 3. Clicks "View Pricing" → Goes to settler.dev/pricing
@@ -94,25 +106,25 @@ React.Settler now has a clear, strategic separation between OSS (free) and comme
 
 ## 📊 Feature Matrix
 
-| Feature | OSS | Commercial | Enterprise |
-|---------|-----|------------|------------|
-| Core Protocol | ✅ | ✅ | ✅ |
-| Basic Components | ✅ | ✅ | ✅ |
-| Config Compiler | ✅ | ✅ | ✅ |
-| Validation | ✅ | ✅ | ✅ |
-| Security Basics | ✅ | ✅ | ✅ |
-| Mobile Support | ✅ | ✅ | ✅ |
-| Accessibility | ✅ | ✅ | ✅ |
-| MCP Integration | ❌ | ✅ | ✅ |
-| Shopify Integration | ❌ | ✅ | ✅ |
-| Stripe Integration | ❌ | ✅ | ✅ |
-| Webhook Manager | ❌ | ✅ | ✅ |
-| Virtualization | ❌ | ✅ | ✅ |
-| Telemetry | ❌ | ✅ | ✅ |
-| Audit Logging | ❌ | ✅ | ✅ |
-| SSO | ❌ | ❌ | ✅ |
-| RBAC | ❌ | ❌ | ✅ |
-| White Label | ❌ | ❌ | ✅ |
+| Feature             | OSS | Commercial | Enterprise |
+| ------------------- | --- | ---------- | ---------- |
+| Core Protocol       | ✅  | ✅         | ✅         |
+| Basic Components    | ✅  | ✅         | ✅         |
+| Config Compiler     | ✅  | ✅         | ✅         |
+| Validation          | ✅  | ✅         | ✅         |
+| Security Basics     | ✅  | ✅         | ✅         |
+| Mobile Support      | ✅  | ✅         | ✅         |
+| Accessibility       | ✅  | ✅         | ✅         |
+| MCP Integration     | ❌  | ✅         | ✅         |
+| Shopify Integration | ❌  | ✅         | ✅         |
+| Stripe Integration  | ❌  | ✅         | ✅         |
+| Webhook Manager     | ❌  | ✅         | ✅         |
+| Virtualization      | ❌  | ✅         | ✅         |
+| Telemetry           | ❌  | ✅         | ✅         |
+| Audit Logging       | ❌  | ✅         | ✅         |
+| SSO                 | ❌  | ❌         | ✅         |
+| RBAC                | ❌  | ❌         | ✅         |
+| White Label         | ❌  | ❌         | ✅         |
 
 ## 🎯 Customer Journey
 
@@ -126,18 +138,21 @@ React.Settler now has a clear, strategic separation between OSS (free) and comme
 ## ✅ Why This Works
 
 ### For Developers
+
 - ✅ Can start free and build real apps
 - ✅ Clear upgrade path when needed
 - ✅ No vendor lock-in (OSS features always free)
 - ✅ Great developer experience in OSS tier
 
 ### For Business
+
 - ✅ Sustainable revenue model
 - ✅ Clear value proposition at each tier
 - ✅ Low barrier to entry (free OSS)
 - ✅ High conversion potential (integrations save time)
 
 ### For Settler
+
 - ✅ Strong OSS adoption drives awareness
 - ✅ Commercial tier monetizes integrations
 - ✅ Enterprise tier for high-value customers
@@ -146,16 +161,19 @@ React.Settler now has a clear, strategic separation between OSS (free) and comme
 ## 📈 Success Metrics
 
 ### OSS Tier
+
 - GitHub stars: 1,000+ in Year 1
 - npm downloads: 10,000+/month
 - Community contributions: 50+ contributors
 
 ### Commercial Tier
+
 - Conversion rate: 5-10% of OSS users
 - Churn rate: <5% monthly
 - MRR growth: 20% month-over-month
 
 ### Enterprise Tier
+
 - Enterprise customers: 5-10 in Year 1
 - Average contract value: $25K+/year
 - Customer satisfaction: 90%+ NPS
@@ -170,6 +188,7 @@ React.Settler now has a clear, strategic separation between OSS (free) and comme
 ## Conclusion
 
 This strategic split ensures:
+
 - ✅ Strong OSS adoption and community
 - ✅ Clear upgrade path with value at each tier
 - ✅ Sustainable business model

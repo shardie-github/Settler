@@ -50,7 +50,7 @@ router.get("/playground/examples", (async (_req, res) => {
                     },
                     {
                         order_id: "12346",
-                        amount: 149.50,
+                        amount: 149.5,
                         currency: "USD",
                         date: "2026-01-15T11:00:00Z",
                         customer_email: "customer2@example.com",
@@ -66,7 +66,7 @@ router.get("/playground/examples", (async (_req, res) => {
                     },
                     {
                         charge_id: "ch_stripe_124",
-                        amount: 149.50,
+                        amount: 149.5,
                         currency: "USD",
                         date: "2026-01-15T11:01:00Z",
                         metadata: { order_id: "12346" },
@@ -117,7 +117,7 @@ router.get("/playground/examples", (async (_req, res) => {
                 sourceData: [
                     {
                         charge_id: "ch_eur_123",
-                        amount: 100.00,
+                        amount: 100.0,
                         currency: "EUR",
                         date: "2026-01-15T10:00:00Z",
                     },
@@ -125,7 +125,7 @@ router.get("/playground/examples", (async (_req, res) => {
                 targetData: [
                     {
                         transaction_id: "QB_USD_456",
-                        amount: 110.00,
+                        amount: 110.0,
                         currency: "USD",
                         date: "2026-01-15T10:00:00Z",
                     },
@@ -137,7 +137,7 @@ router.get("/playground/examples", (async (_req, res) => {
                 fxConversion: {
                     enabled: true,
                     baseCurrency: "USD",
-                    rate: 1.10,
+                    rate: 1.1,
                 },
             },
         ];
@@ -168,7 +168,9 @@ router.post("/playground/reconcile", (0, validation_1.validateRequest)(playgroun
                     code: "VALIDATION_ERROR",
                     message: "Invalid adapter configuration",
                     type: "ValidationError",
-                    details: error instanceof Error ? [{ field: "adapter", message: error.message, code: "INVALID_ADAPTER" }] : undefined,
+                    details: error instanceof Error
+                        ? [{ field: "adapter", message: error.message, code: "INVALID_ADAPTER" }]
+                        : undefined,
                 },
             });
         }
@@ -194,7 +196,7 @@ router.post("/playground/reconcile", (0, validation_1.validateRequest)(playgroun
                     };
                 }
             }
-            if (bestMatch && bestMatch.confidence >= 0.80) {
+            if (bestMatch && bestMatch.confidence >= 0.8) {
                 matches.push({
                     sourceId: String(source.id || source.order_id || source.charge_id || "unknown"),
                     targetId: String(bestMatch.target.id ||
@@ -211,7 +213,7 @@ router.post("/playground/reconcile", (0, validation_1.validateRequest)(playgroun
                     reason: bestMatch
                         ? `Low confidence match (${(bestMatch.confidence * 100).toFixed(1)}%)`
                         : "No matching target found",
-                    severity: bestMatch && bestMatch.confidence >= 0.50 ? "low" : "medium",
+                    severity: bestMatch && bestMatch.confidence >= 0.5 ? "low" : "medium",
                 });
             }
         }
@@ -220,9 +222,7 @@ router.post("/playground/reconcile", (0, validation_1.validateRequest)(playgroun
         const matched = matches.length;
         const unmatched = exceptions.length;
         const accuracy = total > 0 ? (matched / total) * 100 : 0;
-        const avgConfidence = matches.length > 0
-            ? matches.reduce((sum, m) => sum + m.confidence, 0) / matches.length
-            : 0;
+        const avgConfidence = matches.length > 0 ? matches.reduce((sum, m) => sum + m.confidence, 0) / matches.length : 0;
         res.json({
             data: {
                 summary: {
@@ -232,7 +232,7 @@ router.post("/playground/reconcile", (0, validation_1.validateRequest)(playgroun
                     accuracy: parseFloat(accuracy.toFixed(2)),
                     averageConfidence: parseFloat((avgConfidence * 100).toFixed(2)),
                 },
-                matches: matches.map(m => ({
+                matches: matches.map((m) => ({
                     ...m,
                     confidence: parseFloat((m.confidence * 100).toFixed(2)),
                 })),
@@ -240,9 +240,9 @@ router.post("/playground/reconcile", (0, validation_1.validateRequest)(playgroun
                 visualization: {
                     matchRate: parseFloat(((matched / total) * 100).toFixed(2)),
                     confidenceDistribution: {
-                        high: matches.filter(m => m.confidence >= 0.95).length,
-                        medium: matches.filter(m => m.confidence >= 0.80 && m.confidence < 0.95).length,
-                        low: matches.filter(m => m.confidence < 0.80).length,
+                        high: matches.filter((m) => m.confidence >= 0.95).length,
+                        medium: matches.filter((m) => m.confidence >= 0.8 && m.confidence < 0.95).length,
+                        low: matches.filter((m) => m.confidence < 0.8).length,
                     },
                 },
             },

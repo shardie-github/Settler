@@ -1,15 +1,15 @@
 /**
  * Cron Job: Monthly Summary Emails
- * 
+ *
  * Sends monthly summary emails to paid users on the 1st of each month
  */
 
-import { NextRequest, NextResponse } from 'next/server';
-import { createAdminClient } from '@/lib/supabase/server';
-import { sendMonthlySummaryEmail, LifecycleUser } from '@settler/api/lib/email-lifecycle';
+import { NextRequest, NextResponse } from "next/server";
+import { createAdminClient } from "@/lib/supabase/server";
+import { sendMonthlySummaryEmail, LifecycleUser } from "@settler/api/lib/email-lifecycle";
 
 const logInfo = (message: string, meta?: Record<string, unknown>) => {
-  console.log(`[INFO] ${message}`, meta || '');
+  console.log(`[INFO] ${message}`, meta || "");
 };
 
 const logError = (message: string, error?: Error, meta?: Record<string, unknown>) => {
@@ -21,19 +21,21 @@ const CRON_SECRET = process.env.CRON_SECRET;
 export async function GET(request: NextRequest) {
   try {
     // Verify cron secret
-    const authHeader = request.headers.get('authorization');
+    const authHeader = request.headers.get("authorization");
     if (CRON_SECRET && authHeader !== `Bearer ${CRON_SECRET}`) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const supabase = await createAdminClient();
-    
+
     // Get paid users
-    const { data: users, error } = await supabase.rpc('get_paid_users_for_monthly_summary' as any) as { data: any[] | null; error: any };
-    
+    const { data: users, error } = (await supabase.rpc(
+      "get_paid_users_for_monthly_summary" as any
+    )) as { data: any[] | null; error: any };
+
     if (error) {
-      logError('Failed to fetch paid users', error);
-      return NextResponse.json({ error: 'Failed to fetch users' }, { status: 500 });
+      logError("Failed to fetch paid users", error);
+      return NextResponse.json({ error: "Failed to fetch users" }, { status: 500 });
     }
 
     const results = {
@@ -56,36 +58,36 @@ export async function GET(request: NextRequest) {
           accuracy: 98.5, // Calculate from reconciliation results
           timeSaved: 0, // Calculate from job history
           jobsCreated: 0, // Count from jobs table
-          topInsight1: 'Your reconciliation accuracy improved this month',
-          topInsight2: 'Consider setting up scheduled reconciliations for better efficiency',
-          recommendation1: 'Try the real-time webhook workflow',
-          recommendation2: 'Explore multi-currency reconciliation',
+          topInsight1: "Your reconciliation accuracy improved this month",
+          topInsight2: "Consider setting up scheduled reconciliations for better efficiency",
+          recommendation1: "Try the real-time webhook workflow",
+          recommendation2: "Explore multi-currency reconciliation",
         };
 
         const lifecycleUser: LifecycleUser = {
           email: user.email,
-          firstName: user.name?.split(' ')[0],
+          firstName: user.name?.split(" ")[0],
           industry: user.industry,
           companyName: user.company_name,
           planType: user.plan_type as any,
         };
 
         await sendMonthlySummaryEmail(lifecycleUser, metrics);
-        
-        await supabase.rpc('update_email_sent', {
+
+        await supabase.rpc("update_email_sent", {
           p_user_id: user.id,
-          p_email_type: 'monthly_summary',
+          p_email_type: "monthly_summary",
         } as any);
 
         results.processed++;
         results.emails.push(user.email);
       } catch (error) {
-        logError('Failed to send monthly summary', error as Error, { user: user.email });
+        logError("Failed to send monthly summary", error as Error, { user: user.email });
         results.errors++;
       }
     }
 
-    logInfo('Monthly summary cron job completed', {
+    logInfo("Monthly summary cron job completed", {
       processed: results.processed,
       errors: results.errors,
     });
@@ -96,9 +98,9 @@ export async function GET(request: NextRequest) {
       errors: results.errors,
     });
   } catch (error) {
-    logError('Monthly summary cron job failed', error as Error);
+    logError("Monthly summary cron job failed", error as Error);
     return NextResponse.json(
-      { error: 'Internal server error', message: (error as Error).message },
+      { error: "Internal server error", message: (error as Error).message },
       { status: 500 }
     );
   }

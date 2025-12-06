@@ -19,20 +19,20 @@ exports.exportsRouter = router;
  * Export reconciliation data
  * POST /api/v1/exports
  */
-router.post('/', auth_1.authMiddleware, async (req, res) => {
+router.post("/", auth_1.authMiddleware, async (req, res) => {
     try {
-        const { jobId, format = 'csv' } = req.body;
+        const { jobId, format = "csv" } = req.body;
         if (!jobId) {
             return res.status(400).json({
-                error: 'Bad Request',
-                message: 'jobId is required',
+                error: "Bad Request",
+                message: "jobId is required",
             });
         }
-        const supportedFormats = ['csv', 'xlsx', 'pdf', 'json'];
+        const supportedFormats = ["csv", "xlsx", "pdf", "json"];
         if (!supportedFormats.includes(format)) {
             return res.status(400).json({
-                error: 'Bad Request',
-                message: `Unsupported format. Supported formats: ${supportedFormats.join(', ')}`,
+                error: "Bad Request",
+                message: `Unsupported format. Supported formats: ${supportedFormats.join(", ")}`,
             });
         }
         // In production, this would:
@@ -41,7 +41,7 @@ router.post('/', auth_1.authMiddleware, async (req, res) => {
         // 3. Generate file
         // 4. Return download URL or stream
         const exportId = `export_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-        (0, logger_1.logInfo)('Export requested', {
+        (0, logger_1.logInfo)("Export requested", {
             exportId,
             jobId,
             format,
@@ -49,14 +49,14 @@ router.post('/', auth_1.authMiddleware, async (req, res) => {
         });
         // Set appropriate content type
         const contentTypeMap = {
-            csv: 'text/csv',
-            xlsx: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-            pdf: 'application/pdf',
-            json: 'application/json',
+            csv: "text/csv",
+            xlsx: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            pdf: "application/pdf",
+            json: "application/json",
         };
-        const contentType = contentTypeMap[format] || 'application/octet-stream';
-        res.setHeader('Content-Type', contentType || 'application/octet-stream');
-        res.setHeader('Content-Disposition', `attachment; filename="reconciliation_${jobId}.${format}"`);
+        const contentType = contentTypeMap[format] || "application/octet-stream";
+        res.setHeader("Content-Type", contentType || "application/octet-stream");
+        res.setHeader("Content-Disposition", `attachment; filename="reconciliation_${jobId}.${format}"`);
         // In production, stream actual file
         return res.json({
             exportId,
@@ -67,10 +67,10 @@ router.post('/', auth_1.authMiddleware, async (req, res) => {
         });
     }
     catch (error) {
-        (0, logger_1.logError)('Export failed', error);
+        (0, logger_1.logError)("Export failed", error);
         return res.status(500).json({
-            error: 'Internal Server Error',
-            message: 'Failed to create export',
+            error: "Internal Server Error",
+            message: "Failed to create export",
         });
     }
 });
@@ -78,20 +78,20 @@ router.post('/', auth_1.authMiddleware, async (req, res) => {
  * Download export file
  * GET /api/v1/exports/:exportId/download
  */
-router.get('/:exportId/download', auth_1.authMiddleware, async (req, res) => {
+router.get("/:exportId/download", auth_1.authMiddleware, async (req, res) => {
     try {
         const { exportId } = req.params;
         // In production, fetch file from storage and stream
         return res.status(200).json({
-            message: 'Export file would be streamed here',
+            message: "Export file would be streamed here",
             exportId,
         });
     }
     catch (error) {
-        (0, logger_1.logError)('Export download failed', error);
+        (0, logger_1.logError)("Export download failed", error);
         return res.status(500).json({
-            error: 'Internal Server Error',
-            message: 'Failed to download export',
+            error: "Internal Server Error",
+            message: "Failed to download export",
         });
     }
 });

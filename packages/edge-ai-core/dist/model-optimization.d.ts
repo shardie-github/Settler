@@ -2,9 +2,9 @@
  * Model Optimization
  * Brand-neutral model optimization utilities
  */
-import type { QuantizationType } from './quantization';
-export type OptimizationLevel = 'speed' | 'balanced' | 'accuracy';
-export type ModelFormat = 'onnx' | 'tensorrt' | 'executorch' | 'tflite' | 'pytorch';
+import type { QuantizationType } from "./quantization";
+export type OptimizationLevel = "speed" | "balanced" | "accuracy";
+export type ModelFormat = "onnx" | "tensorrt" | "executorch" | "tflite" | "pytorch";
 export interface OptimizationRequest {
     modelId: string;
     targetDevices: string[];

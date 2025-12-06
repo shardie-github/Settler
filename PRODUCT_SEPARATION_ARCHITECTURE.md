@@ -32,6 +32,7 @@ Settler.dev and AIAS are **two independent SaaS ventures** that share internal t
 ### ✅ What CAN Be Shared
 
 **Technical Components Only:**
+
 - `/packages/edge-ai-core` - Brand-neutral engine
 - Device profiling utilities
 - Model optimization pipelines
@@ -44,6 +45,7 @@ Settler.dev and AIAS are **two independent SaaS ventures** that share internal t
 ### ❌ What CANNOT Be Shared
 
 **Product-Specific:**
+
 - UI components and pages
 - Branding and marketing content
 - Pricing structures
@@ -64,6 +66,7 @@ Settler.dev and AIAS are **two independent SaaS ventures** that share internal t
 **Purpose**: Brand-neutral technical utilities
 
 **Contents**:
+
 - Device profiling
 - Model optimization
 - Inference engines
@@ -74,9 +77,10 @@ Settler.dev and AIAS are **two independent SaaS ventures** that share internal t
 - Security
 
 **Usage**:
+
 ```typescript
 // Both AIAS and Settler.dev can import
-import { generateDeviceProfile, selectOptimalRuntime } from '@settler/edge-ai-core';
+import { generateDeviceProfile, selectOptimalRuntime } from "@settler/edge-ai-core";
 ```
 
 ### 2. AIAS Integration (API-Based)
@@ -85,13 +89,15 @@ import { generateDeviceProfile, selectOptimalRuntime } from '@settler/edge-ai-co
 
 **Pattern**: HTTP API client, NOT direct code dependency
 
-**Why**: 
+**Why**:
+
 - Settler.dev calls AIAS via HTTP API
 - No code coupling
 - Independent versioning
 - Can be replaced with alternative provider
 
 **Example**:
+
 ```typescript
 // Settler.dev uses AIAS via API
 const aiasClient = getAIASClient();
@@ -103,6 +109,7 @@ const result = await aiasClient.optimizeModel({ ... });
 **Location**: `/workspace/packages/api/src/routes/edge-ai.ts`
 
 **Dependencies**:
+
 - ✅ Uses `@settler/edge-ai-core` for utilities
 - ✅ Uses AIAS API client for model optimization
 - ❌ Does NOT import AIAS UI code
@@ -112,12 +119,14 @@ const result = await aiasClient.optimizeModel({ ... });
 ### 4. Database Separation
 
 **Settler.dev Tables**:
+
 - `edge_nodes` - Settler.dev edge nodes
 - `model_versions` - Settler.dev models
 - `reconciliation_candidates` - Settler.dev matches
 - `anomaly_events` - Settler.dev anomalies
 
 **AIAS Tables** (separate):
+
 - AIAS has its own database schema
 - No shared tables
 - No cross-product queries
@@ -125,12 +134,14 @@ const result = await aiasClient.optimizeModel({ ... });
 ### 5. Frontend Separation
 
 **Settler.dev Frontend**:
+
 - `/packages/web/src/app/edge-ai/` - Settler.dev Edge AI pages
 - Settler.dev branding
 - Settler.dev pricing display
 - No AIAS branding
 
 **AIAS Frontend** (separate):
+
 - AIAS has its own frontend
 - AIAS branding
 - AIAS pricing
@@ -142,14 +153,14 @@ const result = await aiasClient.optimizeModel({ ... });
 
 ```typescript
 // Both products import shared utilities
-import { generateDeviceProfile } from '@settler/edge-ai-core';
+import { generateDeviceProfile } from "@settler/edge-ai-core";
 
 // Settler.dev usage
-const profile = generateDeviceProfile('server');
+const profile = generateDeviceProfile("server");
 // ... Settler.dev-specific logic
 
 // AIAS usage (in separate codebase)
-const profile = generateDeviceProfile('server');
+const profile = generateDeviceProfile("server");
 // ... AIAS-specific logic
 ```
 
@@ -159,10 +170,10 @@ const profile = generateDeviceProfile('server');
 // Settler.dev calls AIAS via HTTP API
 const aiasClient = getAIASClient();
 const result = await aiasClient.optimizeModel({
-  modelId: 'settler-model-123',
-  targetDevices: ['x86_64'],
-  quantization: 'int8',
-  optimizationLevel: 'balanced'
+  modelId: "settler-model-123",
+  targetDevices: ["x86_64"],
+  quantization: "int8",
+  optimizationLevel: "balanced",
 });
 ```
 
@@ -208,11 +219,13 @@ This architecture enables:
 ## Documentation
 
 ### Internal Documentation
+
 - Can mention both products
 - Can explain shared components
 - Can show integration patterns
 
 ### External Documentation
+
 - Settler.dev docs: Settler.dev only
 - AIAS docs: AIAS only
 - No cross-linking in public docs
@@ -237,8 +250,8 @@ export async function getDeviceProfile() {
 
 ```typescript
 // DON'T DO THIS
-import { AIASDashboard } from '@aias/web-components';
-import { AIASPricing } from '@aias/pricing';
+import { AIASDashboard } from "@aias/web-components";
+import { AIASPricing } from "@aias/pricing";
 
 // This creates coupling and breaks separation
 ```
@@ -255,7 +268,7 @@ const result = await aiasClient.optimizeModel({...});
 
 ```typescript
 // DON'T DO THIS
-import { SharedEdgeAIDashboard } from '@shared/ui';
+import { SharedEdgeAIDashboard } from "@shared/ui";
 
 // UI must be product-specific
 ```

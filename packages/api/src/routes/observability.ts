@@ -3,7 +3,7 @@ import { query } from "../db";
 
 /**
  * Observability Routes
- * 
+ *
  * GET /api/v1/observability/metrics - Get metrics
  * GET /api/v1/observability/logs - Query logs
  * GET /api/v1/observability/traces - Query traces
@@ -135,14 +135,7 @@ observabilityRouter.get("/logs", async (req: Request, res: Response) => {
   try {
     const userId = (req as any).userId;
     const tenantId = (req as any).tenantId;
-    const {
-      level,
-      jobId,
-      startDate,
-      endDate,
-      limit = "100",
-      offset = "0",
-    } = req.query;
+    const { level, jobId, startDate, endDate, limit = "100", offset = "0" } = req.query;
 
     let queryStr = `
       SELECT 

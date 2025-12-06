@@ -99,7 +99,7 @@ exports.observabilityRouter.get("/logs", async (req, res) => {
     try {
         const userId = req.userId;
         const tenantId = req.tenantId;
-        const { level, jobId, startDate, endDate, limit = "100", offset = "0", } = req.query;
+        const { level, jobId, startDate, endDate, limit = "100", offset = "0" } = req.query;
         let queryStr = `
       SELECT 
         id,

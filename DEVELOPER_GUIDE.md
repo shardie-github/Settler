@@ -3,6 +3,7 @@
 ## Getting Started
 
 ### Prerequisites
+
 - Node.js 20+
 - PostgreSQL 14+
 - Redis (optional, for caching)
@@ -30,12 +31,14 @@ npm run dev
 ## Code Style
 
 ### TypeScript
+
 - Use strict mode (enforced)
 - No `any` types (use `unknown` with type guards)
 - Explicit return types for public APIs
 - Use discriminated unions for state
 
 ### Error Handling
+
 ```typescript
 // ✅ Good
 try {
@@ -53,6 +56,7 @@ try {
 ```
 
 ### Database Queries
+
 ```typescript
 // ✅ Good
 interface UserRow {
@@ -69,18 +73,23 @@ const users = await query<any>("SELECT * FROM users");
 ## Adding New Features
 
 ### 1. Define Domain Model
+
 Create entity in `packages/api/src/domain/entities/`
 
 ### 2. Create Application Service
+
 Add service in `packages/api/src/application/services/`
 
 ### 3. Add Route Handler
+
 Create route in `packages/api/src/routes/`
 
 ### 4. Add Validation Schema
+
 Use Zod for input validation
 
 ### 5. Write Tests
+
 Add unit and integration tests
 
 ## Common Tasks
@@ -117,16 +126,19 @@ Add unit and integration tests
 ## Troubleshooting
 
 ### Type Errors
+
 - Check `tsconfig.json` strict settings
 - Use type guards for `unknown` types
 - Ensure all imports are typed
 
 ### Build Errors
+
 - Run `npm run typecheck` to see all errors
 - Fix `any` types first
 - Check for missing type assertions
 
 ### Runtime Errors
+
 - Check error logs for context
 - Verify input validation
 - Check database connection

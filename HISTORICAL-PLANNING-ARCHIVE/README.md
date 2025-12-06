@@ -12,6 +12,7 @@ This directory contains historical planning documents, implementation summaries,
 - Build and deployment fix summaries
 
 For current documentation, see:
+
 - `/docs` - Current technical documentation
 - `/README.md` - Main project README
 - `/INVESTOR-RELATIONS-PRIVATE` - Private business documents (encrypted)

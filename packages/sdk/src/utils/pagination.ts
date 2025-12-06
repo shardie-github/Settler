@@ -26,9 +26,7 @@ export class PaginatedIterator<T> implements AsyncIterableIterator<T> {
   private hasMore = true;
 
   constructor(
-    private readonly fetchPage: (
-      options: PaginationOptions
-    ) => Promise<PaginatedResponse<T>>
+    private readonly fetchPage: (options: PaginationOptions) => Promise<PaginatedResponse<T>>
   ) {}
 
   async next(): Promise<IteratorResult<T>> {
@@ -81,13 +79,13 @@ export class PaginatedIterator<T> implements AsyncIterableIterator<T> {
 
 /**
  * Creates an async iterator for paginated API responses
- * 
+ *
  * @example
  * ```typescript
- * const iterator = createPaginatedIterator((options) => 
+ * const iterator = createPaginatedIterator((options) =>
  *   client.jobs.list({ cursor: options.cursor })
  * );
- * 
+ *
  * for await (const job of iterator) {
  *   console.log(job);
  * }
@@ -101,15 +99,13 @@ export function createPaginatedIterator<T>(
 
 /**
  * Collects all items from a paginated iterator into an array
- * 
+ *
  * @example
  * ```typescript
  * const allJobs = await collectPaginated(iterator);
  * ```
  */
-export async function collectPaginated<T>(
-  iterator: AsyncIterableIterator<T>
-): Promise<T[]> {
+export async function collectPaginated<T>(iterator: AsyncIterableIterator<T>): Promise<T[]> {
   const items: T[] = [];
   for await (const item of iterator) {
     items.push(item);

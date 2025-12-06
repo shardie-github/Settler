@@ -19,13 +19,13 @@
 
 ### Prerequisites Checklist
 
-| Requirement | Status | Notes |
-|------------|--------|-------|
-| PostgreSQL 14+ | ⚠️ Required | Can use Docker Compose |
-| Redis 7+ | ⚠️ Required | Can use Docker Compose |
-| Node.js 18+ | ⚠️ Required | Check with `node --version` |
-| npm or yarn | ⚠️ Required | Check with `npm --version` |
-| Docker & Docker Compose | ✅ Recommended | For local dev environment |
+| Requirement             | Status         | Notes                       |
+| ----------------------- | -------------- | --------------------------- |
+| PostgreSQL 14+          | ⚠️ Required    | Can use Docker Compose      |
+| Redis 7+                | ⚠️ Required    | Can use Docker Compose      |
+| Node.js 18+             | ⚠️ Required    | Check with `node --version` |
+| npm or yarn             | ⚠️ Required    | Check with `npm --version`  |
+| Docker & Docker Compose | ✅ Recommended | For local dev environment   |
 
 ### Step 1: Clone and Install
 
@@ -42,6 +42,7 @@ npm install
 ```
 
 **Friction Points:**
+
 - ⚠️ **If npm install fails:** Check Node.js version (requires 18+)
 - ⚠️ **If workspace dependencies fail:** Run `npm install` in each package directory
 
@@ -84,6 +85,7 @@ JAEGER_ENDPOINT=http://localhost:14268/api/traces
 ```
 
 **Friction Points:**
+
 - ⚠️ **Missing .env.example:** Create one with all required variables
 - ⚠️ **Weak secrets:** Use strong random strings (32+ chars) in production
 
@@ -112,6 +114,7 @@ docker-compose ps
 ```
 
 **Friction Points:**
+
 - ⚠️ **Port conflicts:** If 3000, 5432, or 6379 are in use, change ports in docker-compose.yml
 - ⚠️ **Docker not running:** Start Docker Desktop or Docker daemon
 - ⚠️ **Health checks fail:** Wait 30 seconds for services to initialize
@@ -142,15 +145,16 @@ psql -U postgres -d settler -f src/db/migrations/001-initial-schema.sql
 psql -U postgres -d settler
 
 -- Check tables exist
-SELECT table_name 
-FROM information_schema.tables 
-WHERE table_schema = 'public' 
+SELECT table_name
+FROM information_schema.tables
+WHERE table_schema = 'public'
 ORDER BY table_name;
 
 -- Expected: tenants, users, api_keys, jobs, executions, matches, webhooks, etc.
 ```
 
 **Friction Points:**
+
 - ⚠️ **Migration fails:** Check PostgreSQL logs, ensure user has CREATE privileges
 - ⚠️ **Tables already exist:** Migration should be idempotent (uses IF NOT EXISTS)
 
@@ -183,6 +187,7 @@ curl http://localhost:3000/health
 ```
 
 **Friction Points:**
+
 - ⚠️ **Port 3000 in use:** Change PORT in .env or kill process using port 3000
 - ⚠️ **Database connection fails:** Verify PostgreSQL is running and credentials are correct
 - ⚠️ **Redis connection fails:** Verify Redis is running
@@ -255,11 +260,13 @@ curl -X POST http://localhost:3000/api/v1/auth/login \
 ```
 
 **Friction Points:**
+
 - ⚠️ **No admin endpoint:** Need to create tenant manually via SQL or add admin UI
 - ⚠️ **Password requirements unclear:** Document minimum password requirements
 - ⚠️ **API key not returned:** Check auth flow, ensure API key generation works
 
 **Screenshots/Code Blocks Needed:**
+
 1. Registration form (if web UI exists)
 2. API response showing API key
 3. Dashboard showing account creation
@@ -320,11 +327,13 @@ curl -X POST http://localhost:3000/api/v1/jobs \
 ```
 
 **Friction Points:**
+
 - ⚠️ **Adapter not found:** Verify adapter exists in packages/adapters/src/
 - ⚠️ **Config validation fails:** Check error message, ensure required fields are present
 - ⚠️ **API key invalid:** Verify API key format and authentication middleware
 
 **Screenshots/Code Blocks Needed:**
+
 1. Job creation form/API call
 2. Success response with job ID
 3. Dashboard showing new job
@@ -373,11 +382,13 @@ curl http://localhost:3000/api/v1/jobs/job_1234567890/executions \
 ```
 
 **Friction Points:**
+
 - ⚠️ **Job never completes:** Check logs, verify adapters can connect to test data
 - ⚠️ **Status stuck on "running":** Check background job processor, verify Redis queue
 - ⚠️ **No test data:** Need sample data or mock adapters for testing
 
 **Screenshots/Code Blocks Needed:**
+
 1. Job execution request
 2. Execution status polling
 3. Completed execution with summary
@@ -437,11 +448,13 @@ curl http://localhost:3000/api/v1/webhooks/wh_1234567890/deliveries \
 ```
 
 **Friction Points:**
+
 - ⚠️ **Webhook URL invalid:** Validate URL format, check SSRF protection
 - ⚠️ **Webhook never delivered:** Check webhook queue processor, verify Redis
 - ⚠️ **Webhook fails:** Check delivery logs, verify endpoint is accessible
 
 **Screenshots/Code Blocks Needed:**
+
 1. Webhook creation
 2. Webhook delivery log
 3. Received webhook payload (from webhook.site)
@@ -496,11 +509,13 @@ tail -f packages/api/logs/app.log
 ```
 
 **Friction Points:**
+
 - ⚠️ **No report data:** Verify execution completed successfully
 - ⚠️ **Logs not accessible:** Check log configuration, verify file permissions
 - ⚠️ **Report format unclear:** Document report structure and fields
 
 **Screenshots/Code Blocks Needed:**
+
 1. Report summary dashboard
 2. Matched records table
 3. Unmatched records with reasons
@@ -512,25 +527,25 @@ tail -f packages/api/logs/app.log
 
 ### Critical Blockers
 
-| Blocker | Impact | Fix Required | Priority |
-|---------|--------|--------------|----------|
-| No admin UI for tenant creation | High | Add admin UI or document SQL setup | P0 |
-| Missing sample/test data | High | Create mock adapters or sample data | P0 |
-| Webhook delivery not working | Medium | Fix webhook queue processor | P1 |
-| Password requirements unclear | Low | Document in API/UI | P2 |
+| Blocker                         | Impact | Fix Required                        | Priority |
+| ------------------------------- | ------ | ----------------------------------- | -------- |
+| No admin UI for tenant creation | High   | Add admin UI or document SQL setup  | P0       |
+| Missing sample/test data        | High   | Create mock adapters or sample data | P0       |
+| Webhook delivery not working    | Medium | Fix webhook queue processor         | P1       |
+| Password requirements unclear   | Low    | Document in API/UI                  | P2       |
 
 ### Friction Points by Step
 
-| Step | Friction | Severity | Suggested Fix |
-|------|----------|-----------|---------------|
-| Setup | Missing .env.example | Medium | Create comprehensive .env.example |
-| Setup | Port conflicts | Low | Document how to change ports |
-| Account Creation | No admin UI | High | Add admin UI or SQL scripts |
-| Account Creation | API key not obvious | Medium | Show API key prominently after creation |
-| Connect Integration | Adapter config unclear | Medium | Add adapter documentation with examples |
-| Run Reconciliation | No test data | High | Create sample data or mock adapters |
-| Webhooks | Webhook URL validation too strict | Low | Relax SSRF checks for development |
-| View Results | Report format complex | Low | Add simplified summary view |
+| Step                | Friction                          | Severity | Suggested Fix                           |
+| ------------------- | --------------------------------- | -------- | --------------------------------------- |
+| Setup               | Missing .env.example              | Medium   | Create comprehensive .env.example       |
+| Setup               | Port conflicts                    | Low      | Document how to change ports            |
+| Account Creation    | No admin UI                       | High     | Add admin UI or SQL scripts             |
+| Account Creation    | API key not obvious               | Medium   | Show API key prominently after creation |
+| Connect Integration | Adapter config unclear            | Medium   | Add adapter documentation with examples |
+| Run Reconciliation  | No test data                      | High     | Create sample data or mock adapters     |
+| Webhooks            | Webhook URL validation too strict | Low      | Relax SSRF checks for development       |
+| View Results        | Report format complex             | Low      | Add simplified summary view             |
 
 ### Missing Explanations
 
@@ -554,18 +569,23 @@ tail -f packages/api/logs/app.log
 ### For Founders/Sales
 
 **Hook (5 seconds):**
+
 > "Every finance team wastes 10+ hours per week manually matching orders to payments. Settler automates this in 5 minutes."
 
 **Problem (5 seconds):**
+
 > "You have orders in Shopify, payments in Stripe, invoices in QuickBooks—all disconnected. Manual reconciliation is slow, error-prone, and doesn't scale."
 
 **Solution (10 seconds):**
+
 > "Settler connects your systems with a simple API. Create a job, set matching rules, and get automated reconciliation with 99%+ accuracy. See unmatched records, get webhook notifications, and export reports."
 
 **Proof (5 seconds):**
+
 > "Watch: I'll create a job, run reconciliation, and show you matched records in under 30 seconds."
 
 **Demo Flow:**
+
 1. Show dashboard (2 seconds)
 2. Click "Create Job" (2 seconds)
 3. Select Shopify → Stripe (3 seconds)
@@ -576,14 +596,17 @@ tail -f packages/api/logs/app.log
 8. Show report export (5 seconds)
 
 **Close (5 seconds):**
+
 > "That's it. From setup to first reconciliation in under 5 minutes. Want to try it with your data?"
 
 ### For Technical Audiences
 
 **Hook:**
+
 > "Reconciliation-as-a-Service API. Like Resend for payments, but for matching records across systems."
 
 **Demo Flow:**
+
 1. Show API call to create job (5 seconds)
 2. Show job running (3 seconds)
 3. Show webhook payload (5 seconds)
@@ -591,6 +614,7 @@ tail -f packages/api/logs/app.log
 5. Show SDK usage (7 seconds)
 
 **Close:**
+
 > "5-minute integration. 99%+ accuracy. Usage-based pricing. Ready to try?"
 
 ---
@@ -599,15 +623,15 @@ tail -f packages/api/logs/app.log
 
 ### 5-Minute Quick Start
 
-| Step | Time | Command/Action |
-|------|------|----------------|
-| 1. Clone & Install | 2 min | `git clone ... && npm install` |
-| 2. Start Services | 1 min | `docker-compose up -d` |
-| 3. Create Account | 30 sec | `curl -X POST /api/v1/auth/register` |
-| 4. Get API Key | 30 sec | `curl -X POST /api/v1/auth/login` |
-| 5. Create Job | 30 sec | `curl -X POST /api/v1/jobs` |
-| 6. Run Job | 30 sec | `curl -X POST /api/v1/jobs/{id}/run` |
-| 7. View Results | 30 sec | `curl /api/v1/reports/{jobId}` |
+| Step               | Time   | Command/Action                       |
+| ------------------ | ------ | ------------------------------------ |
+| 1. Clone & Install | 2 min  | `git clone ... && npm install`       |
+| 2. Start Services  | 1 min  | `docker-compose up -d`               |
+| 3. Create Account  | 30 sec | `curl -X POST /api/v1/auth/register` |
+| 4. Get API Key     | 30 sec | `curl -X POST /api/v1/auth/login`    |
+| 5. Create Job      | 30 sec | `curl -X POST /api/v1/jobs`          |
+| 6. Run Job         | 30 sec | `curl -X POST /api/v1/jobs/{id}/run` |
+| 7. View Results    | 30 sec | `curl /api/v1/reports/{jobId}`       |
 
 **Total: ~5 minutes**
 
@@ -623,7 +647,7 @@ const job = await client.jobs.create({
   name: "Quick Test",
   source: { adapter: "stripe", config: { apiKey: "sk_test_..." } },
   target: { adapter: "shopify", config: { apiKey: "...", shopDomain: "..." } },
-  rules: { matching: [{ field: "amount", type: "exact" }] }
+  rules: { matching: [{ field: "amount", type: "exact" }] },
 });
 
 // 2. Run job (30 seconds)
@@ -689,30 +713,30 @@ console.log(report.data.summary);
 
 ### Immediate Actions (This Week)
 
-| Task | Owner | Time Estimate | Priority |
-|------|-------|---------------|----------|
-| Create .env.example | Dev | 30 min | P0 |
-| Add admin UI for tenant creation | Dev | 4 hours | P0 |
-| Create sample/test data | Dev | 2 hours | P0 |
-| Document password requirements | Docs | 15 min | P1 |
-| Add adapter examples | Docs | 1 hour | P1 |
+| Task                             | Owner | Time Estimate | Priority |
+| -------------------------------- | ----- | ------------- | -------- |
+| Create .env.example              | Dev   | 30 min        | P0       |
+| Add admin UI for tenant creation | Dev   | 4 hours       | P0       |
+| Create sample/test data          | Dev   | 2 hours       | P0       |
+| Document password requirements   | Docs  | 15 min        | P1       |
+| Add adapter examples             | Docs  | 1 hour        | P1       |
 
 ### Short-Term (This Month)
 
-| Task | Owner | Time Estimate | Priority |
-|------|-------|---------------|----------|
-| Build web UI for job creation | Dev | 1 week | P1 |
-| Add report interpretation guide | Docs | 2 hours | P1 |
-| Create video walkthrough | Marketing | 4 hours | P2 |
-| Add tooltips and help text | UX | 1 day | P2 |
+| Task                            | Owner     | Time Estimate | Priority |
+| ------------------------------- | --------- | ------------- | -------- |
+| Build web UI for job creation   | Dev       | 1 week        | P1       |
+| Add report interpretation guide | Docs      | 2 hours       | P1       |
+| Create video walkthrough        | Marketing | 4 hours       | P2       |
+| Add tooltips and help text      | UX        | 1 day         | P2       |
 
 ### Long-Term (This Quarter)
 
-| Task | Owner | Time Estimate | Priority |
-|------|-------|---------------|----------|
-| Build full admin dashboard | Dev | 2 weeks | P2 |
-| Add interactive tutorial | UX | 1 week | P2 |
-| Create API playground | Dev | 1 week | P2 |
+| Task                       | Owner | Time Estimate | Priority |
+| -------------------------- | ----- | ------------- | -------- |
+| Build full admin dashboard | Dev   | 2 weeks       | P2       |
+| Add interactive tutorial   | UX    | 1 week        | P2       |
+| Create API playground      | Dev   | 1 week        | P2       |
 
 ---
 

@@ -49,21 +49,24 @@ const resend_1 = require("resend");
 const logger_1 = require("../utils/logger");
 // Initialize Resend client
 const resendApiKey = process.env.RESEND_API_KEY;
-const resendFromEmail = process.env.RESEND_FROM_EMAIL || 'noreply@settler.dev';
-const resendFromName = process.env.RESEND_FROM_NAME || 'Settler';
+const resendFromEmail = process.env.RESEND_FROM_EMAIL || "noreply@settler.dev";
+const resendFromName = process.env.RESEND_FROM_NAME || "Settler";
 let resendClient = null;
 if (resendApiKey) {
     resendClient = new resend_1.Resend(resendApiKey);
 }
 else {
-    (0, logger_1.logWarn)('RESEND_API_KEY not set - email sending will be disabled');
+    (0, logger_1.logWarn)("RESEND_API_KEY not set - email sending will be disabled");
 }
 /**
  * Send email via Resend
  */
 async function sendEmail(template) {
     if (!resendClient) {
-        (0, logger_1.logWarn)('Resend client not initialized - email not sent', { to: template.to, subject: template.subject });
+        (0, logger_1.logWarn)("Resend client not initialized - email not sent", {
+            to: template.to,
+            subject: template.subject,
+        });
         return null;
     }
     try {
@@ -76,15 +79,15 @@ async function sendEmail(template) {
             ...(template.replyTo && { reply_to: template.replyTo }),
             tags: template.tags,
         });
-        (0, logger_1.logInfo)('Email sent successfully', {
-            emailId: result.data?.id || 'unknown',
+        (0, logger_1.logInfo)("Email sent successfully", {
+            emailId: result.data?.id || "unknown",
             to: template.to,
             subject: template.subject,
         });
-        return { id: result.data?.id || 'unknown' };
+        return { id: result.data?.id || "unknown" };
     }
     catch (error) {
-        (0, logger_1.logError)('Failed to send email', error, {
+        (0, logger_1.logError)("Failed to send email", error, {
             to: template.to,
             subject: template.subject,
         });
@@ -98,10 +101,10 @@ async function sendEmail(template) {
  * Sign-up verification email
  */
 async function sendVerificationEmail(email, verificationLink, userName) {
-    const name = userName || email.split('@')[0];
+    const name = userName || email.split("@")[0];
     return sendEmail({
         to: email,
-        subject: 'Verify your Settler account',
+        subject: "Verify your Settler account",
         html: `
       <!DOCTYPE html>
       <html>
@@ -129,17 +132,17 @@ async function sendVerificationEmail(email, verificationLink, userName) {
       
       This link will expire in 24 hours.
     `,
-        tags: [{ name: 'email_type', value: 'verification' }],
+        tags: [{ name: "email_type", value: "verification" }],
     });
 }
 /**
  * Password reset email
  */
 async function sendPasswordResetEmail(email, resetLink, userName) {
-    const name = userName || email.split('@')[0];
+    const name = userName || email.split("@")[0];
     return sendEmail({
         to: email,
-        subject: 'Reset your Settler password',
+        subject: "Reset your Settler password",
         html: `
       <!DOCTYPE html>
       <html>
@@ -173,7 +176,7 @@ async function sendPasswordResetEmail(email, resetLink, userName) {
       
       If you didn't request this, you can safely ignore this email.
     `,
-        tags: [{ name: 'email_type', value: 'password_reset' }],
+        tags: [{ name: "email_type", value: "password_reset" }],
     });
 }
 /**
@@ -183,11 +186,11 @@ async function sendPasswordResetEmail(email, resetLink, userName) {
 async function sendWelcomeEmail(email, userName, dashboardLink, isTrialUser, trialEndDate) {
     // If trial user, use lifecycle email system
     if (isTrialUser && trialEndDate) {
-        const { sendTrialWelcomeEmail } = await Promise.resolve().then(() => __importStar(require('./email-lifecycle')));
+        const { sendTrialWelcomeEmail } = await Promise.resolve().then(() => __importStar(require("./email-lifecycle")));
         return sendTrialWelcomeEmail({
             email,
-            firstName: userName || email.split('@')[0] || 'User',
-            planType: 'trial',
+            firstName: userName || email.split("@")[0] || "User",
+            planType: "trial",
         }, {
             trialStartDate: new Date().toISOString(),
             trialEndDate,
@@ -195,11 +198,11 @@ async function sendWelcomeEmail(email, userName, dashboardLink, isTrialUser, tri
         });
     }
     // Legacy welcome email for non-trial users
-    const name = userName || email.split('@')[0];
-    const dashboard = dashboardLink || 'https://app.settler.dev/dashboard';
+    const name = userName || email.split("@")[0];
+    const dashboard = dashboardLink || "https://app.settler.dev/dashboard";
     return sendEmail({
         to: email,
-        subject: 'Welcome to Settler! 🎉',
+        subject: "Welcome to Settler! 🎉",
         html: `
       <!DOCTYPE html>
       <html>
@@ -234,14 +237,14 @@ async function sendWelcomeEmail(email, userName, dashboardLink, isTrialUser, tri
       
       Need help? Check out our documentation or reach out to support@settler.dev.
     `,
-        tags: [{ name: 'email_type', value: 'welcome' }],
+        tags: [{ name: "email_type", value: "welcome" }],
     });
 }
 /**
  * Notification email (for important events)
  */
 async function sendNotificationEmail(email, title, message, actionLink, actionText, userName) {
-    const name = userName || email.split('@')[0];
+    const name = userName || email.split("@")[0];
     return sendEmail({
         to: email,
         subject: title,
@@ -256,11 +259,13 @@ async function sendNotificationEmail(email, title, message, actionLink, actionTe
           <h1 style="color: #2563eb;">${title}</h1>
           <p>Hi ${name},</p>
           <p>${message}</p>
-          ${actionLink && actionText ? `
+          ${actionLink && actionText
+            ? `
             <div style="text-align: center; margin: 30px 0;">
               <a href="${actionLink}" style="background-color: #2563eb; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;">${actionText}</a>
             </div>
-          ` : ''}
+          `
+            : ""}
         </body>
       </html>
     `,
@@ -271,19 +276,19 @@ async function sendNotificationEmail(email, title, message, actionLink, actionTe
       
       ${message}
       
-      ${actionLink ? `Visit: ${actionLink}` : ''}
+      ${actionLink ? `Visit: ${actionLink}` : ""}
     `,
-        tags: [{ name: 'email_type', value: 'notification' }],
+        tags: [{ name: "email_type", value: "notification" }],
     });
 }
 /**
  * Magic link email (passwordless login)
  */
 async function sendMagicLinkEmail(email, magicLink, userName) {
-    const name = userName || email.split('@')[0];
+    const name = userName || email.split("@")[0];
     return sendEmail({
         to: email,
-        subject: 'Sign in to Settler',
+        subject: "Sign in to Settler",
         html: `
       <!DOCTYPE html>
       <html>
@@ -317,7 +322,7 @@ async function sendMagicLinkEmail(email, magicLink, userName) {
       
       If you didn't request this, you can safely ignore this email.
     `,
-        tags: [{ name: 'email_type', value: 'magic_link' }],
+        tags: [{ name: "email_type", value: "magic_link" }],
     });
 }
 //# sourceMappingURL=email.js.map

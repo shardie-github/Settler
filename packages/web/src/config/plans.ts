@@ -1,32 +1,32 @@
 /**
  * Plan Configuration
- * 
+ *
  * Defines feature access levels for free, trial, and paid plans
  */
 
-export type PlanType = 'free' | 'trial' | 'commercial' | 'enterprise';
+export type PlanType = "free" | "trial" | "commercial" | "enterprise";
 
 export interface PlanFeatures {
-  cookbooks: string[] | 'all';
-  docs: string[] | 'all';
+  cookbooks: string[] | "all";
+  docs: string[] | "all";
   playground: {
-    runsPerDay: number | 'unlimited';
+    runsPerDay: number | "unlimited";
     advancedFeatures: boolean;
   };
   consulting: boolean;
   emailAnalysis: {
     enabled: boolean;
-    reportsPerMonth: number | 'unlimited';
+    reportsPerMonth: number | "unlimited";
   };
   newsFeed: {
     personalized: boolean;
     aiGenerated: boolean;
   };
   workflows: {
-    maxWorkflows: number | 'unlimited';
+    maxWorkflows: number | "unlimited";
     advancedWorkflows: boolean;
   };
-  support: 'community' | 'email' | 'priority' | 'dedicated';
+  support: "community" | "email" | "priority" | "dedicated";
 }
 
 export interface Plan {
@@ -36,21 +36,21 @@ export interface Plan {
   period: string;
   features: PlanFeatures;
   limits: {
-    reconciliationsPerMonth: number | 'unlimited';
-    logRetentionDays: number | 'unlimited';
-    platformAdapters: number | 'unlimited';
+    reconciliationsPerMonth: number | "unlimited";
+    logRetentionDays: number | "unlimited";
+    platformAdapters: number | "unlimited";
   };
 }
 
 export const plans: Record<PlanType, Plan> = {
   free: {
-    name: 'Free',
-    type: 'free',
-    price: '$0',
-    period: 'forever',
+    name: "Free",
+    type: "free",
+    price: "$0",
+    period: "forever",
     features: {
-      cookbooks: ['ecommerce-shopify-stripe', 'scheduled-reconciliations', 'error-handling'],
-      docs: ['getting-started', 'installation', 'api-reference-basic'],
+      cookbooks: ["ecommerce-shopify-stripe", "scheduled-reconciliations", "error-handling"],
+      docs: ["getting-started", "installation", "api-reference-basic"],
       playground: {
         runsPerDay: 3,
         advancedFeatures: false,
@@ -68,7 +68,7 @@ export const plans: Record<PlanType, Plan> = {
         maxWorkflows: 2,
         advancedWorkflows: false,
       },
-      support: 'community',
+      support: "community",
     },
     limits: {
       reconciliationsPerMonth: 1000,
@@ -77,102 +77,102 @@ export const plans: Record<PlanType, Plan> = {
     },
   },
   trial: {
-    name: 'Free Trial',
-    type: 'trial',
-    price: '$0',
-    period: '30 days',
+    name: "Free Trial",
+    type: "trial",
+    price: "$0",
+    period: "30 days",
     features: {
-      cookbooks: 'all', // Full access during trial
-      docs: 'all', // Full access during trial
+      cookbooks: "all", // Full access during trial
+      docs: "all", // Full access during trial
       playground: {
-        runsPerDay: 'unlimited', // Unlimited during trial
+        runsPerDay: "unlimited", // Unlimited during trial
         advancedFeatures: true,
       },
       consulting: true, // Free consultation included
       emailAnalysis: {
         enabled: true,
-        reportsPerMonth: 'unlimited',
+        reportsPerMonth: "unlimited",
       },
       newsFeed: {
         personalized: true, // If pre-test completed
         aiGenerated: true,
       },
       workflows: {
-        maxWorkflows: 'unlimited',
+        maxWorkflows: "unlimited",
         advancedWorkflows: true,
       },
-      support: 'email',
+      support: "email",
     },
     limits: {
-      reconciliationsPerMonth: 'unlimited',
+      reconciliationsPerMonth: "unlimited",
       logRetentionDays: 30,
-      platformAdapters: 'unlimited',
+      platformAdapters: "unlimited",
     },
   },
   commercial: {
-    name: 'Commercial',
-    type: 'commercial',
-    price: '$99',
-    period: '/month',
+    name: "Commercial",
+    type: "commercial",
+    price: "$99",
+    period: "/month",
     features: {
-      cookbooks: 'all',
-      docs: 'all',
+      cookbooks: "all",
+      docs: "all",
       playground: {
-        runsPerDay: 'unlimited',
+        runsPerDay: "unlimited",
         advancedFeatures: true,
       },
       consulting: true, // 30-minute onboarding included
       emailAnalysis: {
         enabled: true,
-        reportsPerMonth: 'unlimited',
+        reportsPerMonth: "unlimited",
       },
       newsFeed: {
         personalized: true,
         aiGenerated: true,
       },
       workflows: {
-        maxWorkflows: 'unlimited',
+        maxWorkflows: "unlimited",
         advancedWorkflows: true,
       },
-      support: 'email',
+      support: "email",
     },
     limits: {
       reconciliationsPerMonth: 100000,
       logRetentionDays: 30,
-      platformAdapters: 'unlimited',
+      platformAdapters: "unlimited",
     },
   },
   enterprise: {
-    name: 'Enterprise',
-    type: 'enterprise',
-    price: 'Custom',
-    period: '',
+    name: "Enterprise",
+    type: "enterprise",
+    price: "Custom",
+    period: "",
     features: {
-      cookbooks: 'all',
-      docs: 'all',
+      cookbooks: "all",
+      docs: "all",
       playground: {
-        runsPerDay: 'unlimited',
+        runsPerDay: "unlimited",
         advancedFeatures: true,
       },
       consulting: true, // Dedicated account manager
       emailAnalysis: {
         enabled: true,
-        reportsPerMonth: 'unlimited',
+        reportsPerMonth: "unlimited",
       },
       newsFeed: {
         personalized: true,
         aiGenerated: true,
       },
       workflows: {
-        maxWorkflows: 'unlimited',
+        maxWorkflows: "unlimited",
         advancedWorkflows: true,
       },
-      support: 'dedicated',
+      support: "dedicated",
     },
     limits: {
-      reconciliationsPerMonth: 'unlimited',
-      logRetentionDays: 'unlimited',
-      platformAdapters: 'unlimited',
+      reconciliationsPerMonth: "unlimited",
+      logRetentionDays: "unlimited",
+      platformAdapters: "unlimited",
     },
   },
 };
@@ -200,15 +200,15 @@ export function hasFeatureAccess(
   }
 
   // Handle 'all' access
-  if (featureConfig === 'all') return true;
+  if (featureConfig === "all") return true;
 
   // Handle object features (playground, emailAnalysis, etc.)
-  if (typeof featureConfig === 'object') {
-    if ('enabled' in featureConfig) {
+  if (typeof featureConfig === "object") {
+    if ("enabled" in featureConfig) {
       return featureConfig.enabled === true;
     }
-    if ('runsPerDay' in featureConfig) {
-      return featureConfig.runsPerDay === 'unlimited' || featureConfig.runsPerDay > 0;
+    if ("runsPerDay" in featureConfig) {
+      return featureConfig.runsPerDay === "unlimited" || featureConfig.runsPerDay > 0;
     }
     return true;
   }
@@ -229,32 +229,27 @@ export function getPlanLimits(userPlan: PlanType) {
 export function isContentGated(
   userPlan: PlanType,
   contentId: string,
-  contentType: 'cookbook' | 'doc' | 'feature'
+  contentType: "cookbook" | "doc" | "feature"
 ): boolean {
   const plan = plans[userPlan];
 
-  if (plan.type === 'trial' || plan.type === 'commercial' || plan.type === 'enterprise') {
+  if (plan.type === "trial" || plan.type === "commercial" || plan.type === "enterprise") {
     return false; // Full access
   }
 
   // Free tier gating
-  if (contentType === 'cookbook') {
+  if (contentType === "cookbook") {
     const gatedCookbooks = [
-      'realtime-webhooks',
-      'multi-currency',
-      'dashboard-metrics',
-      'api-key-management',
+      "realtime-webhooks",
+      "multi-currency",
+      "dashboard-metrics",
+      "api-key-management",
     ];
     return gatedCookbooks.includes(contentId);
   }
 
-  if (contentType === 'doc') {
-    const gatedDocs = [
-      'api-reference-advanced',
-      'webhooks',
-      'multi-currency',
-      'edge-ai',
-    ];
+  if (contentType === "doc") {
+    const gatedDocs = ["api-reference-advanced", "webhooks", "multi-currency", "edge-ai"];
     return gatedDocs.includes(contentId);
   }
 

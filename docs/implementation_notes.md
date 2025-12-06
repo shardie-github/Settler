@@ -72,12 +72,14 @@ This document tracks all code changes, new components, and configuration added d
 **Purpose:** Gate content based on user plan type
 
 **Features:**
+
 - Conditional rendering based on plan type
 - Teaser content display for gated content
 - Upgrade prompts with clear value proposition
 - Supports multiple content types (cookbooks, docs, features)
 
 **Usage Example:**
+
 ```tsx
 <PlanFeatureGate
   userPlan="free"
@@ -97,10 +99,9 @@ This document tracks all code changes, new components, and configuration added d
 **Purpose:** Show blurred/preview version of gated content
 
 **Usage Example:**
+
 ```tsx
-<TeaserContent blurIntensity="medium">
-  {/* Content to blur */}
-</TeaserContent>
+<TeaserContent blurIntensity="medium">{/* Content to blur */}</TeaserContent>
 ```
 
 ---
@@ -110,12 +111,14 @@ This document tracks all code changes, new components, and configuration added d
 ### Plan Configuration (`config/plans.ts`)
 
 **Structure:**
+
 - Plan types: `free`, `trial`, `commercial`, `enterprise`
 - Feature access levels per plan
 - Content gating rules
 - Plan limits (reconciliations, retention, adapters)
 
 **Key Functions:**
+
 - `hasFeatureAccess()` - Check if user has access to specific feature
 - `getPlanLimits()` - Get plan limits for user
 - `isContentGated()` - Check if content should be gated
@@ -127,10 +130,12 @@ This document tracks all code changes, new components, and configuration added d
 ### Current Gating Rules:
 
 **Free Tier Gated:**
+
 - Advanced cookbooks: `realtime-webhooks`, `multi-currency`, `dashboard-metrics`, `api-key-management`
 - Advanced docs: `api-reference-advanced`, `webhooks`, `multi-currency`, `edge-ai`
 
 **Trial/Paid Access:**
+
 - Full access to all content during trial
 - Full access to all content on paid plans
 
@@ -232,6 +237,7 @@ This document tracks all code changes, new components, and configuration added d
 ## Breaking Changes
 
 **None** - All changes are non-breaking:
+
 - Existing routes maintained
 - Existing components still functional
 - New components are additive
@@ -242,9 +248,11 @@ This document tracks all code changes, new components, and configuration added d
 ## Dependencies
 
 **New Dependencies:**
+
 - None (using existing UI components)
 
 **Required Context:**
+
 - User authentication state (for plan detection)
 - User plan information (from database/API)
 

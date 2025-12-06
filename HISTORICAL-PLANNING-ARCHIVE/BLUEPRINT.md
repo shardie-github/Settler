@@ -1,4 +1,5 @@
 # Reconciliation-as-a-Service (RaaS)
+
 ## Technical & Product Blueprint 2026
 
 **Version:** 1.0  
@@ -54,18 +55,21 @@ Reconciliation-as-a-Service eliminates the complexity of cross-platform data val
 ### Value Propositions
 
 **For Developers:**
+
 - 5-minute integration vs. weeks of custom reconciliation logic
 - Real-time webhook reconciliation
 - Built-in retry, deduplication, and conflict resolution
 - TypeScript SDK with full type safety
 
 **For Finance Teams:**
+
 - Automated daily reconciliation reports
 - Exception handling with configurable rules
 - Audit trails for compliance
 - Multi-currency and multi-entity support
 
 **For Operations:**
+
 - Reduce reconciliation time from hours to minutes
 - Proactive alerts on data mismatches
 - Self-service configuration (no engineering tickets)
@@ -78,18 +82,21 @@ Reconciliation-as-a-Service eliminates the complexity of cross-platform data val
 ### Primary Persona: **DevOps/Backend Engineer at E-commerce SaaS**
 
 **Profile:**
+
 - 3-10 years experience
 - Manages integrations with Stripe, Shopify, QuickBooks
 - Frustrated by webhook failures, duplicate events, and manual reconciliation
 - Values: Speed, reliability, observability
 
 **Pain Points:**
+
 - Webhook reconciliation takes 2-3 hours daily
 - Missing events cause revenue discrepancies
 - No single source of truth across platforms
 - Custom reconciliation code is brittle and hard to maintain
 
 **Goals:**
+
 - Automate reconciliation with minimal code
 - Get instant alerts on data mismatches
 - Maintain audit trails for compliance
@@ -100,18 +107,21 @@ Reconciliation-as-a-Service eliminates the complexity of cross-platform data val
 ### Secondary Persona: **Finance Manager at Mid-Market E-commerce**
 
 **Profile:**
+
 - 5-15 years experience
 - Manages books across Shopify, Stripe, PayPal, QuickBooks
 - Reports to CFO/Controller
 - Values: Accuracy, compliance, efficiency
 
 **Pain Points:**
+
 - Monthly reconciliation takes 2-3 days
 - Manual Excel-based processes are error-prone
 - No real-time visibility into discrepancies
 - Compliance audits require extensive documentation
 
 **Goals:**
+
 - Reduce reconciliation time by 80%
 - Eliminate manual errors
 - Generate compliance-ready reports automatically
@@ -122,18 +132,21 @@ Reconciliation-as-a-Service eliminates the complexity of cross-platform data val
 ### Tertiary Persona: **CTO/Founder at B2B SaaS**
 
 **Profile:**
+
 - Technical founder or early-stage CTO
 - Limited engineering resources
 - Needs to move fast without technical debt
 - Values: Speed to market, scalability, cost efficiency
 
 **Pain Points:**
+
 - Can't afford dedicated reconciliation infrastructure
 - Need to focus on core product, not ops
 - Compliance requirements (SOC 2, GDPR) are blockers
 - Multi-tenant reconciliation is complex
 
 **Goals:**
+
 - Outsource reconciliation complexity
 - Meet compliance requirements without in-house expertise
 - Scale reconciliation as customer base grows
@@ -145,14 +158,14 @@ Reconciliation-as-a-Service eliminates the complexity of cross-platform data val
 
 ### Competitive Landscape
 
-| Product | Type | Strengths | Weaknesses | Why We Win |
-|---------|------|-----------|------------|------------|
-| **QuickBooks** | Desktop/Cloud Accounting | Market leader, familiar UI | Manual process, no real-time, limited API | Real-time API-first, automated |
-| **Xero** | Cloud Accounting | Good API, multi-currency | Reconciliation is manual, no event streaming | Event-driven, webhook-native |
-| **Stripe Revenue Recognition** | Payment Platform | Integrated with Stripe | Stripe-only, no multi-platform | Platform-agnostic, composable |
-| **Fivetran** | ETL/Data Pipeline | Strong connectors | Not purpose-built for reconciliation, expensive | Purpose-built, usage-based pricing |
-| **Custom Scripts** | DIY | Full control | High maintenance, no compliance, brittle | Managed service with compliance |
-| **BlackLine** | Enterprise Reconciliation | Enterprise-grade | Expensive ($100K+), complex, slow onboarding | Simple, affordable, fast setup |
+| Product                        | Type                      | Strengths                  | Weaknesses                                      | Why We Win                         |
+| ------------------------------ | ------------------------- | -------------------------- | ----------------------------------------------- | ---------------------------------- |
+| **QuickBooks**                 | Desktop/Cloud Accounting  | Market leader, familiar UI | Manual process, no real-time, limited API       | Real-time API-first, automated     |
+| **Xero**                       | Cloud Accounting          | Good API, multi-currency   | Reconciliation is manual, no event streaming    | Event-driven, webhook-native       |
+| **Stripe Revenue Recognition** | Payment Platform          | Integrated with Stripe     | Stripe-only, no multi-platform                  | Platform-agnostic, composable      |
+| **Fivetran**                   | ETL/Data Pipeline         | Strong connectors          | Not purpose-built for reconciliation, expensive | Purpose-built, usage-based pricing |
+| **Custom Scripts**             | DIY                       | Full control               | High maintenance, no compliance, brittle        | Managed service with compliance    |
+| **BlackLine**                  | Enterprise Reconciliation | Enterprise-grade           | Expensive ($100K+), complex, slow onboarding    | Simple, affordable, fast setup     |
 
 ### Market Gaps
 
@@ -179,6 +192,7 @@ Reconciliation-as-a-Service eliminates the complexity of cross-platform data val
 **Goal:** Prove core value—automated reconciliation between 2 platforms.
 
 **Features:**
+
 - ✅ REST API for reconciliation jobs
 - ✅ Adapters: Stripe ↔ Shopify, Stripe ↔ QuickBooks
 - ✅ Real-time webhook ingestion
@@ -191,6 +205,7 @@ Reconciliation-as-a-Service eliminates the complexity of cross-platform data val
 - ✅ Usage-based pricing (free tier: 1K reconciliations/month)
 
 **Success Metrics:**
+
 - 100 beta users
 - 95%+ reconciliation accuracy
 - <100ms API latency (p95)
@@ -203,6 +218,7 @@ Reconciliation-as-a-Service eliminates the complexity of cross-platform data val
 **Goal:** Enterprise-ready with compliance and scale.
 
 **Features:**
+
 - ✅ **Advanced Matching:** Fuzzy matching, multi-field rules, custom logic
 - ✅ **Conflict Resolution:** Configurable strategies (first-wins, last-wins, manual review)
 - ✅ **Multi-Currency:** FX conversion, currency-aware matching
@@ -216,6 +232,7 @@ Reconciliation-as-a-Service eliminates the complexity of cross-platform data val
 - ✅ **Self-Hosted Option:** Docker Compose deployment guide
 
 **Success Metrics:**
+
 - 1,000 paying customers
 - $50K MRR
 - 99.95% uptime
@@ -228,6 +245,7 @@ Reconciliation-as-a-Service eliminates the complexity of cross-platform data val
 **Goal:** AI-powered anomaly detection and recommendations.
 
 **Features:**
+
 - ✅ **Anomaly Detection:** ML-based outlier detection
 - ✅ **Smart Matching:** AI suggests matching rules from historical data
 - ✅ **Predictive Alerts:** Forecast reconciliation failures
@@ -238,6 +256,7 @@ Reconciliation-as-a-Service eliminates the complexity of cross-platform data val
 - ✅ **Slack/Email Integration:** Alert channels
 
 **Success Metrics:**
+
 - 5,000 customers
 - $200K MRR
 - 50% reduction in false positives
@@ -249,6 +268,7 @@ Reconciliation-as-a-Service eliminates the complexity of cross-platform data val
 **Goal:** Become the reconciliation platform with marketplace.
 
 **Features:**
+
 - ✅ **Adapter Marketplace:** Community-built adapters (GitHub integration)
 - ✅ **Workflow Builder:** Visual reconciliation workflow designer
 - ✅ **Multi-Entity:** Support for holding companies, subsidiaries
@@ -259,6 +279,7 @@ Reconciliation-as-a-Service eliminates the complexity of cross-platform data val
 - ✅ **Adapters:** SAP, Oracle NetSuite, Microsoft Dynamics
 
 **Success Metrics:**
+
 - 20,000 customers
 - $1M MRR
 - 50+ community adapters
@@ -270,6 +291,7 @@ Reconciliation-as-a-Service eliminates the complexity of cross-platform data val
 **Vision:** Expand to broader financial operations automation.
 
 **Potential Features:**
+
 - Revenue recognition automation
 - Tax calculation and filing
 - Multi-entity consolidation
@@ -316,21 +338,21 @@ const job = await reconcile.jobs.create({
   name: "shopify-stripe-reconciliation",
   source: {
     adapter: "shopify",
-    config: { apiKey: process.env.SHOPIFY_API_KEY }
+    config: { apiKey: process.env.SHOPIFY_API_KEY },
   },
   target: {
     adapter: "stripe",
-    config: { apiKey: process.env.STRIPE_SECRET_KEY }
+    config: { apiKey: process.env.STRIPE_SECRET_KEY },
   },
   rules: {
     matching: [
       { field: "order_id", type: "exact" },
       { field: "amount", type: "exact", tolerance: 0.01 },
-      { field: "date", type: "range", days: 1 }
+      { field: "date", type: "range", days: 1 },
     ],
-    conflictResolution: "last-wins"
+    conflictResolution: "last-wins",
   },
-  schedule: "0 2 * * *" // Daily at 2 AM
+  schedule: "0 2 * * *", // Daily at 2 AM
 });
 
 // 2. Webhook handlers (automatic)
@@ -339,7 +361,7 @@ const job = await reconcile.jobs.create({
 
 // 3. Query results
 const report = await reconcile.reports.get(job.id, {
-  dateRange: { start: "2026-01-01", end: "2026-01-31" }
+  dateRange: { start: "2026-01-01", end: "2026-01-31" },
 });
 
 console.log(report.summary);
@@ -436,17 +458,17 @@ Order Placed → Shopify Webhook → RaaS Webhook Endpoint
 // Customer webhook handler
 app.post("/webhooks/reconcile", async (req, res) => {
   const { event, data } = req.body;
-  
+
   if (event === "reconciliation.mismatch") {
     // Alert finance team
     await sendAlert({
       type: "mismatch",
       orderId: data.order_id,
       expected: data.expected_amount,
-      actual: data.actual_amount
+      actual: data.actual_amount,
     });
   }
-  
+
   res.json({ received: true });
 });
 ```
@@ -566,6 +588,7 @@ app.post("/webhooks/reconcile", async (req, res) => {
 ### Frontend Stack
 
 **Web Dashboard:**
+
 - **Framework:** Next.js 14+ (App Router)
 - **UI Library:** shadcn/ui + Tailwind CSS
 - **State Management:** Zustand + React Query
@@ -574,6 +597,7 @@ app.post("/webhooks/reconcile", async (req, res) => {
 - **Deployment:** Vercel
 
 **Playground:**
+
 - **Framework:** Next.js (same as dashboard)
 - **Code Editor:** Monaco Editor (VS Code editor)
 - **API Testing:** Built-in HTTP client
@@ -583,6 +607,7 @@ app.post("/webhooks/reconcile", async (req, res) => {
 ### Backend Stack
 
 **API Layer:**
+
 - **Runtime:** Node.js 20+ (TypeScript)
 - **Framework:** Hono (lightweight, fast) or Express.js
 - **Validation:** Zod
@@ -622,26 +647,31 @@ app.post("/webhooks/reconcile", async (req, res) => {
 ### Database & Storage
 
 **Primary Database:**
+
 - **Option 1:** PostgreSQL 15+ (TimescaleDB extension for time-series)
 - **Option 2:** Supabase (Postgres + Auth + Storage)
 - **Use Cases:** Jobs, users, reconciliation results, audit logs
 
 **Time-Series Data:**
+
 - **Option 1:** TimescaleDB (Postgres extension)
 - **Option 2:** InfluxDB
 - **Use Cases:** Metrics, reconciliation history, performance data
 
 **Object Storage:**
+
 - **Option 1:** Cloudflare R2 (S3-compatible)
 - **Option 2:** AWS S3
 - **Use Cases:** Reports, webhook payloads, exports
 
 **Cache:**
+
 - **Option 1:** Upstash Redis (serverless)
 - **Option 2:** Cloudflare KV
 - **Use Cases:** API responses, adapter configs, rate limiting
 
 **Message Queue:**
+
 - **Option 1:** Cloudflare Queues
 - **Option 2:** AWS SQS
 - **Option 3:** BullMQ (Redis-based)
@@ -679,11 +709,13 @@ app.post("/webhooks/reconcile", async (req, res) => {
    - **Cost:** Infrastructure only
 
 **CI/CD:**
+
 - **GitHub Actions** (or GitLab CI)
 - **Deployment:** Automated on merge to main
 - **Testing:** Jest (unit), Playwright (E2E)
 
 **Monitoring & Observability:**
+
 - **APM:** Datadog / New Relic / Sentry
 - **Logs:** Axiom / Datadog Logs
 - **Metrics:** Prometheus + Grafana (self-hosted) or Datadog
@@ -700,13 +732,13 @@ app.post("/webhooks/reconcile", async (req, res) => {
 export interface Adapter {
   name: string;
   version: string;
-  
+
   // Fetch data from source
   fetch(options: FetchOptions): Promise<Data[]>;
-  
+
   // Normalize data to RaaS format
   normalize(data: RawData): NormalizedData;
-  
+
   // Validate data
   validate(data: NormalizedData): ValidationResult;
 }
@@ -715,28 +747,29 @@ export interface Adapter {
 export class StripeAdapter implements Adapter {
   name = "stripe";
   version = "1.0.0";
-  
+
   async fetch(options: { apiKey: string; dateRange: DateRange }) {
     const stripe = new Stripe(options.apiKey);
     const charges = await stripe.charges.list({
-      created: { gte: options.dateRange.start, lte: options.dateRange.end }
+      created: { gte: options.dateRange.start, lte: options.dateRange.end },
     });
     return charges.data;
   }
-  
+
   normalize(charge: Stripe.Charge): NormalizedData {
     return {
       id: charge.id,
       amount: charge.amount / 100, // Convert cents to dollars
       currency: charge.currency,
       date: new Date(charge.created * 1000),
-      metadata: charge.metadata
+      metadata: charge.metadata,
     };
   }
 }
 ```
 
 **Built-in Adapters (MVP):**
+
 - Stripe
 - Shopify
 - QuickBooks
@@ -744,6 +777,7 @@ export class StripeAdapter implements Adapter {
 - Square
 
 **Community Adapters (v1.5+):**
+
 - GitHub-hosted adapter registry
 - npm packages: `@reconcile/adapter-{platform}`
 - Marketplace UI for discovery
@@ -768,12 +802,14 @@ export class StripeAdapter implements Adapter {
 4. **Compliance Certifications:** SOC 2, PCI-DSS (hosted only)
 
 **Open Source Model:**
+
 - **Community Edition:** Self-hostable core (AGPL)
 - **Hosted Free Tier:** 1K reconciliations/month
 - **Hosted Paid Tiers:** Usage-based pricing
 - **Enterprise:** Custom pricing, dedicated infra, SLA
 
 **Community Strategy:**
+
 - GitHub Discussions for feature requests
 - Discord/Slack for community support
 - Adapter marketplace (GitHub + npm)
@@ -992,18 +1028,21 @@ export class StripeAdapter implements Adapter {
 ### Launch Strategy (Months 1-3)
 
 **Phase 1: Private Beta (Month 1)**
+
 - 50 handpicked developers (Twitter, Indie Hackers, Product Hunt makers)
 - Free unlimited usage
 - Weekly office hours
 - Direct feedback loop
 
 **Phase 2: Public Beta (Month 2)**
+
 - Open signups (waitlist)
 - Free tier: 1K reconciliations/month
 - Product Hunt launch
 - Blog posts: "How we built RaaS"
 
 **Phase 3: General Availability (Month 3)**
+
 - Public launch
 - Pricing live
 - Documentation complete
@@ -1039,11 +1078,13 @@ export class StripeAdapter implements Adapter {
 ### Sales Strategy
 
 **Self-Service (MVP - v1.0):**
+
 - Credit card required for paid tiers
 - No sales team
 - Automated onboarding
 
 **Sales-Assisted (v1.5+):**
+
 - Enterprise tier ($10K+ ARR)
 - Dedicated account manager
 - Custom contracts, SLAs
@@ -1055,6 +1096,7 @@ export class StripeAdapter implements Adapter {
 ### Pricing Tiers (Stripe-Style)
 
 **Free Tier:**
+
 - 1,000 reconciliations/month
 - 2 adapters
 - 7-day log retention
@@ -1062,6 +1104,7 @@ export class StripeAdapter implements Adapter {
 - **Use Case:** Testing, small projects
 
 **Starter ($29/month):**
+
 - 10,000 reconciliations/month
 - 5 adapters
 - 30-day log retention
@@ -1069,6 +1112,7 @@ export class StripeAdapter implements Adapter {
 - **Use Case:** Small e-commerce stores
 
 **Growth ($99/month):**
+
 - 100,000 reconciliations/month
 - 15 adapters
 - 90-day log retention
@@ -1077,6 +1121,7 @@ export class StripeAdapter implements Adapter {
 - **Use Case:** Mid-market SaaS
 
 **Scale ($299/month):**
+
 - 1,000,000 reconciliations/month
 - Unlimited adapters
 - 1-year log retention
@@ -1086,6 +1131,7 @@ export class StripeAdapter implements Adapter {
 - **Use Case:** Large e-commerce, multi-entity
 
 **Enterprise (Custom):**
+
 - Unlimited reconciliations
 - Dedicated infrastructure
 - SOC 2, PCI-DSS, HIPAA
@@ -1095,10 +1141,12 @@ export class StripeAdapter implements Adapter {
 - **Use Case:** Enterprise, regulated industries
 
 **Overage Pricing:**
+
 - $0.01 per reconciliation (beyond plan limits)
 - Automatic billing
 
 **Add-ons:**
+
 - Additional log retention: $10/month per 90 days
 - Dedicated IP: $50/month
 - Custom adapters: $500 one-time + $50/month
@@ -1169,6 +1217,7 @@ export class StripeAdapter implements Adapter {
 Reconciliation-as-a-Service addresses a critical pain point for modern businesses: fragmented data across platforms. By combining API-first design, composable adapters, and compliance-by-default, RaaS can become the infrastructure layer for financial operations automation.
 
 **Next Steps:**
+
 1. Validate MVP with 50 beta users
 2. Build core reconciliation engine (Months 1-3)
 3. Launch publicly with Stripe + Shopify adapters
@@ -1176,6 +1225,7 @@ Reconciliation-as-a-Service addresses a critical pain point for modern businesse
 5. Expand to enterprise (Months 6-12)
 
 **Success Criteria (12 Months):**
+
 - 20,000 customers
 - $1M ARR
 - 99.95% uptime

@@ -3,15 +3,15 @@
  * Event handlers that update read models
  */
 
-import { Pool } from 'pg';
-import { pool } from '../../../db';
-import { DomainEvent } from '../../../domain/events/DomainEvent';
-import { EventEnvelope } from '../../../domain/eventsourcing/EventEnvelope';
+import { Pool } from "pg";
+import { pool } from "../../../db";
+import { DomainEvent } from "../../../domain/events/DomainEvent";
+import { EventEnvelope } from "../../../domain/eventsourcing/EventEnvelope";
 
 export interface ReconciliationSummary {
   reconciliation_id: string;
   job_id: string;
-  status: 'running' | 'completed' | 'failed' | 'cancelled';
+  status: "running" | "completed" | "failed" | "cancelled";
   total_source_records: number;
   total_target_records: number;
   matched_count: number;
@@ -70,14 +70,14 @@ export class ReconciliationProjectionHandlers {
     `;
 
     // Extract from event metadata
-    const tenantId = (event as any).tenantId || 'unknown';
+    const tenantId = (event as any).tenantId || "unknown";
     const reconciliationId = (event as any).reconciliationId;
     const jobId = (event as any).jobId;
 
     await this.db.query(query, [
       reconciliationId,
       jobId,
-      'running',
+      "running",
       tenantId,
       new Date(),
       new Date(),
@@ -152,7 +152,7 @@ export class ReconciliationProjectionHandlers {
       WHERE reconciliation_id = $1
     `;
 
-    const unmatchedType = data.source_id ? 'source' : 'target';
+    const unmatchedType = data.source_id ? "source" : "target";
     await this.db.query(query, [data.reconciliation_id, unmatchedType]);
   }
 
@@ -236,11 +236,7 @@ export class ReconciliationProjectionHandlers {
     `;
 
     const data = eventEnvelope.data as any;
-    await this.db.query(query, [
-      tenantId,
-      today,
-      data.summary?.duration_ms || 0,
-    ]);
+    await this.db.query(query, [tenantId, today, data.summary?.duration_ms || 0]);
   }
 
   /**
@@ -268,9 +264,9 @@ export class ReconciliationProjectionHandlers {
 
     await this.db.query(query, [
       data.reconciliation_id,
-      (data as any).job_id || 'unknown',
+      (data as any).job_id || "unknown",
       data.error.type,
-      data.step || 'unknown',
+      data.step || "unknown",
       new Date(data.failed_at),
       tenantId,
     ]);

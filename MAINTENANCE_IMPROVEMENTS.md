@@ -7,6 +7,7 @@ This document outlines the improvements made to enhance maintainability, resilie
 ### 1. Package Updates
 
 #### Updated Deprecated Packages
+
 - **supertest**: `^6.3.3` → `^7.1.4` (removed deprecated `@types/supertest`)
 - **opossum**: `^7.0.0` → `^9.0.0` (now supports Node 24)
 - **OpenTelemetry packages**: Updated to latest stable versions:
@@ -20,12 +21,15 @@ This document outlines the improvements made to enhance maintainability, resilie
   - `@opentelemetry/semantic-conventions`: `^1.24.0` → `^1.28.0`
 
 #### TypeScript ESLint
+
 - Updated to `^8.0.0` (ESLint 9 requires flat config migration, kept at 8.x for now)
 
 ### 2. Dependency Management
 
 #### npm Overrides
+
 Added to root `package.json` to handle problematic transitive dependencies:
+
 ```json
 "overrides": {
   "glob": "^10.4.5",
@@ -35,24 +39,30 @@ Added to root `package.json` to handle problematic transitive dependencies:
 ```
 
 #### Workspace Dependencies
+
 - Added `@settler/api` as a dependency to `@settler/adapters` to properly declare the dependency relationship
 
 ### 3. TypeScript Configuration Improvements
 
 #### Enhanced Path Mappings
+
 Added wildcard path mapping for better subpath resolution:
+
 ```json
 "@settler/api/*": ["./packages/api/src/*"]
 ```
 
 #### Project References
+
 - Added TypeScript project references in `packages/adapters/tsconfig.json` to reference `@settler/api`
 - Enabled `composite: true` and `declaration: true` for better incremental builds
 
 ### 4. Package Exports Enhancement
 
 #### Improved Exports Field
+
 Enhanced `packages/api/package.json` exports:
+
 - Added `./package.json` export for tooling
 - Added `typesVersions` for better TypeScript resolution
 - Properly configured subpath exports for `./domain/canonical/types`
@@ -60,11 +70,14 @@ Enhanced `packages/api/package.json` exports:
 ### 5. Build Configuration
 
 #### Turbo Configuration
+
 - Added `NODE_ENV` to build pipeline environment variables
 - Maintained proper build dependencies with `dependsOn: ["^build"]`
 
 #### NPM Configuration
+
 Created `.npmrc` file with:
+
 - Consistent package-lock format
 - Proper engine handling
 - Security audit enabled
@@ -72,7 +85,9 @@ Created `.npmrc` file with:
 ### 6. Code Updates
 
 #### OpenTelemetry Tracing
+
 Updated `packages/api/src/infrastructure/observability/tracing.ts`:
+
 - Changed import from deprecated `@opentelemetry/exporter-otlp-http` to `@opentelemetry/exporter-trace-otlp-http`
 
 ## 🔍 Remaining Warnings (Non-Blocking)

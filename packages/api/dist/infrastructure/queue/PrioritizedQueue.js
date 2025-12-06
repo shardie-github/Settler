@@ -14,6 +14,7 @@ const config_1 = require("../../config");
 const Tenant_1 = require("../../domain/entities/Tenant");
 const tracing_1 = require("../observability/tracing");
 const metrics_1 = require("../observability/metrics");
+const logger_1 = require("../../utils/logger");
 var QueuePriority;
 (function (QueuePriority) {
     QueuePriority[QueuePriority["LOW"] = 1] = "LOW";
@@ -47,7 +48,7 @@ class PrioritizedQueue {
             if (config_1.config.redis.password) {
                 redisOptions.password = config_1.config.redis.password;
             }
-            if (process.env.REDIS_TLS === 'true') {
+            if (process.env.REDIS_TLS === "true") {
                 redisOptions.tls = {};
             }
             this.redis = new ioredis_1.default(redisOptions);
@@ -74,9 +75,9 @@ class PrioritizedQueue {
     async add(data, priority = QueuePriority.NORMAL, options = {}) {
         // Enterprise tenants bypass queue
         if (data.tenantTier === Tenant_1.TenantTier.ENTERPRISE) {
-            return await (0, tracing_1.traceQueue)(this.queueName, 'execute_immediate', async () => {
+            return await (0, tracing_1.traceQueue)(this.queueName, "execute_immediate", async () => {
                 // Execute immediately without queuing
-                const job = new bullmq_1.Job(this.queue, 'immediate', data, {
+                const job = new bullmq_1.Job(this.queue, "immediate", data, {
                     jobId: `immediate-${Date.now()}`,
                 });
                 await this.processor(job);
@@ -85,8 +86,8 @@ class PrioritizedQueue {
         }
         // Calculate priority score (higher = more important)
         const priorityScore = this.calculatePriority(data.tenantTier, priority);
-        return await (0, tracing_1.traceQueue)(this.queueName, 'add', async () => {
-            return await this.queue.add('job', data, (() => {
+        return await (0, tracing_1.traceQueue)(this.queueName, "add", async () => {
+            return await this.queue.add("job", data, (() => {
                 const jobOptions = {
                     priority: priorityScore,
                 };
@@ -121,7 +122,7 @@ class PrioritizedQueue {
             return; // Already started
         }
         this.worker = new bullmq_1.Worker(this.queueName, async (job) => {
-            return await (0, tracing_1.traceQueue)(this.queueName, 'process', async () => {
+            return await (0, tracing_1.traceQueue)(this.queueName, "process", async () => {
                 return await this.processor(job);
             }, job.data.tenantId, job.data.jobId);
         }, {
@@ -132,11 +133,11 @@ class PrioritizedQueue {
                 duration: 1000, // Max 100 jobs per second
             },
         });
-        this.worker.on('completed', (job) => {
-            console.log(`Job ${job.id} completed in queue ${this.queueName}`);
+        this.worker.on("completed", (job) => {
+            (0, logger_1.logInfo)("Job completed", { jobId: job.id, queueName: this.queueName });
         });
-        this.worker.on('failed', (job, err) => {
-            console.error(`Job ${job?.id} failed in queue ${this.queueName}:`, err);
+        this.worker.on("failed", (job, err) => {
+            (0, logger_1.logError)("Job failed", err, { jobId: job?.id, queueName: this.queueName });
         });
     }
     /**

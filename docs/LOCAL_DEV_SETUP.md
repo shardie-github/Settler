@@ -1,4 +1,5 @@
 # Local Development Setup
+
 ## Run Settler Locally for Development and Testing
 
 This guide will help you set up Settler locally for development, testing, and sandbox mode.
@@ -30,6 +31,7 @@ docker-compose up -d
 ```
 
 This starts:
+
 - **PostgreSQL** (port 5432)
 - **Redis** (port 6379)
 - **Settler API** (port 3000)
@@ -143,11 +145,11 @@ settler --base-url http://localhost:3000 jobs list
 **SDK:**
 
 ```typescript
-import { SettlerClient } from '@settler/sdk';
+import { SettlerClient } from "@settler/sdk";
 
 const client = new SettlerClient({
-  apiKey: 'sk_test_local',
-  baseUrl: 'http://localhost:3000',
+  apiKey: "sk_test_local",
+  baseUrl: "http://localhost:3000",
 });
 ```
 
@@ -189,24 +191,22 @@ SANDBOX_MODE=true
 
 ```typescript
 const job = await client.jobs.create({
-  name: 'Sandbox Test',
+  name: "Sandbox Test",
   source: {
-    adapter: 'stripe-sandbox', // Sandbox adapter
+    adapter: "stripe-sandbox", // Sandbox adapter
     config: {
-      apiKey: 'sk_test_sandbox', // Any value works
+      apiKey: "sk_test_sandbox", // Any value works
     },
   },
   target: {
-    adapter: 'shopify-sandbox',
+    adapter: "shopify-sandbox",
     config: {
-      apiKey: 'sandbox_key',
-      shopDomain: 'test.myshopify.com',
+      apiKey: "sandbox_key",
+      shopDomain: "test.myshopify.com",
     },
   },
   rules: {
-    matching: [
-      { field: 'order_id', type: 'exact' },
-    ],
+    matching: [{ field: "order_id", type: "exact" }],
   },
 });
 ```
@@ -280,6 +280,7 @@ docker exec -it settler-postgres psql -U postgres -d settler
 ```
 
 Or use a GUI tool:
+
 - **pgAdmin:** http://localhost:5050 (if included in docker-compose)
 - **DBeaver:** Connect to `localhost:5432`
 - **TablePlus:** Connect to `localhost:5432`
@@ -354,6 +355,7 @@ curl http://localhost:3000/health
 ### Tracing
 
 If OTLP endpoint is configured, traces are automatically sent. View in:
+
 - **Jaeger:** http://localhost:16686
 - **Zipkin:** http://localhost:9411
 
@@ -433,15 +435,15 @@ Add custom adapters in `packages/adapters/src/`:
 
 ```typescript
 // packages/adapters/src/custom.ts
-import { BaseAdapter } from './base';
+import { BaseAdapter } from "./base";
 
 export class CustomAdapter extends BaseAdapter {
-  name = 'custom';
-  
+  name = "custom";
+
   async fetch(options: FetchOptions) {
     // Your implementation
   }
-  
+
   normalize(data: RawData) {
     // Your normalization logic
   }

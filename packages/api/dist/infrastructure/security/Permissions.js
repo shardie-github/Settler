@@ -112,7 +112,7 @@ class PermissionChecker {
      */
     static hasPermission(role, scopes, requiredPermission) {
         // Check explicit scopes first (API keys)
-        if (scopes.includes('*') || scopes.includes(requiredPermission)) {
+        if (scopes.includes("*") || scopes.includes(requiredPermission)) {
             return true;
         }
         // Check role-based permissions

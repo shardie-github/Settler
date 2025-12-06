@@ -20,13 +20,13 @@ class AIASClient {
     baseUrl;
     constructor(config) {
         this.apiKey = config.apiKey;
-        this.baseUrl = config.baseUrl || process.env.AIAS_BASE_URL || 'https://api.aias.studio';
+        this.baseUrl = config.baseUrl || process.env.AIAS_BASE_URL || "https://api.aias.studio";
     }
     async request(method, endpoint, body, headers) {
         const url = `${this.baseUrl}${endpoint}`;
         const requestHeaders = {
-            'Authorization': `Bearer ${this.apiKey}`,
-            'Content-Type': 'application/json',
+            Authorization: `Bearer ${this.apiKey}`,
+            "Content-Type": "application/json",
             ...headers,
         };
         try {
@@ -42,10 +42,10 @@ class AIASClient {
                 const errorText = await response.text();
                 throw new Error(`AIAS API error: ${response.status} ${errorText}`);
             }
-            return await response.json();
+            return (await response.json());
         }
         catch (error) {
-            (0, logger_1.logError)('AIAS API request failed', error, {
+            (0, logger_1.logError)("AIAS API request failed", error, {
                 method,
                 endpoint,
             });
@@ -56,11 +56,11 @@ class AIASClient {
      * Upload a model to AIAS for optimization
      */
     async uploadModel(request) {
-        (0, logger_1.logInfo)('Uploading model to AIAS', { modelName: request.modelName });
-        const modelData = typeof request.modelFile === 'string'
+        (0, logger_1.logInfo)("Uploading model to AIAS", { modelName: request.modelName });
+        const modelData = typeof request.modelFile === "string"
             ? request.modelFile
-            : request.modelFile.toString('base64');
-        const response = await this.request('POST', '/v1/models/upload', {
+            : request.modelFile.toString("base64");
+        const response = await this.request("POST", "/v1/models/upload", {
             model_name: request.modelName,
             model_type: request.modelType,
             model_data: modelData,
@@ -73,8 +73,8 @@ class AIASClient {
      * Request model optimization
      */
     async optimizeModel(request) {
-        (0, logger_1.logInfo)('Requesting model optimization', { modelId: request.modelId });
-        const response = await this.request('POST', `/v1/models/${request.modelId}/optimize`, {
+        (0, logger_1.logInfo)("Requesting model optimization", { modelId: request.modelId });
+        const response = await this.request("POST", `/v1/models/${request.modelId}/optimize`, {
             target_devices: request.targetDevices,
             quantization: request.quantization,
             optimization_level: request.optimizationLevel,
@@ -85,7 +85,7 @@ class AIASClient {
      * Get optimization job status
      */
     async getOptimizationStatus(jobId) {
-        const response = await this.request('GET', `/v1/jobs/${jobId}`);
+        const response = await this.request("GET", `/v1/jobs/${jobId}`);
         const status = {
             status: response.status,
         };
@@ -104,8 +104,8 @@ class AIASClient {
      * Run benchmark on a model
      */
     async benchmarkModel(request) {
-        (0, logger_1.logInfo)('Requesting model benchmark', { modelId: request.modelId });
-        const response = await this.request('POST', `/v1/models/${request.modelId}/benchmark`, {
+        (0, logger_1.logInfo)("Requesting model benchmark", { modelId: request.modelId });
+        const response = await this.request("POST", `/v1/models/${request.modelId}/benchmark`, {
             device_profile: request.deviceProfile,
             test_data: request.testData || [],
         });
@@ -115,15 +115,15 @@ class AIASClient {
      * Get benchmark results
      */
     async getBenchmarkResults(jobId) {
-        const response = await this.request('GET', `/v1/jobs/${jobId}/results`);
+        const response = await this.request("GET", `/v1/jobs/${jobId}/results`);
         return response;
     }
     /**
      * Export optimized model
      */
     async exportModel(request) {
-        (0, logger_1.logInfo)('Requesting model export', { modelId: request.modelId, format: request.format });
-        const response = await this.request('POST', `/v1/models/${request.modelId}/export`, {
+        (0, logger_1.logInfo)("Requesting model export", { modelId: request.modelId, format: request.format });
+        const response = await this.request("POST", `/v1/models/${request.modelId}/export`, {
             format: request.format,
             target_device: request.targetDevice,
         });
@@ -133,8 +133,8 @@ class AIASClient {
      * List available models
      */
     async listModels() {
-        const response = await this.request('GET', '/v1/models');
-        return response.map(m => ({
+        const response = await this.request("GET", "/v1/models");
+        return response.map((m) => ({
             id: m.id,
             name: m.name,
             type: m.type,
@@ -146,7 +146,7 @@ class AIASClient {
      * Get model details
      */
     async getModel(modelId) {
-        const response = await this.request('GET', `/v1/models/${modelId}`);
+        const response = await this.request("GET", `/v1/models/${modelId}`);
         return {
             id: response.id,
             name: response.name,
@@ -160,7 +160,7 @@ class AIASClient {
      * Delete a model
      */
     async deleteModel(modelId) {
-        await this.request('DELETE', `/v1/models/${modelId}`);
+        await this.request("DELETE", `/v1/models/${modelId}`);
     }
 }
 exports.AIASClient = AIASClient;
@@ -168,9 +168,9 @@ exports.AIASClient = AIASClient;
 let aiasClientInstance = null;
 function getAIASClient() {
     if (!aiasClientInstance) {
-        const apiKey = process.env.AIAS_API_KEY || '';
+        const apiKey = process.env.AIAS_API_KEY || "";
         if (!apiKey) {
-            throw new Error('AIAS_API_KEY environment variable is required');
+            throw new Error("AIAS_API_KEY environment variable is required");
         }
         const config = { apiKey };
         if (process.env.AIAS_BASE_URL) {

@@ -253,6 +253,7 @@ This document tracks the implementation status of all items from the Operator-in
 **In Progress:** 24 (86%)
 
 **By Category:**
+
 - UX Issues: 2/12 complete (17%)
 - Event Tracking: 1/1 complete (100%)
 - Dashboards: 0/2 complete (0%)

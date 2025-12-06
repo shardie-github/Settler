@@ -1,4 +1,5 @@
 # Environment & Secrets Audit Report
+
 **Generated:** $(date)  
 **Project:** Settler API  
 **Scope:** Complete environment variable and secrets inventory across GitHub, Vercel, Supabase, Sentry, and other third-party services
@@ -20,18 +21,21 @@ This report provides an exhaustive, non-destructive audit of environment variabl
 ### Key Findings
 
 ✅ **Strengths:**
+
 - Comprehensive environment variable validation using `envalid`
 - Secrets management infrastructure (`SecretsManager`)
 - Well-structured `.env.example` template
 - Proper `.gitignore` patterns for secrets
 
 ⚠️ **Gaps Identified:**
+
 - Missing CI validation step for environment variables
 - Some env vars referenced in code but not in validation schema
 - No automated scope validation (client vs server)
 - Missing platform-specific environment mappings
 
 🔴 **Critical Actions Required:**
+
 - Configure secrets in GitHub Actions
 - Configure secrets in Vercel (Dev/Preview/Production)
 - Configure Supabase secrets
@@ -73,14 +77,14 @@ This report provides an exhaustive, non-destructive audit of environment variabl
 
 ### 1.2 Entry Points & Environment Consumption
 
-| Service/Package | Type | Entry Points | Env Var Sources |
-|----------------|------|--------------|-----------------|
-| `packages/api` | Backend | `src/index.ts` | `config/validation.ts`, `config/supabase.ts`, `config/redis.ts` |
-| `packages/web` | Frontend | `next.config.js`, `src/app/**` | Next.js env vars (NEXT_PUBLIC_*) |
-| `packages/cli` | CLI Tool | `src/commands/**` | `SETTLER_API_KEY` (runtime) |
-| `packages/sdk` | Library | N/A | None (uses API key passed to client) |
-| GitHub Actions | CI/CD | `.github/workflows/*.yml` | `secrets.*` context |
-| Vercel | Deployment | `packages/api/vercel.json` | Vercel dashboard env vars |
+| Service/Package | Type       | Entry Points                   | Env Var Sources                                                 |
+| --------------- | ---------- | ------------------------------ | --------------------------------------------------------------- |
+| `packages/api`  | Backend    | `src/index.ts`                 | `config/validation.ts`, `config/supabase.ts`, `config/redis.ts` |
+| `packages/web`  | Frontend   | `next.config.js`, `src/app/**` | Next.js env vars (NEXT*PUBLIC*\*)                               |
+| `packages/cli`  | CLI Tool   | `src/commands/**`              | `SETTLER_API_KEY` (runtime)                                     |
+| `packages/sdk`  | Library    | N/A                            | None (uses API key passed to client)                            |
+| GitHub Actions  | CI/CD      | `.github/workflows/*.yml`      | `secrets.*` context                                             |
+| Vercel          | Deployment | `packages/api/vercel.json`     | Vercel dashboard env vars                                       |
 
 ### 1.3 Configuration Files Scanned
 
@@ -107,87 +111,87 @@ This report provides an exhaustive, non-destructive audit of environment variabl
 
 ### 2.2 Status Matrix
 
-| ENV_VAR_NAME | Used By | Used Where | Defined In | Status | Notes |
-|--------------|---------|------------|-------------|--------|-------|
-| **CORE CONFIGURATION** |
-| `NODE_ENV` | api | Runtime | validation.ts | ✅ OK | Has default, validated |
-| `DEPLOYMENT_ENV` | api | Runtime | validation.ts | ✅ OK | Optional, has default |
-| `PORT` | api | Runtime | validation.ts | ✅ OK | Has default (3000) |
-| `HOST` | api | Runtime | validation.ts | ⚠️ LOCAL ONLY | Only for local/dev |
-| **DATABASE (SUPABASE)** |
-| `SUPABASE_URL` | api | Runtime | supabase.ts, validation.ts | 🔴 MISSING | Required for production |
-| `SUPABASE_ANON_KEY` | api | Runtime | supabase.ts, validation.ts | 🔴 MISSING | Required for production |
-| `SUPABASE_SERVICE_ROLE_KEY` | api | Runtime | supabase.ts, validation.ts | 🔴 MISSING | Required for admin ops |
-| `SUPABASE_REALTIME_EVENTS_PER_SECOND` | api | Runtime | supabase.ts | ✅ OK | Has default (10) |
-| **DATABASE (POSTGRESQL FALLBACK)** |
-| `DB_HOST` | api | Runtime | validation.ts | ✅ OK | Local dev only, has default |
-| `DB_PORT` | api | Runtime | validation.ts | ✅ OK | Local dev only, has default |
-| `DB_NAME` | api | Runtime | validation.ts | ✅ OK | Local dev only, has default |
-| `DB_USER` | api | Runtime | validation.ts | ✅ OK | Local dev only, has default |
-| `DB_PASSWORD` | api | Runtime | validation.ts | 🔴 MISSING | Required if using PostgreSQL fallback |
-| `DB_SSL` | api | Runtime | validation.ts | ✅ OK | Optional, has default |
-| `DB_POOL_MIN` | api | Runtime | validation.ts | ✅ OK | Optional, has default |
-| `DB_POOL_MAX` | api | Runtime | validation.ts | ✅ OK | Optional, has default |
-| `DB_CONNECTION_TIMEOUT` | api | Runtime | validation.ts | ✅ OK | Optional, has default |
-| `DB_STATEMENT_TIMEOUT` | api | Runtime | validation.ts | ✅ OK | Optional, has default |
-| `DATABASE_URL` | api, CI | Runtime | CI workflows | ⚠️ INCONSISTENT | Used in CI, not in validation schema |
-| **REDIS (UPSTASH)** |
-| `UPSTASH_REDIS_REST_URL` | api | Runtime | redis.ts, client.ts | 🔴 MISSING | Required for production Redis |
-| `UPSTASH_REDIS_REST_TOKEN` | api | Runtime | redis.ts, client.ts | 🔴 MISSING | Required for production Redis |
-| `REDIS_URL` | api, CI | Runtime | redis.ts, CI workflows | ⚠️ INCONSISTENT | Fallback, used in CI |
-| `REDIS_TOKEN` | api | Runtime | redis.ts | ⚠️ INCONSISTENT | Fallback, not in validation schema |
-| `REDIS_HOST` | api | Runtime | redis.ts, validation.ts | ✅ OK | Local dev only, has default |
-| `REDIS_PORT` | api | Runtime | redis.ts, validation.ts | ✅ OK | Local dev only, has default |
-| `REDIS_PASSWORD` | api | Runtime | redis.ts, validation.ts | ✅ OK | Optional, local dev |
-| `REDIS_TLS` | api | Runtime | validation.ts | ✅ OK | Optional, has default |
-| `REDIS_DB` | api | Runtime | redis.ts, validation.ts | ✅ OK | Optional, local dev |
-| `REDIS_CACHE_TTL` | api | Runtime | redis.ts, validation.ts | ✅ OK | Optional, has default |
-| `REDIS_RECONCILIATION_TTL` | api | Runtime | redis.ts, validation.ts | ✅ OK | Optional, has default |
-| **SECURITY & AUTH** |
-| `JWT_SECRET` | api | Runtime | validation.ts, SecretsManager | 🔴 MISSING | Required, min 32 chars |
-| `JWT_ACCESS_EXPIRY` | api | Runtime | validation.ts | ✅ OK | Has default (15m) |
-| `JWT_REFRESH_EXPIRY` | api | Runtime | validation.ts | ✅ OK | Has default (7d) |
-| `JWT_REFRESH_SECRET` | api | Runtime | validation.ts | ✅ OK | Optional, falls back to JWT_SECRET |
-| `ENCRYPTION_KEY` | api | Runtime | validation.ts, SecretsManager | 🔴 MISSING | Required, exactly 32 chars |
-| `ALLOWED_ORIGINS` | api | Runtime | validation.ts | ⚠️ WARNING | Defaults to *, should restrict in prod |
-| `TRUST_PROXY` | api | Runtime | validation.ts | ✅ OK | Optional, should be true in Vercel |
-| `SECURE_COOKIES` | api | Runtime | validation.ts | ✅ OK | Optional, should be true in prod |
-| **OBSERVABILITY (SENTRY)** |
-| `SENTRY_DSN` | api | Runtime | sentry.ts, validation.ts | 🔴 MISSING | Optional but recommended |
-| `SENTRY_ENVIRONMENT` | api | Runtime | sentry.ts, validation.ts | ✅ OK | Optional, defaults to NODE_ENV |
-| `SENTRY_TRACES_SAMPLE_RATE` | api | Runtime | sentry.ts, validation.ts | ✅ OK | Optional, has default (0.1) |
-| `SENTRY_ENABLE_DEV` | api | Runtime | sentry.ts | ✅ OK | Optional, local dev only |
-| `SERVICE_NAME` | api | Runtime | validation.ts | ✅ OK | Optional, has default |
-| `OTLP_ENDPOINT` | api | Runtime | validation.ts | ✅ OK | Optional, OpenTelemetry |
-| `JAEGER_ENDPOINT` | api | Runtime | validation.ts | ✅ OK | Optional, Jaeger tracing |
-| **LOGGING & MONITORING** |
-| `LOG_LEVEL` | api | Runtime | validation.ts | ✅ OK | Optional, has default |
-| `LOG_SAMPLING_RATE` | api | Runtime | validation.ts | ✅ OK | Optional, has default |
-| `METRICS_ENABLED` | api | Runtime | validation.ts | ✅ OK | Optional, has default |
-| `HEALTH_CHECK_ENABLED` | api | Runtime | validation.ts | ✅ OK | Optional, has default |
-| **RATE LIMITING** |
-| `RATE_LIMIT_DEFAULT` | api | Runtime | validation.ts | ✅ OK | Optional, has default |
-| `RATE_LIMIT_WINDOW_MS` | api | Runtime | validation.ts | ✅ OK | Optional, has default |
-| **WEBHOOKS** |
-| `WEBHOOK_MAX_RETRIES` | api | Runtime | validation.ts | ✅ OK | Optional, has default |
-| `WEBHOOK_INITIAL_DELAY` | api | Runtime | validation.ts | ✅ OK | Optional, has default |
-| `WEBHOOK_MAX_DELAY` | api | Runtime | validation.ts | ✅ OK | Optional, has default |
-| **DATA RETENTION** |
-| `DATA_RETENTION_DAYS` | api | Runtime | validation.ts | ✅ OK | Optional, has default |
-| **FEATURE FLAGS** |
-| `ENABLE_SCHEMA_PER_TENANT` | api | Runtime | validation.ts | ✅ OK | Optional, feature flag |
-| `ENABLE_REQUEST_TIMEOUT` | api | Runtime | validation.ts | ✅ OK | Optional, feature flag |
-| `ENABLE_API_DOCS` | api | Runtime | validation.ts | ✅ OK | Optional, feature flag |
-| **THIRD-PARTY ADAPTERS** |
-| `STRIPE_SECRET_KEY` | adapters | Runtime (per-job) | Code references | ⚠️ PER-JOB | Set in job config, not global |
-| `SHOPIFY_API_KEY` | adapters | Runtime (per-job) | Code references | ⚠️ PER-JOB | Set in job config, not global |
-| **CI/CD (GITHUB ACTIONS)** |
-| `VERCEL_TOKEN` | CI | CI-only | deploy-preview.yml | 🔴 MISSING | Required for Vercel deployments |
-| `VERCEL_ORG_ID` | CI | CI-only | deploy-preview.yml | 🔴 MISSING | Required for Vercel deployments |
-| `VERCEL_PROJECT_ID` | CI | CI-only | deploy-preview.yml | 🔴 MISSING | Required for Vercel deployments |
-| `SNYK_TOKEN` | CI | CI-only | ci.yml | ⚠️ OPTIONAL | Optional security scanning |
-| `E2E_API_KEY` | CI | CI-only | ci.yml, e2e tests | ⚠️ OPTIONAL | E2E test auth |
-| `E2E_BASE_URL` | CI | CI-only | ci.yml, e2e tests | ✅ OK | Has default in code |
+| ENV_VAR_NAME                          | Used By  | Used Where        | Defined In                    | Status          | Notes                                   |
+| ------------------------------------- | -------- | ----------------- | ----------------------------- | --------------- | --------------------------------------- |
+| **CORE CONFIGURATION**                |
+| `NODE_ENV`                            | api      | Runtime           | validation.ts                 | ✅ OK           | Has default, validated                  |
+| `DEPLOYMENT_ENV`                      | api      | Runtime           | validation.ts                 | ✅ OK           | Optional, has default                   |
+| `PORT`                                | api      | Runtime           | validation.ts                 | ✅ OK           | Has default (3000)                      |
+| `HOST`                                | api      | Runtime           | validation.ts                 | ⚠️ LOCAL ONLY   | Only for local/dev                      |
+| **DATABASE (SUPABASE)**               |
+| `SUPABASE_URL`                        | api      | Runtime           | supabase.ts, validation.ts    | 🔴 MISSING      | Required for production                 |
+| `SUPABASE_ANON_KEY`                   | api      | Runtime           | supabase.ts, validation.ts    | 🔴 MISSING      | Required for production                 |
+| `SUPABASE_SERVICE_ROLE_KEY`           | api      | Runtime           | supabase.ts, validation.ts    | 🔴 MISSING      | Required for admin ops                  |
+| `SUPABASE_REALTIME_EVENTS_PER_SECOND` | api      | Runtime           | supabase.ts                   | ✅ OK           | Has default (10)                        |
+| **DATABASE (POSTGRESQL FALLBACK)**    |
+| `DB_HOST`                             | api      | Runtime           | validation.ts                 | ✅ OK           | Local dev only, has default             |
+| `DB_PORT`                             | api      | Runtime           | validation.ts                 | ✅ OK           | Local dev only, has default             |
+| `DB_NAME`                             | api      | Runtime           | validation.ts                 | ✅ OK           | Local dev only, has default             |
+| `DB_USER`                             | api      | Runtime           | validation.ts                 | ✅ OK           | Local dev only, has default             |
+| `DB_PASSWORD`                         | api      | Runtime           | validation.ts                 | 🔴 MISSING      | Required if using PostgreSQL fallback   |
+| `DB_SSL`                              | api      | Runtime           | validation.ts                 | ✅ OK           | Optional, has default                   |
+| `DB_POOL_MIN`                         | api      | Runtime           | validation.ts                 | ✅ OK           | Optional, has default                   |
+| `DB_POOL_MAX`                         | api      | Runtime           | validation.ts                 | ✅ OK           | Optional, has default                   |
+| `DB_CONNECTION_TIMEOUT`               | api      | Runtime           | validation.ts                 | ✅ OK           | Optional, has default                   |
+| `DB_STATEMENT_TIMEOUT`                | api      | Runtime           | validation.ts                 | ✅ OK           | Optional, has default                   |
+| `DATABASE_URL`                        | api, CI  | Runtime           | CI workflows                  | ⚠️ INCONSISTENT | Used in CI, not in validation schema    |
+| **REDIS (UPSTASH)**                   |
+| `UPSTASH_REDIS_REST_URL`              | api      | Runtime           | redis.ts, client.ts           | 🔴 MISSING      | Required for production Redis           |
+| `UPSTASH_REDIS_REST_TOKEN`            | api      | Runtime           | redis.ts, client.ts           | 🔴 MISSING      | Required for production Redis           |
+| `REDIS_URL`                           | api, CI  | Runtime           | redis.ts, CI workflows        | ⚠️ INCONSISTENT | Fallback, used in CI                    |
+| `REDIS_TOKEN`                         | api      | Runtime           | redis.ts                      | ⚠️ INCONSISTENT | Fallback, not in validation schema      |
+| `REDIS_HOST`                          | api      | Runtime           | redis.ts, validation.ts       | ✅ OK           | Local dev only, has default             |
+| `REDIS_PORT`                          | api      | Runtime           | redis.ts, validation.ts       | ✅ OK           | Local dev only, has default             |
+| `REDIS_PASSWORD`                      | api      | Runtime           | redis.ts, validation.ts       | ✅ OK           | Optional, local dev                     |
+| `REDIS_TLS`                           | api      | Runtime           | validation.ts                 | ✅ OK           | Optional, has default                   |
+| `REDIS_DB`                            | api      | Runtime           | redis.ts, validation.ts       | ✅ OK           | Optional, local dev                     |
+| `REDIS_CACHE_TTL`                     | api      | Runtime           | redis.ts, validation.ts       | ✅ OK           | Optional, has default                   |
+| `REDIS_RECONCILIATION_TTL`            | api      | Runtime           | redis.ts, validation.ts       | ✅ OK           | Optional, has default                   |
+| **SECURITY & AUTH**                   |
+| `JWT_SECRET`                          | api      | Runtime           | validation.ts, SecretsManager | 🔴 MISSING      | Required, min 32 chars                  |
+| `JWT_ACCESS_EXPIRY`                   | api      | Runtime           | validation.ts                 | ✅ OK           | Has default (15m)                       |
+| `JWT_REFRESH_EXPIRY`                  | api      | Runtime           | validation.ts                 | ✅ OK           | Has default (7d)                        |
+| `JWT_REFRESH_SECRET`                  | api      | Runtime           | validation.ts                 | ✅ OK           | Optional, falls back to JWT_SECRET      |
+| `ENCRYPTION_KEY`                      | api      | Runtime           | validation.ts, SecretsManager | 🔴 MISSING      | Required, exactly 32 chars              |
+| `ALLOWED_ORIGINS`                     | api      | Runtime           | validation.ts                 | ⚠️ WARNING      | Defaults to \*, should restrict in prod |
+| `TRUST_PROXY`                         | api      | Runtime           | validation.ts                 | ✅ OK           | Optional, should be true in Vercel      |
+| `SECURE_COOKIES`                      | api      | Runtime           | validation.ts                 | ✅ OK           | Optional, should be true in prod        |
+| **OBSERVABILITY (SENTRY)**            |
+| `SENTRY_DSN`                          | api      | Runtime           | sentry.ts, validation.ts      | 🔴 MISSING      | Optional but recommended                |
+| `SENTRY_ENVIRONMENT`                  | api      | Runtime           | sentry.ts, validation.ts      | ✅ OK           | Optional, defaults to NODE_ENV          |
+| `SENTRY_TRACES_SAMPLE_RATE`           | api      | Runtime           | sentry.ts, validation.ts      | ✅ OK           | Optional, has default (0.1)             |
+| `SENTRY_ENABLE_DEV`                   | api      | Runtime           | sentry.ts                     | ✅ OK           | Optional, local dev only                |
+| `SERVICE_NAME`                        | api      | Runtime           | validation.ts                 | ✅ OK           | Optional, has default                   |
+| `OTLP_ENDPOINT`                       | api      | Runtime           | validation.ts                 | ✅ OK           | Optional, OpenTelemetry                 |
+| `JAEGER_ENDPOINT`                     | api      | Runtime           | validation.ts                 | ✅ OK           | Optional, Jaeger tracing                |
+| **LOGGING & MONITORING**              |
+| `LOG_LEVEL`                           | api      | Runtime           | validation.ts                 | ✅ OK           | Optional, has default                   |
+| `LOG_SAMPLING_RATE`                   | api      | Runtime           | validation.ts                 | ✅ OK           | Optional, has default                   |
+| `METRICS_ENABLED`                     | api      | Runtime           | validation.ts                 | ✅ OK           | Optional, has default                   |
+| `HEALTH_CHECK_ENABLED`                | api      | Runtime           | validation.ts                 | ✅ OK           | Optional, has default                   |
+| **RATE LIMITING**                     |
+| `RATE_LIMIT_DEFAULT`                  | api      | Runtime           | validation.ts                 | ✅ OK           | Optional, has default                   |
+| `RATE_LIMIT_WINDOW_MS`                | api      | Runtime           | validation.ts                 | ✅ OK           | Optional, has default                   |
+| **WEBHOOKS**                          |
+| `WEBHOOK_MAX_RETRIES`                 | api      | Runtime           | validation.ts                 | ✅ OK           | Optional, has default                   |
+| `WEBHOOK_INITIAL_DELAY`               | api      | Runtime           | validation.ts                 | ✅ OK           | Optional, has default                   |
+| `WEBHOOK_MAX_DELAY`                   | api      | Runtime           | validation.ts                 | ✅ OK           | Optional, has default                   |
+| **DATA RETENTION**                    |
+| `DATA_RETENTION_DAYS`                 | api      | Runtime           | validation.ts                 | ✅ OK           | Optional, has default                   |
+| **FEATURE FLAGS**                     |
+| `ENABLE_SCHEMA_PER_TENANT`            | api      | Runtime           | validation.ts                 | ✅ OK           | Optional, feature flag                  |
+| `ENABLE_REQUEST_TIMEOUT`              | api      | Runtime           | validation.ts                 | ✅ OK           | Optional, feature flag                  |
+| `ENABLE_API_DOCS`                     | api      | Runtime           | validation.ts                 | ✅ OK           | Optional, feature flag                  |
+| **THIRD-PARTY ADAPTERS**              |
+| `STRIPE_SECRET_KEY`                   | adapters | Runtime (per-job) | Code references               | ⚠️ PER-JOB      | Set in job config, not global           |
+| `SHOPIFY_API_KEY`                     | adapters | Runtime (per-job) | Code references               | ⚠️ PER-JOB      | Set in job config, not global           |
+| **CI/CD (GITHUB ACTIONS)**            |
+| `VERCEL_TOKEN`                        | CI       | CI-only           | deploy-preview.yml            | 🔴 MISSING      | Required for Vercel deployments         |
+| `VERCEL_ORG_ID`                       | CI       | CI-only           | deploy-preview.yml            | 🔴 MISSING      | Required for Vercel deployments         |
+| `VERCEL_PROJECT_ID`                   | CI       | CI-only           | deploy-preview.yml            | 🔴 MISSING      | Required for Vercel deployments         |
+| `SNYK_TOKEN`                          | CI       | CI-only           | ci.yml                        | ⚠️ OPTIONAL     | Optional security scanning              |
+| `E2E_API_KEY`                         | CI       | CI-only           | ci.yml, e2e tests             | ⚠️ OPTIONAL     | E2E test auth                           |
+| `E2E_BASE_URL`                        | CI       | CI-only           | ci.yml, e2e tests             | ✅ OK           | Has default in code                     |
 
 ### 2.3 Status Legend
 
@@ -204,16 +208,19 @@ This report provides an exhaustive, non-destructive audit of environment variabl
 ### 3.1 GitHub Actions
 
 **Workflow Files:**
+
 - `.github/workflows/ci.yml` - Lint, test, build, security scan, E2E tests
 - `.github/workflows/deploy-preview.yml` - Vercel preview deployments
 
 **Secrets Referenced:**
+
 - `secrets.SNYK_TOKEN` - Security scanning (optional)
 - `secrets.VERCEL_TOKEN` - Vercel deployment (required)
 - `secrets.VERCEL_ORG_ID` - Vercel deployment (required)
 - `secrets.VERCEL_PROJECT_ID` - Vercel deployment (required)
 
 **Environment Variables Used:**
+
 - `NODE_ENV=test` (E2E job)
 - `PORT=3000` (E2E job)
 - `DATABASE_URL` (E2E job) - Hardcoded for test DB
@@ -224,10 +231,12 @@ This report provides an exhaustive, non-destructive audit of environment variabl
 - `E2E_BASE_URL` (E2E job) - Test base URL
 
 **Status:** ⚠️ **INCOMPLETE**
+
 - Missing: `VERCEL_TOKEN`, `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID` (required for deployments)
 - Optional: `SNYK_TOKEN` (security scanning)
 
 **Recommendations:**
+
 1. Add secrets to GitHub repository settings:
    - Settings → Secrets and variables → Actions → New repository secret
 2. Configure environment-specific secrets if needed (production vs preview)
@@ -235,11 +244,13 @@ This report provides an exhaustive, non-destructive audit of environment variabl
 ### 3.2 Vercel
 
 **Configuration Files:**
+
 - `packages/api/vercel.json` - Vercel serverless function config
 
 **Environment Variables Required:**
 
 **Production:**
+
 - `NODE_ENV=production` (set in vercel.json)
 - `SUPABASE_URL` 🔴
 - `SUPABASE_ANON_KEY` 🔴
@@ -255,14 +266,17 @@ This report provides an exhaustive, non-destructive audit of environment variabl
 - `ALLOWED_ORIGINS` (should restrict, not `*`)
 
 **Preview:**
+
 - Same as production, but `SENTRY_ENVIRONMENT=preview`
 
 **Development:**
+
 - Same as production, but `NODE_ENV=development`
 
 **Status:** 🔴 **NOT CONFIGURED**
 
 **Recommendations:**
+
 1. Navigate to Vercel Dashboard → Project → Settings → Environment Variables
 2. Add all required variables for each environment (Production, Preview, Development)
 3. Ensure `TRUST_PROXY=true` and `SECURE_COOKIES=true` in production
@@ -271,20 +285,24 @@ This report provides an exhaustive, non-destructive audit of environment variabl
 ### 3.3 Supabase
 
 **Configuration:**
+
 - Supabase project URL and keys required
 - Edge Functions may need additional secrets
 
 **Environment Variables Required:**
+
 - `SUPABASE_URL` - Project URL
 - `SUPABASE_ANON_KEY` - Public/anonymous key
 - `SUPABASE_SERVICE_ROLE_KEY` - Service role key (admin)
 
 **Supabase Secrets (for Edge Functions):**
+
 - May need to set secrets via `supabase secrets set` CLI or dashboard
 
 **Status:** 🔴 **NOT CONFIGURED**
 
 **Recommendations:**
+
 1. Create Supabase project at https://supabase.com
 2. Get project URL and keys from Project Settings → API
 3. Copy `SUPABASE_URL` and `SUPABASE_ANON_KEY` to Vercel/GitHub
@@ -294,9 +312,11 @@ This report provides an exhaustive, non-destructive audit of environment variabl
 ### 3.4 Sentry
 
 **Configuration:**
+
 - Optional but highly recommended for production error tracking
 
 **Environment Variables Required:**
+
 - `SENTRY_DSN` - Project DSN from Sentry dashboard
 - `SENTRY_ENVIRONMENT` - Environment name (production, staging, preview)
 - `SENTRY_TRACES_SAMPLE_RATE` - Performance tracing sample rate (default: 0.1)
@@ -304,6 +324,7 @@ This report provides an exhaustive, non-destructive audit of environment variabl
 **Status:** ⚠️ **OPTIONAL BUT RECOMMENDED**
 
 **Recommendations:**
+
 1. Create Sentry project at https://sentry.io
 2. Get DSN from Project Settings → Client Keys (DSN)
 3. Add `SENTRY_DSN` to Vercel environment variables
@@ -312,16 +333,19 @@ This report provides an exhaustive, non-destructive audit of environment variabl
 ### 3.5 Upstash Redis
 
 **Configuration:**
+
 - Serverless Redis for production
 - Local Redis fallback for development
 
 **Environment Variables Required:**
+
 - `UPSTASH_REDIS_REST_URL` - REST API URL
 - `UPSTASH_REDIS_REST_TOKEN` - REST API token
 
 **Status:** 🔴 **NOT CONFIGURED**
 
 **Recommendations:**
+
 1. Create Upstash Redis database at https://upstash.com
 2. Get REST URL and token from database dashboard
 3. Add to Vercel environment variables
@@ -330,16 +354,19 @@ This report provides an exhaustive, non-destructive audit of environment variabl
 ### 3.6 Third-Party Adapters (Stripe, Shopify)
 
 **Configuration:**
+
 - These are set **per reconciliation job**, not globally
 - Users provide API keys in job configuration
 
 **Environment Variables:**
+
 - `STRIPE_SECRET_KEY` - Only if testing adapters locally
 - `SHOPIFY_API_KEY` - Only if testing adapters locally
 
 **Status:** ✅ **OK** (Per-job configuration is correct)
 
 **Recommendations:**
+
 - No global configuration needed
 - Users provide keys via API when creating reconciliation jobs
 
@@ -352,6 +379,7 @@ This report provides an exhaustive, non-destructive audit of environment variabl
 **Location:** `scripts/check-env.ts`
 
 **Features:**
+
 - Validates all environment variables against schema
 - Checks for missing required variables
 - Validates format and type
@@ -360,6 +388,7 @@ This report provides an exhaustive, non-destructive audit of environment variabl
 - JSON output option for CI integration
 
 **Usage:**
+
 ```bash
 # Validate production environment
 tsx scripts/check-env.ts --env=production
@@ -381,6 +410,7 @@ tsx scripts/check-env.ts --env=production --json
 **Location:** `config/env.schema.ts`
 
 **Features:**
+
 - Canonical specification of all environment variables
 - Type definitions, validation rules, platform mappings
 - Used by validation script and documentation
@@ -398,28 +428,33 @@ tsx scripts/check-env.ts --env=production --json
 ### 5.1 Files Created/Updated
 
 ✅ **Created:**
+
 - `config/env.schema.ts` - Canonical environment variable schema
 - `scripts/check-env.ts` - Environment validation script
 - `ENVIRONMENT_SECRETS_AUDIT_REPORT.md` - This report
 
 ✅ **Updated:**
+
 - `.env.example` - Comprehensive template with all variables documented
 
 ### 5.2 Code Improvements
 
 ✅ **Environment Schema:**
+
 - Centralized specification of all env vars
 - Type-safe validation
 - Platform-specific mappings
 - Criticality and scope classification
 
 ✅ **Validation Script:**
+
 - Automated checks for missing/invalid variables
 - Hardcoded secret detection
 - Platform-specific validation
 - CI-friendly JSON output
 
 ✅ **Documentation:**
+
 - Updated `.env.example` with comprehensive comments
 - Clear categorization and warnings
 - Platform-specific notes
@@ -427,14 +462,17 @@ tsx scripts/check-env.ts --env=production --json
 ### 5.3 Recommendations for Future
 
 **Scope Validation:**
+
 - Add ESLint rule to prevent server-only secrets in client code
 - Validate `NEXT_PUBLIC_*` prefix usage in Next.js app
 
 **Turborepo Integration:**
+
 - Update `turbo.json` to declare env var dependencies
 - Ensure cache invalidation on env var changes
 
 **Secrets Hygiene:**
+
 - ✅ `.gitignore` already excludes `.env*` files
 - Consider adding pre-commit hook to check for secrets in staged files
 
@@ -455,8 +493,8 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          cache: 'npm'
+          node-version: "20"
+          cache: "npm"
       - run: npm ci
       - name: Validate environment schema
         run: |
@@ -475,7 +513,7 @@ jobs:
 
   lint-and-typecheck:
     # ... existing steps
-    needs: [validate-env]  # Add dependency
+    needs: [validate-env] # Add dependency
 ```
 
 **Status:** ⚠️ **PROPOSED** (Not yet implemented)
@@ -493,8 +531,8 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          cache: 'npm'
+          node-version: "20"
+          cache: "npm"
       - run: npm ci
       - name: Validate Vercel environment
         run: |
@@ -514,14 +552,15 @@ jobs:
 
 **Priority:** 🔴 **CRITICAL** (Required for deployments)
 
-| Secret Name | Used By | Impact if Missing | Where to Set |
-|-------------|---------|-------------------|--------------|
-| `VERCEL_TOKEN` | `deploy-preview.yml` | Preview deployments fail | GitHub → Settings → Secrets → Actions → New repository secret |
-| `VERCEL_ORG_ID` | `deploy-preview.yml` | Preview deployments fail | GitHub → Settings → Secrets → Actions → New repository secret |
-| `VERCEL_PROJECT_ID` | `deploy-preview.yml` | Preview deployments fail | GitHub → Settings → Secrets → Actions → New repository secret |
-| `SNYK_TOKEN` | `ci.yml` (security-scan) | Security scanning skipped | GitHub → Settings → Secrets → Actions → New repository secret (optional) |
+| Secret Name         | Used By                  | Impact if Missing         | Where to Set                                                             |
+| ------------------- | ------------------------ | ------------------------- | ------------------------------------------------------------------------ |
+| `VERCEL_TOKEN`      | `deploy-preview.yml`     | Preview deployments fail  | GitHub → Settings → Secrets → Actions → New repository secret            |
+| `VERCEL_ORG_ID`     | `deploy-preview.yml`     | Preview deployments fail  | GitHub → Settings → Secrets → Actions → New repository secret            |
+| `VERCEL_PROJECT_ID` | `deploy-preview.yml`     | Preview deployments fail  | GitHub → Settings → Secrets → Actions → New repository secret            |
+| `SNYK_TOKEN`        | `ci.yml` (security-scan) | Security scanning skipped | GitHub → Settings → Secrets → Actions → New repository secret (optional) |
 
 **Steps:**
+
 1. Go to GitHub repository → Settings → Secrets and variables → Actions
 2. Click "New repository secret"
 3. Add each secret listed above
@@ -534,33 +573,36 @@ jobs:
 
 **Production Environment:**
 
-| Variable | Value Format | Impact if Missing | Where to Set |
-|----------|--------------|-------------------|--------------|
-| `NODE_ENV` | `production` | App may not run correctly | Vercel → Project → Settings → Environment Variables → Production |
-| `SUPABASE_URL` | `https://your-project.supabase.co` | Database connection fails, app won't boot | Vercel Dashboard → Production |
-| `SUPABASE_ANON_KEY` | `eyJ...` (JWT token) | Database connection fails | Vercel Dashboard → Production |
-| `SUPABASE_SERVICE_ROLE_KEY` | `eyJ...` (JWT token) | Admin operations fail, Edge Functions fail | Vercel Dashboard → Production (⚠️ Server-only) |
-| `UPSTASH_REDIS_REST_URL` | `https://your-redis.upstash.io` | Redis cache/queue disabled | Vercel Dashboard → Production |
-| `UPSTASH_REDIS_REST_TOKEN` | Bearer token | Redis cache/queue disabled | Vercel Dashboard → Production |
-| `JWT_SECRET` | Min 32 characters | Authentication fails | Vercel Dashboard → Production |
-| `ENCRYPTION_KEY` | Exactly 32 characters | Data encryption fails | Vercel Dashboard → Production |
-| `SENTRY_DSN` | `https://key@sentry.io/project-id` | Error tracking disabled (optional) | Vercel Dashboard → Production |
-| `SENTRY_ENVIRONMENT` | `production` | Sentry environment incorrect | Vercel Dashboard → Production |
-| `TRUST_PROXY` | `true` | IP/forwarding headers incorrect | Vercel Dashboard → Production |
-| `SECURE_COOKIES` | `true` | Cookies not secure (HTTPS only) | Vercel Dashboard → Production |
-| `ALLOWED_ORIGINS` | Comma-separated URLs | CORS may be too permissive | Vercel Dashboard → Production (restrict from `*`) |
+| Variable                    | Value Format                       | Impact if Missing                          | Where to Set                                                     |
+| --------------------------- | ---------------------------------- | ------------------------------------------ | ---------------------------------------------------------------- |
+| `NODE_ENV`                  | `production`                       | App may not run correctly                  | Vercel → Project → Settings → Environment Variables → Production |
+| `SUPABASE_URL`              | `https://your-project.supabase.co` | Database connection fails, app won't boot  | Vercel Dashboard → Production                                    |
+| `SUPABASE_ANON_KEY`         | `eyJ...` (JWT token)               | Database connection fails                  | Vercel Dashboard → Production                                    |
+| `SUPABASE_SERVICE_ROLE_KEY` | `eyJ...` (JWT token)               | Admin operations fail, Edge Functions fail | Vercel Dashboard → Production (⚠️ Server-only)                   |
+| `UPSTASH_REDIS_REST_URL`    | `https://your-redis.upstash.io`    | Redis cache/queue disabled                 | Vercel Dashboard → Production                                    |
+| `UPSTASH_REDIS_REST_TOKEN`  | Bearer token                       | Redis cache/queue disabled                 | Vercel Dashboard → Production                                    |
+| `JWT_SECRET`                | Min 32 characters                  | Authentication fails                       | Vercel Dashboard → Production                                    |
+| `ENCRYPTION_KEY`            | Exactly 32 characters              | Data encryption fails                      | Vercel Dashboard → Production                                    |
+| `SENTRY_DSN`                | `https://key@sentry.io/project-id` | Error tracking disabled (optional)         | Vercel Dashboard → Production                                    |
+| `SENTRY_ENVIRONMENT`        | `production`                       | Sentry environment incorrect               | Vercel Dashboard → Production                                    |
+| `TRUST_PROXY`               | `true`                             | IP/forwarding headers incorrect            | Vercel Dashboard → Production                                    |
+| `SECURE_COOKIES`            | `true`                             | Cookies not secure (HTTPS only)            | Vercel Dashboard → Production                                    |
+| `ALLOWED_ORIGINS`           | Comma-separated URLs               | CORS may be too permissive                 | Vercel Dashboard → Production (restrict from `*`)                |
 
 **Preview Environment:**
+
 - Same as Production, but:
   - `SENTRY_ENVIRONMENT=preview`
   - May use different Supabase/Redis instances for testing
 
 **Development Environment:**
+
 - Same as Preview, but:
   - `NODE_ENV=development`
   - `SENTRY_ENVIRONMENT=development`
 
 **Steps:**
+
 1. Go to Vercel Dashboard → Your Project → Settings → Environment Variables
 2. For each variable:
    - Click "Add New"
@@ -575,16 +617,18 @@ jobs:
 
 **Priority:** 🔴 **CRITICAL** (Required for database)
 
-| Configuration | Value Format | Impact if Missing | Where to Set |
-|---------------|--------------|-------------------|--------------|
-| Project URL | `https://your-project.supabase.co` | Database unavailable | Supabase Dashboard → Project Settings → API → Project URL |
-| Anon Key | `eyJ...` (JWT token) | Database queries fail | Supabase Dashboard → Project Settings → API → anon/public key |
-| Service Role Key | `eyJ...` (JWT token) | Admin operations fail | Supabase Dashboard → Project Settings → API → service_role key |
+| Configuration    | Value Format                       | Impact if Missing     | Where to Set                                                   |
+| ---------------- | ---------------------------------- | --------------------- | -------------------------------------------------------------- |
+| Project URL      | `https://your-project.supabase.co` | Database unavailable  | Supabase Dashboard → Project Settings → API → Project URL      |
+| Anon Key         | `eyJ...` (JWT token)               | Database queries fail | Supabase Dashboard → Project Settings → API → anon/public key  |
+| Service Role Key | `eyJ...` (JWT token)               | Admin operations fail | Supabase Dashboard → Project Settings → API → service_role key |
 
 **Additional Supabase Secrets (if using Edge Functions):**
+
 - Set via `supabase secrets set KEY=value` CLI or dashboard
 
 **Steps:**
+
 1. Create Supabase project at https://supabase.com (if not exists)
 2. Go to Project Settings → API
 3. Copy `Project URL` → Set as `SUPABASE_URL` in Vercel
@@ -596,11 +640,12 @@ jobs:
 
 **Priority:** ⚠️ **RECOMMENDED** (Optional but highly recommended)
 
-| Configuration | Value Format | Impact if Missing | Where to Set |
-|---------------|--------------|-------------------|--------------|
-| DSN | `https://key@sentry.io/project-id` | Error tracking disabled | Sentry Dashboard → Project Settings → Client Keys (DSN) |
+| Configuration | Value Format                       | Impact if Missing       | Where to Set                                            |
+| ------------- | ---------------------------------- | ----------------------- | ------------------------------------------------------- |
+| DSN           | `https://key@sentry.io/project-id` | Error tracking disabled | Sentry Dashboard → Project Settings → Client Keys (DSN) |
 
 **Steps:**
+
 1. Create Sentry project at https://sentry.io (if not exists)
 2. Go to Project Settings → Client Keys (DSN)
 3. Copy DSN → Set as `SENTRY_DSN` in Vercel (all environments)
@@ -611,12 +656,13 @@ jobs:
 
 **Priority:** 🔴 **CRITICAL** (Required for Redis cache/queue)
 
-| Configuration | Value Format | Impact if Missing | Where to Set |
-|---------------|--------------|-------------------|--------------|
-| REST URL | `https://your-redis.upstash.io` | Redis cache/queue disabled | Upstash Dashboard → Redis → REST API → URL |
-| REST Token | Bearer token | Redis cache/queue disabled | Upstash Dashboard → Redis → REST API → Token |
+| Configuration | Value Format                    | Impact if Missing          | Where to Set                                 |
+| ------------- | ------------------------------- | -------------------------- | -------------------------------------------- |
+| REST URL      | `https://your-redis.upstash.io` | Redis cache/queue disabled | Upstash Dashboard → Redis → REST API → URL   |
+| REST Token    | Bearer token                    | Redis cache/queue disabled | Upstash Dashboard → Redis → REST API → Token |
 
 **Steps:**
+
 1. Create Upstash Redis database at https://upstash.com (if not exists)
 2. Go to Redis → REST API
 3. Copy `REST URL` → Set as `UPSTASH_REDIS_REST_URL` in Vercel
@@ -629,13 +675,14 @@ jobs:
 
 Generate secure random secrets for:
 
-| Secret | Length | Generation Command |
-|--------|--------|-------------------|
-| `JWT_SECRET` | Min 32 chars | `openssl rand -base64 32` or `node -e "console.log(require('crypto').randomBytes(32).toString('base64'))"` |
-| `JWT_REFRESH_SECRET` | Min 32 chars | Same as above |
-| `ENCRYPTION_KEY` | Exactly 32 chars | `openssl rand -base64 24` (24 bytes = 32 base64 chars) or `node -e "console.log(require('crypto').randomBytes(32).toString('base64').substring(0,32))"` |
+| Secret               | Length           | Generation Command                                                                                                                                      |
+| -------------------- | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `JWT_SECRET`         | Min 32 chars     | `openssl rand -base64 32` or `node -e "console.log(require('crypto').randomBytes(32).toString('base64'))"`                                              |
+| `JWT_REFRESH_SECRET` | Min 32 chars     | Same as above                                                                                                                                           |
+| `ENCRYPTION_KEY`     | Exactly 32 chars | `openssl rand -base64 24` (24 bytes = 32 base64 chars) or `node -e "console.log(require('crypto').randomBytes(32).toString('base64').substring(0,32))"` |
 
 **Steps:**
+
 1. Generate secrets using commands above
 2. Store securely (password manager, secret manager)
 3. Set in Vercel environment variables (Production, Preview)

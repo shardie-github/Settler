@@ -20,17 +20,19 @@ async function pricingMiddleware(req, _res, next) {
             return next();
         }
         // Get tenant tier from database
-        const result = await (0, db_1.query)(`SELECT tier FROM tenants WHERE id = $1`, [tenantId]);
+        const result = await (0, db_1.query)(`SELECT tier FROM tenants WHERE id = $1`, [
+            tenantId,
+        ]);
         if (result.length === 0) {
             return next();
         }
         const tier = result[0]?.tier;
         req.pricingTier = tier;
         req.featureLimits = {
-            edgeNodes: (0, pricing_1.getFeatureLimit)(tier, 'edgeNodes'),
-            modelOptimizations: (0, pricing_1.getFeatureLimit)(tier, 'modelOptimizations'),
-            monthlyReconciliations: (0, pricing_1.getFeatureLimit)(tier, 'monthlyReconciliations'),
-            apiCalls: (0, pricing_1.getFeatureLimit)(tier, 'apiCalls'),
+            edgeNodes: (0, pricing_1.getFeatureLimit)(tier, "edgeNodes"),
+            modelOptimizations: (0, pricing_1.getFeatureLimit)(tier, "modelOptimizations"),
+            monthlyReconciliations: (0, pricing_1.getFeatureLimit)(tier, "monthlyReconciliations"),
+            apiCalls: (0, pricing_1.getFeatureLimit)(tier, "apiCalls"),
         };
         next();
     }
@@ -45,7 +47,7 @@ function requireFeature(feature) {
     return async (req, res, next) => {
         const tier = req.pricingTier || pricing_1.PricingTier.SAAS_ONLY;
         if (!(0, pricing_1.hasFeature)(tier, feature)) {
-            (0, api_response_1.sendError)(res, 403, 'FEATURE_NOT_AVAILABLE', `Feature '${feature}' is not available in your pricing tier. Please upgrade to access this feature.`, {
+            (0, api_response_1.sendError)(res, 403, "FEATURE_NOT_AVAILABLE", `Feature '${feature}' is not available in your pricing tier. Please upgrade to access this feature.`, {
                 requiredTier: getRequiredTierForFeature(feature),
                 currentTier: tier,
             });
@@ -72,26 +74,26 @@ function checkFeatureLimit(feature) {
         try {
             let currentUsage;
             switch (feature) {
-                case 'edgeNodes':
+                case "edgeNodes":
                     const nodesResult = await (0, db_1.query)(`SELECT COUNT(*) as count FROM edge_nodes 
              WHERE tenant_id = $1 AND deleted_at IS NULL`, [tenantId]);
                     currentUsage = Number(nodesResult[0]?.count || 0);
                     break;
-                case 'modelOptimizations':
+                case "modelOptimizations":
                     // Count optimizations this month
                     const optimizationsResult = await (0, db_1.query)(`SELECT COUNT(*) as count FROM model_versions 
              WHERE tenant_id = $1 
              AND created_at >= date_trunc('month', CURRENT_DATE)`, [tenantId]);
                     currentUsage = Number(optimizationsResult[0]?.count || 0);
                     break;
-                case 'monthlyReconciliations':
+                case "monthlyReconciliations":
                     // Count reconciliations this month
                     const reconciliationsResult = await (0, db_1.query)(`SELECT COUNT(*) as count FROM executions 
              WHERE tenant_id = $1 
              AND created_at >= date_trunc('month', CURRENT_DATE)`, [tenantId]);
                     currentUsage = Number(reconciliationsResult[0]?.count || 0);
                     break;
-                case 'apiCalls':
+                case "apiCalls":
                     // This would typically come from usage tracking
                     currentUsage = 0; // Placeholder
                     break;
@@ -99,7 +101,7 @@ function checkFeatureLimit(feature) {
                     return next();
             }
             if (currentUsage >= limit) {
-                (0, api_response_1.sendError)(res, 403, 'FEATURE_LIMIT_REACHED', `Feature limit reached for '${feature}'. Current usage: ${currentUsage}/${limit}. Please upgrade your plan.`, {
+                (0, api_response_1.sendError)(res, 403, "FEATURE_LIMIT_REACHED", `Feature limit reached for '${feature}'. Current usage: ${currentUsage}/${limit}. Please upgrade your plan.`, {
                     feature,
                     currentUsage,
                     limit,
@@ -116,13 +118,13 @@ function checkFeatureLimit(feature) {
 }
 function getRequiredTierForFeature(feature) {
     // Determine minimum tier required for feature
-    if (feature === 'edgeNodes' || feature === 'anomalyDetection') {
+    if (feature === "edgeNodes" || feature === "anomalyDetection") {
         return pricing_1.PricingTier.EDGE_STARTER;
     }
-    if (feature === 'onDeviceOCR' || feature === 'customModels') {
+    if (feature === "onDeviceOCR" || feature === "customModels") {
         return pricing_1.PricingTier.EDGE_PRO;
     }
-    if (feature === 'onPremDeployment') {
+    if (feature === "onPremDeployment") {
         return pricing_1.PricingTier.ENTERPRISE_EDGE;
     }
     return pricing_1.PricingTier.SAAS_ONLY;

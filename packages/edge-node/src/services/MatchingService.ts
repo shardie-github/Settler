@@ -3,9 +3,9 @@
  * Performs local fuzzy matching and candidate scoring using optimized models
  */
 
-import Database from 'better-sqlite3';
-import { ModelManager } from './ModelManager';
-import { logger } from '../utils/logger';
+import Database from "better-sqlite3";
+import { ModelManager } from "./ModelManager";
+import { logger } from "../utils/logger";
 
 export interface Candidate {
   sourceId: string;
@@ -23,11 +23,8 @@ export class MatchingService {
     private _modelManager: ModelManager
   ) {}
 
-  async findCandidates(
-    sourceData: unknown[],
-    targetData: unknown[]
-  ): Promise<Candidate[]> {
-    logger.info('Finding candidates', {
+  async findCandidates(sourceData: unknown[], targetData: unknown[]): Promise<Candidate[]> {
+    logger.info("Finding candidates", {
       sourceCount: sourceData.length,
       targetCount: targetData.length,
     });
@@ -36,20 +33,21 @@ export class MatchingService {
 
     // Simple fuzzy matching (can be enhanced with ML models)
     for (const source of sourceData) {
-      if (typeof source !== 'object' || source === null) continue;
+      if (typeof source !== "object" || source === null) continue;
 
       const sourceRecord = source as Record<string, unknown>;
       const sourceId = this.extractId(sourceRecord);
 
       for (const target of targetData) {
-        if (typeof target !== 'object' || target === null) continue;
+        if (typeof target !== "object" || target === null) continue;
 
         const targetRecord = target as Record<string, unknown>;
         const targetId = this.extractId(targetRecord);
 
         const score = this.calculateMatchScore(sourceRecord, targetRecord);
-        
-        if (score > 0.5) { // Threshold for candidate
+
+        if (score > 0.5) {
+          // Threshold for candidate
           candidates.push({
             sourceId,
             targetId,
@@ -57,7 +55,7 @@ export class MatchingService {
             scoreMatrix: {
               amount: this.compareAmount(sourceRecord, targetRecord),
               date: this.compareDate(sourceRecord, targetRecord),
-              description: this.compareString(sourceRecord, targetRecord, 'description'),
+              description: this.compareString(sourceRecord, targetRecord, "description"),
             },
           });
         }
@@ -72,7 +70,7 @@ export class MatchingService {
   }
 
   private extractId(record: Record<string, unknown>): string {
-    return String(record.id || record.transaction_id || record.order_id || '');
+    return String(record.id || record.transaction_id || record.order_id || "");
   }
 
   private calculateMatchScore(
@@ -93,18 +91,15 @@ export class MatchingService {
     weightSum += 0.3;
 
     // Description/ID matching (medium weight)
-    const descScore = this.compareString(source, target, 'description') ||
-                     this.compareString(source, target, 'id');
+    const descScore =
+      this.compareString(source, target, "description") || this.compareString(source, target, "id");
     totalScore += descScore * 0.3;
     weightSum += 0.3;
 
     return weightSum > 0 ? totalScore / weightSum : 0;
   }
 
-  private compareAmount(
-    source: Record<string, unknown>,
-    target: Record<string, unknown>
-  ): number {
+  private compareAmount(source: Record<string, unknown>, target: Record<string, unknown>): number {
     const sourceAmount = this.extractAmount(source);
     const targetAmount = this.extractAmount(target);
 
@@ -125,20 +120,17 @@ export class MatchingService {
 
   private extractAmount(record: Record<string, unknown>): number | null {
     const amount = record.amount || record.total || record.value;
-    if (typeof amount === 'number') {
+    if (typeof amount === "number") {
       return amount;
     }
-    if (typeof amount === 'string') {
-      const parsed = parseFloat(amount.replace(/[^0-9.-]/g, ''));
+    if (typeof amount === "string") {
+      const parsed = parseFloat(amount.replace(/[^0-9.-]/g, ""));
       return isNaN(parsed) ? null : parsed;
     }
     return null;
   }
 
-  private compareDate(
-    source: Record<string, unknown>,
-    target: Record<string, unknown>
-  ): number {
+  private compareDate(source: Record<string, unknown>, target: Record<string, unknown>): number {
     const sourceDate = this.extractDate(source);
     const targetDate = this.extractDate(target);
 
@@ -158,11 +150,11 @@ export class MatchingService {
     if (dateField instanceof Date) {
       return dateField;
     }
-    if (typeof dateField === 'string') {
+    if (typeof dateField === "string") {
       const parsed = new Date(dateField);
       return isNaN(parsed.getTime()) ? null : parsed;
     }
-    if (typeof dateField === 'number') {
+    if (typeof dateField === "number") {
       return new Date(dateField);
     }
     return null;
@@ -173,8 +165,8 @@ export class MatchingService {
     target: Record<string, unknown>,
     field: string
   ): number {
-    const sourceValue = String(source[field] || '').toLowerCase();
-    const targetValue = String(target[field] || '').toLowerCase();
+    const sourceValue = String(source[field] || "").toLowerCase();
+    const targetValue = String(target[field] || "").toLowerCase();
 
     if (!sourceValue || !targetValue) {
       return 0;
@@ -191,7 +183,7 @@ export class MatchingService {
 
     // Calculate simple similarity
     const longer = sourceValue.length > targetValue.length ? sourceValue : targetValue;
-    
+
     if (longer.length === 0) {
       return 1.0;
     }
@@ -223,11 +215,11 @@ export class MatchingService {
         const prevJ = j - 1;
         const prevRow = matrix[prevI];
         const currRow = matrix[i];
-        
+
         if (!prevRow || !currRow) {
-          throw new Error('Matrix initialization error');
+          throw new Error("Matrix initialization error");
         }
-        
+
         if (str2.charAt(prevI) === str1.charAt(prevJ)) {
           currRow[j] = prevRow[prevJ] ?? 0;
         } else {

@@ -95,5 +95,5 @@ export declare function generatePlainText(html: string): string;
 /**
  * Get default URLs based on environment
  */
-export declare function getDefaultUrls(): EmailTemplateData['product'] & EmailTemplateData['urls'];
+export declare function getDefaultUrls(): EmailTemplateData["product"] & EmailTemplateData["urls"];
 //# sourceMappingURL=email-templates.d.ts.map

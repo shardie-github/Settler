@@ -14,12 +14,15 @@ This document summarizes the complete implementation of the Operator-in-a-Box bl
 ### 1. UX Issues (Critical Path)
 
 #### ✅ UX-001: API Key Regeneration
+
 **Status:** Complete  
 **Files:**
+
 - `packages/api/src/routes/api-keys.ts` - Full CRUD + regenerate
 - Registered in `packages/api/src/index.ts`
 
 **Features:**
+
 - List API keys (masked display)
 - Get API key details (masked)
 - Create API key (returns key once)
@@ -29,13 +32,16 @@ This document summarizes the complete implementation of the Operator-in-a-Box bl
 - Event tracking on all operations
 
 #### ✅ UX-002: Adapter Config Schema Clarity
+
 **Status:** Complete  
 **Files:**
+
 - `packages/api/src/utils/adapter-config-validator.ts` - Schema definitions & validation
 - `packages/api/src/routes/adapters.ts` - Enhanced with schema info
 - Integrated into `packages/api/src/routes/jobs.ts`
 
 **Features:**
+
 - Schema definitions for Stripe, Shopify, PayPal, QuickBooks, Square
 - Field-level validation with clear error messages
 - Required vs optional field specification
@@ -44,36 +50,45 @@ This document summarizes the complete implementation of the Operator-in-a-Box bl
 - Enhanced adapter routes with full schema info
 
 #### ✅ UX-003: Detailed Error Messages
+
 **Status:** Complete  
 **Files:**
+
 - `packages/api/src/utils/typed-errors.ts` - Enhanced ValidationError
 - `packages/api/src/utils/adapter-config-validator.ts` - Field-level errors
 
 **Features:**
+
 - ValidationError supports field-level error arrays
 - Adapter config validator provides detailed field errors
 - Error codes for different error types
 - Clear, actionable error messages
 
 #### ✅ UX-004: Test Mode Toggle
+
 **Status:** Complete (Routes ready, needs DB column)  
 **Files:**
+
 - `packages/api/src/routes/test-mode.ts` - Test mode routes
 - Registered in `packages/api/src/index.ts`
 
 **Features:**
+
 - Get test mode status
 - Toggle test mode
 - Event tracking
 - Note: Requires `test_mode_enabled` column in users table
 
 #### ✅ UX-008: Exception Queue UI
+
 **Status:** Complete  
 **Files:**
+
 - `packages/api/src/routes/exceptions.ts` - Full exception queue API
 - Registered in `packages/api/src/index.ts`
 
 **Features:**
+
 - List exceptions with filters (jobId, status, category, date range)
 - Get exception details
 - Resolve exception (matched/manual/ignored)
@@ -84,14 +99,17 @@ This document summarizes the complete implementation of the Operator-in-a-Box bl
 ### 2. Event Tracking Infrastructure
 
 #### ✅ E4-S1: Event Tracking Infrastructure
+
 **Status:** Complete  
 **Files:**
+
 - `packages/api/src/db/migrations/004-events-tracking.sql` - Events table
 - `packages/api/src/utils/event-tracker.ts` - Event tracking utilities
 - `packages/api/src/middleware/event-tracking.ts` - Middleware
 - Integrated into key routes
 
 **Features:**
+
 - Events table with indexes
 - `trackEvent()` - Synchronous tracking
 - `trackEventAsync()` - Fire-and-forget tracking
@@ -101,6 +119,7 @@ This document summarizes the complete implementation of the Operator-in-a-Box bl
 - Integrated into: API keys, jobs, exceptions, test mode
 
 **Event Taxonomy Implemented:**
+
 - Marketing: PageViewed, SignupStarted, SignupCompleted, EmailVerified
 - Product: APIKeyCreated, APIKeyRegenerated, JobCreated, ReconciliationSuccess, ReconciliationError
 - Support: ExceptionResolved, TestModeToggled
@@ -108,39 +127,47 @@ This document summarizes the complete implementation of the Operator-in-a-Box bl
 ### 3. Dashboards
 
 #### ✅ E4-S2: Dashboards
+
 **Status:** Complete  
 **Files:**
+
 - `packages/api/src/routes/dashboards.ts` - Dashboard routes
 - Registered in `packages/api/src/index.ts`
 
 **Features:**
 
 **Activation Dashboard:**
+
 - Signup funnel (SignupStarted → SignupCompleted → EmailVerified → APIKeyCreated → JobCreated → ReconciliationSuccess)
 - Time to first value (median, P25, P75, P95)
 - Activation rate by channel
 
 **Usage Dashboard:**
+
 - Reconciliation volume (daily, by adapter combination)
 - Accuracy trends (daily average, by job type)
 - Error rate (by error type, percentage)
 - Exception rate (by category, percentage)
 
 **Revenue Dashboard:**
+
 - Placeholder (requires billing integration)
 - Ready for MRR, ARPU, churn, expansion revenue
 
 **Support Dashboard:**
+
 - Support ticket volume (by category, daily)
 - Exception resolution time (median, P95)
 
 ### 4. Database Migrations
 
 #### ✅ Events Table Migration
+
 **Status:** Complete  
 **File:** `packages/api/src/db/migrations/004-events-tracking.sql`
 
 **Schema:**
+
 - `events` table with user_id, tenant_id, event_name, properties (JSONB)
 - Indexes for common queries (user+timestamp, event_name+timestamp, tenant+timestamp)
 - GIN index on properties for JSON queries
@@ -194,13 +221,16 @@ This document summarizes the complete implementation of the Operator-in-a-Box bl
 ### Immediate (Week 1)
 
 1. **Run Database Migrations**
+
    ```bash
    npm run migrate
    ```
+
    - Creates `events` table
    - Adds indexes
 
 2. **Add Test Mode Column**
+
    ```sql
    ALTER TABLE users ADD COLUMN test_mode_enabled BOOLEAN DEFAULT false;
    ```
@@ -244,6 +274,7 @@ This document summarizes the complete implementation of the Operator-in-a-Box bl
 **In Progress:** 20 (71%)
 
 **By Category:**
+
 - ✅ UX Issues (Critical): 5/5 complete (100%)
 - ✅ Event Tracking: 1/1 complete (100%)
 - ✅ Dashboards: 1/1 complete (100%)

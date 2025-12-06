@@ -6,14 +6,14 @@ const uuid_1 = require("uuid");
 function idempotencyMiddleware() {
     return async (req, res, next) => {
         // Only apply to state-changing methods
-        if (!['POST', 'PUT', 'PATCH', 'DELETE'].includes(req.method)) {
+        if (!["POST", "PUT", "PATCH", "DELETE"].includes(req.method)) {
             return next();
         }
         if (!req.userId) {
             return next();
         }
         // Get idempotency key from header or generate one
-        const idempotencyKey = req.headers['idempotency-key'] || (0, uuid_1.v4)();
+        const idempotencyKey = req.headers["idempotency-key"] || (0, uuid_1.v4)();
         // Check if we've seen this request
         const cached = await (0, db_1.query)(`SELECT response, created_at
        FROM idempotency_keys
@@ -46,13 +46,9 @@ function idempotencyMiddleware() {
                 if (statusCode >= 200 && statusCode < 300) {
                     (0, db_1.query)(`INSERT INTO idempotency_keys (user_id, key, response, expires_at)
              VALUES ($1, $2, $3, NOW() + INTERVAL '24 hours')
-             ON CONFLICT (user_id, key) DO NOTHING`, [
-                        req.userId || null,
-                        idempotencyKey,
-                        JSON.stringify({ statusCode, data: responseData }),
-                    ]).catch(err => console.error('Failed to cache idempotency key', err));
+             ON CONFLICT (user_id, key) DO NOTHING`, [req.userId || null, idempotencyKey, JSON.stringify({ statusCode, data: responseData })]).catch((err) => console.error("Failed to cache idempotency key", err));
                 }
-                if (encoding !== undefined && typeof encoding === 'string') {
+                if (encoding !== undefined && typeof encoding === "string") {
                     originalEnd(chunk, encoding, cb);
                 }
                 else if (cb !== undefined) {

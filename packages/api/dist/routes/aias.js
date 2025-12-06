@@ -28,9 +28,9 @@ exports.aiasRouter = router;
 const uploadModelSchema = zod_1.z.object({
     body: zod_1.z.object({
         modelName: zod_1.z.string().min(1).max(255),
-        modelType: zod_1.z.enum(['matching', 'anomaly_detection', 'schema_inference', 'pii_detection']),
+        modelType: zod_1.z.enum(["matching", "anomaly_detection", "schema_inference", "pii_detection"]),
         modelFile: zod_1.z.string().min(1), // Base64 encoded
-        format: zod_1.z.enum(['onnx', 'tensorrt', 'executorch', 'tflite', 'pytorch']),
+        format: zod_1.z.enum(["onnx", "tensorrt", "executorch", "tflite", "pytorch"]),
         metadata: zod_1.z.record(zod_1.z.unknown()).optional(),
     }),
 });
@@ -40,8 +40,8 @@ const optimizeModelSchema = zod_1.z.object({
     }),
     body: zod_1.z.object({
         targetDevices: zod_1.z.array(zod_1.z.string()),
-        quantization: zod_1.z.enum(['int4', 'int8', 'fp16', 'fp32']),
-        optimizationLevel: zod_1.z.enum(['speed', 'balanced', 'accuracy']),
+        quantization: zod_1.z.enum(["int4", "int8", "fp16", "fp32"]),
+        optimizationLevel: zod_1.z.enum(["speed", "balanced", "accuracy"]),
     }),
 });
 const benchmarkModelSchema = zod_1.z.object({
@@ -63,7 +63,7 @@ const exportModelSchema = zod_1.z.object({
         modelId: zod_1.z.string().uuid(),
     }),
     body: zod_1.z.object({
-        format: zod_1.z.enum(['docker', 'wasm', 'apk', 'onnx', 'tensorrt']),
+        format: zod_1.z.enum(["docker", "wasm", "apk", "onnx", "tensorrt"]),
         targetDevice: zod_1.z.string().optional(),
     }),
 });
@@ -94,27 +94,27 @@ router.post("/models/upload", (0, validation_1.validateRequest)(uploadModelSchem
       RETURNING id`, [
             tenantId,
             modelName,
-            '1.0.0', // Initial version
+            "1.0.0", // Initial version
             modelType,
             format,
             uploadResult.jobId,
             JSON.stringify(metadata || {}),
             false, // Not active until optimized
         ]);
-        await (0, event_tracker_1.trackEventAsync)(tenantId, 'aias_model_uploaded', {
-            model_id: modelResult[0]?.id || '',
+        await (0, event_tracker_1.trackEventAsync)(tenantId, "aias_model_uploaded", {
+            model_id: modelResult[0]?.id || "",
             aias_job_id: uploadResult.jobId,
         });
-        (0, logger_1.logInfo)(`Model uploaded to AIAS: ${modelResult[0]?.id || ''}`);
+        (0, logger_1.logInfo)(`Model uploaded to AIAS: ${modelResult[0]?.id || ""}`);
         (0, api_response_1.sendSuccess)(res, {
-            modelId: modelResult[0]?.id || '',
+            modelId: modelResult[0]?.id || "",
             aiasJobId: uploadResult.jobId,
             aiasModelId: uploadResult.modelId,
-            status: 'uploaded',
+            status: "uploaded",
         });
     }
     catch (error) {
-        (0, error_handler_1.handleRouteError)(res, error, 'Failed to upload model', 500);
+        (0, error_handler_1.handleRouteError)(res, error, "Failed to upload model", 500);
     }
 });
 /**
@@ -125,16 +125,16 @@ router.post("/models/:modelId/optimize", (0, validation_1.validateRequest)(optim
     try {
         const { modelId } = req.params;
         if (!modelId) {
-            (0, api_response_1.sendError)(res, 400, 'MODEL_ID_REQUIRED', "Model ID is required");
+            (0, api_response_1.sendError)(res, 400, "MODEL_ID_REQUIRED", "Model ID is required");
             return;
         }
         const { targetDevices, quantization, optimizationLevel } = req.body;
         const tenantId = req.tenantId;
         // Verify model belongs to tenant
         const modelCheck = await (0, db_1.query)(`SELECT id FROM model_versions 
-       WHERE id = $1 AND tenant_id = $2`, [modelId, tenantId || '']);
+       WHERE id = $1 AND tenant_id = $2`, [modelId, tenantId || ""]);
         if (modelCheck.length === 0) {
-            (0, api_response_1.sendError)(res, 404, 'MODEL_NOT_FOUND', "Model not found");
+            (0, api_response_1.sendError)(res, 404, "MODEL_NOT_FOUND", "Model not found");
             return;
         }
         const aiasClient = (0, client_1.getAIASClient)();
@@ -148,19 +148,19 @@ router.post("/models/:modelId/optimize", (0, validation_1.validateRequest)(optim
         // Update model version with optimization job
         await (0, db_1.query)(`UPDATE model_versions 
        SET aias_job_id = $1, updated_at = NOW()
-       WHERE id = $2`, [optimizeResult.jobId || '', modelId || '']);
-        await (0, event_tracker_1.trackEventAsync)(tenantId, 'aias_model_optimization_requested', {
+       WHERE id = $2`, [optimizeResult.jobId || "", modelId || ""]);
+        await (0, event_tracker_1.trackEventAsync)(tenantId, "aias_model_optimization_requested", {
             model_id: modelId,
             aias_job_id: optimizeResult.jobId,
             quantization,
         });
         (0, api_response_1.sendSuccess)(res, {
             jobId: optimizeResult.jobId,
-            status: 'pending',
+            status: "pending",
         });
     }
     catch (error) {
-        (0, error_handler_1.handleRouteError)(res, error, 'Failed to optimize model', 500);
+        (0, error_handler_1.handleRouteError)(res, error, "Failed to optimize model", 500);
     }
 });
 /**
@@ -173,32 +173,29 @@ router.get("/jobs/:jobId/status", (0, validation_1.validateRequest)(zod_1.z.obje
     try {
         const { jobId } = req.params;
         if (!jobId) {
-            (0, api_response_1.sendError)(res, 400, 'JOB_ID_REQUIRED', "Job ID is required");
+            (0, api_response_1.sendError)(res, 400, "JOB_ID_REQUIRED", "Job ID is required");
             return;
         }
         const tenantId = req.tenantId;
         // Verify job belongs to tenant's model
         const modelCheck = await (0, db_1.query)(`SELECT id FROM model_versions 
-       WHERE aias_job_id = $1 AND tenant_id = $2`, [jobId, tenantId || '']);
+       WHERE aias_job_id = $1 AND tenant_id = $2`, [jobId, tenantId || ""]);
         if (modelCheck.length === 0) {
-            (0, api_response_1.sendError)(res, 404, 'JOB_NOT_FOUND', "Job not found");
+            (0, api_response_1.sendError)(res, 404, "JOB_NOT_FOUND", "Job not found");
             return;
         }
         const aiasClient = (0, client_1.getAIASClient)();
         const status = await aiasClient.getOptimizationStatus(jobId);
         // If completed, update model version
-        if (status.status === 'completed' && status.result) {
+        if (status.status === "completed" && status.result) {
             await (0, db_1.query)(`UPDATE model_versions 
          SET benchmark_results = $1, updated_at = NOW()
-         WHERE id = $2`, [
-                JSON.stringify(status.result.benchmarkResults),
-                (modelCheck[0]?.id || ''),
-            ]);
+         WHERE id = $2`, [JSON.stringify(status.result.benchmarkResults), (modelCheck[0]?.id || "")]);
         }
         (0, api_response_1.sendSuccess)(res, status);
     }
     catch (error) {
-        (0, error_handler_1.handleRouteError)(res, error, 'Failed to get job status', 500);
+        (0, error_handler_1.handleRouteError)(res, error, "Failed to get job status", 500);
     }
 });
 /**
@@ -209,16 +206,16 @@ router.post("/models/:modelId/benchmark", (0, validation_1.validateRequest)(benc
     try {
         const { modelId } = req.params;
         if (!modelId) {
-            (0, api_response_1.sendError)(res, 400, 'MODEL_ID_REQUIRED', "Model ID is required");
+            (0, api_response_1.sendError)(res, 400, "MODEL_ID_REQUIRED", "Model ID is required");
             return;
         }
         const { deviceProfile, testData } = req.body;
         const tenantId = req.tenantId;
         // Verify model belongs to tenant
         const modelCheck = await (0, db_1.query)(`SELECT id FROM model_versions 
-       WHERE id = $1 AND tenant_id = $2`, [modelId, tenantId || '']);
+       WHERE id = $1 AND tenant_id = $2`, [modelId, tenantId || ""]);
         if (modelCheck.length === 0) {
-            (0, api_response_1.sendError)(res, 404, 'MODEL_NOT_FOUND', "Model not found");
+            (0, api_response_1.sendError)(res, 404, "MODEL_NOT_FOUND", "Model not found");
             return;
         }
         const aiasClient = (0, client_1.getAIASClient)();
@@ -228,17 +225,17 @@ router.post("/models/:modelId/benchmark", (0, validation_1.validateRequest)(benc
             deviceProfile,
             testData,
         });
-        await (0, event_tracker_1.trackEventAsync)(tenantId, 'aias_model_benchmark_requested', {
+        await (0, event_tracker_1.trackEventAsync)(tenantId, "aias_model_benchmark_requested", {
             model_id: modelId,
             aias_job_id: benchmarkResult.jobId,
         });
         (0, api_response_1.sendSuccess)(res, {
             jobId: benchmarkResult.jobId,
-            status: 'pending',
+            status: "pending",
         });
     }
     catch (error) {
-        (0, error_handler_1.handleRouteError)(res, error, 'Failed to benchmark model', 500);
+        (0, error_handler_1.handleRouteError)(res, error, "Failed to benchmark model", 500);
     }
 });
 /**
@@ -251,15 +248,15 @@ router.get("/jobs/:jobId/benchmark-results", (0, validation_1.validateRequest)(z
     try {
         const { jobId } = req.params;
         if (!jobId) {
-            (0, api_response_1.sendError)(res, 400, 'JOB_ID_REQUIRED', "Job ID is required");
+            (0, api_response_1.sendError)(res, 400, "JOB_ID_REQUIRED", "Job ID is required");
             return;
         }
         const tenantId = req.tenantId;
         // Verify job belongs to tenant's model
         const modelCheck = await (0, db_1.query)(`SELECT id FROM model_versions 
-       WHERE aias_job_id = $1 AND tenant_id = $2`, [jobId, tenantId || '']);
+       WHERE aias_job_id = $1 AND tenant_id = $2`, [jobId, tenantId || ""]);
         if (modelCheck.length === 0) {
-            (0, api_response_1.sendError)(res, 404, 'JOB_NOT_FOUND', "Job not found");
+            (0, api_response_1.sendError)(res, 404, "JOB_NOT_FOUND", "Job not found");
             return;
         }
         const aiasClient = (0, client_1.getAIASClient)();
@@ -267,14 +264,11 @@ router.get("/jobs/:jobId/benchmark-results", (0, validation_1.validateRequest)(z
         // Update model version with benchmark results
         await (0, db_1.query)(`UPDATE model_versions 
        SET benchmark_results = $1, updated_at = NOW()
-       WHERE id = $2`, [
-            JSON.stringify(results),
-            (modelCheck[0]?.id || ''),
-        ]);
+       WHERE id = $2`, [JSON.stringify(results), (modelCheck[0]?.id || "")]);
         (0, api_response_1.sendSuccess)(res, results);
     }
     catch (error) {
-        (0, error_handler_1.handleRouteError)(res, error, 'Failed to get benchmark results', 500);
+        (0, error_handler_1.handleRouteError)(res, error, "Failed to get benchmark results", 500);
     }
 });
 /**
@@ -285,16 +279,16 @@ router.post("/models/:modelId/export", (0, validation_1.validateRequest)(exportM
     try {
         const { modelId } = req.params;
         if (!modelId) {
-            (0, api_response_1.sendError)(res, 400, 'MODEL_ID_REQUIRED', "Model ID is required");
+            (0, api_response_1.sendError)(res, 400, "MODEL_ID_REQUIRED", "Model ID is required");
             return;
         }
         const { format, targetDevice } = req.body;
         const tenantId = req.tenantId;
         // Verify model belongs to tenant
         const modelCheck = await (0, db_1.query)(`SELECT id FROM model_versions 
-       WHERE id = $1 AND tenant_id = $2`, [modelId, tenantId || '']);
+       WHERE id = $1 AND tenant_id = $2`, [modelId, tenantId || ""]);
         if (modelCheck.length === 0) {
-            (0, api_response_1.sendError)(res, 404, 'MODEL_NOT_FOUND', "Model not found");
+            (0, api_response_1.sendError)(res, 404, "MODEL_NOT_FOUND", "Model not found");
             return;
         }
         const aiasClient = (0, client_1.getAIASClient)();
@@ -307,19 +301,15 @@ router.post("/models/:modelId/export", (0, validation_1.validateRequest)(exportM
         // Update model version with export info
         await (0, db_1.query)(`UPDATE model_versions 
        SET file_path = $1, file_size_bytes = $2, updated_at = NOW()
-       WHERE id = $3`, [
-            exportResult.downloadUrl,
-            exportResult.fileSize,
-            modelId,
-        ]);
-        await (0, event_tracker_1.trackEventAsync)(tenantId, 'aias_model_exported', {
+       WHERE id = $3`, [exportResult.downloadUrl, exportResult.fileSize, modelId]);
+        await (0, event_tracker_1.trackEventAsync)(tenantId, "aias_model_exported", {
             model_id: modelId,
             format,
         });
         (0, api_response_1.sendSuccess)(res, exportResult);
     }
     catch (error) {
-        (0, error_handler_1.handleRouteError)(res, error, 'Failed to export model', 500);
+        (0, error_handler_1.handleRouteError)(res, error, "Failed to export model", 500);
     }
 });
 /**
@@ -347,7 +337,7 @@ router.get("/models", (0, authorization_1.requirePermission)(Permissions_1.Permi
         });
     }
     catch (error) {
-        (0, error_handler_1.handleRouteError)(res, error, 'Failed to list models', 500);
+        (0, error_handler_1.handleRouteError)(res, error, "Failed to list models", 500);
     }
 });
 /**
@@ -360,7 +350,7 @@ router.get("/models/:modelId", (0, validation_1.validateRequest)(zod_1.z.object(
     try {
         const { modelId } = req.params;
         if (!modelId) {
-            (0, api_response_1.sendError)(res, 400, 'MODEL_ID_REQUIRED', "Model ID is required");
+            (0, api_response_1.sendError)(res, 400, "MODEL_ID_REQUIRED", "Model ID is required");
             return;
         }
         const tenantId = req.tenantId;
@@ -368,25 +358,25 @@ router.get("/models/:modelId", (0, validation_1.validateRequest)(zod_1.z.object(
               file_path, file_size_bytes, benchmark_results, device_targets,
               metadata, is_active, created_at
        FROM model_versions
-       WHERE id = $1 AND tenant_id = $2`, [modelId, tenantId || '']);
+       WHERE id = $1 AND tenant_id = $2`, [modelId, tenantId || ""]);
         if (result.length === 0) {
-            (0, api_response_1.sendError)(res, 404, 'MODEL_NOT_FOUND', "Model not found");
+            (0, api_response_1.sendError)(res, 404, "MODEL_NOT_FOUND", "Model not found");
             return;
         }
         const model = result[0];
         if (!model) {
-            (0, api_response_1.sendError)(res, 404, 'MODEL_NOT_FOUND', "Model not found");
+            (0, api_response_1.sendError)(res, 404, "MODEL_NOT_FOUND", "Model not found");
             return;
         }
         (0, api_response_1.sendSuccess)(res, {
             ...model,
             benchmark_results: model.benchmark_results ? JSON.parse(model.benchmark_results) : null,
             device_targets: model.device_targets || [],
-            metadata: JSON.parse(model.metadata || '{}'),
+            metadata: JSON.parse(model.metadata || "{}"),
         });
     }
     catch (error) {
-        (0, error_handler_1.handleRouteError)(res, error, 'Failed to get model details', 500);
+        (0, error_handler_1.handleRouteError)(res, error, "Failed to get model details", 500);
     }
 });
 // ============================================================================
@@ -397,9 +387,9 @@ async function getAIASModelId(modelVersionId) {
     // For now, we'll use a placeholder - in production, store AIAS model ID in model_versions.metadata
     const result = await (0, db_1.query)(`SELECT metadata FROM model_versions WHERE id = $1`, [modelVersionId]);
     if (result.length === 0) {
-        throw new Error('Model not found');
+        throw new Error("Model not found");
     }
-    const metadata = JSON.parse(result[0]?.metadata || '{}');
+    const metadata = JSON.parse(result[0]?.metadata || "{}");
     return metadata.aiasModelId || modelVersionId; // Fallback to model version ID
 }
 //# sourceMappingURL=aias.js.map

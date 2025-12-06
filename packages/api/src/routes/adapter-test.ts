@@ -58,7 +58,9 @@ router.post(
         });
       }
     } catch (error: unknown) {
-      handleRouteError(res, error, "Failed to test adapter connection", 500, { userId: req.userId });
+      handleRouteError(res, error, "Failed to test adapter connection", 500, {
+        userId: req.userId,
+      });
     }
   }
 );

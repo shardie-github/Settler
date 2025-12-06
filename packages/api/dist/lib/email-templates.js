@@ -17,10 +17,10 @@ const logger_1 = require("../utils/logger");
 function renderTemplate(template, data) {
     let rendered = template;
     // Flatten nested data structure for easier replacement
-    const flatten = (obj, prefix = '') => {
+    const flatten = (obj, prefix = "") => {
         const result = {};
         for (const key in obj) {
-            if (obj[key] && typeof obj[key] === 'object' && !Array.isArray(obj[key])) {
+            if (obj[key] && typeof obj[key] === "object" && !Array.isArray(obj[key])) {
                 Object.assign(result, flatten(obj[key], `${prefix}${key}.`));
             }
             else {
@@ -47,18 +47,18 @@ function renderTemplate(template, data) {
 function loadTemplate(templateName) {
     try {
         // Try lifecycle templates first
-        const lifecyclePath = (0, path_1.join)(process.cwd(), 'emails', 'lifecycle', `${templateName}.html`);
+        const lifecyclePath = (0, path_1.join)(process.cwd(), "emails", "lifecycle", `${templateName}.html`);
         try {
-            return (0, fs_1.readFileSync)(lifecyclePath, 'utf8');
+            return (0, fs_1.readFileSync)(lifecyclePath, "utf8");
         }
         catch {
             // Try in root emails directory
-            const rootPath = (0, path_1.join)(process.cwd(), 'emails', `${templateName}.html`);
-            return (0, fs_1.readFileSync)(rootPath, 'utf8');
+            const rootPath = (0, path_1.join)(process.cwd(), "emails", `${templateName}.html`);
+            return (0, fs_1.readFileSync)(rootPath, "utf8");
         }
     }
     catch (error) {
-        (0, logger_1.logError)('Failed to load email template', error, { templateName });
+        (0, logger_1.logError)("Failed to load email template", error, { templateName });
         throw new Error(`Email template not found: ${templateName}`);
     }
 }
@@ -69,12 +69,12 @@ function loadTemplateWithComponents(templateName) {
     let template = loadTemplate(templateName);
     // Load shared components
     try {
-        const headerPath = (0, path_1.join)(process.cwd(), 'emails', 'shared', 'components', 'header.html');
-        const footerPath = (0, path_1.join)(process.cwd(), 'emails', 'shared', 'components', 'footer.html');
-        const buttonPath = (0, path_1.join)(process.cwd(), 'emails', 'shared', 'components', 'button.html');
-        const header = (0, fs_1.readFileSync)(headerPath, 'utf8');
-        const footer = (0, fs_1.readFileSync)(footerPath, 'utf8');
-        const button = (0, fs_1.readFileSync)(buttonPath, 'utf8');
+        const headerPath = (0, path_1.join)(process.cwd(), "emails", "shared", "components", "header.html");
+        const footerPath = (0, path_1.join)(process.cwd(), "emails", "shared", "components", "footer.html");
+        const buttonPath = (0, path_1.join)(process.cwd(), "emails", "shared", "components", "button.html");
+        const header = (0, fs_1.readFileSync)(headerPath, "utf8");
+        const footer = (0, fs_1.readFileSync)(footerPath, "utf8");
+        const button = (0, fs_1.readFileSync)(buttonPath, "utf8");
         // Replace component includes
         template = template.replace(/\{\{>\s*header\s*\}\}/g, header);
         template = template.replace(/\{\{>\s*footer\s*\}\}/g, footer);
@@ -82,16 +82,16 @@ function loadTemplateWithComponents(templateName) {
             // Parse button parameters (simplified)
             const buttonData = {};
             params.split(/\s+/).forEach((param) => {
-                const [key, value] = param.split('=');
+                const [key, value] = param.split("=");
                 if (key && value) {
-                    buttonData[key] = value.replace(/['"]/g, '');
+                    buttonData[key] = value.replace(/['"]/g, "");
                 }
             });
             return renderTemplate(button, buttonData);
         });
     }
     catch (error) {
-        (0, logger_1.logWarn)('Failed to load shared components, using template as-is', { error });
+        (0, logger_1.logWarn)("Failed to load shared components, using template as-is", { error });
     }
     return template;
 }
@@ -108,16 +108,16 @@ async function renderEmailTemplate(templateName, data) {
 function generatePlainText(html) {
     // Simple HTML to text conversion
     let text = html
-        .replace(/<style[^>]*>.*?<\/style>/gis, '')
-        .replace(/<script[^>]*>.*?<\/script>/gis, '')
-        .replace(/<[^>]+>/g, '')
-        .replace(/&nbsp;/g, ' ')
-        .replace(/&amp;/g, '&')
-        .replace(/&lt;/g, '<')
-        .replace(/&gt;/g, '>')
+        .replace(/<style[^>]*>.*?<\/style>/gis, "")
+        .replace(/<script[^>]*>.*?<\/script>/gis, "")
+        .replace(/<[^>]+>/g, "")
+        .replace(/&nbsp;/g, " ")
+        .replace(/&amp;/g, "&")
+        .replace(/&lt;/g, "<")
+        .replace(/&gt;/g, ">")
         .replace(/&quot;/g, '"')
         .replace(/&#39;/g, "'")
-        .replace(/\s+/g, ' ')
+        .replace(/\s+/g, " ")
         .trim();
     // Extract links and add them as text
     const linkRegex = /<a[^>]+href=["']([^"']+)["'][^>]*>(.*?)<\/a>/gi;
@@ -126,7 +126,7 @@ function generatePlainText(html) {
         if (!match || !match[1] || !match[2])
             continue;
         const url = match[1];
-        const linkText = match[2].replace(/<[^>]+>/g, '');
+        const linkText = match[2].replace(/<[^>]+>/g, "");
         text = text.replace(linkText, `${linkText} (${url})`);
     }
     return text;
@@ -137,9 +137,9 @@ function generatePlainText(html) {
 function getDefaultUrls() {
     const appUrl = process.env.APP_URL || process.env.VERCEL_URL
         ? `https://${process.env.VERCEL_URL}`
-        : 'https://app.settler.dev';
+        : "https://app.settler.dev";
     return {
-        product_name: 'Settler',
+        product_name: "Settler",
         upgrade_url: `${appUrl}/pricing`,
         dashboard_url: `${appUrl}/dashboard`,
         support_url: `${appUrl}/support`,

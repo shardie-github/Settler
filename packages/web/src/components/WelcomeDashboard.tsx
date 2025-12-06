@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Sparkles, CheckCircle2, ArrowRight, Zap } from 'lucide-react';
-import Link from 'next/link';
-import { useState } from 'react';
-import { PreTestQuestionnaire, PreTestAnswers } from './PreTestQuestionnaire';
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Sparkles, CheckCircle2, ArrowRight, Zap } from "lucide-react";
+import Link from "next/link";
+import { useState } from "react";
+import { PreTestQuestionnaire, PreTestAnswers } from "./PreTestQuestionnaire";
 
 interface WelcomeDashboardProps {
   userName?: string;
@@ -13,18 +13,14 @@ interface WelcomeDashboardProps {
   onComplete?: () => void;
 }
 
-export function WelcomeDashboard({ 
-  userName, 
-  trialEndDate,
-  onComplete 
-}: WelcomeDashboardProps) {
+export function WelcomeDashboard({ userName, trialEndDate, onComplete }: WelcomeDashboardProps) {
   const [showPreTest, setShowPreTest] = useState(false);
 
   const handlePreTestComplete = async (answers: PreTestAnswers) => {
     try {
-      const response = await fetch('/api/user/pre-test', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const response = await fetch("/api/user/pre-test", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(answers),
       });
 
@@ -32,32 +28,32 @@ export function WelcomeDashboard({
         setShowPreTest(false);
         // Personalize experience based on answers
       } else {
-        console.error('Failed to save pre-test answers');
+        console.error("Failed to save pre-test answers");
       }
     } catch (error) {
-      console.error('Error saving pre-test answers:', error);
+      console.error("Error saving pre-test answers:", error);
     }
   };
 
   const quickStartSteps = [
     {
-      title: 'Complete your profile',
-      description: 'Help us personalize your experience',
-      time: '2 min',
-      link: '/dashboard?setup=profile',
+      title: "Complete your profile",
+      description: "Help us personalize your experience",
+      time: "2 min",
+      link: "/dashboard?setup=profile",
       action: () => setShowPreTest(true),
     },
     {
-      title: 'Connect your first platform',
-      description: 'See how easy it is to match transactions',
-      time: '3 min',
-      link: '/playground',
+      title: "Connect your first platform",
+      description: "See how easy it is to match transactions",
+      time: "3 min",
+      link: "/playground",
     },
     {
-      title: 'Try a demo reconciliation',
-      description: 'See results in real-time',
-      time: '5 min',
-      link: '/playground?demo=true',
+      title: "Try a demo reconciliation",
+      description: "See results in real-time",
+      time: "5 min",
+      link: "/playground?demo=true",
     },
   ];
 
@@ -77,7 +73,7 @@ export function WelcomeDashboard({
       {/* Welcome Header */}
       <div className="text-center space-y-4">
         <h1 className="text-4xl font-bold text-slate-900 dark:text-white">
-          Welcome to Settler{userName ? `, ${userName}` : ''}! 🎉
+          Welcome to Settler{userName ? `, ${userName}` : ""}! 🎉
         </h1>
         <p className="text-xl text-slate-600 dark:text-slate-400">
           Your 30-day free trial starts now—no credit card required.
@@ -93,9 +89,7 @@ export function WelcomeDashboard({
       <Card>
         <CardHeader>
           <CardTitle>Get Started in 10 Minutes</CardTitle>
-          <CardDescription>
-            Here's how to get value quickly
-          </CardDescription>
+          <CardDescription>Here's how to get value quickly</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="grid md:grid-cols-3 gap-4">

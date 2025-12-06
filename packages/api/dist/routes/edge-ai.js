@@ -37,11 +37,13 @@ const createEdgeNodeSchema = zod_1.z.object({
         device_os: zod_1.z.string().max(100).optional(),
         device_arch: zod_1.z.string().max(50).optional(),
         capabilities: zod_1.z.record(zod_1.z.boolean()).optional(),
-        location: zod_1.z.object({
+        location: zod_1.z
+            .object({
             region: zod_1.z.string().optional(),
             lat: zod_1.z.number().optional(),
             lng: zod_1.z.number().optional(),
-        }).optional(),
+        })
+            .optional(),
         metadata: zod_1.z.record(zod_1.z.unknown()).optional(),
     }),
 });
@@ -64,11 +66,13 @@ const updateEdgeNodeSchema = zod_1.z.object({
         name: zod_1.z.string().min(1).max(255).optional(),
         status: zod_1.z.enum(["active", "inactive"]).optional(),
         capabilities: zod_1.z.record(zod_1.z.boolean()).optional(),
-        location: zod_1.z.object({
+        location: zod_1.z
+            .object({
             region: zod_1.z.string().optional(),
             lat: zod_1.z.number().optional(),
             lng: zod_1.z.number().optional(),
-        }).optional(),
+        })
+            .optional(),
         metadata: zod_1.z.record(zod_1.z.unknown()).optional(),
     }),
 });
@@ -140,10 +144,12 @@ async function authenticateEdgeNode(nodeKey) {
         return null;
     }
     // Update last heartbeat
-    await (0, db_1.query)(`UPDATE edge_nodes SET last_heartbeat_at = NOW() WHERE id = $1`, [result[0]?.id || '']);
+    await (0, db_1.query)(`UPDATE edge_nodes SET last_heartbeat_at = NOW() WHERE id = $1`, [
+        result[0]?.id || "",
+    ]);
     return {
-        nodeId: result[0]?.id || '',
-        tenantId: result[0]?.tenant_id || '',
+        nodeId: result[0]?.id || "",
+        tenantId: result[0]?.tenant_id || "",
     };
 }
 // Use shared edge-ai-core utilities instead of local implementations
@@ -182,10 +188,10 @@ router.post("/nodes", (0, validation_1.validateRequest)(createEdgeNodeSchema), (
             JSON.stringify(capabilities || {}),
             JSON.stringify(location || {}),
             JSON.stringify(metadata || {}),
-            'pending',
+            "pending",
         ]);
-        const nodeId = result[0]?.id || '';
-        await (0, event_tracker_1.trackEventAsync)(tenantId, 'edge_node_created', {
+        const nodeId = result[0]?.id || "";
+        await (0, event_tracker_1.trackEventAsync)(tenantId, "edge_node_created", {
             node_id: nodeId,
             device_type,
         });
@@ -195,12 +201,12 @@ router.post("/nodes", (0, validation_1.validateRequest)(createEdgeNodeSchema), (
             name,
             node_key: nodeKey, // Only returned once
             enrollment_key: enrollmentKey, // Only returned once
-            status: 'pending',
+            status: "pending",
             created_at: new Date().toISOString(),
         });
     }
     catch (error) {
-        (0, error_handler_1.handleRouteError)(res, error, 'Failed to create edge node', 500);
+        (0, error_handler_1.handleRouteError)(res, error, "Failed to create edge node", 500);
     }
 });
 /**
@@ -223,7 +229,7 @@ router.post("/nodes/enroll", (0, validation_1.validateRequest)(enrollEdgeNodeSch
             }
         }
         if (!matchedNode) {
-            (0, api_response_1.sendError)(res, 401, 'INVALID_ENROLLMENT_KEY', "Invalid enrollment key");
+            (0, api_response_1.sendError)(res, 401, "INVALID_ENROLLMENT_KEY", "Invalid enrollment key");
             return;
         }
         // Use shared edge-ai-core utilities
@@ -246,18 +252,18 @@ router.post("/nodes/enroll", (0, validation_1.validateRequest)(enrollEdgeNodeSch
             version || null,
             matchedNode.id,
         ]);
-        await (0, event_tracker_1.trackEventAsync)(matchedNode.tenant_id, 'edge_node_enrolled', {
+        await (0, event_tracker_1.trackEventAsync)(matchedNode.tenant_id, "edge_node_enrolled", {
             node_id: matchedNode.id,
         });
         (0, logger_1.logInfo)(`Edge node enrolled: ${matchedNode.id}`);
         (0, api_response_1.sendSuccess)(res, {
             node_id: matchedNode.id,
             node_key: nodeKey, // Only returned once
-            status: 'active',
+            status: "active",
         });
     }
     catch (error) {
-        (0, error_handler_1.handleRouteError)(res, error, 'Failed to enroll edge node', 500);
+        (0, error_handler_1.handleRouteError)(res, error, "Failed to enroll edge node", 500);
     }
 });
 /**
@@ -286,7 +292,7 @@ router.get("/nodes", (0, authorization_1.requirePermission)(Permissions_1.Permis
         });
     }
     catch (error) {
-        (0, error_handler_1.handleRouteError)(res, error, 'Failed to list edge nodes', 500);
+        (0, error_handler_1.handleRouteError)(res, error, "Failed to list edge nodes", 500);
     }
 });
 /**
@@ -303,25 +309,25 @@ router.get("/nodes/:id", (0, validation_1.validateRequest)(zod_1.z.object({
               capabilities, location, last_heartbeat_at, last_sync_at,
               version, metadata, created_at
        FROM edge_nodes
-       WHERE id = $1 AND tenant_id = $2 AND deleted_at IS NULL`, [id || '', tenantId || '']);
+       WHERE id = $1 AND tenant_id = $2 AND deleted_at IS NULL`, [id || "", tenantId || ""]);
         if (result.length === 0) {
-            (0, api_response_1.sendError)(res, 404, 'EDGE_NODE_NOT_FOUND', "Edge node not found");
+            (0, api_response_1.sendError)(res, 404, "EDGE_NODE_NOT_FOUND", "Edge node not found");
             return;
         }
         const node = result[0];
         if (!node) {
-            (0, api_response_1.sendError)(res, 404, 'EDGE_NODE_NOT_FOUND', "Edge node not found");
+            (0, api_response_1.sendError)(res, 404, "EDGE_NODE_NOT_FOUND", "Edge node not found");
             return;
         }
         (0, api_response_1.sendSuccess)(res, {
             ...node,
-            capabilities: JSON.parse(node.capabilities || '{}'),
-            location: JSON.parse(node.location || '{}'),
-            metadata: JSON.parse(node.metadata || '{}'),
+            capabilities: JSON.parse(node.capabilities || "{}"),
+            location: JSON.parse(node.location || "{}"),
+            metadata: JSON.parse(node.metadata || "{}"),
         });
     }
     catch (error) {
-        (0, error_handler_1.handleRouteError)(res, error, 'Failed to get edge node', 500);
+        (0, error_handler_1.handleRouteError)(res, error, "Failed to get edge node", 500);
     }
 });
 /**
@@ -357,18 +363,18 @@ router.patch("/nodes/:id", (0, validation_1.validateRequest)(updateEdgeNodeSchem
             values.push(JSON.stringify(metadata));
         }
         if (updates.length === 0) {
-            (0, api_response_1.sendError)(res, 400, 'NO_FIELDS_TO_UPDATE', "No fields to update");
+            (0, api_response_1.sendError)(res, 400, "NO_FIELDS_TO_UPDATE", "No fields to update");
             return;
         }
-        values.push(id || '', tenantId || '');
+        values.push(id || "", tenantId || "");
         await (0, db_1.query)(`UPDATE edge_nodes 
-       SET ${updates.join(', ')}, updated_at = NOW()
+       SET ${updates.join(", ")}, updated_at = NOW()
        WHERE id = $${paramIndex++} AND tenant_id = $${paramIndex++}`, values);
-        await (0, event_tracker_1.trackEventAsync)(tenantId, 'edge_node_updated', { node_id: id });
+        await (0, event_tracker_1.trackEventAsync)(tenantId, "edge_node_updated", { node_id: id });
         (0, api_response_1.sendNoContent)(res);
     }
     catch (error) {
-        (0, error_handler_1.handleRouteError)(res, error, 'Failed to update edge node', 500);
+        (0, error_handler_1.handleRouteError)(res, error, "Failed to update edge node", 500);
     }
 });
 /**
@@ -383,12 +389,12 @@ router.delete("/nodes/:id", (0, validation_1.validateRequest)(zod_1.z.object({
         const tenantId = req.tenantId;
         await (0, db_1.query)(`UPDATE edge_nodes 
        SET deleted_at = NOW(), status = 'revoked', updated_at = NOW()
-       WHERE id = $1 AND tenant_id = $2`, [id || '', tenantId || '']);
-        await (0, event_tracker_1.trackEventAsync)(tenantId, 'edge_node_deleted', { node_id: id });
+       WHERE id = $1 AND tenant_id = $2`, [id || "", tenantId || ""]);
+        await (0, event_tracker_1.trackEventAsync)(tenantId, "edge_node_deleted", { node_id: id });
         (0, api_response_1.sendNoContent)(res);
     }
     catch (error) {
-        (0, error_handler_1.handleRouteError)(res, error, 'Failed to update edge node', 500);
+        (0, error_handler_1.handleRouteError)(res, error, "Failed to update edge node", 500);
     }
 });
 // ============================================================================
@@ -403,10 +409,10 @@ router.post("/heartbeat", (0, validation_1.validateRequest)(heartbeatSchema), as
         const { node_key, version } = req.body;
         const auth = await authenticateEdgeNode(node_key);
         if (!auth) {
-            (0, api_response_1.sendError)(res, 401, 'INVALID_NODE_KEY', "Invalid node key");
+            (0, api_response_1.sendError)(res, 401, "INVALID_NODE_KEY", "Invalid node key");
             return;
         }
-        const updates = ['last_heartbeat_at = NOW()'];
+        const updates = ["last_heartbeat_at = NOW()"];
         const values = [];
         let paramIndex = 1;
         if (version !== undefined) {
@@ -414,13 +420,13 @@ router.post("/heartbeat", (0, validation_1.validateRequest)(heartbeatSchema), as
             values.push(version);
         }
         if (updates.length > 1) {
-            values.push(auth.nodeId || '');
-            await (0, db_1.query)(`UPDATE edge_nodes SET ${updates.join(', ')} WHERE id = $${paramIndex}`, values);
+            values.push(auth.nodeId || "");
+            await (0, db_1.query)(`UPDATE edge_nodes SET ${updates.join(", ")} WHERE id = $${paramIndex}`, values);
         }
-        (0, api_response_1.sendSuccess)(res, { status: 'ok', timestamp: new Date().toISOString() });
+        (0, api_response_1.sendSuccess)(res, { status: "ok", timestamp: new Date().toISOString() });
     }
     catch (error) {
-        (0, error_handler_1.handleRouteError)(res, error, 'Failed to process heartbeat', 500);
+        (0, error_handler_1.handleRouteError)(res, error, "Failed to process heartbeat", 500);
     }
 });
 /**
@@ -432,7 +438,7 @@ router.post("/batch-ingestion", (0, validation_1.validateRequest)(batchIngestion
         const { node_key, job_id, data, schema_hints, metadata } = req.body;
         const auth = await authenticateEdgeNode(node_key);
         if (!auth) {
-            (0, api_response_1.sendError)(res, 401, 'INVALID_NODE_KEY', "Invalid node key");
+            (0, api_response_1.sendError)(res, 401, "INVALID_NODE_KEY", "Invalid node key");
             return;
         }
         // Create edge job record
@@ -445,17 +451,14 @@ router.post("/batch-ingestion", (0, validation_1.validateRequest)(batchIngestion
             JSON.stringify({ data, schema_hints }),
             JSON.stringify(metadata || {}),
         ]);
-        const edgeJobId = jobResult[0]?.id || '';
+        const edgeJobId = jobResult[0]?.id || "";
         // TODO: Process ingestion (schema inference, PII detection, etc.)
         // For now, mark as completed
         await (0, db_1.query)(`UPDATE edge_jobs 
        SET status = 'completed', completed_at = NOW(), 
            output_data = $1, duration_ms = EXTRACT(EPOCH FROM (NOW() - started_at)) * 1000
-       WHERE id = $2`, [
-            JSON.stringify({ records_processed: data.length }),
-            edgeJobId,
-        ]);
-        await (0, event_tracker_1.trackEventAsync)(auth.tenantId, 'edge_batch_ingested', {
+       WHERE id = $2`, [JSON.stringify({ records_processed: data.length }), edgeJobId]);
+        await (0, event_tracker_1.trackEventAsync)(auth.tenantId, "edge_batch_ingested", {
             node_id: auth.nodeId,
             job_id,
             record_count: data.length,
@@ -463,11 +466,11 @@ router.post("/batch-ingestion", (0, validation_1.validateRequest)(batchIngestion
         (0, api_response_1.sendSuccess)(res, {
             edge_job_id: edgeJobId,
             records_processed: data.length,
-            status: 'completed',
+            status: "completed",
         });
     }
     catch (error) {
-        (0, error_handler_1.handleRouteError)(res, error, 'Failed to ingest batch data', 500);
+        (0, error_handler_1.handleRouteError)(res, error, "Failed to ingest batch data", 500);
     }
 });
 /**
@@ -479,7 +482,7 @@ router.post("/candidate-scores", (0, validation_1.validateRequest)(candidateScor
         const { node_key, job_id, execution_id, candidates, model_version_id } = req.body;
         const auth = await authenticateEdgeNode(node_key);
         if (!auth) {
-            (0, api_response_1.sendError)(res, 401, 'INVALID_NODE_KEY', "Invalid node key");
+            (0, api_response_1.sendError)(res, 401, "INVALID_NODE_KEY", "Invalid node key");
             return;
         }
         // Insert candidates
@@ -506,7 +509,7 @@ router.post("/candidate-scores", (0, validation_1.validateRequest)(candidateScor
             if (result[0]?.id)
                 candidateIds.push(result[0].id);
         }
-        await (0, event_tracker_1.trackEventAsync)(auth.tenantId, 'edge_candidates_submitted', {
+        await (0, event_tracker_1.trackEventAsync)(auth.tenantId, "edge_candidates_submitted", {
             node_id: auth.nodeId,
             job_id,
             candidate_count: candidates.length,
@@ -517,7 +520,7 @@ router.post("/candidate-scores", (0, validation_1.validateRequest)(candidateScor
         });
     }
     catch (error) {
-        (0, error_handler_1.handleRouteError)(res, error, 'Failed to submit candidate scores', 500);
+        (0, error_handler_1.handleRouteError)(res, error, "Failed to submit candidate scores", 500);
     }
 });
 /**
@@ -529,7 +532,7 @@ router.post("/anomalies", (0, validation_1.validateRequest)(anomalyReportSchema)
         const { node_key, job_id, execution_id, anomalies, model_version_id } = req.body;
         const auth = await authenticateEdgeNode(node_key);
         if (!auth) {
-            (0, api_response_1.sendError)(res, 401, 'INVALID_NODE_KEY', "Invalid node key");
+            (0, api_response_1.sendError)(res, 401, "INVALID_NODE_KEY", "Invalid node key");
             return;
         }
         const anomalyIds = [];
@@ -552,7 +555,7 @@ router.post("/anomalies", (0, validation_1.validateRequest)(anomalyReportSchema)
             if (result[0]?.id)
                 anomalyIds.push(result[0].id);
         }
-        await (0, event_tracker_1.trackEventAsync)(auth.tenantId, 'edge_anomalies_reported', {
+        await (0, event_tracker_1.trackEventAsync)(auth.tenantId, "edge_anomalies_reported", {
             node_id: auth.nodeId,
             job_id,
             anomaly_count: anomalies.length,
@@ -563,7 +566,7 @@ router.post("/anomalies", (0, validation_1.validateRequest)(anomalyReportSchema)
         });
     }
     catch (error) {
-        (0, error_handler_1.handleRouteError)(res, error, 'Failed to report anomalies', 500);
+        (0, error_handler_1.handleRouteError)(res, error, "Failed to report anomalies", 500);
     }
 });
 /**
@@ -575,7 +578,7 @@ router.post("/device-profile", (0, validation_1.validateRequest)(deviceProfileSc
         const { node_key, device_specs, benchmark_results, optimization_settings } = req.body;
         const auth = await authenticateEdgeNode(node_key);
         if (!auth) {
-            (0, api_response_1.sendError)(res, 401, 'INVALID_NODE_KEY', "Invalid node key");
+            (0, api_response_1.sendError)(res, 401, "INVALID_NODE_KEY", "Invalid node key");
             return;
         }
         const result = await (0, db_1.query)(`INSERT INTO device_profiles (
@@ -590,18 +593,18 @@ router.post("/device-profile", (0, validation_1.validateRequest)(deviceProfileSc
       RETURNING id`, [
             auth.tenantId,
             auth.nodeId,
-            'default',
+            "default",
             JSON.stringify(device_specs),
             JSON.stringify(benchmark_results || {}),
             JSON.stringify(optimization_settings || {}),
         ]);
         (0, api_response_1.sendSuccess)(res, {
-            profile_id: result[0]?.id || '',
-            status: 'created',
+            profile_id: result[0]?.id || "",
+            status: "created",
         });
     }
     catch (error) {
-        (0, error_handler_1.handleRouteError)(res, error, 'Failed to submit device profile', 500);
+        (0, error_handler_1.handleRouteError)(res, error, "Failed to submit device profile", 500);
     }
 });
 //# sourceMappingURL=edge-ai.js.map

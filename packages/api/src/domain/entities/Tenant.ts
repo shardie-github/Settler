@@ -4,18 +4,18 @@
  */
 
 export enum TenantTier {
-  FREE = 'free',
-  STARTER = 'starter',
-  GROWTH = 'growth',
-  SCALE = 'scale',
-  ENTERPRISE = 'enterprise',
+  FREE = "free",
+  STARTER = "starter",
+  GROWTH = "growth",
+  SCALE = "scale",
+  ENTERPRISE = "enterprise",
 }
 
 export enum TenantStatus {
-  ACTIVE = 'active',
-  SUSPENDED = 'suspended',
-  TRIAL = 'trial',
-  CANCELLED = 'cancelled',
+  ACTIVE = "active",
+  SUSPENDED = "suspended",
+  TRIAL = "trial",
+  CANCELLED = "cancelled",
 }
 
 export interface TenantQuotas {
@@ -55,7 +55,7 @@ export interface TenantProps {
 export class Tenant {
   private constructor(private props: TenantProps) {}
 
-  static create(props: Omit<TenantProps, 'id' | 'createdAt' | 'updatedAt'>): Tenant {
+  static create(props: Omit<TenantProps, "id" | "createdAt" | "updatedAt">): Tenant {
     return new Tenant({
       ...props,
       id: crypto.randomUUID(),

@@ -2,7 +2,7 @@
  * Quantization Utilities
  * Brand-neutral quantization helpers
  */
-export type QuantizationType = 'int4' | 'int8' | 'fp16' | 'fp32';
+export type QuantizationType = "int4" | "int8" | "fp16" | "fp32";
 export interface QuantizationConfig {
     type: QuantizationType;
     calibrationData?: unknown[];
@@ -19,5 +19,5 @@ export declare function getCompressionRatio(originalType: QuantizationType, quan
 /**
  * Estimate accuracy impact
  */
-export declare function estimateAccuracyImpact(quantization: QuantizationType): 'low' | 'medium' | 'high';
+export declare function estimateAccuracyImpact(quantization: QuantizationType): "low" | "medium" | "high";
 //# sourceMappingURL=quantization.d.ts.map

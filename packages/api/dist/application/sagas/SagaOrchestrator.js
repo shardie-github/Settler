@@ -48,7 +48,7 @@ class SagaOrchestrator {
             sagaId,
             sagaType,
             aggregateId,
-            currentStep: saga.steps[0]?.name || '',
+            currentStep: saga.steps[0]?.name || "",
             stepHistory: [],
             data: initialData,
             correlationId: correlationId || crypto.randomUUID(),
@@ -72,7 +72,7 @@ class SagaOrchestrator {
         try {
             for (const step of saga.steps) {
                 // Skip if already completed
-                const stepCompleted = state.stepHistory.some((h) => h.step === step.name && h.status === 'completed');
+                const stepCompleted = state.stepHistory.some((h) => h.step === step.name && h.status === "completed");
                 if (stepCompleted && !this.shouldRetryStep(state, step.name)) {
                     continue;
                 }
@@ -88,9 +88,9 @@ class SagaOrchestrator {
                         else {
                             // Non-retryable failure, start compensation
                             await this.compensate(state, step.name);
-                            await this.markSagaFailed(state, result.error?.message || 'Step failed');
+                            await this.markSagaFailed(state, result.error?.message || "Step failed");
                             if (saga.onFailure) {
-                                await saga.onFailure(state, new Error(result.error?.message || 'Unknown error'));
+                                await saga.onFailure(state, new Error(result.error?.message || "Unknown error"));
                             }
                             return;
                         }
@@ -101,7 +101,7 @@ class SagaOrchestrator {
                 }
                 catch (error) {
                     // Handle timeout or unexpected errors
-                    if (step.timeoutMs && error.name === 'TimeoutError') {
+                    if (step.timeoutMs && error.name === "TimeoutError") {
                         await this.handleStepTimeout(state, step);
                         return;
                     }
@@ -140,7 +140,7 @@ class SagaOrchestrator {
                 const result = await Promise.race([
                     step.execute(state),
                     step.timeoutMs
-                        ? new Promise((_, reject) => setTimeout(() => reject(new Error('Step timeout')), step.timeoutMs))
+                        ? new Promise((_, reject) => setTimeout(() => reject(new Error("Step timeout")), step.timeoutMs))
                         : Promise.resolve({ success: true }),
                 ]);
                 if (result.success) {
@@ -152,7 +152,7 @@ class SagaOrchestrator {
                 lastError = {
                     success: false,
                     error: {
-                        type: error.name || 'UnknownError',
+                        type: error.name || "UnknownError",
                         message: error.message,
                         retryable: attempt < maxRetries,
                     },
@@ -164,14 +164,14 @@ class SagaOrchestrator {
                 await new Promise((resolve) => setTimeout(resolve, delayMs));
             }
         }
-        return lastError || {
+        return (lastError || {
             success: false,
             error: {
-                type: 'MaxRetriesExceeded',
-                message: 'Maximum retries exceeded',
+                type: "MaxRetriesExceeded",
+                message: "Maximum retries exceeded",
                 retryable: false,
             },
-        };
+        });
     }
     /**
      * Compensate for completed steps
@@ -193,7 +193,7 @@ class SagaOrchestrator {
                 continue;
             }
             if (step.compensate) {
-                const stepCompleted = state.stepHistory.some((h) => h.step === step.name && h.status === 'completed');
+                const stepCompleted = state.stepHistory.some((h) => h.step === step.name && h.status === "completed");
                 if (stepCompleted) {
                     try {
                         await step.compensate(state);
@@ -246,7 +246,7 @@ class SagaOrchestrator {
     async recordStepStart(state, stepName) {
         state.stepHistory.push({
             step: stepName,
-            status: 'started',
+            status: "started",
             timestamp: new Date(),
         });
         await this.saveSagaState(state);
@@ -255,9 +255,9 @@ class SagaOrchestrator {
      * Record step completion
      */
     async recordStepComplete(state, stepName) {
-        const history = state.stepHistory.find((h) => h.step === stepName && h.status === 'started');
+        const history = state.stepHistory.find((h) => h.step === stepName && h.status === "started");
         if (history) {
-            history.status = 'completed';
+            history.status = "completed";
         }
         await this.saveSagaState(state);
     }
@@ -265,9 +265,9 @@ class SagaOrchestrator {
      * Record step compensation
      */
     async recordStepCompensated(state, stepName) {
-        const history = state.stepHistory.find((h) => h.step === stepName && h.status === 'completed');
+        const history = state.stepHistory.find((h) => h.step === stepName && h.status === "completed");
         if (history) {
-            history.status = 'compensated';
+            history.status = "compensated";
             await this.saveSagaState(state);
         }
     }
@@ -316,12 +316,7 @@ class SagaOrchestrator {
         updated_at = NOW()
       WHERE saga_id = $3 AND saga_type = $4
     `;
-        await this.db.query(query, [
-            retryCount + 1,
-            nextRetryAt,
-            state.sagaId,
-            state.sagaType,
-        ]);
+        await this.db.query(query, [retryCount + 1, nextRetryAt, state.sagaId, state.sagaType]);
     }
     /**
      * Check if step should be retried

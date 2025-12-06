@@ -5,21 +5,25 @@ Your Supabase database is fully configured and ready to be migrated! All migrati
 ## 📦 What's Been Set Up
 
 ### ✅ Migration Files (4 files)
+
 - `supabase/migrations/20251128193735_initial_schema.sql` - Core database schema
 - `supabase/migrations/20251128193816_functions_and_triggers.sql` - Functions & triggers
 - `supabase/migrations/20251128193816_reconciliation_graph_tables.sql` - Graph tables
 - `supabase/migrations/20251128193816_rls_policies.sql` - Security policies
 
 ### ✅ Seed Data
+
 - `supabase/seeds/seed.sql` - Initial data (tenant, user, API keys, webhook configs)
 
 ### ✅ Automation Scripts
+
 - `scripts/migrate-supabase.ts` - Automatic migration runner
 - `scripts/check-connection.ts` - Connection tester
 - `npm run db:migrate:auto` - One-command migration
 - `npm run db:check` - Connection checker
 
 ### ✅ Documentation
+
 - `SUPABASE_SETUP.md` - Quick start guide
 - `scripts/setup-supabase.md` - Detailed documentation
 - `.env.template` - Environment variable template
@@ -29,6 +33,7 @@ Your Supabase database is fully configured and ready to be migrated! All migrati
 ### 1. Set Up Connection
 
 **For Remote Supabase:**
+
 ```bash
 # Copy template
 cp .env.template .env
@@ -38,6 +43,7 @@ DATABASE_URL=postgresql://postgres:[PASSWORD]@db.[PROJECT-REF].supabase.co:5432/
 ```
 
 **For Local Supabase:**
+
 ```bash
 # Start Supabase (if you have CLI)
 supabase start
@@ -71,12 +77,14 @@ After running migrations, you'll have:
 ## 🔍 Verify Success
 
 After migrations, you should see:
+
 ```
 ✅ All migrations completed successfully!
 ✓ Seed data loaded successfully
 ```
 
 You can verify in Supabase dashboard:
+
 - Go to Table Editor
 - You should see all tables created
 - Check `tenants` table for seed data
@@ -93,6 +101,7 @@ You can verify in Supabase dashboard:
 See `SUPABASE_SETUP.md` for detailed troubleshooting guide.
 
 Quick checks:
+
 - `npm run db:check` - Test connection
 - Check `.env` file exists and has correct values
 - For remote: Ensure IP is allowed in Supabase dashboard

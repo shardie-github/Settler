@@ -25,16 +25,16 @@ function estimateQuantizedSize(originalSizeBytes, quantization) {
 function validateOptimizationRequest(request) {
     const errors = [];
     if (!request.modelId) {
-        errors.push('modelId is required');
+        errors.push("modelId is required");
     }
     if (!request.targetDevices || request.targetDevices.length === 0) {
-        errors.push('targetDevices must contain at least one device');
+        errors.push("targetDevices must contain at least one device");
     }
-    if (!['int4', 'int8', 'fp16', 'fp32'].includes(request.quantization)) {
-        errors.push('quantization must be one of: int4, int8, fp16, fp32');
+    if (!["int4", "int8", "fp16", "fp32"].includes(request.quantization)) {
+        errors.push("quantization must be one of: int4, int8, fp16, fp32");
     }
-    if (!['speed', 'balanced', 'accuracy'].includes(request.optimizationLevel)) {
-        errors.push('optimizationLevel must be one of: speed, balanced, accuracy');
+    if (!["speed", "balanced", "accuracy"].includes(request.optimizationLevel)) {
+        errors.push("optimizationLevel must be one of: speed, balanced, accuracy");
     }
     return {
         valid: errors.length === 0,

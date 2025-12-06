@@ -2,25 +2,26 @@ import { Metadata } from "next";
 import Link from "next/link";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { 
-  Cpu, 
-  Cloud, 
-  Zap, 
-  Shield, 
-  TrendingUp, 
+import {
+  Cpu,
+  Cloud,
+  Zap,
+  Shield,
+  TrendingUp,
   Activity,
   Brain,
   Lock,
-  ExternalLink
+  ExternalLink,
 } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Edge AI - Settler",
-  description: "Dual-layer Cloud + Edge AI reconciliation platform for real-time, local processing with AI-powered matching",
+  description:
+    "Dual-layer Cloud + Edge AI reconciliation platform for real-time, local processing with AI-powered matching",
 };
 
 // AIAS Edge Studio URL - external service for model optimization
-const AIAS_STUDIO_URL = process.env.NEXT_PUBLIC_AIAS_STUDIO_URL || 'https://aias.studio';
+const AIAS_STUDIO_URL = process.env.NEXT_PUBLIC_AIAS_STUDIO_URL || "https://aias.studio";
 
 export default function EdgeAIPage() {
   return (
@@ -32,8 +33,8 @@ export default function EdgeAIPage() {
             Edge AI Reconciliation Platform
           </h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Dual-layer architecture combining cloud intelligence with local edge processing
-            for real-time reconciliation, reduced latency, and enhanced privacy.
+            Dual-layer architecture combining cloud intelligence with local edge processing for
+            real-time reconciliation, reduced latency, and enhanced privacy.
           </p>
         </div>
 
@@ -113,7 +114,8 @@ export default function EdgeAIPage() {
             </CardHeader>
             <CardContent>
               <p className="text-sm text-gray-600">
-                Process reconciliation locally with &lt;10ms latency. No round-trip to cloud for critical operations.
+                Process reconciliation locally with &lt;10ms latency. No round-trip to cloud for
+                critical operations.
               </p>
             </CardContent>
           </Card>
@@ -125,7 +127,8 @@ export default function EdgeAIPage() {
             </CardHeader>
             <CardContent>
               <p className="text-sm text-gray-600">
-                PII redaction and tokenization before cloud sync. Keep sensitive data local while leveraging cloud intelligence.
+                PII redaction and tokenization before cloud sync. Keep sensitive data local while
+                leveraging cloud intelligence.
               </p>
             </CardContent>
           </Card>
@@ -137,8 +140,8 @@ export default function EdgeAIPage() {
             </CardHeader>
             <CardContent>
               <p className="text-sm text-gray-600 mb-3">
-                Quantized models (int4/int8) optimized via{' '}
-                <a 
+                Quantized models (int4/int8) optimized via{" "}
+                <a
                   href={AIAS_STUDIO_URL}
                   target="_blank"
                   rel="noopener noreferrer"
@@ -146,11 +149,12 @@ export default function EdgeAIPage() {
                 >
                   AIAS Edge Studio
                   <ExternalLink className="w-3 h-3" />
-                </a>
-                {' '}for your specific device architecture.
+                </a>{" "}
+                for your specific device architecture.
               </p>
               <p className="text-xs text-gray-500">
-                Model optimization powered by AIAS Edge Studio — a separate service for Edge AI model optimization
+                Model optimization powered by AIAS Edge Studio — a separate service for Edge AI
+                model optimization
               </p>
             </CardContent>
           </Card>
@@ -162,7 +166,8 @@ export default function EdgeAIPage() {
             </CardHeader>
             <CardContent>
               <p className="text-sm text-gray-600">
-                Continue processing during network outages. Automatic sync when connectivity is restored.
+                Continue processing during network outages. Automatic sync when connectivity is
+                restored.
               </p>
             </CardContent>
           </Card>
@@ -174,7 +179,8 @@ export default function EdgeAIPage() {
             </CardHeader>
             <CardContent>
               <p className="text-sm text-gray-600">
-                Deploy edge nodes across multiple locations. Fleet management and centralized monitoring.
+                Deploy edge nodes across multiple locations. Fleet management and centralized
+                monitoring.
               </p>
             </CardContent>
           </Card>
@@ -219,17 +225,14 @@ export default function EdgeAIPage() {
                 <CardTitle className="text-lg">Edge Nodes</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-sm text-gray-600">Manage and monitor your edge node deployments</p>
+                <p className="text-sm text-gray-600">
+                  Manage and monitor your edge node deployments
+                </p>
               </CardContent>
             </Card>
           </Link>
 
-          <a 
-            href={AIAS_STUDIO_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="block"
-          >
+          <a href={AIAS_STUDIO_URL} target="_blank" rel="noopener noreferrer" className="block">
             <Card className="hover:shadow-lg transition-shadow cursor-pointer border-purple-200 hover:border-purple-400">
               <CardHeader>
                 <CardTitle className="text-lg flex items-center gap-2">
@@ -239,7 +242,7 @@ export default function EdgeAIPage() {
               </CardHeader>
               <CardContent>
                 <p className="text-sm text-gray-600 mb-2">
-                  Optimize models via{' '}
+                  Optimize models via{" "}
                   <span className="font-semibold text-purple-600">AIAS Edge Studio</span>
                 </p>
                 <p className="text-xs text-gray-500">
@@ -266,7 +269,9 @@ export default function EdgeAIPage() {
                 <CardTitle className="text-lg">Benchmark Results</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-sm text-gray-600">Performance metrics and optimization results</p>
+                <p className="text-sm text-gray-600">
+                  Performance metrics and optimization results
+                </p>
               </CardContent>
             </Card>
           </Link>

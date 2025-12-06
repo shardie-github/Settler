@@ -22,6 +22,7 @@ Settler operates a **dual-product, dual-license business model** designed for su
 ### Product Portfolio
 
 #### Settler API (Proprietary SaaS)
+
 - **License:** Proprietary (Closed Source)
 - **Pricing:** Usage-based + subscription ($99-$499/month)
 - **Target:** Production businesses needing reconciliation infrastructure
@@ -29,6 +30,7 @@ Settler operates a **dual-product, dual-license business model** designed for su
 - **Revenue:** $50K ARR (Year 1) → $2M ARR (Year 3)
 
 #### React.Settler (OSS + Commercial)
+
 - **OSS License:** MIT (Free Forever)
 - **Commercial License:** $99/month or $990/year
 - **Enterprise License:** Custom ($5K-$50K+/year)
@@ -39,11 +41,13 @@ Settler operates a **dual-product, dual-license business model** designed for su
 ### Revenue Mix
 
 **Year 1:**
+
 - Settler API SaaS: 30% ($50K ARR)
 - React.Settler Commercial: 70% ($120K ARR)
 - **Total:** $170K ARR
 
 **Year 3:**
+
 - Settler API SaaS: 48% ($2M ARR)
 - React.Settler Commercial: 29% ($1.2M ARR)
 - React.Settler Enterprise: 24% ($1M ARR)
@@ -54,18 +58,21 @@ Settler operates a **dual-product, dual-license business model** designed for su
 ### Settler API SaaS
 
 **Starter** - $99/month
+
 - Up to 1,000 jobs/month
 - Basic adapters
 - Email support
 - 99.5% SLA
 
 **Pro** - $499/month
+
 - Up to 10,000 jobs/month
 - All adapters
 - Priority support
 - 99.9% SLA
 
 **Enterprise** - Custom
+
 - Unlimited jobs
 - Custom adapters
 - Dedicated support
@@ -74,17 +81,20 @@ Settler operates a **dual-product, dual-license business model** designed for su
 ### React.Settler
 
 **OSS** - Free Forever
+
 - Core protocol, basic components
 - Security basics, mobile, accessibility
 - MIT License
 
 **Commercial** - $99/month or $990/year
+
 - All OSS features
 - Platform integrations
 - Virtualization, telemetry, audit logging
 - Commercial License
 
 **Enterprise** - Custom ($5K-$50K+/year)
+
 - All Commercial features
 - SSO, RBAC, white-label
 - Dedicated support
@@ -136,16 +146,19 @@ Settler operates a **dual-product, dual-license business model** designed for su
 ### Year 1 (Months 1-12)
 
 **Revenue:**
+
 - Settler API SaaS: $50K ARR
 - React.Settler Commercial: $120K ARR
 - **Total:** $170K ARR
 
 **Customers:**
+
 - Settler API SaaS: 20 customers
 - React.Settler Commercial: 100 customers
 - **Total:** 120 customers
 
 **Expenses:**
+
 - Infrastructure: $10K
 - Marketing: $20K
 - Team: $50K (founder + contractors)
@@ -156,18 +169,21 @@ Settler operates a **dual-product, dual-license business model** designed for su
 ### Year 2 (Months 13-24)
 
 **Revenue:**
+
 - Settler API SaaS: $500K ARR
 - React.Settler Commercial: $600K ARR
 - React.Settler Enterprise: $250K ARR
 - **Total:** $1.35M ARR
 
 **Customers:**
+
 - Settler API SaaS: 200 customers
 - React.Settler Commercial: 500 customers
 - React.Settler Enterprise: 10 customers
 - **Total:** 710 customers
 
 **Expenses:**
+
 - Infrastructure: $50K
 - Marketing: $100K
 - Team: $300K (5-7 people)
@@ -178,18 +194,21 @@ Settler operates a **dual-product, dual-license business model** designed for su
 ### Year 3 (Months 25-36)
 
 **Revenue:**
+
 - Settler API SaaS: $2M ARR
 - React.Settler Commercial: $1.2M ARR
 - React.Settler Enterprise: $1M ARR
 - **Total:** $4.2M ARR
 
 **Customers:**
+
 - Settler API SaaS: 800 customers
 - React.Settler Commercial: 1,000 customers
 - React.Settler Enterprise: 20 customers
 - **Total:** 1,820 customers
 
 **Expenses:**
+
 - Infrastructure: $200K
 - Marketing: $500K
 - Team: $1.5M (15-20 people)
@@ -204,6 +223,7 @@ Settler operates a **dual-product, dual-license business model** designed for su
 **Focus:** Drive adoption and community growth
 
 **Activities:**
+
 - Open source React.Settler
 - Launch GitHub repository
 - Publish to npm
@@ -212,6 +232,7 @@ Settler operates a **dual-product, dual-license business model** designed for su
 - Engage communities
 
 **Success Metrics:**
+
 - 1,000+ GitHub stars
 - 10,000+ npm downloads/month
 - 100+ OSS users
@@ -222,6 +243,7 @@ Settler operates a **dual-product, dual-license business model** designed for su
 **Focus:** Convert OSS users, launch Settler API SaaS
 
 **Activities:**
+
 - Launch Commercial tier
 - Launch Settler API SaaS (beta)
 - Add upgrade prompts
@@ -230,6 +252,7 @@ Settler operates a **dual-product, dual-license business model** designed for su
 - Gather testimonials
 
 **Success Metrics:**
+
 - 50-100 Commercial customers
 - 20+ SaaS customers
 - $10K+ MRR
@@ -240,6 +263,7 @@ Settler operates a **dual-product, dual-license business model** designed for su
 **Focus:** Scale revenue, expand enterprise
 
 **Activities:**
+
 - Expand sales team
 - Launch Enterprise tier
 - Build partner ecosystem
@@ -248,6 +272,7 @@ Settler operates a **dual-product, dual-license business model** designed for su
 - International expansion
 
 **Success Metrics:**
+
 - $50K+ MRR
 - 200+ Commercial customers
 - 10+ Enterprise customers
@@ -256,12 +281,15 @@ Settler operates a **dual-product, dual-license business model** designed for su
 ## Competitive Positioning
 
 ### vs. Building In-House
+
 - **Settler Advantage:** Save 2-6 months, pre-built adapters, ongoing maintenance
 
 ### vs. Legacy Tools
+
 - **Settler Advantage:** Modern API-first, developer-friendly, flexible
 
 ### vs. Generic Platforms
+
 - **Settler Advantage:** Purpose-built, specialized algorithms, better accuracy
 
 ## Key Success Factors
@@ -276,35 +304,43 @@ Settler operates a **dual-product, dual-license business model** designed for su
 ## Risk Mitigation
 
 ### Risk: Low Conversion Rate
+
 **Mitigation:** Improve upgrade prompts, optimize pricing, A/B test
 
 ### Risk: High Churn
+
 **Mitigation:** Improve onboarding, add value features, proactive support
 
 ### Risk: Competition
+
 **Mitigation:** Focus on DX, build community, innovate faster
 
 ### Risk: Market Adoption
+
 **Mitigation:** Content marketing, community building, partnerships
 
 ## Success Metrics
 
 ### Acquisition
+
 - GitHub stars: 1,000+ (Year 1)
 - npm downloads: 10,000+/month
 - Trial signups: 100+/month
 
 ### Conversion
+
 - Trial → Paid: 10-15%
 - OSS → Commercial: 5-10%
 - Demo → Enterprise: 20-30%
 
 ### Retention
+
 - Monthly churn: <5%
 - Annual retention: 95%+
 - NRR: 110%+
 
 ### Revenue
+
 - MRR growth: 20% month-over-month
 - ARR: $170K (Year 1), $1.35M (Year 2), $4.2M (Year 3)
 - Gross margin: 85%+
@@ -312,6 +348,7 @@ Settler operates a **dual-product, dual-license business model** designed for su
 ## Conclusion
 
 Settler's business model is designed for:
+
 - ✅ Sustainable growth
 - ✅ Clear path to profitability
 - ✅ Scalable revenue streams

@@ -51,7 +51,7 @@ export async function cleanupOldData(): Promise<void> {
       []
     );
 
-    logInfo('Data retention cleanup completed', {
+    logInfo("Data retention cleanup completed", {
       deletedReports: deletedReports.length,
       deletedPayloads: deletedPayloads.length,
       deletedDeliveries: deletedDeliveries.length,
@@ -60,7 +60,7 @@ export async function cleanupOldData(): Promise<void> {
       cutoffDate: cutoffDate.toISOString(),
     });
   } catch (error: any) {
-    logError('Data retention cleanup failed', error);
+    logError("Data retention cleanup failed", error);
     throw error;
   }
 }
@@ -72,14 +72,14 @@ export function startDataRetentionJob(): void {
   const initialDelay = getInitialDelay();
 
   setTimeout(() => {
-    cleanupOldData().catch(error => {
-      logError('Scheduled data retention job failed', error);
+    cleanupOldData().catch((error) => {
+      logError("Scheduled data retention job failed", error);
     });
 
     // Schedule recurring
     setInterval(() => {
-      cleanupOldData().catch(error => {
-        logError('Scheduled data retention job failed', error);
+      cleanupOldData().catch((error) => {
+        logError("Scheduled data retention job failed", error);
       });
     }, intervalMs);
   }, initialDelay);

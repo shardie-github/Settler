@@ -16,6 +16,7 @@ The core business logic, independent of infrastructure.
 - **Repository Interfaces**: Contracts for data persistence (ports)
 
 **Key Principles:**
+
 - No dependencies on external frameworks
 - Pure business logic
 - Rich domain models with behavior
@@ -33,6 +34,7 @@ Orchestrates domain objects to fulfill use cases.
 - **DTOs**: Data Transfer Objects for API boundaries
 
 **Key Principles:**
+
 - Thin layer that delegates to domain
 - Transaction boundaries
 - Use case orchestration
@@ -50,6 +52,7 @@ Implements technical concerns and adapters.
 - **DI Container**: Dependency injection
 
 **Key Principles:**
+
 - Implements interfaces defined in domain/application
 - Can be swapped without changing business logic
 - Handles technical concerns
@@ -64,6 +67,7 @@ HTTP adapters that expose the application to the outside world.
 - **Validation**: Input validation with Zod
 
 **Key Principles:**
+
 - Thin adapters that translate HTTP to application calls
 - Input validation and output formatting
 - Error handling and status codes
@@ -384,12 +388,14 @@ HTTP adapters that expose the application to the outside world.
 See `config/env.schema.ts` for complete documentation.
 
 **Required for production:**
+
 - `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY` (or `DATABASE_URL`)
 - `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN` (or `REDIS_URL`)
 - `JWT_SECRET` (min 32 chars)
 - `ENCRYPTION_KEY` (exactly 32 chars)
 
 **Optional:**
+
 - `SENTRY_DSN` (error tracking)
 - `LOG_LEVEL` (default: `info`)
 - `OTLP_ENDPOINT` (distributed tracing)

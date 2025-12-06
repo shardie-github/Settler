@@ -2,7 +2,7 @@
  * Role-Based Access Control (RBAC) and Scope-Based Permissions
  * Implements least privilege principle
  */
-import { UserRole } from '../../domain/entities/User';
+import { UserRole } from "../../domain/entities/User";
 export declare enum Permission {
     JOBS_READ = "jobs:read",
     JOBS_WRITE = "jobs:write",

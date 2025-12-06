@@ -1,6 +1,6 @@
 /**
  * Infrastructure Optimizer Agent
- * 
+ *
  * Automatically optimizes Settler's infrastructure:
  * - Query optimization
  * - Cost reduction
@@ -8,26 +8,26 @@
  * - Capacity planning
  */
 
-import { BaseAgent } from './orchestrator';
+import { BaseAgent } from "./orchestrator";
 
 export interface OptimizationOpportunity {
   id: string;
-  type: 'query' | 'cost' | 'performance' | 'capacity';
+  type: "query" | "cost" | "performance" | "capacity";
   description: string;
   currentState: Record<string, unknown>;
   proposedChange: Record<string, unknown>;
   expectedImpact: {
     costSavings?: number;
     performanceImprovement?: number;
-    riskLevel: 'low' | 'medium' | 'high';
+    riskLevel: "low" | "medium" | "high";
   };
-  recommendedAction: 'auto-apply' | 'human-review';
+  recommendedAction: "auto-apply" | "human-review";
 }
 
 export class InfrastructureOptimizerAgent extends BaseAgent {
-  id = 'infrastructure-optimizer';
-  name = 'Infrastructure Optimizer';
-  type = 'infrastructure' as const;
+  id = "infrastructure-optimizer";
+  name = "Infrastructure Optimizer";
+  type = "infrastructure" as const;
 
   private lastOptimization?: Date;
   private optimizationHistory: OptimizationOpportunity[] = [];
@@ -36,8 +36,8 @@ export class InfrastructureOptimizerAgent extends BaseAgent {
     // Start periodic optimization checks
     setInterval(() => {
       if (this.enabled) {
-        this.analyzeInfrastructure().catch(error => {
-          console.error('Infrastructure analysis failed:', error);
+        this.analyzeInfrastructure().catch((error) => {
+          console.error("Infrastructure analysis failed:", error);
         });
       }
     }, 3600000); // Every hour
@@ -47,18 +47,18 @@ export class InfrastructureOptimizerAgent extends BaseAgent {
 
   async execute(action: string, params: Record<string, unknown>): Promise<unknown> {
     switch (action) {
-      case 'analyze':
+      case "analyze":
         return await this.analyzeInfrastructure();
-      
-      case 'optimize':
+
+      case "optimize":
         return await this.optimizeInfrastructure(params);
-      
-      case 'get_opportunities':
+
+      case "get_opportunities":
         return this.optimizationHistory;
-      
-      case 'get_stats':
+
+      case "get_stats":
         return await this.getStatus();
-      
+
       default:
         throw new Error(`Unknown action: ${action}`);
     }
@@ -81,7 +81,8 @@ export class InfrastructureOptimizerAgent extends BaseAgent {
     }
     status.metrics = {
       opportunitiesFound: this.optimizationHistory.length,
-      autoApplied: this.optimizationHistory.filter(o => o.recommendedAction === 'auto-apply').length,
+      autoApplied: this.optimizationHistory.filter((o) => o.recommendedAction === "auto-apply")
+        .length,
     };
     return status;
   }
@@ -113,8 +114,11 @@ export class InfrastructureOptimizerAgent extends BaseAgent {
 
     // Auto-apply low-risk optimizations
     for (const opportunity of opportunities) {
-      if (opportunity.recommendedAction === 'auto-apply' && opportunity.expectedImpact.riskLevel === 'low') {
-        await this.applyOptimization(opportunity).catch(error => {
+      if (
+        opportunity.recommendedAction === "auto-apply" &&
+        opportunity.expectedImpact.riskLevel === "low"
+      ) {
+        await this.applyOptimization(opportunity).catch((error) => {
           console.error(`Failed to apply optimization ${opportunity.id}:`, error);
         });
       }
@@ -131,22 +135,22 @@ export class InfrastructureOptimizerAgent extends BaseAgent {
     // For now, return mock data
     return [
       {
-        id: 'opt_query_1',
-        type: 'query' as const,
-        description: 'Slow query detected: SELECT * FROM reconciliation_jobs WHERE status = ?',
+        id: "opt_query_1",
+        type: "query" as const,
+        description: "Slow query detected: SELECT * FROM reconciliation_jobs WHERE status = ?",
         currentState: {
-          query: 'SELECT * FROM reconciliation_jobs WHERE status = ?',
+          query: "SELECT * FROM reconciliation_jobs WHERE status = ?",
           avgDuration: 250, // ms
           callCount: 1000,
         },
         proposedChange: {
-          addIndex: 'CREATE INDEX idx_reconciliation_jobs_status ON reconciliation_jobs(status)',
+          addIndex: "CREATE INDEX idx_reconciliation_jobs_status ON reconciliation_jobs(status)",
         },
         expectedImpact: {
           performanceImprovement: 80, // 80% faster
-          riskLevel: 'low' as const,
+          riskLevel: "low" as const,
         },
-        recommendedAction: 'auto-apply' as const,
+        recommendedAction: "auto-apply" as const,
       },
     ];
   }
@@ -159,9 +163,9 @@ export class InfrastructureOptimizerAgent extends BaseAgent {
     // For now, return mock data
     return [
       {
-        id: 'opt_cost_1',
-        type: 'cost' as const,
-        description: 'Unused database connections detected',
+        id: "opt_cost_1",
+        type: "cost" as const,
+        description: "Unused database connections detected",
         currentState: {
           connectionPoolSize: 100,
           activeConnections: 20,
@@ -172,9 +176,9 @@ export class InfrastructureOptimizerAgent extends BaseAgent {
         },
         expectedImpact: {
           costSavings: 50, // $50/month
-          riskLevel: 'low' as const,
+          riskLevel: "low" as const,
         },
-        recommendedAction: 'auto-apply' as const,
+        recommendedAction: "auto-apply" as const,
       },
     ];
   }
@@ -203,7 +207,7 @@ export class InfrastructureOptimizerAgent extends BaseAgent {
   private async applyOptimization(opportunity: OptimizationOpportunity): Promise<void> {
     // TODO: Implement actual optimization logic
     console.log(`Applying optimization: ${opportunity.id}`);
-    this.emit('optimization_applied', opportunity);
+    this.emit("optimization_applied", opportunity);
   }
 
   /**
@@ -211,16 +215,16 @@ export class InfrastructureOptimizerAgent extends BaseAgent {
    */
   private async optimizeInfrastructure(params: Record<string, unknown>): Promise<unknown> {
     const opportunities = await this.analyzeInfrastructure();
-    
+
     if (params.autoApply === true) {
       const lowRiskOpportunities = opportunities.filter(
-        o => o.expectedImpact.riskLevel === 'low'
+        (o) => o.expectedImpact.riskLevel === "low"
       );
-      
+
       for (const opportunity of lowRiskOpportunities) {
         await this.applyOptimization(opportunity);
       }
-      
+
       return {
         applied: lowRiskOpportunities.length,
         opportunities: lowRiskOpportunities,
@@ -229,7 +233,7 @@ export class InfrastructureOptimizerAgent extends BaseAgent {
 
     return {
       opportunities,
-      message: 'Review opportunities and apply manually',
+      message: "Review opportunities and apply manually",
     };
   }
 }

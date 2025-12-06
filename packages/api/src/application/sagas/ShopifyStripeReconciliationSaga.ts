@@ -3,18 +3,13 @@
  * Concrete saga implementation for monthly reconciliation between Shopify and Stripe
  */
 
-import {
-  SagaDefinition,
-  SagaStep,
-  SagaStepResult,
-  SagaState,
-} from './SagaOrchestrator';
-import { ShopifyAdapter } from '@settler/adapters';
-import { StripeAdapter } from '@settler/adapters';
-import { IEventStore } from '../../infrastructure/eventsourcing/EventStore';
-import { ReconciliationEvents } from '../../domain/eventsourcing/reconciliation/ReconciliationEvents';
-import { createCircuitBreaker } from '../../infrastructure/resilience/circuit-breaker';
-import { CircuitBreaker } from 'opossum';
+import { SagaDefinition, SagaStep, SagaStepResult, SagaState } from "./SagaOrchestrator";
+import { ShopifyAdapter } from "@settler/adapters";
+import { StripeAdapter } from "@settler/adapters";
+import { IEventStore } from "../../infrastructure/eventsourcing/EventStore";
+import { ReconciliationEvents } from "../../domain/eventsourcing/reconciliation/ReconciliationEvents";
+import { createCircuitBreaker } from "../../infrastructure/resilience/circuit-breaker";
+import { CircuitBreaker } from "opossum";
 
 export class ShopifyStripeReconciliationSaga {
   private shopifyCircuitBreaker: CircuitBreaker<any>;
@@ -28,11 +23,11 @@ export class ShopifyStripeReconciliationSaga {
     // Initialize circuit breakers
     this.shopifyCircuitBreaker = createCircuitBreaker(
       async (options: any) => this.shopifyAdapter.fetch(options),
-      { name: 'shopify-api' }
+      { name: "shopify-api" }
     );
     this.stripeCircuitBreaker = createCircuitBreaker(
       async (options: any) => this.stripeAdapter.fetch(options),
-      { name: 'stripe-api' }
+      { name: "stripe-api" }
     );
   }
 
@@ -41,7 +36,7 @@ export class ShopifyStripeReconciliationSaga {
    */
   createDefinition(): SagaDefinition {
     return {
-      type: 'shopify_stripe_monthly_reconciliation',
+      type: "shopify_stripe_monthly_reconciliation",
       steps: [
         this.createFetchShopifyOrdersStep(),
         this.createFetchStripePaymentsStep(),
@@ -59,7 +54,7 @@ export class ShopifyStripeReconciliationSaga {
    */
   private createFetchShopifyOrdersStep(): SagaStep {
     return {
-      name: 'fetch_shopify_orders',
+      name: "fetch_shopify_orders",
       timeoutMs: 60000, // 1 minute timeout
       retryable: true,
       maxRetries: 3,
@@ -83,7 +78,7 @@ export class ShopifyStripeReconciliationSaga {
             reconciliationId,
             {
               reconciliation_id: reconciliationId,
-              source: 'shopify',
+              source: "shopify",
               count: orders.length,
               orders: orders.map((order: any) => ({
                 id: order.id,
@@ -113,7 +108,7 @@ export class ShopifyStripeReconciliationSaga {
           return {
             success: false,
             error: {
-              type: error.name || 'FetchError',
+              type: error.name || "FetchError",
               message: error.message,
               retryable: true,
             },
@@ -132,7 +127,7 @@ export class ShopifyStripeReconciliationSaga {
    */
   private createFetchStripePaymentsStep(): SagaStep {
     return {
-      name: 'fetch_stripe_payments',
+      name: "fetch_stripe_payments",
       timeoutMs: 60000,
       retryable: true,
       maxRetries: 3,
@@ -155,7 +150,7 @@ export class ShopifyStripeReconciliationSaga {
             reconciliationId,
             {
               reconciliation_id: reconciliationId,
-              source: 'stripe',
+              source: "stripe",
               count: payments.length,
               payments: payments.map((payment: any) => ({
                 id: payment.id,
@@ -184,7 +179,7 @@ export class ShopifyStripeReconciliationSaga {
           return {
             success: false,
             error: {
-              type: error.name || 'FetchError',
+              type: error.name || "FetchError",
               message: error.message,
               retryable: true,
             },
@@ -203,7 +198,7 @@ export class ShopifyStripeReconciliationSaga {
    */
   private createMatchingStep(): SagaStep {
     return {
-      name: 'perform_matching',
+      name: "perform_matching",
       timeoutMs: 300000, // 5 minutes for large datasets
       retryable: false, // Matching is idempotent but expensive
       execute: async (state: SagaState): Promise<SagaStepResult> => {
@@ -230,8 +225,7 @@ export class ShopifyStripeReconciliationSaga {
 
               // Also check metadata for order_id match
               const metadataMatch =
-                payment.metadata?.order_id === order.id ||
-                payment.referenceId === order.id;
+                payment.metadata?.order_id === order.id || payment.referenceId === order.id;
 
               return amountMatch && (dateMatch || metadataMatch);
             });
@@ -243,7 +237,7 @@ export class ShopifyStripeReconciliationSaga {
                 amount: order.amount,
                 currency: order.currency,
                 confidence: 1.0,
-                matched_fields: ['amount', 'date', 'metadata'],
+                matched_fields: ["amount", "date", "metadata"],
               });
 
               // Emit RecordMatched event
@@ -257,7 +251,7 @@ export class ShopifyStripeReconciliationSaga {
                   amount: order.amount,
                   currency: order.currency,
                   confidence: 1.0,
-                  matched_fields: ['amount', 'date', 'metadata'],
+                  matched_fields: ["amount", "date", "metadata"],
                   matched_at: new Date().toISOString(),
                 },
                 state.tenantId,
@@ -270,7 +264,7 @@ export class ShopifyStripeReconciliationSaga {
                 source_id: order.id,
                 amount: order.amount,
                 currency: order.currency,
-                reason: 'No matching payment found',
+                reason: "No matching payment found",
               });
 
               // Emit RecordUnmatched event
@@ -281,7 +275,7 @@ export class ShopifyStripeReconciliationSaga {
                   source_id: order.id,
                   amount: order.amount,
                   currency: order.currency,
-                  reason: 'No matching payment found',
+                  reason: "No matching payment found",
                   unmatched_at: new Date().toISOString(),
                 },
                 state.tenantId,
@@ -300,7 +294,7 @@ export class ShopifyStripeReconciliationSaga {
                 target_id: payment.id,
                 amount: payment.amount,
                 currency: payment.currency,
-                reason: 'No matching order found',
+                reason: "No matching order found",
               });
 
               const unmatchedEvent = ReconciliationEvents.RecordUnmatched(
@@ -310,7 +304,7 @@ export class ShopifyStripeReconciliationSaga {
                   target_id: payment.id,
                   amount: payment.amount,
                   currency: payment.currency,
-                  reason: 'No matching order found',
+                  reason: "No matching order found",
                   unmatched_at: new Date().toISOString(),
                 },
                 state.tenantId,
@@ -335,7 +329,7 @@ export class ShopifyStripeReconciliationSaga {
           return {
             success: false,
             error: {
-              type: error.name || 'MatchingError',
+              type: error.name || "MatchingError",
               message: error.message,
               retryable: false,
             },
@@ -350,7 +344,7 @@ export class ShopifyStripeReconciliationSaga {
    */
   private createPersistResultsStep(): SagaStep {
     return {
-      name: 'persist_results',
+      name: "persist_results",
       timeoutMs: 30000,
       retryable: true,
       maxRetries: 3,
@@ -370,7 +364,7 @@ export class ShopifyStripeReconciliationSaga {
           return {
             success: false,
             error: {
-              type: error.name || 'PersistenceError',
+              type: error.name || "PersistenceError",
               message: error.message,
               retryable: true,
             },
@@ -389,7 +383,7 @@ export class ShopifyStripeReconciliationSaga {
    */
   private createNotifyWebhooksStep(): SagaStep {
     return {
-      name: 'notify_webhooks',
+      name: "notify_webhooks",
       timeoutMs: 30000,
       retryable: true,
       maxRetries: 3,
@@ -409,7 +403,7 @@ export class ShopifyStripeReconciliationSaga {
           return {
             success: false,
             error: {
-              type: error.name || 'WebhookError',
+              type: error.name || "WebhookError",
               message: error.message,
               retryable: true,
             },
@@ -437,9 +431,7 @@ export class ShopifyStripeReconciliationSaga {
     const unmatchedTarget = unmatched.filter((u) => u.target_id).length;
 
     const totalRecords = orders.length + payments.length;
-    const accuracy = totalRecords > 0
-      ? (matched.length / totalRecords) * 100
-      : 100;
+    const accuracy = totalRecords > 0 ? (matched.length / totalRecords) * 100 : 100;
 
     const completedEvent = ReconciliationEvents.ReconciliationCompleted(
       reconciliationId,
@@ -475,7 +467,7 @@ export class ShopifyStripeReconciliationSaga {
       {
         reconciliation_id: reconciliationId,
         error: {
-          type: error.name || 'UnknownError',
+          type: error.name || "UnknownError",
           message: error.message,
           ...(error.stack ? { stack: error.stack } : {}),
         },

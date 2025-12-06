@@ -1,11 +1,10 @@
 /**
  * Email Scheduler
- * 
+ *
  * Scheduled jobs for lifecycle email automation
  */
 
-import { logInfo, logError } from '../utils/logger';
-
+import { logInfo, logError } from "../utils/logger";
 
 /**
  * Calculate days remaining in trial
@@ -15,19 +14,18 @@ function _calculateDaysRemaining(_trialEndDate: string): number {
   return 0;
 }
 
-
 /**
  * Process trial lifecycle emails
  * Should be called daily via cron job
  */
 export async function processTrialLifecycleEmails(): Promise<void> {
   try {
-    logInfo('Processing trial lifecycle emails');
-    
+    logInfo("Processing trial lifecycle emails");
+
     // In production, fetch users from database
     // For now, this is a placeholder structure
     // const users = await getTrialUsers();
-    
+
     // Example structure:
     // const users = [
     //   {
@@ -38,21 +36,21 @@ export async function processTrialLifecycleEmails(): Promise<void> {
     //     // ... other user data
     //   },
     // ];
-    
+
     // for (const user of users) {
     //   const trialData: TrialData = {
     //     trialStartDate: user.trialStartDate,
     //     trialEndDate: user.trialEndDate,
     //     daysRemaining: calculateDaysRemaining(user.trialEndDate),
     //   };
-    //   
+    //
     //   const lifecycleUser: LifecycleUser = {
     //     email: user.email,
     //     firstName: user.firstName,
     //     industry: user.industry,
     //     planType: 'trial',
     //   };
-    //   
+    //
     //   // Send appropriate email based on days remaining
     //   if (shouldSendTrialEmail(trialData.trialEndDate, 7)) {
     //     await sendTrialGatedFeaturesEmail(lifecycleUser, trialData);
@@ -73,10 +71,10 @@ export async function processTrialLifecycleEmails(): Promise<void> {
     //     await sendTrialEndedEmail(lifecycleUser);
     //   }
     // }
-    
-    logInfo('Trial lifecycle emails processed');
+
+    logInfo("Trial lifecycle emails processed");
   } catch (error) {
-    logError('Failed to process trial lifecycle emails', error as Error);
+    logError("Failed to process trial lifecycle emails", error as Error);
   }
 }
 
@@ -86,21 +84,21 @@ export async function processTrialLifecycleEmails(): Promise<void> {
  */
 export async function processMonthlySummaryEmails(): Promise<void> {
   try {
-    logInfo('Processing monthly summary emails');
-    
+    logInfo("Processing monthly summary emails");
+
     // In production, fetch paid users from database
     // For each user, calculate metrics and send email
-    
+
     // Example:
     // const paidUsers = await getPaidUsers();
     // for (const user of paidUsers) {
     //   const metrics = await calculateUserMetrics(user.id, lastMonth);
     //   await sendMonthlySummaryEmail(user, metrics);
     // }
-    
-    logInfo('Monthly summary emails processed');
+
+    logInfo("Monthly summary emails processed");
   } catch (error) {
-    logError('Failed to process monthly summary emails', error as Error);
+    logError("Failed to process monthly summary emails", error as Error);
   }
 }
 
@@ -110,23 +108,23 @@ export async function processMonthlySummaryEmails(): Promise<void> {
  */
 export async function processLowActivityEmails(): Promise<void> {
   try {
-    logInfo('Processing low activity emails');
-    
+    logInfo("Processing low activity emails");
+
     // In production, find users inactive for 7+ days
     // const inactiveUsers = await getInactiveUsers(7);
     // for (const user of inactiveUsers) {
     //   await sendLowActivityEmail(user);
     // }
-    
-    logInfo('Low activity emails processed');
+
+    logInfo("Low activity emails processed");
   } catch (error) {
-    logError('Failed to process low activity emails', error as Error);
+    logError("Failed to process low activity emails", error as Error);
   }
 }
 
 /**
  * Setup cron jobs (example using node-cron syntax)
- * 
+ *
  * In production, use a proper job scheduler like:
  * - BullMQ with cron jobs
  * - Vercel Cron Jobs
@@ -138,6 +136,6 @@ export function setupEmailScheduler(): void {
   // cron.schedule('0 9 * * *', processTrialLifecycleEmails); // Daily at 9 AM
   // cron.schedule('0 9 1 * *', processMonthlySummaryEmails); // 1st of month at 9 AM
   // cron.schedule('0 10 * * *', processLowActivityEmails); // Daily at 10 AM
-  
-  logInfo('Email scheduler setup complete');
+
+  logInfo("Email scheduler setup complete");
 }

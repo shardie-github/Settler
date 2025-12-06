@@ -51,11 +51,11 @@ function detectDeviceCapabilities() {
         gpu: false, // Would need actual detection
         npu: false, // Would need actual detection
         tpu: false, // Would need actual detection
-        onnx_runtime: checkRuntimeAvailable('onnx'),
-        tensorrt: checkRuntimeAvailable('tensorrt'),
-        executorch: checkRuntimeAvailable('executorch'),
-        webgpu: checkRuntimeAvailable('webgpu'),
-        wasm: checkRuntimeAvailable('wasm'),
+        onnx_runtime: checkRuntimeAvailable("onnx"),
+        tensorrt: checkRuntimeAvailable("tensorrt"),
+        executorch: checkRuntimeAvailable("executorch"),
+        webgpu: checkRuntimeAvailable("webgpu"),
+        wasm: checkRuntimeAvailable("wasm"),
     };
 }
 /**
@@ -85,16 +85,16 @@ function generateDeviceProfile(deviceType) {
  */
 function inferDeviceType(platform) {
     switch (platform) {
-        case 'linux':
-            return 'server';
-        case 'darwin':
-            return 'server';
-        case 'win32':
-            return 'server';
-        case 'android':
-            return 'mobile';
+        case "linux":
+            return "server";
+        case "darwin":
+            return "server";
+        case "win32":
+            return "server";
+        case "android":
+            return "mobile";
         default:
-            return 'embedded';
+            return "embedded";
     }
 }
 /**

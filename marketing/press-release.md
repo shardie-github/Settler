@@ -24,6 +24,7 @@ Settler solves the problem of multi-platform reconciliation—matching transacti
 ### Pricing
 
 Settler offers transparent, usage-based pricing:
+
 - **Free:** 1,000 reconciliations/month
 - **Starter:** $29/month for 10,000 reconciliations
 - **Growth:** $99/month for 100,000 reconciliations
@@ -37,6 +38,7 @@ Settler targets mid-market e-commerce and SaaS companies ($1M-$50M ARR) processi
 ### Availability
 
 Settler is available now at [settler.io](https://settler.io). The platform includes:
+
 - REST API with TypeScript SDK
 - Interactive documentation
 - Code examples and tutorials
