@@ -35,7 +35,7 @@ export async function predictJobFailure(
       [jobId]
     );
 
-    if (job.length === 0) {
+    if (job.length === 0 || !job[0]) {
       return null;
     }
 
@@ -99,13 +99,7 @@ export async function predictJobFailure(
 
     // Check 3: Adapter connection health (if we track this)
     // This would require adapter health monitoring - placeholder for now
-    const adapterHealth = await query<{
-      health_status: string;
-    }>(
-      `SELECT 'unknown' as health_status
-       LIMIT 1`,
-      []
-    );
+    // Adapter health check would go here
 
     // Check 4: Job age (stale jobs might fail)
     const jobAge = Math.floor(

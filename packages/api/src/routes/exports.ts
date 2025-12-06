@@ -13,13 +13,7 @@ import { authMiddleware, AuthRequest } from "../middleware/auth";
 import { logInfo, logError } from "../utils/logger";
 import { PDFGenerator } from "../services/export/pdf-generator";
 import { query } from "../db";
-import { query } from "../db";
-import { createWriteStream } from "fs";
-import { join } from "path";
-import { tmpdir } from "os";
-import { unlink } from "fs/promises";
-import { createReadStream } from "fs";
-import { sendSuccess, sendError } from "../utils/api-response";
+import { sendError } from "../utils/api-response";
 
 const router = Router();
 const pdfGenerator = new PDFGenerator();
@@ -189,7 +183,7 @@ router.post("/", authMiddleware, async (req: AuthRequest, res: Response) => {
  */
 router.get("/:exportId/download", authMiddleware, async (req: AuthRequest, res: Response) => {
   try {
-    const { exportId } = req.params;
+    // const { exportId } = req.params; // Unused for now
 
     // Future: Fetch from file storage (S3, R2, etc.)
     // For now, exports are streamed directly in POST /exports

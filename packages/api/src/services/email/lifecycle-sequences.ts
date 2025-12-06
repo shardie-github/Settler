@@ -5,7 +5,7 @@
 
 import { query } from "../../db";
 import { logInfo, logError } from "../../utils/logger";
-import { getOnboardingProgress, isOnboardingComplete } from "../onboarding/tracker";
+import { getOnboardingProgress } from "../onboarding/tracker";
 import { getUserUsageMetrics } from "../analytics/metrics";
 import { sendEmail, renderEmailTemplate } from "./email-service";
 import {

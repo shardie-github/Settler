@@ -153,6 +153,7 @@ export async function trackUsageAfterOperation(
 
         // Track export creation
         if (req.path.includes("/exports") && req.method === "POST") {
+          const { trackExportCreation } = await import("../services/usage/tracker");
           trackExportCreation(userId, tenantId).catch(() => {
             // Silent fail
           });

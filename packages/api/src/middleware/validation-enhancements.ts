@@ -6,7 +6,7 @@
 import { Request, Response, NextFunction } from "express";
 import { z } from "zod";
 import { logWarn } from "../utils/logger";
-import { AuthRequest } from "./auth";
+// AuthRequest import removed - not used
 
 /**
  * Validate UUID format

@@ -38,7 +38,7 @@ export async function predictChurn(
       [userId]
     );
 
-    if (user.length === 0) {
+    if (user.length === 0 || !user[0]) {
       return null;
     }
 
@@ -97,7 +97,7 @@ export async function predictChurn(
     }
 
     // Signal 3: Trial expiration without upgrade
-    if (userData.plan_type === "trial") {
+    if (userData && userData.plan_type === "trial") {
       const daysUntilExpiration = 30 - daysSinceSignup;
       if (daysUntilExpiration <= 3 && daysUntilExpiration > 0) {
         const upgradeEvents = await query<{ count: string }>(

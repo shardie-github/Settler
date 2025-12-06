@@ -3,8 +3,6 @@
  * Detects when routes change and flags documentation updates needed
  */
 
-import * as fs from "fs/promises";
-import * as path from "path";
 import { logInfo, logError } from "../../utils/logger";
 import { generateRouteDocs, RouteDoc } from "./doc-generator";
 
@@ -65,7 +63,8 @@ export async function detectAPIChanges(
         });
       } else {
         // Check for modifications
-        const lastRoute = lastMap.get(key)!;
+        const lastRoute = lastMap.get(key);
+        if (!lastRoute) continue;
         const modifications: string[] = [];
 
         if (route.description !== lastRoute.description) {
@@ -99,7 +98,7 @@ export async function detectAPIChanges(
 
     // Find removed routes
     for (const [key, route] of lastMap.entries()) {
-      if (!currentMap.has(key)) {
+      if (!currentMap.has(key) && route) {
         changes.push({
           type: "removed",
           route: route.path,

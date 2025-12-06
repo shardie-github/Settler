@@ -132,16 +132,23 @@ export async function getUnresolvedAlerts(
       resolved_at: Date | null;
     }>(queryStr, params);
 
-    return results.map((r) => ({
-      id: r.id,
-      type: r.type,
-      severity: r.severity as AlertSeverity,
-      message: r.message,
-      details: r.details ? JSON.parse(r.details) : undefined,
-      resolved: r.resolved,
-      createdAt: r.created_at,
-      resolvedAt: r.resolved_at || undefined,
-    }));
+    return results.map((r) => {
+      const alert: Alert = {
+        id: r.id,
+        type: r.type,
+        severity: r.severity as AlertSeverity,
+        message: r.message,
+        resolved: r.resolved,
+        createdAt: r.created_at,
+      };
+      if (r.details) {
+        alert.details = JSON.parse(r.details) as Record<string, unknown>;
+      }
+      if (r.resolved_at) {
+        alert.resolvedAt = r.resolved_at;
+      }
+      return alert;
+    });
   } catch (error) {
     logError("Failed to get unresolved alerts", error);
     return [];

@@ -19,7 +19,7 @@ export interface CircuitBreakerOptions {
 export function createCircuitBreaker<T extends (...args: any[]) => Promise<any>>(
   fn: T,
   options: CircuitBreakerOptions = {}
-): CircuitBreaker<T> {
+): InstanceType<typeof CircuitBreaker> {
   const {
     timeout = 10000,
     errorThresholdPercentage = 50,
@@ -50,7 +50,7 @@ export function createCircuitBreaker<T extends (...args: any[]) => Promise<any>>
     logWarn("Circuit breaker closed", { name });
   });
 
-  breaker.on("failure", (error) => {
+  breaker.on("failure", (error: Error) => {
     logError("Circuit breaker failure", error, { name });
   });
 
@@ -63,7 +63,7 @@ export function createCircuitBreaker<T extends (...args: any[]) => Promise<any>>
 export function createAdapterCircuitBreaker<T extends (...args: any[]) => Promise<any>>(
   adapterName: string,
   fn: T
-): CircuitBreaker<T> {
+): InstanceType<typeof CircuitBreaker> {
   return createCircuitBreaker(fn, {
     name: `adapter-${adapterName}`,
     timeout: 30000, // 30s timeout for adapters
@@ -77,7 +77,7 @@ export function createAdapterCircuitBreaker<T extends (...args: any[]) => Promis
  */
 export function createWebhookCircuitBreaker<T extends (...args: any[]) => Promise<any>>(
   fn: T
-): CircuitBreaker<T> {
+): InstanceType<typeof CircuitBreaker> {
   return createCircuitBreaker(fn, {
     name: "webhook-delivery",
     timeout: 10000, // 10s timeout for webhooks
@@ -91,7 +91,7 @@ export function createWebhookCircuitBreaker<T extends (...args: any[]) => Promis
  */
 export function createFXRateCircuitBreaker<T extends (...args: any[]) => Promise<any>>(
   fn: T
-): CircuitBreaker<T> {
+): InstanceType<typeof CircuitBreaker> {
   return createCircuitBreaker(fn, {
     name: "fx-rate-provider",
     timeout: 5000, // 5s timeout for FX rates

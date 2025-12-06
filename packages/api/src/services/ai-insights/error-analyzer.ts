@@ -143,16 +143,18 @@ export async function analyzeErrorPatterns(
         relatedErrors.push(...related.map((r) => r.error_message));
       }
 
-      patterns.push({
-        pattern,
-        count,
-        affectedUsers,
-        firstSeen: error.first_seen,
-        lastSeen: error.last_seen,
-        suggestedFix,
-        relatedErrors,
-        severity,
-      });
+      if (error.first_seen && error.last_seen) {
+        patterns.push({
+          pattern,
+          count,
+          affectedUsers,
+          firstSeen: error.first_seen,
+          lastSeen: error.last_seen,
+          suggestedFix,
+          relatedErrors,
+          severity,
+        });
+      }
     }
 
     // Sort by severity and count

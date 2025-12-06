@@ -26,7 +26,7 @@ export async function batchFetchUsers(
        FROM users
        WHERE id = ANY($1::uuid[])
          AND deleted_at IS NULL`,
-      [userIds]
+      [userIds as unknown as string]
     );
 
     const userMap = new Map<string, { id: string; email: string; plan_type: string }>();
@@ -63,7 +63,7 @@ export async function batchFetchJobs(
       `SELECT id, user_id, name
        FROM jobs
        WHERE id = ANY($1::uuid[])`,
-      [jobIds]
+      [jobIds as unknown as string]
     );
 
     const jobMap = new Map<string, { id: string; user_id: string; name: string }>();
@@ -99,7 +99,7 @@ export async function batchFetchTenants(
       `SELECT id, name
        FROM tenants
        WHERE id = ANY($1::uuid[])`,
-      [tenantIds]
+      [tenantIds as unknown as string]
     );
 
     const tenantMap = new Map<string, { id: string; name: string }>();
@@ -138,7 +138,12 @@ export async function batchInsert<T extends Record<string, unknown>>(
       )
       .join(", ");
 
-    const values = records.flatMap((record) => columns.map((col) => record[col]));
+    const values: (string | number | boolean | Date | null)[] = records.flatMap((record) =>
+      columns.map((col) => {
+        const value = record[col];
+        return value === undefined ? null : (value as string | number | boolean | Date | null);
+      })
+    );
 
     let conflictClause = "";
     if (conflictColumns.length > 0) {

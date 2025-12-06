@@ -87,11 +87,14 @@ export async function getOnboardingProgress(
 
     const steps: OnboardingStep[] = ONBOARDING_STEPS.map((step) => {
       const result = results.find((r) => r.step === step);
-      return {
+      const stepResult: OnboardingStep = {
         step,
         completed: result?.completed || false,
-        completedAt: result?.completed ? result.updated_at : undefined,
       };
+      if (result?.completed && result.updated_at) {
+        stepResult.completedAt = result.updated_at;
+      }
+      return stepResult;
     });
 
     const completedSteps = steps.filter((s) => s.completed).length;
@@ -99,17 +102,17 @@ export async function getOnboardingProgress(
       (completedSteps / ONBOARDING_STEPS.length) * 100
     );
 
-    const allCompleted = completionPercentage === 100;
-    const completedAt = allCompleted
-      ? results[results.length - 1]?.updated_at
-      : undefined;
-
-    return {
+    const result: OnboardingProgress = {
       userId,
       steps,
       completionPercentage,
-      completedAt,
     };
+    
+    if (completionPercentage === 100 && results.length > 0 && results[results.length - 1]?.updated_at) {
+      result.completedAt = results[results.length - 1].updated_at;
+    }
+
+    return result;
   } catch (error) {
     logInfo("Failed to get onboarding progress", {
       userId,

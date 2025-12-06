@@ -40,10 +40,11 @@ export async function aggregateInsights(
     logInfo("Aggregating insights", { period });
 
     // Collect insights from all services
+    const errorPeriod = period === "day" ? "day" : period === "week" ? "week" : "day";
     const [dropOff, friction, errors, warnings, dependencies] = await Promise.all([
       analyzeDropOffSteps("onboarding", period === "day" ? 1 : period === "week" ? 7 : 30),
       identifyFrictionPoints(period),
-      analyzeErrorPatterns(period),
+      analyzeErrorPatterns(errorPeriod),
       getAllWarningSignals(),
       detectFeatureDependencies(period === "day" ? 1 : period === "week" ? 7 : 30),
     ]);
@@ -72,7 +73,7 @@ export async function aggregateInsights(
     }
 
     // Top error pattern
-    if (errors.length > 0) {
+    if (errors.length > 0 && errors[0]) {
       const topError = errors[0];
       topIssues.push({
         type: "error",
@@ -102,13 +103,13 @@ export async function aggregateInsights(
     }
 
     // Add friction recommendations
-    if (friction.frictionPoints.length > 0) {
+    if (friction.frictionPoints.length > 0 && friction.frictionPoints[0]) {
       const topFriction = friction.frictionPoints[0];
       recommendations.push(`Fix friction point: ${topFriction.issue} - ${topFriction.suggestedFix}`);
     }
 
     // Add error recommendations
-    if (errors.length > 0) {
+    if (errors.length > 0 && errors[0]) {
       const topError = errors[0];
       recommendations.push(`Address error pattern: ${topError.pattern} - ${topError.suggestedFix}`);
     }

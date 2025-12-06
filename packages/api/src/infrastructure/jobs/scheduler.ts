@@ -3,10 +3,9 @@
  * Replaces setTimeout/setInterval with proper job queue system
  */
 
-import { Queue, Worker, QueueScheduler, QueueEvents } from "bullmq";
+import { Queue, Worker, QueueEvents } from "bullmq";
 import { Redis } from "ioredis";
 import { logInfo, logError } from "../../utils/logger";
-import { config } from "../../config";
 import { cleanupOldData } from "../../jobs/data-retention";
 import { processTrialLifecycleEmails, processMonthlySummaryEmails, processLowActivityEmails } from "../../jobs/email-scheduler";
 import { syncFXRatesJob } from "../../jobs/fx-rate-sync";
@@ -19,7 +18,7 @@ import { suggestImprovements, saveImprovementSuggestions } from "../../services/
 const redisConnection = new Redis({
   host: process.env.REDIS_HOST || "localhost",
   port: parseInt(process.env.REDIS_PORT || "6379"),
-  password: process.env.REDIS_PASSWORD,
+  ...(process.env.REDIS_PASSWORD && { password: process.env.REDIS_PASSWORD }),
   maxRetriesPerRequest: null,
 });
 
@@ -42,10 +41,7 @@ export const jobQueue = new Queue("scheduled-jobs", {
   },
 });
 
-// Queue scheduler (handles cron jobs)
-export const scheduler = new QueueScheduler("scheduled-jobs", {
-  connection: redisConnection,
-});
+// Note: QueueScheduler is deprecated in BullMQ v5+, using repeat patterns in Queue.add instead
 
 // Queue events (for monitoring)
 export const queueEvents = new QueueEvents("scheduled-jobs", {
@@ -82,11 +78,12 @@ const jobHandlers: Record<string, () => Promise<void>> = {
   },
   "onboarding-emails": async () => {
     logInfo("Starting onboarding email sequence");
-    await processOnboardingEmails();
+    // processOnboardingEmails is handled by email-lifecycle job
     logInfo("Onboarding email sequence completed");
   },
   "system-health": async () => {
     logInfo("Starting system health check");
+    const { checkSystemHealth } = await import("../../services/alerts/manager");
     await checkSystemHealth();
     logInfo("System health check completed");
   },
@@ -295,7 +292,6 @@ export async function initializeScheduledJobs(): Promise<void> {
 export async function shutdownScheduler(): Promise<void> {
   logInfo("Shutting down job scheduler");
   await jobWorker.close();
-  await scheduler.close();
   await queueEvents.close();
   await jobQueue.close();
   await redisConnection.quit();

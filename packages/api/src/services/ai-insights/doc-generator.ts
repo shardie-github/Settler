@@ -106,7 +106,6 @@ async function parseRouteFile(filePath: string): Promise<RouteDoc[]> {
   try {
     const content = await fs.readFile(filePath, "utf-8");
     const routes: RouteDoc[] = [];
-    const lines = content.split("\n");
 
     // Look for router patterns: router.get, router.post, router.put, router.delete, router.patch
     const routePattern =
@@ -124,9 +123,11 @@ async function parseRouteFile(filePath: string): Promise<RouteDoc[]> {
       const lastComment = beforeMatch.match(/\/\*\*[\s\S]*?\*\//g);
       if (lastComment && lastComment.length > 0) {
         const comment = lastComment[lastComment.length - 1];
-        const descMatch = comment.match(/\*\s+(.+)/);
-        if (descMatch) {
-          description = descMatch[1].trim();
+        if (comment) {
+          const descMatch = comment.match(/\*\s+(.+)/);
+          if (descMatch && descMatch[1]) {
+            description = descMatch[1].trim();
+          }
         }
       }
 
@@ -142,13 +143,14 @@ async function parseRouteFile(filePath: string): Promise<RouteDoc[]> {
         permissions.push(permMatch[1]);
       }
 
+      const relativePath = path.relative(path.join(__dirname, "../../"), filePath);
       routes.push({
-        path: routePath,
+        path: routePath || "",
         method,
         auth: hasAuth,
         permissions: permissions.length > 0 ? permissions : undefined,
         description,
-        file: path.relative(path.join(__dirname, "../../"), filePath),
+        file: relativePath,
         line: lineNumber,
       });
     }
@@ -166,17 +168,17 @@ async function parseRouteFile(filePath: string): Promise<RouteDoc[]> {
 export async function generateMarkdownDocs(
   report: DocumentationReport
 ): Promise<string> {
-  const lines: string[] = [];
+  const outputLines: string[] = [];
 
-  lines.push("# Auto-Generated API Route Documentation");
-  lines.push("");
-  lines.push(`**Generated:** ${report.generatedAt.toISOString()}`);
-  lines.push(`**Total Routes:** ${report.totalRoutes}`);
-  lines.push(`**Documented:** ${report.documentedRoutes}`);
-  lines.push(`**Undocumented:** ${report.undocumentedRoutes}`);
-  lines.push("");
-  lines.push("---");
-  lines.push("");
+  outputLines.push("# Auto-Generated API Route Documentation");
+  outputLines.push("");
+  outputLines.push(`**Generated:** ${report.generatedAt.toISOString()}`);
+  outputLines.push(`**Total Routes:** ${report.totalRoutes}`);
+  outputLines.push(`**Documented:** ${report.documentedRoutes}`);
+  outputLines.push(`**Undocumented:** ${report.undocumentedRoutes}`);
+  outputLines.push("");
+  outputLines.push("---");
+  outputLines.push("");
 
   // Group by method
   const byMethod: Record<string, RouteDoc[]> = {};
@@ -190,35 +192,35 @@ export async function generateMarkdownDocs(
   for (const method of ["GET", "POST", "PUT", "DELETE", "PATCH"]) {
     if (!byMethod[method]) continue;
 
-    lines.push(`## ${method} Routes`);
-    lines.push("");
+    outputLines.push(`## ${method} Routes`);
+    outputLines.push("");
 
     for (const route of byMethod[method]) {
-      lines.push(`### ${route.path}`);
-      lines.push("");
+      outputLines.push(`### ${route.path}`);
+      outputLines.push("");
 
       if (route.description) {
-        lines.push(route.description);
-        lines.push("");
+        outputLines.push(route.description);
+        outputLines.push("");
       } else {
-        lines.push("*No description available.*");
-        lines.push("");
+        outputLines.push("*No description available.*");
+        outputLines.push("");
       }
 
-      lines.push(`- **Method:** ${route.method}`);
-      lines.push(`- **Auth Required:** ${route.auth ? "Yes" : "No"}`);
+      outputLines.push(`- **Method:** ${route.method}`);
+      outputLines.push(`- **Auth Required:** ${route.auth ? "Yes" : "No"}`);
       if (route.permissions && route.permissions.length > 0) {
-        lines.push(`- **Permissions:** ${route.permissions.join(", ")}`);
+        outputLines.push(`- **Permissions:** ${route.permissions.join(", ")}`);
       }
-      lines.push(`- **File:** \`${route.file}\``);
+      outputLines.push(`- **File:** \`${route.file}\``);
       if (route.line) {
-        lines.push(`- **Line:** ${route.line}`);
+        outputLines.push(`- **Line:** ${route.line}`);
       }
-      lines.push("");
+      outputLines.push("");
     }
   }
 
-  return lines.join("\n");
+  return outputLines.join("\n");
 }
 
 /**

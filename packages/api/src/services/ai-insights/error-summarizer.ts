@@ -40,7 +40,7 @@ export async function summarizeError(
       [errorId]
     );
 
-    if (error.length === 0) {
+    if (error.length === 0 || !error[0]) {
       return null;
     }
 

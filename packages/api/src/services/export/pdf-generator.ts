@@ -5,7 +5,6 @@
 
 import PDFDocument from "pdfkit";
 import { query } from "../../db";
-import type { Buffer } from "buffer";
 
 export interface ReconciliationReportData {
   jobId: string;
@@ -57,8 +56,8 @@ export class PDFGenerator {
           margins: { top: 50, bottom: 50, left: 50, right: 50 },
         });
 
-        const buffers: Buffer[] = [];
-        doc.on("data", buffers.push.bind(buffers));
+        const buffers: Uint8Array[] = [];
+        doc.on("data", (chunk: Uint8Array) => buffers.push(chunk));
         doc.on("end", () => {
           const pdfBuffer = Buffer.concat(buffers);
           resolve(pdfBuffer);
@@ -133,7 +132,7 @@ export class PDFGenerator {
 
           // Table rows
           let y = doc.y;
-          reportData.matches.slice(0, 50).forEach((match, index) => {
+          reportData.matches.slice(0, 50).forEach((match) => {
             // Limit to 50 matches per page to avoid overflow
             if (y > 700) {
               doc.addPage();
@@ -368,14 +367,24 @@ export class PDFGenerator {
         confidence: Number(m.confidence),
         matchedAt: m.matched_at,
       })),
-      unmatched: unmatched.map((u) => ({
-        id: u.id,
-        sourceId: u.source_id || undefined,
-        targetId: u.target_id || undefined,
-        amount: Number(u.amount),
-        currency: u.currency,
-        reason: u.reason || "Unknown",
-      })),
+      unmatched: unmatched.map((u) => {
+        const result: {
+          id: string;
+          sourceId?: string;
+          targetId?: string;
+          amount: number;
+          currency: string;
+          reason: string;
+        } = {
+          id: u.id,
+          amount: Number(u.amount),
+          currency: u.currency,
+          reason: u.reason || "Unknown",
+        };
+        if (u.source_id) result.sourceId = u.source_id;
+        if (u.target_id) result.targetId = u.target_id;
+        return result;
+      }),
       errors: errors.map((e) => ({
         id: e.id,
         message: (e.message as string) || "Unknown error",

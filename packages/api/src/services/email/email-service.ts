@@ -21,8 +21,8 @@ export interface EmailOptions {
  */
 export async function sendEmail(options: EmailOptions): Promise<boolean> {
   try {
-    const emailProvider = config.email?.provider || "resend";
-    const fromEmail = options.from || config.email?.from || "noreply@settler.dev";
+    const emailProvider = process.env.EMAIL_PROVIDER || "resend";
+    const fromEmail = options.from || process.env.EMAIL_FROM || "noreply@settler.dev";
 
     if (emailProvider === "resend") {
       return await sendViaResend({
@@ -48,7 +48,7 @@ export async function sendEmail(options: EmailOptions): Promise<boolean> {
  * Send email via Resend
  */
 async function sendViaResend(options: EmailOptions): Promise<boolean> {
-  const apiKey = config.email?.resendApiKey || process.env.RESEND_API_KEY;
+  const apiKey = process.env.RESEND_API_KEY;
 
   if (!apiKey) {
     logError("Resend API key not configured", new Error("Missing RESEND_API_KEY"));
@@ -60,14 +60,23 @@ async function sendViaResend(options: EmailOptions): Promise<boolean> {
     const { Resend } = await import("resend");
     const resend = new Resend(apiKey);
 
-    const result = await resend.emails.send({
+    const emailData: {
+      from: string;
+      to: string;
+      subject: string;
+      html?: string;
+      text?: string;
+      reply_to?: string;
+    } = {
       from: options.from!,
       to: options.to,
       subject: options.subject,
-      html: options.html,
-      text: options.text,
-      reply_to: options.replyTo,
-    });
+    };
+    if (options.html) emailData.html = options.html;
+    if (options.text) emailData.text = options.text;
+    if (options.replyTo) emailData.reply_to = options.replyTo;
+
+    const result = await resend.emails.send(emailData);
 
     if (result.error) {
       logError("Resend API error", new Error(result.error.message), {
@@ -97,7 +106,7 @@ async function sendViaResend(options: EmailOptions): Promise<boolean> {
  * Send email via SendGrid
  */
 async function sendViaSendGrid(options: EmailOptions): Promise<boolean> {
-  const apiKey = config.email?.sendgridApiKey || process.env.SENDGRID_API_KEY;
+  const apiKey = process.env.SENDGRID_API_KEY;
 
   if (!apiKey) {
     logError("SendGrid API key not configured", new Error("Missing SENDGRID_API_KEY"));
@@ -106,7 +115,9 @@ async function sendViaSendGrid(options: EmailOptions): Promise<boolean> {
 
   try {
     // Dynamic import to avoid requiring SendGrid in package.json if not used
-    const sgMail = await import("@sendgrid/mail");
+    // Note: @sendgrid/mail types may not be available
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const sgMail = require("@sendgrid/mail");
     sgMail.default.setApiKey(apiKey);
 
     const msg = {

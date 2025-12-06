@@ -3,7 +3,7 @@
  * Standardized retry logic for external service calls
  */
 
-import { logInfo, logWarn } from "./logger";
+import { logWarn } from "./logger";
 
 export interface RetryOptions {
   maxAttempts?: number;

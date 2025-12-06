@@ -72,8 +72,8 @@ export async function detectFeatureDependencies(
 
     for (let i = 0; i < featureArray.length; i++) {
       for (let j = i + 1; j < featureArray.length; j++) {
-        const featureA = featureArray[i];
-        const featureB = featureArray[j];
+        const featureA = featureArray[i]!;
+        const featureB = featureArray[j]!;
 
         let coOccurrence = 0;
         let featureACount = 0;
@@ -94,12 +94,14 @@ export async function detectFeatureDependencies(
 
         // Only include correlations > 0.5
         if (correlation > 0.5 && coOccurrence >= 5) {
+        if (featureA && featureB) {
           dependencies.push({
             featureA,
             featureB,
             correlation: Math.round(correlation * 1000) / 1000,
             sampleSize: coOccurrence,
           });
+        }
         }
       }
     }
@@ -166,7 +168,6 @@ export async function clusterUsersByBehavior(): Promise<UserCluster[]> {
       const errors = parseInt(metric.error_count || "0");
       const successRate = parseInt(metric.success_rate || "0");
       const features = parseInt(metric.feature_access_count || "0");
-      const daysActive = parseInt(metric.days_active || "0");
 
       if (reconciliations > 50 && adapters > 2 && successRate > 80) {
         powerUsers.push(metric.user_id);

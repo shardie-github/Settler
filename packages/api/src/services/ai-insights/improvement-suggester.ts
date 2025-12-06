@@ -4,7 +4,7 @@
  */
 
 import { logInfo } from "../../utils/logger";
-import { aggregateInsights, InsightReport } from "./insight-aggregator";
+import { aggregateInsights } from "./insight-aggregator";
 import { query } from "../../db";
 
 export interface ImprovementSuggestion {
@@ -54,7 +54,7 @@ export async function suggestImprovements(): Promise<ImprovementSuggestion[]> {
     }
 
     // Analyze friction points
-    if (insights.trends.friction.topIssue) {
+    if (insights.trends.friction && insights.trends.friction.topIssue) {
       const friction = insights.trends.friction.topIssue;
       if (friction.severity === "high") {
         suggestions.push({
@@ -70,7 +70,7 @@ export async function suggestImprovements(): Promise<ImprovementSuggestion[]> {
     }
 
     // Analyze error patterns
-    if (insights.trends.errors.length > 0) {
+    if (insights.trends.errors.length > 0 && insights.trends.errors[0]) {
       const topError = insights.trends.errors[0];
       if (topError.severity === "high" && topError.count > 20) {
         suggestions.push({
@@ -86,7 +86,7 @@ export async function suggestImprovements(): Promise<ImprovementSuggestion[]> {
     }
 
     // Analyze feature dependencies
-    if (insights.trends.dependencies.length > 0) {
+    if (insights.trends.dependencies.length > 0 && insights.trends.dependencies[0]) {
       const topDependency = insights.trends.dependencies[0];
       if (topDependency.correlation > 0.8) {
         suggestions.push({
