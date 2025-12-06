@@ -138,7 +138,7 @@ export async function analyzeErrorPatterns(
                OR error_message ILIKE '%' || $3 || '%'
              )
            LIMIT 5`,
-          [message, pattern, message.split(" ")[0]]
+          [message, pattern, message.split(" ")[0] || ""]
         );
         relatedErrors.push(...related.map((r) => r.error_message));
       }

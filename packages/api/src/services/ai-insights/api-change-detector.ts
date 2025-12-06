@@ -174,16 +174,20 @@ export async function generateChangeReport(
   };
 
   for (const change of report.changes) {
-    byType[change.type].push(change);
+    if (change && change.type && byType[change.type]) {
+      byType[change.type].push(change);
+    }
   }
 
   for (const type of ["added", "modified", "removed"]) {
-    if (byType[type].length === 0) continue;
+    const changes = byType[type];
+    if (!changes || changes.length === 0) continue;
 
     lines.push(`## ${type.toUpperCase()} Routes`);
     lines.push("");
 
-    for (const change of byType[type]) {
+    for (const change of changes) {
+      if (!change) continue;
       lines.push(`### ${change.method} ${change.route}`);
       lines.push("");
 

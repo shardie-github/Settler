@@ -151,10 +151,12 @@ async function parseRouteFile(filePath: string): Promise<RouteDoc[]> {
         path: routePath,
         method,
         auth: hasAuth,
-        description,
         file: relativePath,
         line: lineNumber,
       };
+      if (description) {
+        routeDoc.description = description;
+      }
       if (permissions.length > 0) {
         routeDoc.permissions = permissions;
       }
@@ -190,10 +192,11 @@ export async function generateMarkdownDocs(
   const byMethod: Record<string, RouteDoc[]> = {};
   for (const route of report.routes) {
     if (!route) continue;
-    if (!byMethod[route.method]) {
-      byMethod[route.method] = [];
+    const method = route.method;
+    if (!byMethod[method]) {
+      byMethod[method] = [];
     }
-    byMethod[route.method].push(route);
+    byMethod[method]!.push(route);
   }
 
   for (const method of ["GET", "POST", "PUT", "DELETE", "PATCH"]) {

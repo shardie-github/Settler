@@ -64,7 +64,7 @@ async function sendViaResend(options: EmailOptions): Promise<boolean> {
       to: string;
       subject: string;
       html?: string;
-      text?: string;
+      text: string;
       reply_to?: string;
     } = {
       from: options.from!,
@@ -72,8 +72,12 @@ async function sendViaResend(options: EmailOptions): Promise<boolean> {
       subject: options.subject,
       text: options.text || "",
     };
-    if (options.html) emailData.html = options.html;
-    if (options.replyTo) emailData.reply_to = options.replyTo;
+    if (options.html) {
+      emailData.html = options.html;
+    }
+    if (options.replyTo) {
+      emailData.reply_to = options.replyTo;
+    }
 
     const result = await resend.emails.send(emailData);
 

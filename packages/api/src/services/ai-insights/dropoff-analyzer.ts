@@ -88,6 +88,7 @@ async function analyzeOnboardingDropOff(
     const prevStep = i > 0 ? onboardingSteps[i - 1] : null;
 
     // Get users who completed this step
+    if (!step) continue;
     const completedResult = await query<{ count: string }>(
       `SELECT COUNT(DISTINCT user_id) as count
        FROM onboarding_progress
@@ -121,7 +122,7 @@ async function analyzeOnboardingDropOff(
        WHERE step = $1
          AND completed = true
          AND created_at > NOW() - INTERVAL '${days} days'`,
-      [step]
+      [step!]
     );
     const avgTimeSpent = timeResult[0]?.avg_seconds ? parseFloat(timeResult[0].avg_seconds) : 0;
 
@@ -164,7 +165,8 @@ async function analyzeOnboardingDropOff(
     );
   }
 
-  if (steps.find((s) => s.step === "first_job")?.dropOffRate > 25) {
+  const firstJobStep = steps.find((s) => s.step === "first_job");
+  if (firstJobStep && firstJobStep.dropOffRate > 25) {
     suggestions.push(
       "High drop-off at 'first_job' step. Consider: adding a demo mode, pre-populating sample data, or providing a guided tutorial."
     );
@@ -289,7 +291,8 @@ async function analyzeReconciliationDropOff(
       );
     }
 
-  if (steps.find((s) => s.step === "job_executed")?.dropOffRate > 25) {
+  const jobExecutedStep = steps.find((s) => s.step === "job_executed");
+  if (jobExecutedStep && jobExecutedStep.dropOffRate > 25) {
     suggestions.push(
       "Many jobs are created but never executed. Consider: adding a 'Run Now' button, scheduling reminders, or auto-executing on creation."
     );
