@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Navigation } from "@/components/Navigation";
 import { Footer } from "@/components/Footer";
@@ -24,11 +25,6 @@ export default function Enterprise() {
 
   const features = [
     {
-      icon: "🔒",
-      title: "Enterprise Security",
-      description: "SOC 2 Type II, SSO, SAML, RBAC, and custom security policies",
-    },
-    {
       icon: "🚀",
       title: "Unlimited Scale",
       description: "No limits on reconciliations, adapters, or data retention",
@@ -36,22 +32,27 @@ export default function Enterprise() {
     {
       icon: "👥",
       title: "Dedicated Support",
-      description: "24/7 support with SLA guarantees and dedicated account manager",
-    },
-    {
-      icon: "🏢",
-      title: "On-Premise Option",
-      description: "Deploy Settler in your own infrastructure for maximum control",
-    },
-    {
-      icon: "🎨",
-      title: "White-Label",
-      description: "Fully customizable branding and UI to match your brand",
+      description: "Priority support with SLA guarantees and dedicated account manager",
     },
     {
       icon: "🔌",
       title: "Custom Integrations",
       description: "Build custom adapters and integrations for your specific needs",
+    },
+    {
+      icon: "📊",
+      title: "Extended Log Retention",
+      description: "Keep reconciliation history for up to 7 years for compliance",
+    },
+    {
+      icon: "⚡",
+      title: "Priority Feature Requests",
+      description: "Influence product roadmap with priority feature requests",
+    },
+    {
+      icon: "🔒",
+      title: "Enhanced Security",
+      description: "AES-256 encryption, secure API key storage, and audit trails",
     },
   ];
 
@@ -172,7 +173,7 @@ export default function Enterprise() {
                   },
                   {
                     title: "Compliance Ready",
-                    description: "SOC 2 Type II, GDPR, PCI-DSS, HIPAA-ready with audit trails.",
+                    description: "GDPR compliant with audit trails. SOC 2 Type II certification in progress (Q2 2026).",
                   },
                 ].map((benefit, index) => (
                   <div key={index} className="flex items-start" role="listitem">
@@ -326,7 +327,7 @@ export default function Enterprise() {
               { value: "99.99%", label: "Uptime SLA", description: "Guaranteed availability" },
               { value: "<4hr", label: "Support Response", description: "Critical issues" },
               { value: "24/7", label: "Support Coverage", description: "Always available" },
-              { value: "100%", label: "Compliance", description: "SOC 2, GDPR, PCI-DSS" },
+              { value: "GDPR", label: "Compliance", description: "GDPR compliant, SOC 2 in progress" },
             ].map((stat, index) => (
               <div key={index} role="listitem">
                 <AnimatedStatCard
@@ -336,6 +337,74 @@ export default function Enterprise() {
                   index={index}
                 />
               </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Coming Soon Section */}
+      <section className="py-20 px-4 sm:px-6 lg:px-8" aria-labelledby="coming-soon-heading">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-12">
+            <h2
+              id="coming-soon-heading"
+              className="text-3xl md:text-4xl font-bold mb-4 text-slate-900 dark:text-white"
+            >
+              Coming Soon
+            </h2>
+            <p className="text-lg text-slate-600 dark:text-slate-300 max-w-2xl mx-auto">
+              Enterprise features in development
+            </p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[
+              {
+                title: "SSO (SAML, OIDC)",
+                description: "Single sign-on integration with your identity provider",
+                timeline: "Q2 2026",
+              },
+              {
+                title: "SOC 2 Type II",
+                description: "Full SOC 2 Type II certification and compliance",
+                timeline: "Q2 2026",
+              },
+              {
+                title: "PCI-DSS Level 1",
+                description: "PCI-DSS Level 1 certification for payment processing",
+                timeline: "Q3 2026",
+              },
+              {
+                title: "White-Label Reports",
+                description: "Fully customizable branding for reports and exports",
+                timeline: "Q2 2026",
+              },
+              {
+                title: "On-Premise Deployment",
+                description: "Deploy Settler in your own infrastructure",
+                timeline: "Q4 2026",
+              },
+              {
+                title: "VPC Peering",
+                description: "Private network connectivity for enhanced security",
+                timeline: "Q3 2026",
+              },
+            ].map((feature, index) => (
+              <Card
+                key={index}
+                className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800"
+              >
+                <CardHeader>
+                  <CardTitle className="text-lg text-slate-900 dark:text-white">
+                    {feature.title}
+                  </CardTitle>
+                  <CardDescription>{feature.description}</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <Badge variant="outline" className="text-xs">
+                    {feature.timeline}
+                  </Badge>
+                </CardContent>
+              </Card>
             ))}
           </div>
         </div>

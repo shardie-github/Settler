@@ -25,7 +25,7 @@ export const metadata: Metadata = {
     template: "%s | Settler",
   },
   description:
-    "Automate financial data reconciliation across fragmented SaaS and e-commerce ecosystems. One API. All Platforms. Real-Time. 99.7% accuracy, <50ms latency.",
+    "Automate financial data reconciliation across fragmented SaaS and e-commerce ecosystems. One API. Multiple Platforms. Fast processing with flexible scheduling.",
   keywords: [
     "reconciliation API",
     "financial reconciliation",
@@ -64,7 +64,7 @@ export const metadata: Metadata = {
     siteName: "Settler",
     title: "Settler - Reconciliation as a Service API",
     description:
-      "Automate financial data reconciliation across fragmented SaaS and e-commerce ecosystems. One API. All Platforms. Real-Time.",
+      "Automate financial data reconciliation across fragmented SaaS and e-commerce ecosystems. One API. Multiple Platforms. Fast processing.",
     images: [
       {
         url: "/og-image.png",

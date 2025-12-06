@@ -68,33 +68,33 @@ export default function Home() {
       icon: Zap,
       title: "Save 10+ Hours Per Week",
       description:
-        "Stop manual matching. Get accurate results automatically in minutes, not hours.",
+        "Stop manual matching. Get accurate results with automated reconciliation in minutes, not hours.",
       gradient: "from-electric-cyan to-electric-blue",
     },
     {
       icon: Lock,
-      title: "Bank-Level Security",
+      title: "Enterprise-Grade Security",
       description:
-        "Your data is protected with enterprise-grade security and compliance standards.",
+        "Your data is protected with AES-256 encryption and secure API key storage.",
       gradient: "from-electric-purple to-electric-indigo",
     },
     {
       icon: Rocket,
-      title: "See Results Instantly",
-      description: "Match transactions in real-time. Get instant updates as data flows in.",
+      title: "Fast Processing",
+      description: "Match transactions quickly with event-driven reconciliation and scheduled jobs.",
       gradient: "from-electric-neon to-electric-cyan",
     },
     {
       icon: Target,
-      title: "99.7% Accurate - No More Manual Errors",
-      description: "Advanced matching catches every transaction. Eliminate human error completely.",
+      title: "High Accuracy Matching",
+      description: "Advanced matching rules catch transactions automatically. Eliminate human error.",
       gradient: "from-electric-blue to-electric-purple",
     },
     {
       icon: Plug,
       title: "Works with Your Existing Tools",
       description:
-        "Connect Shopify, Stripe, QuickBooks, PayPal, and 50+ other platforms instantly.",
+        "Connect Shopify, Stripe, QuickBooks, PayPal, Square, Xero, and more with 7+ platform adapters.",
       gradient: "from-electric-indigo to-electric-neon",
     },
     {
@@ -107,10 +107,10 @@ export default function Home() {
   ];
 
   const heroStats = [
-    { value: "99.7%", label: "Accuracy", description: "Reconciliation precision" },
-    { value: "<50ms", label: "API Latency", description: "Average response time" },
-    { value: "50+", label: "Integrations", description: "Platform adapters" },
-    { value: "5min", label: "Setup Time", description: "Time to first reconciliation" },
+    { value: "High", label: "Accuracy", description: "Reconciliation precision" },
+    { value: "Fast", label: "API Response", description: "Quick processing" },
+    { value: "7+", label: "Integrations", description: "Platform adapters" },
+    { value: "Quick", label: "Setup", description: "Get started in under 30 minutes" },
   ];
 
   const secondaryStats = [
@@ -141,7 +141,7 @@ const job = await client.jobs.create({
 });
 
 const report = await client.jobs.run(job.id);
-// ✅ 98.7% accuracy, 145 matched, 3 unmatched`;
+// ✅ High accuracy, 145 matched, 3 unmatched`;
 
   return (
     <>
@@ -188,7 +188,7 @@ const report = await client.jobs.run(job.id);
               />
 
               <TextReveal
-                text="Automatically match transactions between any platforms. Get accurate results in minutes, not hours. No manual work required."
+                text="Automate transaction matching across any platform with flexible scheduling. Get accurate results in minutes, not hours. Simple API, powerful results."
                 className="text-xl md:text-2xl text-slate-700 dark:text-slate-300 mb-8 max-w-3xl mx-auto"
                 delay={0.4}
                 staggerDelay={0.01}
@@ -303,7 +303,7 @@ const report = await client.jobs.run(job.id);
                 staggerDelay={0.02}
               />
               <TextReveal
-                text="Simple, developer-friendly API that works with any platform"
+                text="Simple, developer-friendly API that works with 7+ platforms and growing"
                 className="text-lg text-slate-700 dark:text-slate-300 max-w-2xl mx-auto"
                 delay={0.2}
                 staggerDelay={0.01}
@@ -404,7 +404,7 @@ const report = await client.jobs.run(job.id);
             <SpotlightCard className="p-12 text-center">
               <ConversionCTA
                 title="Ready to Stop Wasting Hours on Manual Matching?"
-                description="Join thousands of companies saving 10+ hours per week. Start your 30-day free trial—no credit card required."
+                description="Automate your reconciliation workflow. Start your 30-day free trial—no credit card required."
                 primaryAction="Start 30-Day Free Trial"
                 primaryLink="/signup"
                 secondaryAction="View Pricing"
