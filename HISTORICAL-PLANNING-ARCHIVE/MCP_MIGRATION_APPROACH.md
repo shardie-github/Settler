@@ -18,6 +18,7 @@ The Supabase MCP server you mentioned (`https://mcp.supabase.com/mcp?project_ref
 ## What MCP Server Could Help With
 
 If configured, the MCP server might help with:
+
 - ✅ Reading database schema
 - ✅ Querying existing data
 - ✅ Managing Supabase resources
@@ -26,6 +27,7 @@ If configured, the MCP server might help with:
 ## Best Solutions
 
 ### Option 1: Run from Local Machine (Recommended)
+
 Your local machine likely has IPv6 connectivity:
 
 ```bash
@@ -33,17 +35,21 @@ npm run db:migrate:auto
 ```
 
 ### Option 2: Supabase Dashboard SQL Editor
+
 1. Go to: https://app.supabase.com/project/johfcvvmtfiomzxipspz/sql/new
 2. Copy/paste migration files
 
 ### Option 3: Supabase CLI
+
 If you have Supabase CLI installed:
+
 ```bash
 supabase link --project-ref johfcvvmtfiomzxipspz
 supabase db push
 ```
 
 ### Option 4: Configure IPv6 in This Environment
+
 If this environment could be configured with IPv6 connectivity, the migrations could run directly.
 
 ## Current Status

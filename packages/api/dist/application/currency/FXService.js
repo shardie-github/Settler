@@ -91,11 +91,11 @@ class FXService {
         const result = await (0, db_1.query)(`SELECT config FROM tenants WHERE id = $1 LIMIT 1`, [tenantId]);
         if (result.length > 0 && result[0]?.config?.baseCurrency) {
             const baseCurrency = result[0].config.baseCurrency;
-            if (typeof baseCurrency === 'string') {
+            if (typeof baseCurrency === "string") {
                 return baseCurrency;
             }
         }
-        return 'USD'; // Default
+        return "USD"; // Default
     }
     /**
      * Get all FX rates for a tenant
@@ -107,12 +107,12 @@ class FXService {
        FROM fx_conversions
        WHERE tenant_id = $1 AND rate_date <= $2
        ORDER BY from_currency, to_currency, rate_date DESC`, [tenantId, targetDate]);
-        return result.map(row => ({
+        return result.map((row) => ({
             fromCurrency: row.from_currency,
             toCurrency: row.to_currency,
             rate: row.fx_rate,
             rateDate: row.rate_date,
-            provider: row.provider ?? 'unknown',
+            provider: row.provider ?? "unknown",
         }));
     }
     /**

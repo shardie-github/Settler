@@ -9,11 +9,13 @@ All components of the automated Supabase migration pipeline have been successful
 ## Files Created
 
 ### Directory Structure
+
 - ✅ `supabase/migrations/` - Migration files directory
-- ✅ `supabase/functions/` - Edge Functions directory  
+- ✅ `supabase/functions/` - Edge Functions directory
 - ✅ `supabase/seeds/` - Seed data directory
 
 ### Migration Templates
+
 - ✅ `supabase/migrations/20240101000001_create_tables.sql` - Table creation template
 - ✅ `supabase/migrations/20240101000002_enable_rls.sql` - RLS policies template
 - ✅ `supabase/migrations/20240101000003_create_functions.sql` - Functions & triggers template
@@ -22,19 +24,23 @@ All components of the automated Supabase migration pipeline have been successful
 - ✅ `supabase/seeds/seed.sql` - Seed data template
 
 ### Configuration Files
+
 - ✅ `supabase/config.toml` - Supabase project configuration
 - ✅ `.github/workflows/supabase-migrate.yml` - Main migration workflow
 - ✅ `.github/workflows/generate-types.yml` - Type generation workflow
 
 ### Helper Scripts
+
 - ✅ `scripts/new-migration.sh` - Create new migration files (executable)
 - ✅ `scripts/verify-migrations.sh` - Verify migration files (executable)
 
 ### Documentation
+
 - ✅ `docs/SUPABASE_MIGRATION_SETUP.md` - Complete setup guide
 - ✅ `docs/GITHUB_SECRETS_SETUP.md` - GitHub secrets configuration guide
 
 ### Updated Files
+
 - ✅ `package.json` - Added `db:*` and `prisma:*` scripts
 - ✅ `.husky/pre-commit` - Added migration verification hook
 
@@ -44,16 +50,16 @@ All components of the automated Supabase migration pipeline have been successful
 
 Configure these in **Settings > Secrets and variables > Actions**:
 
-| Secret Name | Description | Required |
-|------------|-------------|----------|
-| `SUPABASE_ACCESS_TOKEN` | Personal access token from Supabase dashboard | ✅ Yes |
-| `SUPABASE_DB_PASSWORD` | Database password from project settings | ✅ Yes |
-| `SUPABASE_PROJECT_ID` | Project ID (UUID) from project settings | ✅ Yes |
-| `SUPABASE_PROJECT_REF` | Project reference string (from URL) | ✅ Yes |
-| `DATABASE_URL` | Pooled Postgres connection (port 6543) | ✅ Yes |
-| `DIRECT_URL` | Direct Postgres connection (port 5432) | ✅ Yes |
-| `NEXT_PUBLIC_SUPABASE_URL` | Project URL: `https://[ref].supabase.co` | ✅ Yes |
-| `SUPABASE_SERVICE_ROLE_KEY` | Service role key from API settings | ✅ Yes |
+| Secret Name                 | Description                                   | Required |
+| --------------------------- | --------------------------------------------- | -------- |
+| `SUPABASE_ACCESS_TOKEN`     | Personal access token from Supabase dashboard | ✅ Yes   |
+| `SUPABASE_DB_PASSWORD`      | Database password from project settings       | ✅ Yes   |
+| `SUPABASE_PROJECT_ID`       | Project ID (UUID) from project settings       | ✅ Yes   |
+| `SUPABASE_PROJECT_REF`      | Project reference string (from URL)           | ✅ Yes   |
+| `DATABASE_URL`              | Pooled Postgres connection (port 6543)        | ✅ Yes   |
+| `DIRECT_URL`                | Direct Postgres connection (port 5432)        | ✅ Yes   |
+| `NEXT_PUBLIC_SUPABASE_URL`  | Project URL: `https://[ref].supabase.co`      | ✅ Yes   |
+| `SUPABASE_SERVICE_ROLE_KEY` | Service role key from API settings            | ✅ Yes   |
 
 **See `docs/GITHUB_SECRETS_SETUP.md` for detailed setup instructions.**
 
@@ -62,6 +68,7 @@ Configure these in **Settings > Secrets and variables > Actions**:
 ## Package Scripts Added
 
 ### Database Scripts
+
 - `npm run db:new <name>` - Create new migration file
 - `npm run db:verify` - Verify all migration files
 - `npm run db:push` - Push migrations to linked project
@@ -73,6 +80,7 @@ Configure these in **Settings > Secrets and variables > Actions**:
 - `npm run db:migrate:prod` - Push all migrations to production
 
 ### Prisma Scripts
+
 - `npm run prisma:generate` - Generate Prisma client
 - `npm run prisma:migrate` - Deploy Prisma migrations
 - `npm run prisma:push` - Push Prisma schema changes
@@ -85,17 +93,20 @@ Configure these in **Settings > Secrets and variables > Actions**:
 ### First Migration Test
 
 1. **Create a test migration:**
+
    ```bash
    npm run db:new test_migration
    ```
 
 2. **Edit the migration file:**
+
    ```bash
    # Edit supabase/migrations/YYYYMMDDHHMMSS_test_migration.sql
    # Add your SQL (wrapped in BEGIN/COMMIT)
    ```
 
 3. **Verify locally:**
+
    ```bash
    npm run db:verify
    ```
@@ -123,11 +134,13 @@ Configure these in **Settings > Secrets and variables > Actions**:
 ⚠️ **Emergency use only**
 
 1. **Create rollback migration:**
+
    ```bash
    npm run db:new rollback_<original_migration_name>
    ```
 
 2. **Copy template:**
+
    ```bash
    cp supabase/migrations/rollback_template.sql supabase/migrations/YYYYMMDDHHMMSS_rollback_<name>.sql
    ```
@@ -143,6 +156,7 @@ Configure these in **Settings > Secrets and variables > Actions**:
    - Monitor GitHub Actions for success
 
 **Example rollback:**
+
 ```sql
 BEGIN;
 
@@ -184,6 +198,7 @@ Before using in production, verify:
    - Replace `your-project-name` with actual project name
 
 3. **Link Supabase Project Locally** (Optional, for local testing)
+
    ```bash
    supabase link --project-ref <your-project-ref>
    ```
@@ -203,6 +218,7 @@ Before using in production, verify:
 ## Workflow Behavior
 
 ### Automatic Triggers
+
 - ✅ Push to `main` branch with changes to:
   - `supabase/migrations/**`
   - `supabase/functions/**`
@@ -211,10 +227,12 @@ Before using in production, verify:
   - `prisma/schema.prisma`
 
 ### Manual Triggers
+
 - ✅ Can be triggered manually from Actions tab
 - ✅ Options: Run seeds, Target environment
 
 ### Job Execution Order
+
 1. **detect-changes** - Detects what changed
 2. **migrate-supabase** - Runs Supabase migrations (if detected)
 3. **migrate-prisma** - Runs Prisma migrations (if detected)
@@ -224,6 +242,7 @@ Before using in production, verify:
 7. **notify-failure** - Creates GitHub issue on failure
 
 ### Safety Features
+
 - ✅ Idempotent migrations (safe to run multiple times)
 - ✅ Ordered execution (timestamp-based)
 - ✅ Transaction-wrapped (rollback on failure)

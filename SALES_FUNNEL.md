@@ -14,6 +14,7 @@ Settler uses a **developer-first, product-led growth** strategy with clear conve
 **Goal:** Drive awareness and discovery
 
 **Channels:**
+
 1. **GitHub**
    - React.Settler OSS repository
    - Example projects and templates
@@ -45,6 +46,7 @@ Settler uses a **developer-first, product-led growth** strategy with clear conve
    - Target: 5+ talks/year
 
 **Key Metrics:**
+
 - GitHub stars: 1,000+ (Year 1)
 - npm downloads: 10,000+/month
 - Website traffic: 5,000+ unique visitors/month
@@ -59,6 +61,7 @@ Settler uses a **developer-first, product-led growth** strategy with clear conve
 **Goal:** Engage developers, demonstrate value
 
 **Channels:**
+
 1. **Documentation Site** (docs.settler.dev)
    - Comprehensive guides
    - API reference
@@ -88,6 +91,7 @@ Settler uses a **developer-first, product-led growth** strategy with clear conve
    - Target: 100+ active community members
 
 **Key Metrics:**
+
 - Documentation views: 10,000+/month
 - Playground sessions: 500+/month
 - OSS users: 1,000+
@@ -102,6 +106,7 @@ Settler uses a **developer-first, product-led growth** strategy with clear conve
 **Goal:** Convert to paid customers
 
 **Channels:**
+
 1. **Free Trial** (Settler API)
    - 14-day free trial
    - No credit card required
@@ -126,12 +131,14 @@ Settler uses a **developer-first, product-led growth** strategy with clear conve
    - Target: 10+ case studies
 
 **Key Metrics:**
+
 - Trial signups: 100+/month
 - OSS projects: 50+
 - Enterprise demos: 10+/month
 - Case studies: 10+
 
-**Conversion Goal:** 
+**Conversion Goal:**
+
 - Trial → Paid: 10-15%
 - OSS → Commercial: 5-10%
 - Demo → Enterprise: 20-30%
@@ -143,6 +150,7 @@ Settler uses a **developer-first, product-led growth** strategy with clear conve
 **Goal:** Complete purchase, activate subscription
 
 **Channels:**
+
 1. **Self-Serve Signup** (Commercial)
    - In-app upgrade prompts
    - Pricing page
@@ -162,12 +170,14 @@ Settler uses a **developer-first, product-led growth** strategy with clear conve
    - Target: 5% conversion rate
 
 **Key Metrics:**
+
 - Commercial signups: 10-20/month (Year 1)
 - Enterprise signups: 1-2/month (Year 1)
 - Conversion rate: 5-10% (OSS → Commercial)
 - MRR growth: 20% month-over-month
 
-**Conversion Goal:** 
+**Conversion Goal:**
+
 - 100+ Commercial customers (Year 1)
 - 10+ Enterprise customers (Year 1)
 - $10K+ MRR (Year 1)
@@ -179,6 +189,7 @@ Settler uses a **developer-first, product-led growth** strategy with clear conve
 **Goal:** Increase revenue per customer, reduce churn
 
 **Channels:**
+
 1. **Usage-Based Upsells** (Settler API)
    - Automatic tier upgrades
    - Overage charges
@@ -202,12 +213,14 @@ Settler uses a **developer-first, product-led growth** strategy with clear conve
    - Target: 10% of new customers from referrals
 
 **Key Metrics:**
+
 - Net Revenue Retention: 110%+
 - Expansion revenue: 20% of total
 - Customer churn: <5% monthly
 - Customer satisfaction: 90%+ NPS
 
 **Conversion Goal:**
+
 - 20% expansion revenue
 - 95%+ retention rate
 - 110%+ NRR
@@ -268,17 +281,20 @@ Settler uses a **developer-first, product-led growth** strategy with clear conve
 ### 1. Upgrade Prompts (OSS → Commercial)
 
 **Triggers:**
+
 - User tries Commercial feature
 - User reaches usage limit
 - User shows intent (multiple feature attempts)
 
 **Messaging:**
+
 - Clear value proposition
 - Feature comparison
 - Pricing transparency
 - Easy upgrade path
 
 **Placement:**
+
 - In-app prompts
 - Feature gates
 - Documentation links
@@ -287,17 +303,20 @@ Settler uses a **developer-first, product-led growth** strategy with clear conve
 ### 2. Trial Ending (Trial → Paid)
 
 **Triggers:**
+
 - 3 days before trial ends
 - 1 day before trial ends
 - Trial expired
 
 **Messaging:**
+
 - Value recap (what you accomplished)
 - ROI calculation (time saved)
 - Limited-time offer (if applicable)
 - Support availability
 
 **Placement:**
+
 - In-app banners
 - Email sequences
 - Dashboard notifications
@@ -305,11 +324,13 @@ Settler uses a **developer-first, product-led growth** strategy with clear conve
 ### 3. Usage Limits (Starter → Pro)
 
 **Triggers:**
+
 - 80% of usage limit reached
 - 100% of usage limit reached
 - Feature unlock needed
 
 **Messaging:**
+
 - Usage dashboard
 - Upgrade benefits
 - Cost per additional unit
@@ -324,6 +345,7 @@ Settler uses a **developer-first, product-led growth** strategy with clear conve
 **Strategy:** Make product so good it sells itself
 
 **Tactics:**
+
 - Excellent OSS experience
 - Clear upgrade path
 - In-app upgrade prompts
@@ -336,6 +358,7 @@ Settler uses a **developer-first, product-led growth** strategy with clear conve
 **Strategy:** Educate and build authority
 
 **Tactics:**
+
 - Blog posts (reconciliation best practices)
 - Tutorial videos
 - Case studies
@@ -348,6 +371,7 @@ Settler uses a **developer-first, product-led growth** strategy with clear conve
 **Strategy:** Build community, partner ecosystem
 
 **Tactics:**
+
 - GitHub community
 - Discord server
 - Partner integrations
@@ -360,6 +384,7 @@ Settler uses a **developer-first, product-led growth** strategy with clear conve
 **Strategy:** High-touch for high-value customers
 
 **Tactics:**
+
 - Outbound prospecting
 - Inbound leads
 - Partner referrals
@@ -425,24 +450,28 @@ Settler uses a **developer-first, product-led growth** strategy with clear conve
 ## Success Metrics
 
 ### Acquisition Metrics
+
 - GitHub stars: 1,000+ (Year 1)
 - npm downloads: 10,000+/month
 - Trial signups: 100+/month
 - Website traffic: 5,000+ unique visitors/month
 
 ### Conversion Metrics
+
 - Trial → Paid: 10-15%
 - OSS → Commercial: 5-10%
 - Demo → Enterprise: 20-30%
 - Overall conversion: 5-10%
 
 ### Retention Metrics
+
 - Monthly churn: <5%
 - Annual retention: 95%+
 - Net Revenue Retention: 110%+
 - Customer satisfaction: 90%+ NPS
 
 ### Revenue Metrics
+
 - MRR growth: 20% month-over-month
 - ARR: $170K (Year 1), $1.35M (Year 2)
 - Gross margin: 85%+
@@ -453,6 +482,7 @@ Settler uses a **developer-first, product-led growth** strategy with clear conve
 ## Conclusion
 
 Settler's sales funnel is designed to:
+
 - ✅ Drive awareness through OSS and content
 - ✅ Convert through clear value and easy upgrade path
 - ✅ Retain through excellent support and value delivery

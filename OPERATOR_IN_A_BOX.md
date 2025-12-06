@@ -11,10 +11,12 @@
 **Product:** Settler – Developer-first, API-native, real-time payment reconciliation layer for multi-gateway, multi-rail ecommerce/SaaS.
 
 **Targets:**
+
 - **Primary:** Developers & payment engineers at D2C brands, SaaS companies, and platforms processing 1,000+ transactions/month across multiple systems
 - **Secondary:** Finance leaders (CFOs, Finance Directors) who care about reconciliation latency, accuracy, and auditability
 
 **Core Pains:**
+
 - Multi-gateway fragmentation (Stripe, PayPal, Square, Shopify all have different data formats)
 - Manual spreadsheet reconciliation taking 2-3 hours daily
 - Long month-end close cycles (5-7 days)
@@ -23,6 +25,7 @@
 - Brittle custom recon logic that breaks with API changes
 
 **Model:** SaaS + usage-based pricing (per transaction/reconciliation event)
+
 - Free: 1K/month
 - Starter: $29/month (10K/month)
 - Growth: $99/month (100K/month)
@@ -32,6 +35,7 @@
 **Stage:** MVP in progress – Core API functional, adapters for Stripe/Shopify/PayPal/QuickBooks/Square, TypeScript SDK, CLI, web UI in development. OpenTelemetry instrumentation present. Ready for 2-3 design partners.
 
 **Key Differentiators:**
+
 - 5-minute API integration vs. weeks of custom code
 - Real-time reconciliation vs. batch processing
 - Composable adapters (Lego-block architecture)
@@ -46,12 +50,14 @@
 #### Current Artifacts
 
 **Landing/Marketing Pages:**
+
 - Main landing page (settler.io)
 - Pricing page (settler.io/pricing)
 - Documentation hub (docs.settler.io)
 - API reference (comprehensive, exists)
 
 **Docs / API Reference:**
+
 - ✅ Comprehensive API reference (`marketing/customer-acquisition-kit/api-reference-comprehensive.md`)
 - ✅ Quick start guide (`QUICK_START_GUIDE.md`)
 - ✅ Onboarding experience doc (`marketing/customer-acquisition-kit/onboarding-experience.md`)
@@ -60,6 +66,7 @@
 - ⚠️ Missing: Code examples repository
 
 **Onboarding (Sign-up → API Key → First Integration):**
+
 - ✅ Sign-up flow documented
 - ✅ API key generation flow documented
 - ✅ SDK installation documented (`npm install @settler/sdk`)
@@ -68,6 +75,7 @@
 - ⚠️ Unknown: Interactive onboarding wizard state
 
 **Core Surfaces:**
+
 - ✅ Dashboard concept (mentioned in docs)
 - ✅ Jobs management (API exists: `POST /api/v1/jobs`, `GET /api/v1/jobs`)
 - ✅ Reports (`GET /api/v1/reports/:jobId`)
@@ -84,38 +92,38 @@
 1. First Visit (settler.io)
    → Landing page with value prop
    → "Get Started" CTA
-   
+
 2. Sign-up
    → Email/password or OAuth (GitHub/Google)
    → Email verification
    → Welcome screen
-   
+
 3. Get API Key
    → Dashboard → Settings → API Keys
    → Create key → Copy (shown once)
    → ⚠️ FRICTION: No inline copy-to-clipboard confirmation
-   
+
 4. Install SDK
    → npm install @settler/sdk
    → ⚠️ FRICTION: No quickstart script or CLI wizard
-   
+
 5. First Integration
    → Create job via API or playground
    → Configure adapters (Stripe, Shopify, etc.)
    → ⚠️ FRICTION: Adapter config unclear (what fields required?)
    → ⚠️ FRICTION: No test mode toggle visible
-   
+
 6. First Event Ingested
    → Webhook or manual trigger
    → ⚠️ FRICTION: No real-time status indicator
    → ⚠️ FRICTION: Errors unclear (what went wrong?)
-   
+
 7. First Reconciliation Done
    → GET /api/v1/reports/:jobId
    → View matched/unmatched
    → ⚠️ FRICTION: Report format may be overwhelming
    → ⚠️ FRICTION: No visual diff view
-   
+
 8. Export to Accounting/Warehouse
    → CSV/JSON export
    → ⚠️ FRICTION: No QuickBooks/Xero direct sync UI
@@ -128,24 +136,24 @@
 1. Login
    → Dashboard (assumes web UI exists)
    → ⚠️ FRICTION: May not have web UI yet
-   
+
 2. See Accounts/Gateways
    → List of connected platforms
    → ⚠️ FRICTION: No visual connection status
    → ⚠️ FRICTION: No last sync timestamp
-   
+
 3. Understand Status
    → Reconciliation summary
    → Matched vs. unmatched counts
    → ⚠️ FRICTION: No confidence scores explained
    → ⚠️ FRICTION: No drill-down into why unmatched
-   
+
 4. Resolve Exception
    → Exception queue
    → ⚠️ FRICTION: No exception queue UI confirmed
    → ⚠️ FRICTION: No bulk actions (approve/reject)
    → ⚠️ FRICTION: No audit trail visible
-   
+
 5. Trust Numbers
    → Export reports
    → ⚠️ FRICTION: No "reconciliation certified" badge
@@ -158,48 +166,56 @@
 #### Critical Friction Points
 
 **1. API Key Onboarding**
+
 - **Issue:** API key shown once, no easy way to regenerate if lost
 - **Impact:** High activation friction
 - **Severity:** H
 - **Fix:** Add "Regenerate" button, show masked key in list, allow multiple keys
 
 **2. Adapter Configuration Ambiguity**
+
 - **Issue:** Docs show `config: { apiKey: "..." }` but don't specify required vs. optional fields per adapter
 - **Impact:** High activation friction (developers guess config)
 - **Severity:** H
 - **Fix:** Schema validation errors with specific field requirements, adapter-specific docs
 
 **3. Error Messages Too Generic**
+
 - **Issue:** API returns `ValidationError` but doesn't explain which field failed
 - **Impact:** High activation friction (trial-and-error debugging)
 - **Severity:** H
 - **Fix:** Detailed error responses with field-level validation messages
 
 **4. No Test Mode Toggle**
+
 - **Issue:** No clear way to test without using production API keys
 - **Impact:** High activation friction (fear of breaking production)
 - **Severity:** H
 - **Fix:** Test mode toggle in dashboard, sandbox environment
 
 **5. Report Format Overwhelming**
+
 - **Issue:** JSON response with nested structures may confuse non-technical users
 - **Impact:** Medium retention friction (finance users can't understand results)
 - **Severity:** M
 - **Fix:** Visual report UI, summary cards, drill-down views
 
 **6. Missing Trust Anchors**
+
 - **Issue:** No visible indicators of accuracy, compliance, or auditability
 - **Impact:** High trust friction (finance won't trust automated reconciliation)
 - **Severity:** H
 - **Fix:** Accuracy badges, confidence scores explained, audit trail visible, SOC 2 badge
 
 **7. No Real-Time Status**
+
 - **Issue:** No way to see reconciliation progress in real-time
 - **Impact:** Medium activation friction (users don't know if it's working)
 - **Severity:** M
 - **Fix:** SSE endpoint for status updates, progress bar in UI
 
 **8. Exception Queue Missing**
+
 - **Issue:** No UI for reviewing unmatched transactions
 - **Impact:** High retention friction (can't resolve issues)
 - **Severity:** H
@@ -235,22 +251,23 @@
 
 ### 1.3 UX Issue Backlog
 
-| ID | Area | Description | Severity | Impact | Est. Effort |
-|----|------|-------------|----------|--------|------------|
-| UX-001 | Onboarding | API key shown once, no regenerate | H | Activation | S (2 days) |
-| UX-002 | Adapters | Adapter config schema unclear | H | Activation | M (5 days) |
-| UX-003 | Errors | Generic error messages | H | Activation | S (2 days) |
-| UX-004 | Testing | No test mode toggle | H | Activation | M (5 days) |
-| UX-005 | Reports | JSON format overwhelming | M | Retention | L (3 days) |
-| UX-006 | Trust | Missing trust anchors | H | Trust | M (5 days) |
-| UX-007 | Status | No real-time progress | M | Activation | S (2 days) |
-| UX-008 | Exceptions | No exception queue UI | H | Retention | L (8 days) |
-| UX-009 | Rules | No rules editor UI | M | Retention | L (8 days) |
-| UX-010 | Examples | Missing code examples | M | Activation | S (3 days) |
-| UX-011 | Playground | No interactive playground | M | Activation | L (10 days) |
-| UX-012 | Multi-currency | FX docs missing | M | Retention | S (2 days) |
+| ID     | Area           | Description                       | Severity | Impact     | Est. Effort |
+| ------ | -------------- | --------------------------------- | -------- | ---------- | ----------- |
+| UX-001 | Onboarding     | API key shown once, no regenerate | H        | Activation | S (2 days)  |
+| UX-002 | Adapters       | Adapter config schema unclear     | H        | Activation | M (5 days)  |
+| UX-003 | Errors         | Generic error messages            | H        | Activation | S (2 days)  |
+| UX-004 | Testing        | No test mode toggle               | H        | Activation | M (5 days)  |
+| UX-005 | Reports        | JSON format overwhelming          | M        | Retention  | L (3 days)  |
+| UX-006 | Trust          | Missing trust anchors             | H        | Trust      | M (5 days)  |
+| UX-007 | Status         | No real-time progress             | M        | Activation | S (2 days)  |
+| UX-008 | Exceptions     | No exception queue UI             | H        | Retention  | L (8 days)  |
+| UX-009 | Rules          | No rules editor UI                | M        | Retention  | L (8 days)  |
+| UX-010 | Examples       | Missing code examples             | M        | Activation | S (3 days)  |
+| UX-011 | Playground     | No interactive playground         | M        | Activation | L (10 days) |
+| UX-012 | Multi-currency | FX docs missing                   | M        | Retention  | S (2 days)  |
 
 **Must-Fix Before Broad Beta:**
+
 - UX-001: API key regeneration
 - UX-002: Adapter config clarity
 - UX-003: Detailed error messages
@@ -263,11 +280,13 @@
 #### Positioning Lines
 
 **Headlines:**
+
 - "From webhook chaos to reconciled ledger in milliseconds"
 - "Stop manually matching Stripe and Shopify. Start automating reconciliation."
 - "Reconciliation-as-a-Service: API-first, real-time, developer-friendly"
 
 **Value Props:**
+
 - "5-minute integration. 99%+ accuracy. Zero maintenance."
 - "Reconcile Stripe, Shopify, QuickBooks, and 50+ platforms with one API."
 - "Real-time reconciliation with confidence scores and exception handling."
@@ -275,13 +294,14 @@
 #### Example API Calls
 
 **Quickstart Snippet (Add to docs):**
+
 ```typescript
 // 1. Install: npm install @settler/sdk
 import Settler from "@settler/sdk";
 
 // 2. Initialize
-const settler = new Settler({ 
-  apiKey: process.env.SETTLER_API_KEY 
+const settler = new Settler({
+  apiKey: process.env.SETTLER_API_KEY,
 });
 
 // 3. Create job (Shopify → Stripe)
@@ -292,9 +312,9 @@ const job = await settler.jobs.create({
   rules: {
     matching: [
       { field: "order_id", type: "exact" },
-      { field: "amount", type: "exact", tolerance: 0.01 }
-    ]
-  }
+      { field: "amount", type: "exact", tolerance: 0.01 },
+    ],
+  },
 });
 
 // 4. Run reconciliation
@@ -309,6 +329,7 @@ console.log(`Accuracy: ${report.data.summary.accuracy}%`);
 #### Improved Empty States
 
 **No Jobs Yet:**
+
 ```
 🎯 Create Your First Reconciliation Job
 
@@ -318,6 +339,7 @@ Connect your platforms and start automating reconciliation.
 ```
 
 **No Matches Found:**
+
 ```
 ⚠️ No Matches Found
 
@@ -330,6 +352,7 @@ Possible reasons:
 ```
 
 **Error State:**
+
 ```
 ❌ Reconciliation Failed
 
@@ -343,6 +366,7 @@ Time: 2026-01-15 10:00:00 UTC
 #### Product Tour Outline
 
 **For Developers (5 steps, 3 minutes):**
+
 1. **Sign up** → Get API key (30s)
 2. **Install SDK** → `npm install @settler/sdk` (30s)
 3. **Create job** → Copy-paste example (60s)
@@ -350,6 +374,7 @@ Time: 2026-01-15 10:00:00 UTC
 5. **Set up webhooks** → Real-time notifications (30s)
 
 **For Finance (5 steps, 5 minutes):**
+
 1. **Connect platforms** → Stripe, Shopify, QuickBooks (90s)
 2. **Configure rules** → Match by order ID + amount (60s)
 3. **Run first reconciliation** → See matched/unmatched (60s)
@@ -364,54 +389,54 @@ Time: 2026-01-15 10:00:00 UTC
 
 #### Marketing & Signup Events
 
-| Event Name | Trigger | Properties | Owner System |
-|------------|--------|------------|-------------|
-| `PageViewed` | User visits any page | `page`, `referrer`, `utm_source`, `utm_medium`, `utm_campaign` | Frontend |
-| `SignupStarted` | User clicks "Sign Up" | `source`, `referrer` | Frontend |
-| `SignupCompleted` | User completes signup form | `email`, `signup_method` (email/oauth), `source` | Backend |
-| `EmailVerified` | User verifies email | `user_id`, `email`, `time_to_verify` (seconds) | Backend |
-| `WaitlistJoined` | User joins waitlist | `email`, `source` | Frontend |
-| `PricingPageViewed` | User views pricing | `source`, `referrer` | Frontend |
-| `PlanSelected` | User selects plan | `plan`, `source` | Frontend |
+| Event Name          | Trigger                    | Properties                                                     | Owner System |
+| ------------------- | -------------------------- | -------------------------------------------------------------- | ------------ |
+| `PageViewed`        | User visits any page       | `page`, `referrer`, `utm_source`, `utm_medium`, `utm_campaign` | Frontend     |
+| `SignupStarted`     | User clicks "Sign Up"      | `source`, `referrer`                                           | Frontend     |
+| `SignupCompleted`   | User completes signup form | `email`, `signup_method` (email/oauth), `source`               | Backend      |
+| `EmailVerified`     | User verifies email        | `user_id`, `email`, `time_to_verify` (seconds)                 | Backend      |
+| `WaitlistJoined`    | User joins waitlist        | `email`, `source`                                              | Frontend     |
+| `PricingPageViewed` | User views pricing         | `source`, `referrer`                                           | Frontend     |
+| `PlanSelected`      | User selects plan          | `plan`, `source`                                               | Frontend     |
 
 #### Product & Activation Events
 
-| Event Name | Trigger | Properties | Owner System |
-|------------|--------|------------|-------------|
-| `APIKeyCreated` | User creates API key | `user_id`, `key_type` (test/live), `key_id` | Backend |
-| `IntegrationConfigured` | User connects adapter | `user_id`, `adapter`, `adapter_type` (source/target) | Backend |
-| `JobCreated` | User creates reconciliation job | `user_id`, `job_id`, `source_adapter`, `target_adapter`, `has_schedule` | Backend |
-| `EventIngested` | Transaction ingested from adapter | `job_id`, `adapter`, `event_type`, `event_id`, `amount`, `currency` | Worker |
-| `ReconciliationRun` | Job execution started | `job_id`, `execution_id`, `trigger` (manual/scheduled/webhook), `date_range` | Worker |
-| `ReconciliationSuccess` | Job completed successfully | `job_id`, `execution_id`, `matched_count`, `unmatched_count`, `accuracy`, `duration_ms` | Worker |
-| `ReconciliationError` | Job failed | `job_id`, `execution_id`, `error_type`, `error_message`, `adapter` | Worker |
-| `ExportTriggered` | User exports report | `user_id`, `job_id`, `format` (csv/json/pdf), `date_range` | Backend |
-| `WebhookCreated` | User creates webhook | `user_id`, `webhook_id`, `events` (array) | Backend |
-| `WebhookDelivered` | Webhook sent successfully | `webhook_id`, `event_type`, `status_code`, `latency_ms` | Worker |
-| `WebhookFailed` | Webhook delivery failed | `webhook_id`, `event_type`, `error`, `retry_count` | Worker |
-| `ExceptionResolved` | User resolves unmatched item | `user_id`, `job_id`, `exception_id`, `resolution` (matched/manual/ignored) | Backend |
-| `MatchingRuleUpdated` | User updates matching rules | `user_id`, `job_id`, `rule_type`, `rule_config` | Backend |
+| Event Name              | Trigger                           | Properties                                                                              | Owner System |
+| ----------------------- | --------------------------------- | --------------------------------------------------------------------------------------- | ------------ |
+| `APIKeyCreated`         | User creates API key              | `user_id`, `key_type` (test/live), `key_id`                                             | Backend      |
+| `IntegrationConfigured` | User connects adapter             | `user_id`, `adapter`, `adapter_type` (source/target)                                    | Backend      |
+| `JobCreated`            | User creates reconciliation job   | `user_id`, `job_id`, `source_adapter`, `target_adapter`, `has_schedule`                 | Backend      |
+| `EventIngested`         | Transaction ingested from adapter | `job_id`, `adapter`, `event_type`, `event_id`, `amount`, `currency`                     | Worker       |
+| `ReconciliationRun`     | Job execution started             | `job_id`, `execution_id`, `trigger` (manual/scheduled/webhook), `date_range`            | Worker       |
+| `ReconciliationSuccess` | Job completed successfully        | `job_id`, `execution_id`, `matched_count`, `unmatched_count`, `accuracy`, `duration_ms` | Worker       |
+| `ReconciliationError`   | Job failed                        | `job_id`, `execution_id`, `error_type`, `error_message`, `adapter`                      | Worker       |
+| `ExportTriggered`       | User exports report               | `user_id`, `job_id`, `format` (csv/json/pdf), `date_range`                              | Backend      |
+| `WebhookCreated`        | User creates webhook              | `user_id`, `webhook_id`, `events` (array)                                               | Backend      |
+| `WebhookDelivered`      | Webhook sent successfully         | `webhook_id`, `event_type`, `status_code`, `latency_ms`                                 | Worker       |
+| `WebhookFailed`         | Webhook delivery failed           | `webhook_id`, `event_type`, `error`, `retry_count`                                      | Worker       |
+| `ExceptionResolved`     | User resolves unmatched item      | `user_id`, `job_id`, `exception_id`, `resolution` (matched/manual/ignored)              | Backend      |
+| `MatchingRuleUpdated`   | User updates matching rules       | `user_id`, `job_id`, `rule_type`, `rule_config`                                         | Backend      |
 
 #### Billing & Usage Events
 
-| Event Name | Trigger | Properties | Owner System |
-|------------|--------|------------|-------------|
-| `PlanChanged` | User upgrades/downgrades | `user_id`, `old_plan`, `new_plan`, `billing_cycle` | Backend |
-| `InvoiceGenerated` | Monthly invoice created | `user_id`, `invoice_id`, `amount`, `currency`, `period_start`, `period_end` | Backend |
-| `PaymentSucceeded` | Payment processed | `user_id`, `invoice_id`, `amount`, `payment_method` | Backend |
-| `PaymentFailed` | Payment failed | `user_id`, `invoice_id`, `amount`, `error` | Backend |
-| `QuotaExceeded` | User exceeds plan limits | `user_id`, `quota_type` (reconciliations/adapters), `current_usage`, `limit` | Backend |
-| `OverageCharged` | Overage fees applied | `user_id`, `amount`, `reconciliations_over_limit` | Backend |
+| Event Name         | Trigger                  | Properties                                                                   | Owner System |
+| ------------------ | ------------------------ | ---------------------------------------------------------------------------- | ------------ |
+| `PlanChanged`      | User upgrades/downgrades | `user_id`, `old_plan`, `new_plan`, `billing_cycle`                           | Backend      |
+| `InvoiceGenerated` | Monthly invoice created  | `user_id`, `invoice_id`, `amount`, `currency`, `period_start`, `period_end`  | Backend      |
+| `PaymentSucceeded` | Payment processed        | `user_id`, `invoice_id`, `amount`, `payment_method`                          | Backend      |
+| `PaymentFailed`    | Payment failed           | `user_id`, `invoice_id`, `amount`, `error`                                   | Backend      |
+| `QuotaExceeded`    | User exceeds plan limits | `user_id`, `quota_type` (reconciliations/adapters), `current_usage`, `limit` | Backend      |
+| `OverageCharged`   | Overage fees applied     | `user_id`, `amount`, `reconciliations_over_limit`                            | Backend      |
 
 #### Support & Engagement Events
 
-| Event Name | Trigger | Properties | Owner System |
-|------------|--------|------------|-------------|
-| `SupportTicketCreated` | User creates support ticket | `user_id`, `ticket_id`, `category`, `priority` | Backend |
-| `DocumentationViewed` | User views docs | `user_id`, `page`, `search_query` (if searched) | Frontend |
-| `ExampleCopied` | User copies code example | `user_id`, `example_id`, `language` | Frontend |
-| `PlaygroundUsed` | User uses interactive playground | `user_id`, `adapter_combination`, `success` (boolean) | Frontend |
-| `TutorialCompleted` | User completes tutorial | `user_id`, `tutorial_id`, `completion_time` (seconds) | Frontend |
+| Event Name             | Trigger                          | Properties                                            | Owner System |
+| ---------------------- | -------------------------------- | ----------------------------------------------------- | ------------ |
+| `SupportTicketCreated` | User creates support ticket      | `user_id`, `ticket_id`, `category`, `priority`        | Backend      |
+| `DocumentationViewed`  | User views docs                  | `user_id`, `page`, `search_query` (if searched)       | Frontend     |
+| `ExampleCopied`        | User copies code example         | `user_id`, `example_id`, `language`                   | Frontend     |
+| `PlaygroundUsed`       | User uses interactive playground | `user_id`, `adapter_combination`, `success` (boolean) | Frontend     |
+| `TutorialCompleted`    | User completes tutorial          | `user_id`, `tutorial_id`, `completion_time` (seconds) | Frontend     |
 
 ### 2.2 Dashboards & KPIs
 
@@ -420,6 +445,7 @@ Time: 2026-01-15 10:00:00 UTC
 **Purpose:** Track user activation funnel and identify drop-off points.
 
 **Core Charts:**
+
 1. **Signup Funnel**
    - SignupStarted → SignupCompleted → EmailVerified → APIKeyCreated → JobCreated → ReconciliationSuccess
    - Shows conversion rate at each step
@@ -439,6 +465,7 @@ Time: 2026-01-15 10:00:00 UTC
    - **Why:** Indicates onboarding clarity
 
 **Metrics:**
+
 - Activation rate: % who create first job within 7 days (target: 60%+)
 - Time to first value: Median time signup → first reconciliation (target: <24h)
 - Drop-off rate: % who drop off at each funnel step
@@ -449,6 +476,7 @@ Time: 2026-01-15 10:00:00 UTC
 **Purpose:** Monitor reconciliation performance, accuracy, and system health.
 
 **Core Charts:**
+
 1. **Reconciliation Volume**
    - Daily/weekly/monthly reconciliation count
    - Grouped by adapter combination
@@ -474,6 +502,7 @@ Time: 2026-01-15 10:00:00 UTC
    - **Why:** Identifies matching rule issues
 
 **Metrics:**
+
 - Reconciliation accuracy: Average % matched (target: 95%+)
 - Error rate: % of jobs that fail (target: <1%)
 - P95 latency: 95th percentile job duration (target: <30s)
@@ -484,6 +513,7 @@ Time: 2026-01-15 10:00:00 UTC
 **Purpose:** Track revenue, pricing efficiency, and customer value.
 
 **Core Charts:**
+
 1. **MRR Trend**
    - Monthly recurring revenue over time
    - Grouped by plan (Free, Starter, Growth, Scale, Enterprise)
@@ -511,6 +541,7 @@ Time: 2026-01-15 10:00:00 UTC
    - **Why:** Identifies retention issues (target: <5%)
 
 **Metrics:**
+
 - MRR: Monthly recurring revenue (target: $50K by Month 12)
 - ARPU: Average revenue per user (target: $50/month)
 - LTV:CAC: Lifetime value / CAC (target: >10x)
@@ -522,6 +553,7 @@ Time: 2026-01-15 10:00:00 UTC
 **Purpose:** Monitor support load, exception resolution, and customer satisfaction.
 
 **Core Charts:**
+
 1. **Support Ticket Volume**
    - Daily/weekly ticket count
    - Grouped by category (technical, billing, feature_request)
@@ -545,6 +577,7 @@ Time: 2026-01-15 10:00:00 UTC
    - **Why:** Ensures SLA compliance
 
 **Metrics:**
+
 - Support ticket volume: Daily ticket count
 - Exception resolution time: Median time to resolve (target: <24h)
 - Manual reconciliation rate: % requiring manual work (target: <10%)
@@ -556,27 +589,32 @@ Time: 2026-01-15 10:00:00 UTC
 #### Where to Instrument
 
 **Frontend (Web UI):**
+
 - Use analytics library (PostHog, Mixpanel, or custom)
 - Track page views, clicks, form submissions
 - Send events to backend API endpoint: `POST /api/v1/events`
 
 **Backend API:**
+
 - Middleware to track API calls (already have observability middleware)
 - Add business event logging: `logBusinessEvent(eventName, properties)`
 - Store in `events` table or send to analytics service
 
 **Workers (Reconciliation Jobs):**
+
 - Track job execution events (start, success, error)
 - Include job metadata (adapter, duration, accuracy)
 - Send to event bus or analytics service
 
 **SDK:**
+
 - Optional: Track SDK usage (version, method calls)
 - Send to backend: `POST /api/v1/events` (with user context)
 
 #### Event Storage
 
 **Option 1: Database Table (Simple)**
+
 ```sql
 CREATE TABLE events (
   id UUID PRIMARY KEY,
@@ -591,11 +629,13 @@ CREATE INDEX idx_events_name_timestamp ON events(event_name, timestamp);
 ```
 
 **Option 2: Analytics Service (Scalable)**
+
 - Use PostHog, Mixpanel, or Amplitude
 - Send events via API
 - Use for real-time dashboards
 
 **Option 3: Event Store (Advanced)**
+
 - Already have event sourcing infrastructure
 - Extend `event_store` table to include business events
 - Use for audit trail + analytics
@@ -603,12 +643,14 @@ CREATE INDEX idx_events_name_timestamp ON events(event_name, timestamp);
 #### Health Checks
 
 **Tracking Health:**
+
 1. **Event Volume Check:** Daily event count should be >0 (if no events, tracking broken)
 2. **Event Completeness:** % of users with events (should be 100% for active users)
 3. **Event Latency:** Time from event occurrence to storage (should be <1s)
 4. **Missing Events:** Check for gaps in expected event sequences (e.g., SignupCompleted without EmailVerified)
 
 **Alerts:**
+
 - Event volume drops >50% day-over-day
 - Missing critical events (e.g., no ReconciliationSuccess events for 24h)
 - Event storage latency >5s
@@ -626,6 +668,7 @@ CREATE INDEX idx_events_name_timestamp ON events(event_name, timestamp);
 **Stories:**
 
 **E1-S1: Adapter Data Ingestion**
+
 - **Tasks:**
   - ✅ Stripe adapter (exists)
   - ✅ Shopify adapter (exists)
@@ -643,6 +686,7 @@ CREATE INDEX idx_events_name_timestamp ON events(event_name, timestamp);
 - **Stage:** MVP
 
 **E1-S2: Canonical Data Model**
+
 - **Tasks:**
   - ✅ Canonical transaction schema (exists in types)
   - ⚠️ Field mapping UI (for custom fields)
@@ -656,6 +700,7 @@ CREATE INDEX idx_events_name_timestamp ON events(event_name, timestamp);
 - **Stage:** v1.1
 
 **E1-S3: Real-Time Ingestion**
+
 - **Tasks:**
   - ⚠️ Webhook ingestion endpoint
   - ⚠️ Webhook signature verification
@@ -675,6 +720,7 @@ CREATE INDEX idx_events_name_timestamp ON events(event_name, timestamp);
 **Stories:**
 
 **E2-S1: Matching Rules Engine**
+
 - **Tasks:**
   - ✅ Basic matching (exact, fuzzy, range) (exists)
   - ⚠️ Rules editor UI (UX-009)
@@ -689,6 +735,7 @@ CREATE INDEX idx_events_name_timestamp ON events(event_name, timestamp);
 - **Stage:** MVP (basic), v1.1 (UI)
 
 **E2-S2: Exception Handling**
+
 - **Tasks:**
   - ⚠️ Exception queue UI (UX-008)
   - ⚠️ Bulk actions (approve/reject)
@@ -702,6 +749,7 @@ CREATE INDEX idx_events_name_timestamp ON events(event_name, timestamp);
 - **Stage:** MVP
 
 **E2-S3: Multi-Currency Support**
+
 - **Tasks:**
   - ⚠️ FX conversion service (exists: `FXService.ts`)
   - ⚠️ Currency-aware matching
@@ -721,6 +769,7 @@ CREATE INDEX idx_events_name_timestamp ON events(event_name, timestamp);
 **Stories:**
 
 **E3-S1: SDK Improvements**
+
 - **Tasks:**
   - ✅ TypeScript SDK (exists)
   - ⚠️ Python SDK (exists but needs testing)
@@ -736,6 +785,7 @@ CREATE INDEX idx_events_name_timestamp ON events(event_name, timestamp);
 - **Stage:** MVP
 
 **E3-S2: Documentation**
+
 - **Tasks:**
   - ✅ API reference (exists)
   - ⚠️ Integration guides per adapter
@@ -750,6 +800,7 @@ CREATE INDEX idx_events_name_timestamp ON events(event_name, timestamp);
 - **Stage:** MVP
 
 **E3-S3: Interactive Playground**
+
 - **Tasks:**
   - ⚠️ No-signup playground (UX-011)
   - ⚠️ Pre-filled examples
@@ -763,6 +814,7 @@ CREATE INDEX idx_events_name_timestamp ON events(event_name, timestamp);
 - **Stage:** v1.1
 
 **E3-S4: CLI Improvements**
+
 - **Tasks:**
   - ✅ CLI exists (`packages/cli`)
   - ⚠️ CLI quickstart wizard
@@ -781,6 +833,7 @@ CREATE INDEX idx_events_name_timestamp ON events(event_name, timestamp);
 **Stories:**
 
 **E4-S1: Event Tracking**
+
 - **Tasks:**
   - ⚠️ Event tracking middleware (extend existing)
   - ⚠️ Event storage (database table or analytics service)
@@ -794,6 +847,7 @@ CREATE INDEX idx_events_name_timestamp ON events(event_name, timestamp);
 - **Stage:** MVP
 
 **E4-S2: Dashboards**
+
 - **Tasks:**
   - ⚠️ Activation dashboard (Grafana or custom)
   - ⚠️ Usage dashboard
@@ -808,6 +862,7 @@ CREATE INDEX idx_events_name_timestamp ON events(event_name, timestamp);
 - **Stage:** MVP
 
 **E4-S3: Alerts**
+
 - **Tasks:**
   - ⚠️ Alert rules (accuracy drops, error spikes)
   - ⚠️ Alert channels (Slack, email, PagerDuty)
@@ -827,6 +882,7 @@ CREATE INDEX idx_events_name_timestamp ON events(event_name, timestamp);
 **Stories:**
 
 **E5-S1: Dashboard UI**
+
 - **Tasks:**
   - ⚠️ Reconciliation summary cards
   - ⚠️ Accuracy trends chart
@@ -840,6 +896,7 @@ CREATE INDEX idx_events_name_timestamp ON events(event_name, timestamp);
 - **Stage:** MVP
 
 **E5-S2: Exception Queue UI**
+
 - **Tasks:**
   - ⚠️ Exception list view (UX-008)
   - ⚠️ Filters (date, adapter, reason)
@@ -855,6 +912,7 @@ CREATE INDEX idx_events_name_timestamp ON events(event_name, timestamp);
 - **Stage:** MVP
 
 **E5-S3: Export & Reporting**
+
 - **Tasks:**
   - ✅ CSV export (exists: `CSVExporter.ts`)
   - ✅ JSON export (exists: `JSONExporter.ts`)
@@ -876,6 +934,7 @@ CREATE INDEX idx_events_name_timestamp ON events(event_name, timestamp);
 **Stories:**
 
 **E6-S1: Accounting Integrations**
+
 - **Tasks:**
   - ✅ QuickBooks adapter (exists)
   - ⚠️ Xero adapter
@@ -890,6 +949,7 @@ CREATE INDEX idx_events_name_timestamp ON events(event_name, timestamp);
 - **Stage:** v1.1 (Xero), Later (NetSuite)
 
 **E6-S2: Partner Integrations**
+
 - **Tasks:**
   - ⚠️ Stripe Partner Directory listing
   - ⚠️ Shopify App Store app
@@ -907,6 +967,7 @@ CREATE INDEX idx_events_name_timestamp ON events(event_name, timestamp);
 #### Must-Have Now (MVP - Months 0-2)
 
 **Core Functionality:**
+
 - ✅ Adapter ingestion (Stripe, Shopify, PayPal, QuickBooks, Square)
 - ✅ Basic matching (exact, fuzzy, range)
 - ✅ Reconciliation execution
@@ -917,6 +978,7 @@ CREATE INDEX idx_events_name_timestamp ON events(event_name, timestamp);
 - ⚠️ Detailed error messages (UX-003)
 
 **Developer Experience:**
+
 - ✅ TypeScript SDK
 - ✅ CLI
 - ✅ API reference
@@ -924,12 +986,14 @@ CREATE INDEX idx_events_name_timestamp ON events(event_name, timestamp);
 - ⚠️ Adapter config clarity (UX-002)
 
 **Non-Functional:**
+
 - ✅ OpenTelemetry instrumentation
 - ⚠️ Event tracking (E4-S1)
 - ⚠️ Basic dashboards (E4-S2)
 - ⚠️ Error alerting (E4-S3)
 
 **SLOs for MVP:**
+
 - Latency: P95 <30s for reconciliation jobs
 - Accuracy: 95%+ match rate
 - Uptime: 99.5% (allows for planned maintenance)
@@ -938,17 +1002,20 @@ CREATE INDEX idx_events_name_timestamp ON events(event_name, timestamp);
 #### Should-Have (v1.1 - Months 3-4)
 
 **Product:**
+
 - Rules editor UI (UX-009)
 - Interactive playground (UX-011)
 - Multi-currency support (E2-S3)
 - Xero adapter (E6-S1)
 
 **Developer Experience:**
+
 - Python/Go/Ruby SDKs tested
 - Video tutorials
 - Integration guides per adapter
 
 **Operations:**
+
 - Advanced dashboards
 - Automated alerting
 - Support ticket integration
@@ -956,12 +1023,14 @@ CREATE INDEX idx_events_name_timestamp ON events(event_name, timestamp);
 #### Could-Have (Later - Months 5-6)
 
 **Product:**
+
 - NetSuite adapter
 - Custom adapter builder UI
 - AI-powered matching suggestions
 - Advanced analytics
 
 **Enterprise:**
+
 - SSO (SAML, OIDC)
 - VPC peering
 - Custom SLAs
@@ -970,6 +1039,7 @@ CREATE INDEX idx_events_name_timestamp ON events(event_name, timestamp);
 #### Won't-Have (Yet)
 
 **Not in Scope:**
+
 - Mobile apps
 - White-label solution
 - On-premise deployment
@@ -982,12 +1052,14 @@ CREATE INDEX idx_events_name_timestamp ON events(event_name, timestamp);
 **Goal:** Run 2-3 design partners end-to-end with minimal support pain.
 
 **Focus Areas:**
+
 1. **Core Reliability:** Fix critical bugs, ensure 99%+ accuracy
 2. **Developer Experience:** Clear errors, test mode, code examples
 3. **Exception Handling:** Exception queue UI so finance can resolve issues
 4. **Trust Anchors:** Accuracy badges, confidence scores, audit trail visible
 
 **Deliverables:**
+
 - Exception queue UI (UX-008)
 - Test mode toggle (UX-004)
 - Detailed error messages (UX-003)
@@ -996,6 +1068,7 @@ CREATE INDEX idx_events_name_timestamp ON events(event_name, timestamp);
 - Activation dashboard (E4-S2)
 
 **Success Criteria:**
+
 - 2-3 design partners running production reconciliations
 - <5% manual intervention rate
 - NPS >40 from design partners
@@ -1005,12 +1078,14 @@ CREATE INDEX idx_events_name_timestamp ON events(event_name, timestamp);
 **Goal:** Launch open beta with self-service onboarding and minimal support load.
 
 **Focus Areas:**
+
 1. **Self-Service:** Interactive playground, video tutorials, comprehensive docs
 2. **Onboarding:** Smooth signup → API key → first reconciliation flow
 3. **Support Scale:** Documentation, troubleshooting guide, automated alerts
 4. **Partner Integrations:** Stripe Partner Directory, Shopify App Store
 
 **Deliverables:**
+
 - Interactive playground (UX-011)
 - Rules editor UI (UX-009)
 - Video tutorials (E3-S2)
@@ -1020,6 +1095,7 @@ CREATE INDEX idx_events_name_timestamp ON events(event_name, timestamp);
 - Advanced dashboards (E4-S2)
 
 **Success Criteria:**
+
 - 100+ beta users
 - 60%+ activation rate
 - <24h time to first value
@@ -1030,12 +1106,14 @@ CREATE INDEX idx_events_name_timestamp ON events(event_name, timestamp);
 **Goal:** Convert beta users to paying customers, hit $10K MRR.
 
 **Focus Areas:**
+
 1. **Pricing & Billing:** Usage tracking, invoicing, payment processing
 2. **Enterprise Features:** SSO, custom SLAs, dedicated support
 3. **Expansion:** Upsell prompts, usage alerts, feature gating
 4. **Retention:** Churn prevention, expansion revenue, referral program
 
 **Deliverables:**
+
 - Usage tracking & billing (if not exists)
 - SSO (SAML, OIDC) for Enterprise
 - Upsell prompts in UI
@@ -1043,6 +1121,7 @@ CREATE INDEX idx_events_name_timestamp ON events(event_name, timestamp);
 - NetSuite adapter (E6-S1)
 
 **Success Criteria:**
+
 - $10K MRR
 - 20% free-to-paid conversion
 - <5% monthly churn
@@ -1057,30 +1136,35 @@ CREATE INDEX idx_events_name_timestamp ON events(event_name, timestamp);
 #### ICP 1: D2C Brand CTO/Lead Dev
 
 **Profile:**
+
 - Company: D2C e-commerce brand ($1M-$10M ARR)
 - Role: CTO, VP Engineering, or Lead Developer
 - Tech Stack: Shopify + Stripe/PayPal/Square
 - Transaction Volume: 1,000-10,000 orders/month
 
 **Pains:**
+
 - Custom reconciliation code breaks with API changes
 - Engineering time wasted on non-core features
 - Manual reconciliation takes finance team hours daily
 - Multi-gateway fragmentation (different data formats)
 
 **Triggers:**
+
 - Scaling transaction volume
 - Adding new payment provider
 - Finance team complaining about reconciliation time
 - Audit/compliance requirements
 
 **Desired Outcomes:**
+
 - Eliminate custom reconciliation code
 - Reduce engineering maintenance burden
 - Automate reconciliation (finance self-serve)
 - Ensure accuracy and compliance
 
 **Where They Hang Out:**
+
 - Twitter/X (developer communities)
 - Hacker News
 - Indie Hackers
@@ -1088,11 +1172,13 @@ CREATE INDEX idx_events_name_timestamp ON events(event_name, timestamp);
 - Stripe Discord
 
 **Willingness to Pay:**
+
 - $29-$99/month (Starter or Growth plan)
 - Evaluation: 1-2 weeks (try free tier, then upgrade)
 - Decision maker: CTO/VP Eng (technical buyer)
 
 **Evaluation Path:**
+
 1. See Settler on Product Hunt / Twitter
 2. Try free tier (no credit card)
 3. Create first job (5 minutes)
@@ -1102,41 +1188,48 @@ CREATE INDEX idx_events_name_timestamp ON events(event_name, timestamp);
 #### ICP 2: SaaS Head of Eng/Finance
 
 **Profile:**
+
 - Company: B2B SaaS ($5M-$50M ARR)
 - Role: Head of Engineering or Head of Finance
 - Tech Stack: Stripe subscriptions + QuickBooks/Xero
 - Transaction Volume: 5,000-50,000 transactions/month
 
 **Pains:**
+
 - Manual reconciliation of Stripe subscriptions with accounting
 - Revenue recognition compliance
 - Multi-rail billing (Stripe + PayPal + bank transfers)
 - Month-end close takes 5-7 days
 
 **Triggers:**
+
 - Scaling subscription volume
 - Adding new billing method
 - Finance team overwhelmed
 - Audit preparation
 
 **Desired Outcomes:**
+
 - Automate subscription reconciliation
 - Ensure revenue recognition compliance
 - Reduce month-end close time (5-7 days → 1 day)
 - Real-time visibility into revenue
 
 **Where They Hang Out:**
+
 - LinkedIn (finance/operations groups)
 - SaaS communities (SaaS Growth, Revenue Operations)
 - Stripe Sessions (conference)
 - QuickBooks Community
 
 **Willingness to Pay:**
+
 - $99-$299/month (Growth or Scale plan)
 - Evaluation: 2-4 weeks (POC with finance team)
 - Decision maker: Head of Finance (business buyer) + Head of Eng (technical approval)
 
 **Evaluation Path:**
+
 1. See Settler via content marketing / LinkedIn
 2. Request demo (sales-assisted)
 3. POC with finance team (2 weeks)
@@ -1146,41 +1239,48 @@ CREATE INDEX idx_events_name_timestamp ON events(event_name, timestamp);
 #### ICP 3: Payment/Platform Engineer at Vertical SaaS
 
 **Profile:**
+
 - Company: Vertical SaaS / Marketplace ($10M-$100M ARR)
 - Role: Payment Engineer, Platform Engineer
 - Tech Stack: Multi-gateway (Stripe, PayPal, Square, Adyen) + custom billing
 - Transaction Volume: 10,000-100,000 transactions/month
 
 **Pains:**
+
 - Complex multi-gateway reconciliation
 - Custom billing logic reconciliation
 - High transaction volume (performance critical)
 - Compliance requirements (PCI-DSS, SOC 2)
 
 **Triggers:**
+
 - Adding new payment provider
 - Scaling transaction volume
 - Compliance audit
 - Performance issues with custom reconciliation
 
 **Desired Outcomes:**
+
 - Unified reconciliation across all gateways
 - High performance (sub-second reconciliation)
 - Compliance-ready (audit trails, SOC 2)
 - Custom adapter support
 
 **Where They Hang Out:**
+
 - Twitter/X (payment engineering communities)
 - Stripe Sessions
 - API World (conference)
 - GitHub (payment integration repos)
 
 **Willingness to Pay:**
+
 - $299-$1,000+/month (Scale or Enterprise)
 - Evaluation: 1-2 months (POC + technical deep dive)
 - Decision maker: CTO/VP Eng (technical buyer)
 
 **Evaluation Path:**
+
 1. See Settler via technical content / GitHub
 2. Technical evaluation (API quality, performance)
 3. POC with production data (1 month)
@@ -1192,6 +1292,7 @@ CREATE INDEX idx_events_name_timestamp ON events(event_name, timestamp);
 #### Self-Serve Path
 
 **Entry Channels:**
+
 1. **Product Hunt Launch** (Month 4)
    - Target: Top 5 Product of the Day
    - Preparation: Landing page, demo video, early supporters
@@ -1215,11 +1316,13 @@ CREATE INDEX idx_events_name_timestamp ON events(event_name, timestamp);
    - GitHub integrations marketplace
 
 **Landing Experience:**
+
 - **Landing Page:** Clear value prop ("5-minute integration. 99%+ accuracy.")
 - **Core CTA:** "Get Started Free" (no credit card)
 - **Trust Signals:** SOC 2 badge (when available), customer logos, accuracy stats
 
 **First 10 Minutes:**
+
 1. **Sign Up** (1 min): Email/password or OAuth
 2. **Get API Key** (1 min): Dashboard → Settings → API Keys
 3. **Try Playground** (3 min): No-code reconciliation test
@@ -1227,6 +1330,7 @@ CREATE INDEX idx_events_name_timestamp ON events(event_name, timestamp);
 5. **Create First Job** (3 min): Copy-paste example, run reconciliation
 
 **Activation Flow:**
+
 - **Email 1 (Immediate):** Welcome email with quickstart link
 - **Email 2 (Day 1):** "Create your first job" reminder
 - **Email 3 (Day 3):** "See your results" if job created
@@ -1239,12 +1343,14 @@ CREATE INDEX idx_events_name_timestamp ON events(event_name, timestamp);
 **Process:**
 
 **1. Lead Qualification (SDR)**
+
 - **ICP Scoring:** 80+ points (see ICP scoring model)
 - **Budget Verification:** $50K+/year
 - **Decision-Maker Identification:** CTO/VP Eng + CFO/Head of Finance
 - **Pain Point Discovery:** Manual reconciliation, compliance needs, scaling issues
 
 **2. Discovery Call (AE)**
+
 - **Core Questions:**
   - What platforms do you currently reconcile? (Stripe, Shopify, QuickBooks, etc.)
   - How many transactions per month?
@@ -1256,24 +1362,28 @@ CREATE INDEX idx_events_name_timestamp ON events(event_name, timestamp);
 - **Technical Fit:** API access, webhook support, data format compatibility
 
 **3. Demo & POC (AE + Solutions Engineer)**
+
 - **Custom Demo:** Show Settler configured for their use case
 - **Proof of Concept:** 2-4 weeks with production data (anonymized if needed)
 - **Success Criteria:** 95%+ accuracy, <24h time to first value, finance team approval
 - **Technical Validation:** API performance, adapter compatibility, webhook reliability
 
 **4. Proposal & Negotiation (AE)**
+
 - **Custom Pricing:** Based on volume, adapters, support needs
 - **Contract Negotiation:** SLA, support terms, data residency
 - **Legal & Security Review:** SOC 2, data processing agreement, security questionnaire
 - **Executive Sponsorship:** C-level approval if needed
 
 **5. Onboarding (Customer Success)**
+
 - **Kickoff Call:** Week 1, align on success metrics
 - **Account Setup:** Week 1-2, configure adapters, set up jobs
 - **Training Sessions:** Week 2, train finance team on exception queue
 - **Go-Live Support:** Week 3-4, monitor first reconciliations, resolve issues
 
 **Success Metrics:**
+
 - 30% demo-to-POC conversion
 - 50% POC-to-close conversion
 - 90-day sales cycle
@@ -1286,6 +1396,7 @@ CREATE INDEX idx_events_name_timestamp ON events(event_name, timestamp);
 **Hypothesis:** Product Hunt launch will drive 500+ signups and 50+ paying customers in first month.
 
 **First Experiment:**
+
 - **When:** Month 4
 - **Preparation:**
   - Landing page optimized
@@ -1302,6 +1413,7 @@ CREATE INDEX idx_events_name_timestamp ON events(event_name, timestamp);
   - Thank you post (Day 7)
 
 **Success Metrics:**
+
 - Top 5 Product of the Day
 - 500+ upvotes
 - 500+ signups
@@ -1309,6 +1421,7 @@ CREATE INDEX idx_events_name_timestamp ON events(event_name, timestamp);
 - $2,500 MRR from Product Hunt
 
 **Next Steps:**
+
 - If successful: Repeat for major updates
 - If unsuccessful: Analyze feedback, iterate, try again in 3 months
 
@@ -1317,6 +1430,7 @@ CREATE INDEX idx_events_name_timestamp ON events(event_name, timestamp);
 **Hypothesis:** SEO-optimized technical blog posts will drive 100+ signups per month.
 
 **First Experiment:**
+
 - **Content Plan (10 posts in 3 months):**
   1. "How to reconcile Stripe and Shopify automatically"
   2. "Building a reconciliation API: Architecture deep dive"
@@ -1339,12 +1453,14 @@ CREATE INDEX idx_events_name_timestamp ON events(event_name, timestamp);
   - "Payment reconciliation API" (500 searches/month)
 
 **Success Metrics:**
+
 - 10,000+ monthly blog visitors
 - 100+ signups per month from blog
 - 10+ paying customers per month from blog
 - Top 3 ranking for target keywords
 
 **Next Steps:**
+
 - If successful: Scale to 20+ posts, hire content writer
 - If unsuccessful: Analyze which posts perform, double down on winners
 
@@ -1353,6 +1469,7 @@ CREATE INDEX idx_events_name_timestamp ON events(event_name, timestamp);
 **Hypothesis:** Stripe Partner Directory listing will drive 200+ signups and 20+ paying customers in first 3 months.
 
 **First Experiment:**
+
 - **Requirements:**
   - Stripe integration (✅ exists)
   - SOC 2 certification (target: Q2 2026)
@@ -1366,12 +1483,14 @@ CREATE INDEX idx_events_name_timestamp ON events(event_name, timestamp);
   - Case study
 
 **Success Metrics:**
+
 - Listed in Stripe Partner Directory
 - 200+ signups from Stripe referrals
 - 20+ paying customers from Stripe
 - $1,000 MRR from Stripe referrals
 
 **Next Steps:**
+
 - If successful: Apply to other partner directories (Shopify, QuickBooks)
 - If unsuccessful: Improve integration, get more testimonials, reapply
 
@@ -1380,6 +1499,7 @@ CREATE INDEX idx_events_name_timestamp ON events(event_name, timestamp);
 **Hypothesis:** Engaging in developer communities will drive 50+ signups per month.
 
 **First Experiment:**
+
 - **Hacker News:**
   - Share technical blog posts (when relevant)
   - Answer questions in comments
@@ -1394,12 +1514,14 @@ CREATE INDEX idx_events_name_timestamp ON events(event_name, timestamp);
   - r/stripe: Share Stripe integration tips
 
 **Success Metrics:**
+
 - 50+ signups per month from communities
 - 5+ paying customers per month
 - 100+ upvotes on Hacker News posts
 - Active community presence
 
 **Next Steps:**
+
 - If successful: Hire community manager, scale engagement
 - If unsuccessful: Focus on quality over quantity, find better communities
 
@@ -1408,6 +1530,7 @@ CREATE INDEX idx_events_name_timestamp ON events(event_name, timestamp);
 **Hypothesis:** API directory listings will drive 100+ signups and 10+ paying customers in first 3 months.
 
 **First Experiment:**
+
 - **RapidAPI:**
   - List Settler API
   - Offer free tier (1K reconciliations/month)
@@ -1421,12 +1544,14 @@ CREATE INDEX idx_events_name_timestamp ON events(event_name, timestamp);
   - Add description and examples
 
 **Success Metrics:**
+
 - Listed in 3+ API directories
 - 100+ signups from directories
 - 10+ paying customers
 - $500 MRR from directories
 
 **Next Steps:**
+
 - If successful: Expand to more directories, optimize listings
 - If unsuccessful: Improve API documentation, add more examples
 
@@ -1435,6 +1560,7 @@ CREATE INDEX idx_events_name_timestamp ON events(event_name, timestamp);
 #### Pre-Launch Checklist (Weeks -4 to 0)
 
 **Product:**
+
 - [ ] Exception queue UI (UX-008)
 - [ ] Test mode toggle (UX-004)
 - [ ] Detailed error messages (UX-003)
@@ -1442,12 +1568,14 @@ CREATE INDEX idx_events_name_timestamp ON events(event_name, timestamp);
 - [ ] Interactive playground (UX-011) - if time permits
 
 **Documentation:**
+
 - [ ] API reference complete
 - [ ] Integration guides (Stripe, Shopify, QuickBooks)
 - [ ] Video tutorials (3-5 videos)
 - [ ] Troubleshooting guide
 
 **Marketing:**
+
 - [ ] Landing page optimized
 - [ ] Pricing page live
 - [ ] Blog posts (5+ posts ready)
@@ -1455,11 +1583,13 @@ CREATE INDEX idx_events_name_timestamp ON events(event_name, timestamp);
 - [ ] Press release draft
 
 **Design Partners:**
+
 - [ ] 2-3 design partners running production
 - [ ] Case studies (at least 1)
 - [ ] Testimonials (3+)
 
 **Infrastructure:**
+
 - [ ] Event tracking implemented (E4-S1)
 - [ ] Dashboards set up (E4-S2)
 - [ ] Alerts configured (E4-S3)
@@ -1468,6 +1598,7 @@ CREATE INDEX idx_events_name_timestamp ON events(event_name, timestamp);
 #### Launch Week Actions
 
 **Day 1 (Monday):**
+
 - Product Hunt launch (12:01 AM PST)
 - Blog post: "Introducing Settler: Reconciliation-as-a-Service"
 - Twitter/X announcement thread
@@ -1475,22 +1606,26 @@ CREATE INDEX idx_events_name_timestamp ON events(event_name, timestamp);
 - LinkedIn post
 
 **Day 2 (Tuesday):**
+
 - Hacker News "Show HN" post
 - Indie Hackers post
 - Reddit posts (r/SaaS, r/ecommerce)
 - Follow up with Product Hunt comments
 
 **Day 3 (Wednesday):**
+
 - Press outreach (TechCrunch, if possible)
 - Webinar announcement (if hosting)
 - Partner outreach (Stripe, Shopify)
 
 **Day 4 (Thursday):**
+
 - Case study publish (if ready)
 - Customer testimonials post
 - Twitter/X engagement
 
 **Day 5 (Friday):**
+
 - Week 1 recap blog post
 - Thank you email to signups
 - Plan Week 2 content
@@ -1498,17 +1633,20 @@ CREATE INDEX idx_events_name_timestamp ON events(event_name, timestamp);
 #### First 30 Days
 
 **Product:**
+
 - Monitor error rates, fix critical bugs
 - Gather user feedback (surveys, interviews)
 - Prioritize UX fixes (UX-001 through UX-012)
 
 **GTM:**
+
 - 10+ blog posts published
 - 3+ webinars hosted
 - 50+ community engagements
 - 500+ signups target
 
 **Learning:**
+
 - Weekly user interviews (5+ per week)
 - Support ticket analysis
 - Activation funnel analysis
@@ -1517,18 +1655,21 @@ CREATE INDEX idx_events_name_timestamp ON events(event_name, timestamp);
 #### First 60 Days
 
 **Product:**
+
 - Rules editor UI (UX-009)
 - Multi-currency support (E2-S3)
 - Xero adapter (E6-S1)
 - Video tutorials (E3-S2)
 
 **GTM:**
+
 - Stripe Partner Directory application
 - Shopify App Store app (if ready)
 - 20+ blog posts total
 - 1,000+ signups target
 
 **Learning:**
+
 - Monthly user survey (NPS, feature requests)
 - Cohort analysis (activation, retention)
 - Channel attribution analysis
@@ -1537,18 +1678,21 @@ CREATE INDEX idx_events_name_timestamp ON events(event_name, timestamp);
 #### First 90 Days
 
 **Product:**
+
 - NetSuite adapter (E6-S1) - if prioritized
 - Advanced analytics
 - Referral program
 - SSO for Enterprise (if needed)
 
 **GTM:**
+
 - $10K MRR target
 - 20% free-to-paid conversion
 - <5% monthly churn
 - 20% expansion revenue
 
 **Learning:**
+
 - Quarterly business review
 - Product-market fit survey
 - Customer success stories (3+)
@@ -1563,6 +1707,7 @@ CREATE INDEX idx_events_name_timestamp ON events(event_name, timestamp);
 #### Normalized Feedback Format
 
 **Template:**
+
 ```json
 {
   "id": "feedback_001",
@@ -1607,36 +1752,42 @@ CREATE INDEX idx_events_name_timestamp ON events(event_name, timestamp);
 #### Input Sources
 
 **1. Sales Calls**
+
 - **Format:** Recorded calls transcribed, key points extracted
 - **Fields:** Persona, pain, desired outcome, quotes, feature requests
 - **Frequency:** After each call (within 24h)
 - **Owner:** Sales team (SDR/AE)
 
 **2. User Interviews**
+
 - **Format:** Structured interview (30-60 min), notes transcribed
 - **Fields:** Full feedback template
 - **Frequency:** 5+ per week (ongoing)
 - **Owner:** Product/Founder
 
 **3. Support Tickets**
+
 - **Format:** Support ticket → feedback entry (if pain/feature request)
 - **Fields:** Pain, workaround, feature requests
 - **Frequency:** As tickets come in
 - **Owner:** Support team
 
 **4. GitHub Issues**
+
 - **Format:** GitHub issue → feedback entry
 - **Fields:** Pain, desired outcome, feature requests
 - **Frequency:** As issues are created
 - **Owner:** Engineering/Product
 
 **5. Community Messages (Slack/Discord)**
+
 - **Format:** Community message → feedback entry (if substantive)
 - **Fields:** Pain, quotes, feature requests
 - **Frequency:** Weekly review
 - **Owner:** Community manager/Founder
 
 **6. Surveys**
+
 - **Format:** Survey response → feedback entry
 - **Fields:** Pain, desired outcome, NPS, feature requests
 - **Frequency:** Monthly user survey, quarterly NPS survey
@@ -1647,16 +1798,19 @@ CREATE INDEX idx_events_name_timestamp ON events(event_name, timestamp);
 #### JTBD Statements (Per Persona)
 
 **Developer (CTO/VP Eng):**
+
 - "When I'm building payment integrations, I want to eliminate custom reconciliation code so that I can focus on core product features and reduce maintenance burden."
 - "When I'm evaluating reconciliation tools, I want a simple API integration so that I can get started in minutes without complex setup."
 - "When I'm managing engineering resources, I want automated reconciliation so that finance can self-serve without engineering tickets."
 
 **Finance (CFO/Finance Director):**
+
 - "When I'm closing the books, I want automated reconciliation so that I can reduce month-end close time from 5-7 days to 1 day."
 - "When I'm ensuring compliance, I want complete audit trails so that I can pass audits without manual documentation."
 - "When I'm reviewing financial data, I want confidence scores and accuracy metrics so that I can trust automated reconciliation."
 
 **Operations (Finance Ops Manager):**
+
 - "When I'm reconciling transactions, I want an exception queue so that I can quickly resolve unmatched items without digging through spreadsheets."
 - "When I'm handling multi-currency transactions, I want automatic FX conversion so that I don't have to manually look up exchange rates."
 - "When I'm exporting to accounting, I want direct QuickBooks/Xero sync so that I don't have to manually import CSV files."
@@ -1664,6 +1818,7 @@ CREATE INDEX idx_events_name_timestamp ON events(event_name, timestamp);
 #### Top Pains & Outcomes (Categorized)
 
 **Activation Pains:**
+
 1. **Adapter configuration unclear** (Frequency: High, Impact: High)
    - "I don't know what fields are required for Stripe adapter"
    - **Outcome:** Clear schema validation, adapter-specific docs
@@ -1677,6 +1832,7 @@ CREATE INDEX idx_events_name_timestamp ON events(event_name, timestamp);
    - **Outcome:** Detailed error messages with field-level validation
 
 **Retention Pains:**
+
 1. **Exception queue missing** (Frequency: High, Impact: High)
    - "I can't see which transactions didn't match"
    - **Outcome:** Exception queue UI with filters and bulk actions
@@ -1690,6 +1846,7 @@ CREATE INDEX idx_events_name_timestamp ON events(event_name, timestamp);
    - **Outcome:** Confidence scores explained, accuracy badges, comparison charts
 
 **Expansion Pains:**
+
 1. **Multi-currency support missing** (Frequency: Low, Impact: High)
    - "I can't reconcile transactions in different currencies"
    - **Outcome:** FX conversion service, currency-aware matching
@@ -1701,6 +1858,7 @@ CREATE INDEX idx_events_name_timestamp ON events(event_name, timestamp);
 #### Language Bank (Customer Phrases)
 
 **Problem Language:**
+
 - "Manual reconciliation takes hours"
 - "Spreadsheets are error-prone"
 - "We can't scale manual processes"
@@ -1711,6 +1869,7 @@ CREATE INDEX idx_events_name_timestamp ON events(event_name, timestamp);
 - "Finance team is overwhelmed"
 
 **Solution Language:**
+
 - "Automate reconciliation"
 - "Real-time matching"
 - "99%+ accuracy"
@@ -1721,6 +1880,7 @@ CREATE INDEX idx_events_name_timestamp ON events(event_name, timestamp);
 - "Developer-friendly API"
 
 **Use in Marketing Copy:**
+
 - Headlines: "Stop manually matching Stripe and Shopify"
 - Value props: "Automate reconciliation in 5 minutes"
 - Features: "Real-time matching with 99%+ accuracy"
@@ -1730,6 +1890,7 @@ CREATE INDEX idx_events_name_timestamp ON events(event_name, timestamp);
 #### Weekly Feedback Aggregation
 
 **Process:**
+
 1. **Monday:** Collect all feedback from previous week
    - Sales calls (SDR/AE)
    - User interviews (Product/Founder)
@@ -1763,22 +1924,27 @@ CREATE INDEX idx_events_name_timestamp ON events(event_name, timestamp);
 #### Simple Rules: When Customer Signals Trump Internal Roadmap
 
 **Rule 1: Activation Blockers**
+
 - If 3+ customers report same activation blocker → Fix in current sprint
 - Examples: Adapter config unclear, no test mode, generic errors
 
 **Rule 2: Retention Risks**
+
 - If 2+ customers churn due to same issue → Fix in current sprint
 - Examples: Exception queue missing, report format overwhelming
 
 **Rule 3: High-Value Feature Requests**
+
 - If 5+ enterprise customers request same feature → Add to roadmap (next quarter)
 - Examples: SSO, VPC peering, custom adapters
 
 **Rule 4: Competitive Threats**
+
 - If 2+ customers mention competitor → Analyze competitor, prioritize differentiation
 - Examples: "We're evaluating [Competitor] because they have X"
 
 **Rule 5: Market Signals**
+
 - If 10+ customers request same feature → Add to roadmap (next quarter)
 - Examples: Multi-currency support, direct accounting sync
 
@@ -1795,6 +1961,7 @@ CREATE INDEX idx_events_name_timestamp ON events(event_name, timestamp);
 **1. What Happened**
 
 **Key Metrics:**
+
 - **Activation:** [X] signups, [Y]% activation rate, [Z]h median time to first value
 - **Usage:** [X] reconciliations run, [Y]% accuracy, [Z] exception rate
 - **Revenue:** $[X] MRR, [Y] paying customers, [Z]% churn
@@ -1802,6 +1969,7 @@ CREATE INDEX idx_events_name_timestamp ON events(event_name, timestamp);
 - **Incidents:** [X] incidents, [Y] downtime minutes, [Z]% uptime
 
 **Major Events:**
+
 - [ ] Releases: [List releases]
 - [ ] Customer Conversations: [List notable calls/interviews]
 - [ ] Partnerships: [List partnership updates]
@@ -1810,12 +1978,14 @@ CREATE INDEX idx_events_name_timestamp ON events(event_name, timestamp);
 **2. Why It Happened**
 
 **Hypotheses:**
+
 - **Activation:** [Hypothesis for activation metric change]
 - **Usage:** [Hypothesis for usage metric change]
 - **Revenue:** [Hypothesis for revenue metric change]
 - **Support:** [Hypothesis for support metric change]
 
 **Tied to Actions:**
+
 - **Marketing:** [What marketing actions drove signups?]
 - **Product:** [What product changes drove usage?]
 - **Support:** [What support actions drove satisfaction?]
@@ -1823,15 +1993,18 @@ CREATE INDEX idx_events_name_timestamp ON events(event_name, timestamp);
 **3. What We'll Do**
 
 **Top 3-5 Decisions:**
+
 1. [Decision 1] - [Rationale]
 2. [Decision 2] - [Rationale]
 3. [Decision 3] - [Rationale]
 
 **New Experiments:**
+
 - [Experiment 1] - [Hypothesis, success metrics]
 - [Experiment 2] - [Hypothesis, success metrics]
 
 **Cross-Functional Todos:**
+
 - **Engineering:** [Todo 1], [Todo 2]
 - **Product:** [Todo 1], [Todo 2]
 - **GTM:** [Todo 1], [Todo 2]
@@ -1840,24 +2013,29 @@ CREATE INDEX idx_events_name_timestamp ON events(event_name, timestamp);
 **4. Risks & Blockers**
 
 **Risks:**
+
 - [Risk 1] - [Mitigation plan]
 - [Risk 2] - [Mitigation plan]
 
 **Blockers:**
+
 - [Blocker 1] - [Owner, resolution plan]
 - [Blocker 2] - [Owner, resolution plan]
 
 **5. Customer Insights**
 
 **Top Pains This Week:**
+
 1. [Pain 1] - [Frequency, impact]
 2. [Pain 2] - [Frequency, impact]
 
 **Notable Quotes:**
+
 - "[Quote 1]" - [Customer]
 - "[Quote 2]" - [Customer]
 
 **Feature Requests:**
+
 - [Request 1] - [Priority, rationale]
 - [Request 2] - [Priority, rationale]
 
@@ -1868,6 +2046,7 @@ CREATE INDEX idx_events_name_timestamp ON events(event_name, timestamp);
 **Format:** 5-10 bullet points, 2-minute read
 
 **Template:**
+
 ```
 📊 Week of [Date] - Settler Update
 
@@ -1894,6 +2073,7 @@ Full details: [Link to weekly review doc]
 #### Internal Ops Review Agenda
 
 **Who Attends:**
+
 - Founder/CEO
 - Head of Engineering (if exists)
 - Head of Product (if exists)
@@ -1901,6 +2081,7 @@ Full details: [Link to weekly review doc]
 - Support Lead (if exists)
 
 **What's Reviewed:**
+
 1. **Metrics (10 min):** Activation, usage, revenue, support
 2. **Customer Insights (10 min):** Top pains, feature requests, quotes
 3. **Product Updates (10 min):** Releases, roadmap changes, blockers
@@ -1921,30 +2102,35 @@ Full details: [Link to weekly review doc]
 #### Integration Zones
 
 **Zone 1: Payment Gateways / Processors / APMs**
+
 - **Current:** Stripe, PayPal, Square
 - **Target:** Adyen, Braintree, Authorize.net, Worldpay, Klarna, Afterpay
 - **Strategic Value:** High (core use case)
 - **Ease:** Medium (APIs exist, but different formats)
 
 **Zone 2: Commerce Platforms**
+
 - **Current:** Shopify
 - **Target:** WooCommerce, BigCommerce, Magento, Salesforce Commerce Cloud
 - **Strategic Value:** High (distribution channel)
 - **Ease:** Medium (APIs exist, but different data models)
 
 **Zone 3: Accounting/ERP Tools**
+
 - **Current:** QuickBooks
 - **Target:** Xero, NetSuite, Sage, FreshBooks, Zoho Books
 - **Strategic Value:** High (stickiness, compliance)
 - **Ease:** Medium-High (APIs exist, but complex auth)
 
 **Zone 4: Data/Analytics Warehouses**
+
 - **Current:** None
 - **Target:** Snowflake, BigQuery, Redshift, Databricks
 - **Strategic Value:** Medium (advanced use cases)
 - **Ease:** Medium (SQL-based, but requires data modeling)
 
 **Zone 5: Business Intelligence Tools**
+
 - **Current:** None
 - **Target:** Tableau, Looker, Power BI, Metabase
 - **Strategic Value:** Low (nice-to-have)
@@ -1954,20 +2140,21 @@ Full details: [Link to weekly review doc]
 
 #### Prioritized Integration List (Top 10)
 
-| Rank | Integration | Strategic Leverage | Ease | ICP Alignment | Total Score | Timeline |
-|------|-------------|-------------------|------|---------------|-------------|----------|
-| 1 | **Xero** | High (accounting stickiness) | Medium | High (SaaS finance) | 9 | Months 3-4 |
-| 2 | **Stripe Partner Directory** | High (distribution) | Low (listing only) | High (devs) | 9 | Months 3-4 |
-| 3 | **Shopify App Store** | High (distribution) | Medium (app build) | High (e-commerce) | 8 | Months 4-7 |
-| 4 | **QuickBooks App Store** | High (distribution) | Medium (app build) | High (accounting) | 8 | Months 5-8 |
-| 5 | **WooCommerce** | Medium (commerce platform) | Medium | Medium (e-commerce) | 6 | Months 6-9 |
-| 6 | **NetSuite** | High (enterprise stickiness) | Low (complex API) | Medium (enterprise) | 6 | Months 9-12 |
-| 7 | **Adyen** | Medium (payment gateway) | Medium | Medium (enterprise) | 5 | Months 12+ |
-| 8 | **BigCommerce** | Medium (commerce platform) | Medium | Medium (e-commerce) | 5 | Months 12+ |
-| 9 | **Snowflake** | Medium (data warehouse) | Medium | Low (advanced use cases) | 4 | Months 12+ |
-| 10 | **FreshBooks** | Low (smaller market) | High (simple API) | Low (small businesses) | 3 | Later |
+| Rank | Integration                  | Strategic Leverage           | Ease               | ICP Alignment            | Total Score | Timeline    |
+| ---- | ---------------------------- | ---------------------------- | ------------------ | ------------------------ | ----------- | ----------- |
+| 1    | **Xero**                     | High (accounting stickiness) | Medium             | High (SaaS finance)      | 9           | Months 3-4  |
+| 2    | **Stripe Partner Directory** | High (distribution)          | Low (listing only) | High (devs)              | 9           | Months 3-4  |
+| 3    | **Shopify App Store**        | High (distribution)          | Medium (app build) | High (e-commerce)        | 8           | Months 4-7  |
+| 4    | **QuickBooks App Store**     | High (distribution)          | Medium (app build) | High (accounting)        | 8           | Months 5-8  |
+| 5    | **WooCommerce**              | Medium (commerce platform)   | Medium             | Medium (e-commerce)      | 6           | Months 6-9  |
+| 6    | **NetSuite**                 | High (enterprise stickiness) | Low (complex API)  | Medium (enterprise)      | 6           | Months 9-12 |
+| 7    | **Adyen**                    | Medium (payment gateway)     | Medium             | Medium (enterprise)      | 5           | Months 12+  |
+| 8    | **BigCommerce**              | Medium (commerce platform)   | Medium             | Medium (e-commerce)      | 5           | Months 12+  |
+| 9    | **Snowflake**                | Medium (data warehouse)      | Medium             | Low (advanced use cases) | 4           | Months 12+  |
+| 10   | **FreshBooks**               | Low (smaller market)         | High (simple API)  | Low (small businesses)   | 3           | Later       |
 
 **Scoring:**
+
 - Strategic Leverage: High (3), Medium (2), Low (1)
 - Ease: Low (3), Medium (2), High (1) [Lower effort = higher score]
 - ICP Alignment: High (3), Medium (2), Low (1)
@@ -1980,10 +2167,12 @@ Full details: [Link to weekly review doc]
 **Minimal Viable Integration Spec:**
 
 **Data Flow:**
+
 1. **Settler → Xero:** Export reconciled transactions as invoices/payments
 2. **Xero → Settler:** Import Xero transactions for reconciliation (optional)
 
 **Configuration:**
+
 ```typescript
 {
   adapter: "xero",
@@ -1997,17 +2186,20 @@ Full details: [Link to weekly review doc]
 ```
 
 **What It Unlocks:**
+
 - Direct sync to Xero (no manual CSV import)
 - Real-time reconciliation with Xero data
 - Bidirectional sync (if implemented)
 
 **Co-Marketing:**
+
 - Xero App Marketplace listing
 - Joint blog post: "How to automate Stripe-Xero reconciliation"
 - Webinar: "Reconciliation automation for Xero users"
 - Case study: "How [Customer] automated Xero reconciliation"
 
 **Product/UX:**
+
 - "Connect Xero" button in dashboard
 - OAuth flow for authorization
 - Sync status indicator
@@ -2020,6 +2212,7 @@ Full details: [Link to weekly review doc]
 **Minimal Viable Integration Spec:**
 
 **Requirements:**
+
 - Stripe integration (✅ exists)
 - SOC 2 certification (target: Q2 2026)
 - Customer testimonials (need 3+)
@@ -2027,6 +2220,7 @@ Full details: [Link to weekly review doc]
 - Co-marketing materials
 
 **Listing Details:**
+
 - **Category:** Reconciliation & Reporting
 - **Description:** "Automate reconciliation between Stripe and Shopify, QuickBooks, and 50+ platforms"
 - **Features:** Real-time reconciliation, exception handling, audit trails
@@ -2034,18 +2228,21 @@ Full details: [Link to weekly review doc]
 - **Support:** Email, documentation, Discord
 
 **Co-Marketing:**
+
 - Stripe blog post (if possible): "Automating reconciliation with Settler"
 - Joint webinar: "Stripe reconciliation best practices"
 - Case study: "How [Customer] automated Stripe reconciliation"
 - Stripe Sessions booth (if attending)
 
 **What It Unlocks:**
+
 - Access to Stripe's customer base (millions of businesses)
 - Credibility from Stripe partnership
 - Co-marketing opportunities
 - Customer referrals
 
 **Product/UX:**
+
 - "Built for Stripe" badge on landing page
 - Stripe-specific integration guide
 - Stripe webhook examples
@@ -2058,30 +2255,35 @@ Full details: [Link to weekly review doc]
 **Minimal Viable Integration Spec:**
 
 **App Features:**
+
 1. **Order Reconciliation:** Reconcile Shopify orders with Stripe/PayPal payments
 2. **Exception Queue:** View and resolve unmatched orders
 3. **Reports:** Reconciliation reports and exports
 4. **Settings:** Configure adapters and matching rules
 
 **Technical Requirements:**
+
 - Shopify App (Node.js/Next.js)
 - OAuth flow for Shopify authorization
 - Webhook handlers for order events
 - Admin UI embedded in Shopify
 
 **Co-Marketing:**
+
 - Shopify App Store listing
 - Joint blog post: "Automating order reconciliation for Shopify stores"
 - Webinar: "Reconciliation automation for Shopify merchants"
 - Case study: "How [Merchant] automated order reconciliation"
 
 **What It Unlocks:**
+
 - Access to Shopify's merchant base (millions of stores)
 - Distribution through Shopify App Store
 - Co-marketing opportunities
 - Revenue share (if applicable)
 
 **Product/UX:**
+
 - "Install Settler" button in Shopify App Store
 - Embedded app in Shopify admin
 - Order reconciliation dashboard
@@ -2138,4 +2340,4 @@ Full details: [Link to weekly review doc]
 
 ---
 
-*This is a living document. Update weekly with new metrics, insights, and learnings.*
+_This is a living document. Update weekly with new metrics, insights, and learnings._

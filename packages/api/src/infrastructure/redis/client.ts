@@ -1,6 +1,6 @@
 /**
  * Redis Client Configuration (Upstash Redis)
- * 
+ *
  * Used for:
  * - In-memory matching engine (sub-second reconciliation)
  * - Caching reconciliation results
@@ -8,25 +8,26 @@
  * - Session storage
  */
 
-import { Redis } from '@upstash/redis';
+import { Redis } from "@upstash/redis";
 
 // Upstash Redis configuration
 const redisUrl = process.env.UPSTASH_REDIS_REST_URL || process.env.REDIS_URL;
 const redisToken = process.env.UPSTASH_REDIS_REST_TOKEN || process.env.REDIS_TOKEN;
 
 if (!redisUrl || !redisToken) {
-  console.warn('Redis not configured. Some features will be disabled.');
+  console.warn("Redis not configured. Some features will be disabled.");
 }
 
 /**
  * Upstash Redis client (serverless-friendly)
  */
-export const redis = redisUrl && redisToken
-  ? new Redis({
-      url: redisUrl,
-      token: redisToken,
-    })
-  : null;
+export const redis =
+  redisUrl && redisToken
+    ? new Redis({
+        url: redisUrl,
+        token: redisToken,
+      })
+    : null;
 
 /**
  * Fallback Redis client using ioredis (for local development)
@@ -35,23 +36,23 @@ let ioredisClient: any = null;
 
 if (!redis && process.env.REDIS_HOST) {
   try {
-    const Redis = require('ioredis');
+    const Redis = require("ioredis");
     ioredisClient = new Redis({
-      host: process.env.REDIS_HOST || 'localhost',
-      port: parseInt(process.env.REDIS_PORT || '6379'),
+      host: process.env.REDIS_HOST || "localhost",
+      port: parseInt(process.env.REDIS_PORT || "6379"),
       password: process.env.REDIS_PASSWORD,
-      db: parseInt(process.env.REDIS_DB || '0'),
+      db: parseInt(process.env.REDIS_DB || "0"),
       retryStrategy: (times: number) => {
         const delay = Math.min(times * 50, 2000);
         return delay;
       },
     });
 
-    ioredisClient.on('error', (err: Error) => {
-      console.error('Redis connection error:', err);
+    ioredisClient.on("error", (err: Error) => {
+      console.error("Redis connection error:", err);
     });
   } catch (error) {
-    console.warn('Failed to initialize Redis client:', error);
+    console.warn("Failed to initialize Redis client:", error);
   }
 }
 
@@ -88,7 +89,7 @@ export const cache = {
         return value ? JSON.parse(value) : null;
       }
     } catch (error) {
-      console.error('Redis get error:', error);
+      console.error("Redis get error:", error);
       return null;
     }
   },
@@ -116,7 +117,7 @@ export const cache = {
         }
       }
     } catch (error) {
-      console.error('Redis set error:', error);
+      console.error("Redis set error:", error);
     }
   },
 
@@ -130,7 +131,7 @@ export const cache = {
     try {
       await client.del(key);
     } catch (error) {
-      console.error('Redis del error:', error);
+      console.error("Redis del error:", error);
     }
   },
 
@@ -150,7 +151,7 @@ export const cache = {
         return result === 1;
       }
     } catch (error) {
-      console.error('Redis exists error:', error);
+      console.error("Redis exists error:", error);
       return false;
     }
   },

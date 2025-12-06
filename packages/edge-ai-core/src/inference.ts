@@ -37,10 +37,7 @@ export class InferenceExecutor {
     this.engines.set(runtime, engine);
   }
 
-  async execute(
-    runtime: string,
-    request: InferenceRequest
-  ): Promise<InferenceResult> {
+  async execute(runtime: string, request: InferenceRequest): Promise<InferenceResult> {
     const engine = this.engines.get(runtime);
     if (!engine) {
       throw new Error(`Inference engine not found for runtime: ${runtime}`);

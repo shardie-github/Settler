@@ -1,37 +1,37 @@
 /**
  * User Sign-up Page
- * 
+ *
  * Data Flow Diagram:
  * User Sign-up (Vercel Form) → Next.js Server Action → Supabase profiles table (RLS Check)
  * → Profile Page Reload (Server Component Fetch)
  */
 
-import { signUpUser } from '@/app/actions/auth';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Navigation } from '@/components/Navigation';
-import { Footer } from '@/components/Footer';
-import { UserPlus } from 'lucide-react';
-import { redirect } from 'next/navigation';
-import Link from 'next/link';
+import { signUpUser } from "@/app/actions/auth";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Navigation } from "@/components/Navigation";
+import { Footer } from "@/components/Footer";
+import { UserPlus } from "lucide-react";
+import { redirect } from "next/navigation";
+import Link from "next/link";
 
 function SignUpForm() {
   async function handleSubmit(formData: FormData) {
-    'use server';
-    
-    const email = formData.get('email') as string;
-    const password = formData.get('password') as string;
-    const name = formData.get('name') as string;
+    "use server";
+
+    const email = formData.get("email") as string;
+    const password = formData.get("password") as string;
+    const name = formData.get("name") as string;
 
     if (!email || !password) {
       return;
     }
 
     const result = await signUpUser(email, password, name);
-    
+
     if (result.success) {
-      redirect('/dashboard');
+      redirect("/dashboard");
     }
   }
 
@@ -41,13 +41,7 @@ function SignUpForm() {
         <Label htmlFor="name" className="mb-2 block">
           Name (Optional)
         </Label>
-        <Input
-          id="name"
-          name="name"
-          type="text"
-          placeholder="Your name"
-          className="w-full"
-        />
+        <Input id="name" name="name" type="text" placeholder="Your name" className="w-full" />
       </div>
 
       <div>
@@ -97,7 +91,7 @@ export default function SignUpPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-slate-900 dark:via-slate-800 dark:to-black">
       <Navigation />
-      
+
       <div className="max-w-md mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="bg-white dark:bg-slate-800 rounded-lg shadow-lg p-8 border border-slate-200 dark:border-slate-700">
           <div className="text-center mb-8">
@@ -116,7 +110,7 @@ export default function SignUpPage() {
 
           <div className="mt-6 text-center">
             <p className="text-sm text-slate-600 dark:text-slate-400">
-              Already have an account?{' '}
+              Already have an account?{" "}
               <Link
                 href="/dashboard"
                 className="text-blue-600 dark:text-electric-cyan hover:underline"
@@ -155,7 +149,9 @@ export default function SignUpPage() {
             </li>
             <li className="flex items-start gap-2">
               <span className="text-green-600 dark:text-green-400 font-bold">✓</span>
-              <span className="font-semibold">No credit card required - start free, upgrade only if you love it</span>
+              <span className="font-semibold">
+                No credit card required - start free, upgrade only if you love it
+              </span>
             </li>
           </ul>
         </div>

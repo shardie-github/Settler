@@ -88,9 +88,7 @@ export default function AuditTrail({ client: _client, apiKey, jobId }: AuditTrai
       </div>
       <div className="divide-y divide-gray-200">
         {logs.length === 0 ? (
-          <div className="px-6 py-12 text-center text-gray-500">
-            No audit logs found
-          </div>
+          <div className="px-6 py-12 text-center text-gray-500">No audit logs found</div>
         ) : (
           logs.map((log) => (
             <div key={log.id} className="px-6 py-4 hover:bg-gray-50 transition">

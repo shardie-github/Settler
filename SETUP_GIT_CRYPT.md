@@ -5,13 +5,14 @@ This repository uses **git-crypt** to encrypt sensitive files in the `/INVESTOR-
 ## Initial Setup (Repository Maintainer)
 
 1. **Install git-crypt:**
+
    ```bash
    # macOS
    brew install git-crypt
-   
+
    # Linux (Ubuntu/Debian)
    sudo apt-get install git-crypt
-   
+
    # Or build from source
    git clone https://www.agwa.name/git/git-crypt.git
    cd git-crypt
@@ -20,17 +21,21 @@ This repository uses **git-crypt** to encrypt sensitive files in the `/INVESTOR-
    ```
 
 2. **Initialize git-crypt in the repository:**
+
    ```bash
    git crypt init
    ```
 
 3. **Add yourself as a GPG user:**
+
    ```bash
    git crypt add-gpg-user your_email@example.com
    ```
+
    (This requires your GPG key to be set up. If you don't have one, generate it first: `gpg --gen-key`)
 
 4. **Commit the .gitattributes file:**
+
    ```bash
    git add .gitattributes
    git commit -m "feat(security): Configure git-crypt for private investor assets"
@@ -47,12 +52,14 @@ This repository uses **git-crypt** to encrypt sensitive files in the `/INVESTOR-
 To grant access to another collaborator:
 
 1. **Get their GPG public key:**
+
    ```bash
    # They should export it:
    gpg --armor --export their_email@example.com > collaborator.asc
    ```
 
 2. **Add them to git-crypt:**
+
    ```bash
    git crypt add-gpg-user collaborator_email@example.com
    ```
@@ -69,9 +76,11 @@ To grant access to another collaborator:
 1. **Install git-crypt** (see above)
 
 2. **Unlock the repository:**
+
    ```bash
    git crypt unlock
    ```
+
    (You'll be prompted for your GPG key passphrase)
 
 3. **Verify files are decrypted:**

@@ -1,12 +1,12 @@
 /**
  * FX Service
- * 
+ *
  * Handles multi-currency operations: FX rate tracking, base-currency conversion,
  * and currency-aware matching as specified in the Product & Technical Specification.
  */
 
-import { FXConversion, Money } from '@settler/types';
-import { query } from '../../db';
+import { FXConversion, Money } from "@settler/types";
+import { query } from "../../db";
 
 export interface FXRate {
   fromCurrency: string;
@@ -85,7 +85,7 @@ export class FXService {
     }
 
     const targetDate = date || new Date();
-    
+
     const result = await query<{ fx_rate: number }>(
       `SELECT fx_rate FROM fx_conversions
        WHERE tenant_id = $1 
@@ -118,7 +118,7 @@ export class FXService {
     }
 
     const fxRate = await this.getFXRate(tenantId, amount.currency, baseCurrency, conversionDate);
-    
+
     if (fxRate === null) {
       return null; // Cannot convert
     }
@@ -141,12 +141,12 @@ export class FXService {
 
     if (result.length > 0 && result[0]?.config?.baseCurrency) {
       const baseCurrency = result[0].config.baseCurrency;
-      if (typeof baseCurrency === 'string') {
+      if (typeof baseCurrency === "string") {
         return baseCurrency;
       }
     }
 
-    return 'USD'; // Default
+    return "USD"; // Default
   }
 
   /**
@@ -154,7 +154,7 @@ export class FXService {
    */
   async getFXRates(tenantId: string, date?: Date): Promise<FXRate[]> {
     const targetDate = date || new Date();
-    
+
     const result = await query<{
       from_currency: string;
       to_currency: string;
@@ -170,12 +170,12 @@ export class FXService {
       [tenantId, targetDate]
     );
 
-    return result.map(row => ({
+    return result.map((row) => ({
       fromCurrency: row.from_currency,
       toCurrency: row.to_currency,
       rate: row.fx_rate,
       rateDate: row.rate_date,
-      provider: row.provider ?? 'unknown',
+      provider: row.provider ?? "unknown",
     }));
   }
 

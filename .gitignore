@@ -25,8 +25,14 @@ yarn-debug.log*
 yarn-error.log*
 
 # local env files
-.env*.local
 .env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env*.local
+.env.connection
+.env.template
 
 # vercel
 .vercel
@@ -37,3 +43,21 @@ next-env.d.ts
 
 # private venture documents
 .private/
+
+# build outputs
+dist/
+build/
+.next/
+out/
+*.log
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db

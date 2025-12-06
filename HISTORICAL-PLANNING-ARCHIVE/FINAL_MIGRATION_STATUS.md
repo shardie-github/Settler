@@ -3,6 +3,7 @@
 ## ✅ What's Ready
 
 All migration files are prepared and ready:
+
 - ✅ 4 migration SQL files (42KB total)
 - ✅ Seed data file (3.2KB)
 - ✅ Migration automation scripts
@@ -10,7 +11,8 @@ All migration files are prepared and ready:
 
 ## ⚠️ Current Issue
 
-**Connection Challenge:** 
+**Connection Challenge:**
+
 - Direct database connection (`db.johfcvvmtfiomzxipspz.supabase.co:5432`) only resolves to IPv6
 - Transaction Pooler (`port 6543`) connects but doesn't support DDL/migrations
 - This environment doesn't have IPv6 connectivity
@@ -22,11 +24,13 @@ The migrations are **100% ready** - they just need to run from a machine with pr
 ### Quick Steps:
 
 1. **On your local machine:**
+
    ```bash
    cd /path/to/this/project
    ```
 
 2. **The `.env` file is already configured** with your connection:
+
    ```
    DATABASE_URL=postgresql://postgres:XoogH4uSsWQ3mhFD@db.johfcvvmtfiomzxipspz.supabase.co:5432/postgres
    ```
@@ -50,8 +54,9 @@ The migrations are **100% ready** - they just need to run from a machine with pr
 ## 📊 What Will Be Created
 
 After migrations run successfully:
+
 - ✅ 16+ database tables
-- ✅ 50+ indexes  
+- ✅ 50+ indexes
 - ✅ 10+ functions
 - ✅ 20+ triggers
 - ✅ Row Level Security policies

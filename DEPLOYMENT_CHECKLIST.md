@@ -191,11 +191,13 @@ curl -H "Authorization: Bearer $API_KEY" https://api.settler.io/api/v1/jobs
 ### If Deployment Fails
 
 1. **Immediate Rollback:**
+
    ```bash
    vercel rollback
    ```
 
 2. **Verify Rollback:**
+
    ```bash
    curl https://api.settler.io/health
    ```
@@ -218,6 +220,7 @@ curl -H "Authorization: Bearer $API_KEY" https://api.settler.io/api/v1/jobs
 ### If Service is Down
 
 1. **Check Health Endpoints:**
+
    ```bash
    curl https://api.settler.io/health
    curl https://api.settler.io/health/detailed

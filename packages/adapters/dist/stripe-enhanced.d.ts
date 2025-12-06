@@ -4,8 +4,8 @@
  * Implements webhook ingestion, API polling, and comprehensive normalization
  * as specified in the Product & Technical Specification.
  */
-import { EnhancedAdapter, AdapterConfig, DateRange, NormalizedEvent } from './enhanced-base';
-import { Transaction, Settlement, Fee, RefundDispute, RefundDisputeType } from '@settler/types';
+import { EnhancedAdapter, AdapterConfig, DateRange, NormalizedEvent } from "./enhanced-base";
+import { Transaction, Settlement, Fee, RefundDispute, RefundDisputeType } from "@settler/types";
 export declare class StripeEnhancedAdapter implements EnhancedAdapter {
     name: string;
     version: string;
@@ -21,11 +21,11 @@ export declare class StripeEnhancedAdapter implements EnhancedAdapter {
     /**
      * Poll transactions from Stripe API
      */
-    pollTransactions(config: AdapterConfig, _dateRange: DateRange): Promise<Transaction[]>;
+    pollTransactions(config: AdapterConfig, dateRange: DateRange): Promise<Transaction[]>;
     /**
      * Poll settlements from Stripe API
      */
-    pollSettlements(config: AdapterConfig, _dateRange: DateRange): Promise<Settlement[]>;
+    pollSettlements(config: AdapterConfig, dateRange: DateRange): Promise<Settlement[]>;
     /**
      * Extract fees from transaction payload
      */

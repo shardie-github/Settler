@@ -3,9 +3,9 @@
  * Brand-neutral model optimization utilities
  */
 
-export type QuantizationType = 'int4' | 'int8' | 'fp16' | 'fp32';
-export type OptimizationLevel = 'speed' | 'balanced' | 'accuracy';
-export type ModelFormat = 'onnx' | 'tensorrt' | 'executorch' | 'tflite' | 'pytorch';
+import type { QuantizationType } from "./quantization";
+export type OptimizationLevel = "speed" | "balanced" | "accuracy";
+export type ModelFormat = "onnx" | "tensorrt" | "executorch" | "tflite" | "pytorch";
 
 export interface OptimizationRequest {
   modelId: string;
@@ -35,9 +35,9 @@ export function estimateQuantizedSize(
 ): number {
   const ratios: Record<QuantizationType, number> = {
     int4: 0.125, // 4 bits = 1/8 of 32 bits
-    int8: 0.25,  // 8 bits = 1/4 of 32 bits
-    fp16: 0.5,   // 16 bits = 1/2 of 32 bits
-    fp32: 1.0,   // 32 bits = full size
+    int8: 0.25, // 8 bits = 1/4 of 32 bits
+    fp16: 0.5, // 16 bits = 1/2 of 32 bits
+    fp32: 1.0, // 32 bits = full size
   };
 
   return Math.round(originalSizeBytes * ratios[quantization]);
@@ -46,25 +46,26 @@ export function estimateQuantizedSize(
 /**
  * Validate optimization request
  */
-export function validateOptimizationRequest(
-  request: OptimizationRequest
-): { valid: boolean; errors: string[] } {
+export function validateOptimizationRequest(request: OptimizationRequest): {
+  valid: boolean;
+  errors: string[];
+} {
   const errors: string[] = [];
 
   if (!request.modelId) {
-    errors.push('modelId is required');
+    errors.push("modelId is required");
   }
 
   if (!request.targetDevices || request.targetDevices.length === 0) {
-    errors.push('targetDevices must contain at least one device');
+    errors.push("targetDevices must contain at least one device");
   }
 
-  if (!['int4', 'int8', 'fp16', 'fp32'].includes(request.quantization)) {
-    errors.push('quantization must be one of: int4, int8, fp16, fp32');
+  if (!["int4", "int8", "fp16", "fp32"].includes(request.quantization)) {
+    errors.push("quantization must be one of: int4, int8, fp16, fp32");
   }
 
-  if (!['speed', 'balanced', 'accuracy'].includes(request.optimizationLevel)) {
-    errors.push('optimizationLevel must be one of: speed, balanced, accuracy');
+  if (!["speed", "balanced", "accuracy"].includes(request.optimizationLevel)) {
+    errors.push("optimizationLevel must be one of: speed, balanced, accuracy");
   }
 
   return {

@@ -14,14 +14,16 @@ This document maps all pages to funnel stages, defines free vs paid content boun
 ## Funnel Stage Mapping
 
 ### Awareness Stage
+
 **Goal:** Problem framing, credibility, high-level overview
 
-| Page | Current State | Recommended Changes |
-|------|--------------|---------------------|
+| Page           | Current State                     | Recommended Changes                                |
+| -------------- | --------------------------------- | -------------------------------------------------- |
 | `/` (Homepage) | Mixed (awareness + consideration) | Focus on problem/outcome, remove technical details |
-| `/community` | Retention-focused | Add awareness CTAs, showcase success stories |
+| `/community`   | Retention-focused                 | Add awareness CTAs, showcase success stories       |
 
 **Key Messaging:**
+
 - "Stop wasting hours on manual matching"
 - "Automatically match transactions between any platforms"
 - Social proof: "Companies save 10+ hours per week"
@@ -31,16 +33,18 @@ This document maps all pages to funnel stages, defines free vs paid content boun
 ---
 
 ### Consideration Stage
+
 **Goal:** Features, use cases, deeper explanations, comparisons
 
-| Page | Current State | Recommended Changes |
-|------|--------------|---------------------|
-| `/docs` | Full access | Gate advanced docs, show teasers for free users |
-| `/cookbooks` | Full access | Gate advanced cookbooks (real-time, multi-currency) |
-| `/playground` | Full access | Limit free tier to basic examples, gate advanced features |
-| `/pricing` | Comparison table | Add "What you get free" vs "What you unlock" sections |
+| Page          | Current State    | Recommended Changes                                       |
+| ------------- | ---------------- | --------------------------------------------------------- |
+| `/docs`       | Full access      | Gate advanced docs, show teasers for free users           |
+| `/cookbooks`  | Full access      | Gate advanced cookbooks (real-time, multi-currency)       |
+| `/playground` | Full access      | Limit free tier to basic examples, gate advanced features |
+| `/pricing`    | Comparison table | Add "What you get free" vs "What you unlock" sections     |
 
 **Key Messaging:**
+
 - "See how it works" (teasers)
 - "Try advanced features free for 30 days"
 - Use case examples with outcomes
@@ -50,15 +54,17 @@ This document maps all pages to funnel stages, defines free vs paid content boun
 ---
 
 ### Conversion Stage
+
 **Goal:** Pricing, trial, FAQ, risk-reversal, testimonials
 
-| Page | Current State | Recommended Changes |
-|------|--------------|---------------------|
-| `/pricing` | Plans comparison | Add trial benefits, consulting time mention |
-| `/enterprise` | Enterprise form | Add trial option for enterprise leads |
-| `/signup` | Basic signup | Add pre-test questions, trial benefits |
+| Page          | Current State    | Recommended Changes                         |
+| ------------- | ---------------- | ------------------------------------------- |
+| `/pricing`    | Plans comparison | Add trial benefits, consulting time mention |
+| `/enterprise` | Enterprise form  | Add trial option for enterprise leads       |
+| `/signup`     | Basic signup     | Add pre-test questions, trial benefits      |
 
 **Key Messaging:**
+
 - "30-Day Free Trial - No Credit Card Required"
 - "Includes free consulting session"
 - "Cancel anytime during trial"
@@ -68,15 +74,17 @@ This document maps all pages to funnel stages, defines free vs paid content boun
 ---
 
 ### Retention/Expansion Stage
+
 **Goal:** In-app surfaces, upgrade prompts, workflow libraries, advanced tutorials
 
-| Page | Current State | Recommended Changes |
-|------|--------------|---------------------|
+| Page         | Current State  | Recommended Changes                                         |
+| ------------ | -------------- | ----------------------------------------------------------- |
 | `/dashboard` | Public metrics | Create user dashboard with trial countdown, upgrade prompts |
-| `/cookbooks` | All accessible | Show upgrade prompts on gated cookbooks |
-| `/docs` | All accessible | Show upgrade prompts on gated docs |
+| `/cookbooks` | All accessible | Show upgrade prompts on gated cookbooks                     |
+| `/docs`      | All accessible | Show upgrade prompts on gated docs                          |
 
 **Key Messaging:**
+
 - "Your trial ends in X days"
 - "Unlock advanced features"
 - "Get personalized consulting"
@@ -178,40 +186,40 @@ This document maps all pages to funnel stages, defines free vs paid content boun
 
 #### Documentation (`/docs`)
 
-| Section | Free Access | Paid Access |
-|---------|-----------|------------|
-| Getting Started | Full | Full |
-| Installation | Full | Full |
-| Basic API Reference | First 2 endpoints | All endpoints |
-| Advanced API Reference | Teaser only | Full |
-| Webhooks | Teaser only | Full |
-| Multi-currency | Teaser only | Full |
-| Edge AI | Overview only | Full docs |
+| Section                | Free Access       | Paid Access   |
+| ---------------------- | ----------------- | ------------- |
+| Getting Started        | Full              | Full          |
+| Installation           | Full              | Full          |
+| Basic API Reference    | First 2 endpoints | All endpoints |
+| Advanced API Reference | Teaser only       | Full          |
+| Webhooks               | Teaser only       | Full          |
+| Multi-currency         | Teaser only       | Full          |
+| Edge AI                | Overview only     | Full docs     |
 
 **Implementation:** Show blurred/teaser content with "Upgrade to view" CTA
 
 #### Cookbooks (`/cookbooks`)
 
-| Cookbook | Free Access | Paid Access |
-|----------|-----------|------------|
-| E-commerce (Basic) | Full | Full |
-| Scheduled Reconciliations | Full | Full |
-| Real-time Webhooks | Description only | Full code |
-| Multi-currency | Description only | Full code |
-| Advanced Analytics | Description only | Full code |
-| Enterprise Deployment | Teaser only | Full |
+| Cookbook                  | Free Access      | Paid Access |
+| ------------------------- | ---------------- | ----------- |
+| E-commerce (Basic)        | Full             | Full        |
+| Scheduled Reconciliations | Full             | Full        |
+| Real-time Webhooks        | Description only | Full code   |
+| Multi-currency            | Description only | Full code   |
+| Advanced Analytics        | Description only | Full code   |
+| Enterprise Deployment     | Teaser only      | Full        |
 
 **Implementation:** Show description and use case, gate code examples
 
 #### Playground (`/playground`)
 
-| Feature | Free Access | Paid Access |
-|---------|-----------|------------|
-| Basic Examples | 3 runs/day | Unlimited |
-| Code Editor | Basic | Advanced |
-| Real-time Testing | No | Yes |
-| Webhook Simulation | No | Yes |
-| Multi-provider | No | Yes |
+| Feature            | Free Access | Paid Access |
+| ------------------ | ----------- | ----------- |
+| Basic Examples     | 3 runs/day  | Unlimited   |
+| Code Editor        | Basic       | Advanced    |
+| Real-time Testing  | No          | Yes         |
+| Webhook Simulation | No          | Yes         |
+| Multi-provider     | No          | Yes         |
 
 **Implementation:** Show usage limits, prompt upgrade when limit reached
 
@@ -252,6 +260,7 @@ This document maps all pages to funnel stages, defines free vs paid content boun
 ### Trial Length: 30 Days
 
 ### Activation Requirements:
+
 - Email address
 - Basic firmographic info (company name, industry - optional)
 - **No credit card required** (recommended for higher conversion)
@@ -259,6 +268,7 @@ This document maps all pages to funnel stages, defines free vs paid content boun
 ### Day 0 Experience:
 
 **Welcome Dashboard Should Show:**
+
 1. **Welcome message** with trial benefits
 2. **Simple AI-generated news feed** (related to user's industry/niche)
 3. **Option to connect email platform** or upload campaigns for analysis
@@ -270,6 +280,7 @@ This document maps all pages to funnel stages, defines free vs paid content boun
 ### Pre-Test / Personalization Flow
 
 **Questions to Ask:**
+
 1. What's your primary goal? (Save time, reduce errors, scale operations)
 2. What industry are you in? (E-commerce, SaaS, Finance, etc.)
 3. How many transactions do you process monthly? (<1K, 1K-10K, 10K-100K, 100K+)
@@ -278,12 +289,14 @@ This document maps all pages to funnel stages, defines free vs paid content boun
 6. What's your biggest pain point? (Manual work, errors, time-consuming, etc.)
 
 **How Inputs Map to Personalization:**
+
 - **News Feed:** Industry-specific articles, platform-specific tips
 - **Email Insights:** Platform-specific analysis templates
 - **Suggested Workflows:** Based on platforms selected
 - **Dashboard Defaults:** Show relevant metrics first
 
 **UI Location:**
+
 - First-run modal (can be dismissed, but persistent banner until completed)
 - Or onboarding screen (Step 1 of onboarding flow)
 
@@ -292,6 +305,7 @@ This document maps all pages to funnel stages, defines free vs paid content boun
 ## Consulting Time Positioning
 
 ### How to Frame:
+
 - "Bonus Strategy Call" (friendly)
 - "Free Onboarding Session" (professional)
 - "30-Minute Setup Consultation" (specific)
@@ -314,6 +328,7 @@ This document maps all pages to funnel stages, defines free vs paid content boun
    - "Upgrade now and get free consultation"
 
 ### Trigger:
+
 - **Option A:** Available to all trial users (recommended)
 - **Option B:** Only triggered on upgrade (less conversion-friendly)
 
@@ -346,20 +361,20 @@ This document maps all pages to funnel stages, defines free vs paid content boun
 // config/plans.ts
 export const plans = {
   free: {
-    name: 'Free Trial',
+    name: "Free Trial",
     features: {
-      cookbooks: ['basic'],
-      docs: ['getting-started', 'installation'],
+      cookbooks: ["basic"],
+      docs: ["getting-started", "installation"],
       playground: { runsPerDay: 3 },
       consulting: false,
     },
   },
   paid: {
-    name: 'Commercial',
+    name: "Commercial",
     features: {
-      cookbooks: ['all'],
-      docs: ['all'],
-      playground: { runsPerDay: 'unlimited' },
+      cookbooks: ["all"],
+      docs: ["all"],
+      playground: { runsPerDay: "unlimited" },
       consulting: true,
     },
   },

@@ -53,12 +53,12 @@ All references to `settler.io` have been updated to `settler.dev` across the pro
 
 ## Domain Changes
 
-| Old Domain | New Domain | Status |
-|------------|------------|--------|
-| `settler.io` | `settler.dev` | ✅ Updated |
-| `api.settler.io` | `api.settler.dev` | ✅ Updated |
-| `docs.settler.io` | `docs.settler.dev` | ✅ Updated |
-| `status.settler.io` | `status.settler.dev` | ✅ Updated |
+| Old Domain           | New Domain            | Status              |
+| -------------------- | --------------------- | ------------------- |
+| `settler.io`         | `settler.dev`         | ✅ Updated          |
+| `api.settler.io`     | `api.settler.dev`     | ✅ Updated          |
+| `docs.settler.io`    | `docs.settler.dev`    | ✅ Updated          |
+| `status.settler.io`  | `status.settler.dev`  | ✅ Updated          |
 | `support@settler.io` | `support@settler.dev` | ✅ Updated (Active) |
 
 ---
@@ -69,6 +69,7 @@ All references to `settler.io` have been updated to `settler.dev` across the pro
 **Status:** ✅ Active mailbox
 
 All references to the support email have been updated:
+
 - Support page (`/support`)
 - README.md
 - Footer component (if applicable)
@@ -80,6 +81,7 @@ All references to the support email have been updated:
 **Migration Script Created:** `scripts/run-migrations.sh`
 
 The script will run the following migrations in order:
+
 1. `20251129000000_crm_schema.sql` - CRM tables and RLS
 2. `20251129000001_financial_ledger.sql` - Financial ledger
 3. `20251129000002_error_logs.sql` - Error logging
@@ -88,17 +90,20 @@ The script will run the following migrations in order:
 ### To Run Migrations:
 
 **Option 1: Using Supabase CLI (Recommended)**
+
 ```bash
 supabase db push
 ```
 
 **Option 2: Using psql with DATABASE_URL**
+
 ```bash
 export DATABASE_URL="postgresql://user:password@host:port/database"
 ./scripts/run-migrations.sh
 ```
 
 **Option 3: Manual via Supabase Dashboard**
+
 1. Go to Supabase Dashboard → SQL Editor
 2. Run each migration file in order
 

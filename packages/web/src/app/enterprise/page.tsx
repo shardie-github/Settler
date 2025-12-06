@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import Link from "next/link";
 import { useState } from "react";
@@ -16,49 +16,49 @@ import { EdgeAIMarketingSection } from "@/components/EdgeAIMarketingSection";
 
 export default function Enterprise() {
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    company: '',
-    message: '',
+    name: "",
+    email: "",
+    company: "",
+    message: "",
   });
 
   const features = [
     {
-      icon: '🔒',
-      title: 'Enterprise Security',
-      description: 'SOC 2 Type II, SSO, SAML, RBAC, and custom security policies',
+      icon: "🔒",
+      title: "Enterprise Security",
+      description: "SOC 2 Type II, SSO, SAML, RBAC, and custom security policies",
     },
     {
-      icon: '🚀',
-      title: 'Unlimited Scale',
-      description: 'No limits on reconciliations, adapters, or data retention',
+      icon: "🚀",
+      title: "Unlimited Scale",
+      description: "No limits on reconciliations, adapters, or data retention",
     },
     {
-      icon: '👥',
-      title: 'Dedicated Support',
-      description: '24/7 support with SLA guarantees and dedicated account manager',
+      icon: "👥",
+      title: "Dedicated Support",
+      description: "24/7 support with SLA guarantees and dedicated account manager",
     },
     {
-      icon: '🏢',
-      title: 'On-Premise Option',
-      description: 'Deploy Settler in your own infrastructure for maximum control',
+      icon: "🏢",
+      title: "On-Premise Option",
+      description: "Deploy Settler in your own infrastructure for maximum control",
     },
     {
-      icon: '🎨',
-      title: 'White-Label',
-      description: 'Fully customizable branding and UI to match your brand',
+      icon: "🎨",
+      title: "White-Label",
+      description: "Fully customizable branding and UI to match your brand",
     },
     {
-      icon: '🔌',
-      title: 'Custom Integrations',
-      description: 'Build custom adapters and integrations for your specific needs',
+      icon: "🔌",
+      title: "Custom Integrations",
+      description: "Build custom adapters and integrations for your specific needs",
     },
   ];
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // Handle form submission
-    console.log('Form submitted:', formData);
+    console.log("Form submitted:", formData);
     // In production, this would send to your backend
   };
 
@@ -107,10 +107,7 @@ export default function Enterprise() {
       </section>
 
       {/* Features Grid */}
-      <section
-        className="py-20 px-4 sm:px-6 lg:px-8"
-        aria-labelledby="enterprise-features-heading"
-      >
+      <section className="py-20 px-4 sm:px-6 lg:px-8" aria-labelledby="enterprise-features-heading">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <h2
@@ -159,24 +156,23 @@ export default function Enterprise() {
               <div className="space-y-6" role="list" aria-label="Enterprise benefits">
                 {[
                   {
-                    title: '99.99% Uptime SLA',
+                    title: "99.99% Uptime SLA",
                     description:
                       "Guaranteed availability with financial penalties if we don't meet our SLA.",
                   },
                   {
-                    title: 'Custom Contracts',
+                    title: "Custom Contracts",
                     description:
-                      'Flexible terms, custom pricing, and dedicated account management.',
+                      "Flexible terms, custom pricing, and dedicated account management.",
                   },
                   {
-                    title: 'Priority Support',
+                    title: "Priority Support",
                     description:
-                      '24/7 support with under 4 hour response time for critical issues.',
+                      "24/7 support with under 4 hour response time for critical issues.",
                   },
                   {
-                    title: 'Compliance Ready',
-                    description:
-                      'SOC 2 Type II, GDPR, PCI-DSS, HIPAA-ready with audit trails.',
+                    title: "Compliance Ready",
+                    description: "SOC 2 Type II, GDPR, PCI-DSS, HIPAA-ready with audit trails.",
                   },
                 ].map((benefit, index) => (
                   <div key={index} className="flex items-start" role="listitem">
@@ -215,7 +211,10 @@ export default function Enterprise() {
               aria-labelledby="demo-form-heading"
             >
               <CardHeader>
-                <CardTitle id="demo-form-heading" className="text-2xl text-slate-900 dark:text-white">
+                <CardTitle
+                  id="demo-form-heading"
+                  className="text-2xl text-slate-900 dark:text-white"
+                >
                   Request a Demo
                 </CardTitle>
                 <CardDescription>
@@ -324,10 +323,10 @@ export default function Enterprise() {
             aria-label="Enterprise performance metrics"
           >
             {[
-              { value: '99.99%', label: 'Uptime SLA', description: 'Guaranteed availability' },
-              { value: '<4hr', label: 'Support Response', description: 'Critical issues' },
-              { value: '24/7', label: 'Support Coverage', description: 'Always available' },
-              { value: '100%', label: 'Compliance', description: 'SOC 2, GDPR, PCI-DSS' },
+              { value: "99.99%", label: "Uptime SLA", description: "Guaranteed availability" },
+              { value: "<4hr", label: "Support Response", description: "Critical issues" },
+              { value: "24/7", label: "Support Coverage", description: "Always available" },
+              { value: "100%", label: "Compliance", description: "SOC 2, GDPR, PCI-DSS" },
             ].map((stat, index) => (
               <div key={index} role="listitem">
                 <AnimatedStatCard

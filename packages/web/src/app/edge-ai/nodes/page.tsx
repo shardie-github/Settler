@@ -68,7 +68,7 @@ export default function EdgeNodesPage() {
           <CardHeader className="pb-2">
             <CardDescription>Active Nodes</CardDescription>
             <CardTitle className="text-3xl text-green-600">
-              {mockNodes.filter(n => n.status === "active").length}
+              {mockNodes.filter((n) => n.status === "active").length}
             </CardTitle>
           </CardHeader>
         </Card>
@@ -122,9 +122,7 @@ export default function EdgeNodesPage() {
               <div className="grid md:grid-cols-3 gap-4 text-sm">
                 <div>
                   <span className="text-gray-500">Last Heartbeat:</span>
-                  <p className="font-medium">
-                    {new Date(node.lastHeartbeat).toLocaleString()}
-                  </p>
+                  <p className="font-medium">{new Date(node.lastHeartbeat).toLocaleString()}</p>
                 </div>
                 <div>
                   <span className="text-gray-500">Jobs Processed:</span>

@@ -1,27 +1,27 @@
 /**
  * User-Specific Dashboard
- * 
+ *
  * Shows user's reconciliation data, trial status, usage stats, and personalized recommendations
  */
 
-import { Suspense } from 'react';
-import { redirect } from 'next/navigation';
-import { Navigation } from '@/components/Navigation';
-import { Footer } from '@/components/Footer';
-import { TrialCountdownBanner } from '@/components/TrialCountdownBanner';
-import { UsageLimitIndicator } from '@/components/UsageLimitIndicator';
-import { WelcomeDashboard } from '@/components/WelcomeDashboard';
-import { EmptyState } from '@/components/ui/empty-state';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Activity, TrendingUp, Clock, CheckCircle2, AlertCircle } from 'lucide-react';
-import Link from 'next/link';
+import { Suspense } from "react";
+import { redirect } from "next/navigation";
+import { Navigation } from "@/components/Navigation";
+import { Footer } from "@/components/Footer";
+import { TrialCountdownBanner } from "@/components/TrialCountdownBanner";
+import { UsageLimitIndicator } from "@/components/UsageLimitIndicator";
+import { WelcomeDashboard } from "@/components/WelcomeDashboard";
+import { EmptyState } from "@/components/ui/empty-state";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Activity, TrendingUp, Clock, CheckCircle2, AlertCircle } from "lucide-react";
+import Link from "next/link";
 
 // Force dynamic rendering
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
-import { getUserDashboardData } from '@/lib/data/user-dashboard';
-import type { UserDashboardData } from '@/lib/data/user-dashboard';
+import { getUserDashboardData } from "@/lib/data/user-dashboard";
+import type { UserDashboardData } from "@/lib/data/user-dashboard";
 
 async function fetchUserDashboard(): Promise<UserDashboardData | null> {
   return getUserDashboardData();
@@ -32,7 +32,7 @@ async function UserDashboardContent() {
 
   // Redirect to signup if not authenticated
   if (!data) {
-    redirect('/signup');
+    redirect("/signup");
     return null;
   }
 
@@ -53,10 +53,10 @@ async function UserDashboardContent() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-slate-900 dark:via-slate-800 dark:to-black">
       <Navigation />
-      
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 pt-24">
         {/* Trial Countdown Banner */}
-        {data.user.planType === 'trial' && data.user.trialEndDate && (
+        {data.user.planType === "trial" && data.user.trialEndDate && (
           <TrialCountdownBanner
             trialEndDate={data.user.trialEndDate}
             userPlan={data.user.planType}
@@ -86,7 +86,9 @@ async function UserDashboardContent() {
           <Card>
             <CardHeader className="pb-3">
               <CardDescription>Total Reconciliations</CardDescription>
-              <CardTitle className="text-3xl">{data.metrics.totalReconciliations.toLocaleString()}</CardTitle>
+              <CardTitle className="text-3xl">
+                {data.metrics.totalReconciliations.toLocaleString()}
+              </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
@@ -155,8 +157,8 @@ async function UserDashboardContent() {
                 title="No jobs yet"
                 description="Create your first reconciliation job to get started"
                 action={{
-                  label: 'Create Job',
-                  onClick: () => window.location.href = '/playground',
+                  label: "Create Job",
+                  onClick: () => (window.location.href = "/playground"),
                 }}
               />
             ) : (
@@ -183,13 +185,15 @@ async function UserDashboardContent() {
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className={`px-2 py-1 rounded text-xs font-medium ${
-                        job.status === 'completed' 
-                          ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'
-                          : job.status === 'running'
-                          ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400'
-                          : 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'
-                      }`}>
+                      <span
+                        className={`px-2 py-1 rounded text-xs font-medium ${
+                          job.status === "completed"
+                            ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400"
+                            : job.status === "running"
+                              ? "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400"
+                              : "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400"
+                        }`}
+                      >
                         {job.status}
                       </span>
                       <Button asChild variant="ghost" size="sm">

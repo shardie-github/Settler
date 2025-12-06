@@ -12,14 +12,14 @@ Settler.dev uses AIAS as an **external service** via REST API:
 
 ```typescript
 // Settler.dev code
-import { getAIASClient } from '../services/aias/client';
+import { getAIASClient } from "../services/aias/client";
 
 const aiasClient = getAIASClient();
 const result = await aiasClient.optimizeModel({
-  modelId: 'settler-model-123',
-  targetDevices: ['x86_64'],
-  quantization: 'int8',
-  optimizationLevel: 'balanced'
+  modelId: "settler-model-123",
+  targetDevices: ["x86_64"],
+  quantization: "int8",
+  optimizationLevel: "balanced",
 });
 ```
 
@@ -39,14 +39,15 @@ Both products use shared technical components from `@settler/edge-ai-core`:
 
 ```typescript
 // Both Settler.dev and AIAS can use
-import { 
+import {
   generateDeviceProfile,
   selectOptimalRuntime,
-  estimateQuantizedSize
-} from '@settler/edge-ai-core';
+  estimateQuantizedSize,
+} from "@settler/edge-ai-core";
 ```
 
 **What's Shared:**
+
 - Device profiling utilities
 - Model optimization helpers
 - Runtime selection logic
@@ -55,6 +56,7 @@ import {
 - Security utilities
 
 **What's NOT Shared:**
+
 - UI components
 - Branding
 - Pricing
@@ -68,17 +70,17 @@ import {
 ```typescript
 // Settler.dev uploads model to AIAS via API
 const uploadResult = await aiasClient.uploadModel({
-  modelName: 'settler-matching-v1',
-  modelType: 'matching',
+  modelName: "settler-matching-v1",
+  modelType: "matching",
   modelFile: modelBuffer,
-  format: 'onnx'
+  format: "onnx",
 });
 
 // Store AIAS job ID in Settler.dev database
-await query(
-  `UPDATE model_versions SET aias_job_id = $1 WHERE id = $2`,
-  [uploadResult.jobId, settlerModelId]
-);
+await query(`UPDATE model_versions SET aias_job_id = $1 WHERE id = $2`, [
+  uploadResult.jobId,
+  settlerModelId,
+]);
 ```
 
 ### 2. Model Optimization
@@ -87,9 +89,9 @@ await query(
 // Request optimization via AIAS API
 const optimizeResult = await aiasClient.optimizeModel({
   modelId: aiasModelId,
-  targetDevices: ['x86_64', 'arm64'],
-  quantization: 'int8',
-  optimizationLevel: 'balanced'
+  targetDevices: ["x86_64", "arm64"],
+  quantization: "int8",
+  optimizationLevel: "balanced",
 });
 
 // Poll for completion
@@ -102,8 +104,8 @@ const status = await aiasClient.getOptimizationStatus(optimizeResult.jobId);
 // Export optimized model from AIAS
 const exportResult = await aiasClient.exportModel({
   modelId: aiasModelId,
-  format: 'docker',
-  targetDevice: 'x86_64'
+  format: "docker",
+  targetDevice: "x86_64",
 });
 
 // Deploy to Settler.dev edge nodes
@@ -149,6 +151,7 @@ try {
 ### Fallback Behavior
 
 If AIAS is unavailable, Settler.dev can:
+
 - Use unoptimized models
 - Queue optimization requests for later
 - Use alternative optimization provider
@@ -174,6 +177,7 @@ If AIAS is unavailable, Settler.dev can:
 ### Integration Metrics
 
 Track:
+
 - API call success/failure rates
 - Optimization job completion times
 - Model download success rates
@@ -182,6 +186,7 @@ Track:
 ### Alerts
 
 Alert on:
+
 - AIAS API downtime
 - High failure rates
 - Slow optimization jobs
@@ -193,17 +198,18 @@ Alert on:
 
 ```typescript
 // In tests, mock AIAS client
-jest.mock('../services/aias/client', () => ({
+jest.mock("../services/aias/client", () => ({
   getAIASClient: () => ({
-    optimizeModel: jest.fn().mockResolvedValue({ jobId: 'test-job' }),
-    getOptimizationStatus: jest.fn().mockResolvedValue({ status: 'completed' })
-  })
+    optimizeModel: jest.fn().mockResolvedValue({ jobId: "test-job" }),
+    getOptimizationStatus: jest.fn().mockResolvedValue({ status: "completed" }),
+  }),
 }));
 ```
 
 ### Integration Tests
 
 Test with:
+
 - Real AIAS API (staging environment)
 - Mock responses
 - Error scenarios
@@ -222,6 +228,7 @@ Test with:
 ### Alternative Providers
 
 Settler.dev can integrate with other model optimization providers:
+
 - Implement same interface
 - Swap providers without code changes
 - Multi-provider support
@@ -229,6 +236,7 @@ Settler.dev can integrate with other model optimization providers:
 ### Direct Integration (Not Recommended)
 
 Direct code integration would:
+
 - ❌ Create tight coupling
 - ❌ Require shared versioning
 - ❌ Limit deployment flexibility

@@ -11,6 +11,7 @@
 ### 1. Content Simplification & Clarity
 
 **Homepage:**
+
 - Hero changed from "Make Reconciliation As Simple As Email" to "Stop Wasting Hours on Manual Financial Matching"
 - Removed technical jargon ("Reconciliation-as-a-Service API" → "Automatic Transaction Matching")
 - Features rewritten to be outcome-focused:
@@ -20,6 +21,7 @@
   - "99.7% Accuracy" → "99.7% Accurate - No More Manual Errors"
 
 **All Pages:**
+
 - Simplified language throughout (Grade 7-9 reading level)
 - Removed buzzwords and acronym soup
 - Focused on benefits, not features
@@ -28,23 +30,27 @@
 ### 2. Funnel Structure
 
 **New Funnel Mapping:**
+
 - **Awareness:** Homepage focuses on problem/outcome
 - **Consideration:** Docs, cookbooks, playground (with gating)
 - **Conversion:** Pricing page emphasizes trial, signup page optimized
 - **Retention:** Dashboard and in-app surfaces (pending implementation)
 
 **Primary CTA:** "Start 30-Day Free Trial" (changed from "Start Free Trial")
+
 - Links to `/signup` instead of `/playground`
 - Added "No credit card required" messaging
 
 ### 3. Content Gating Architecture
 
 **Created:**
+
 - `config/plans.ts` - Plan configuration with feature flags
 - `PlanFeatureGate` component - For gating content
 - Content gating rules defined (free vs paid boundaries)
 
 **Gating Strategy:**
+
 - Free tier: Basic cookbooks and docs only
 - Trial: Full access to everything (30 days)
 - Paid: Full access + consulting + priority support
@@ -54,6 +60,7 @@
 ### 4. Trial Structure
 
 **30-Day Free Trial:**
+
 - No credit card required (recommended)
 - Full access to all features during trial
 - Clear messaging about trial benefits
@@ -92,23 +99,27 @@
 ### Currently Gated (Free Tier):
 
 **Cookbooks:**
+
 - Real-time webhooks
 - Multi-currency
 - Advanced analytics
 - API key management
 
 **Documentation:**
+
 - Advanced API reference
 - Webhooks deep-dive
 - Multi-currency setup
 - Edge AI deployment
 
 **Playground:**
+
 - Unlimited runs (free: 3/day)
 - Advanced features
 - Real-time testing
 
 ### Full Access (Trial/Paid):
+
 - All content unlocked during 30-day trial
 - All content unlocked on paid plans
 
@@ -119,12 +130,14 @@
 ## How the 30-Day Trial Works
 
 ### Trial Activation:
+
 1. User signs up (no credit card required)
 2. Gets immediate access to all features
 3. Welcome email sent (Day 0)
 4. Pre-test prompt (optional but encouraged)
 
 ### Trial Experience:
+
 - **Day 0:** Welcome + quick start guide
 - **Day 2-3:** First value demonstration email
 - **Day 7:** Introduce gated features (upgrade prompt)
@@ -134,6 +147,7 @@
 - **Day 30:** Trial end, choose plan
 
 ### Trial Benefits:
+
 - Full access to all features
 - Unlimited transaction matching
 - All cookbooks and workflows
@@ -249,18 +263,21 @@
 ## Key Metrics to Track
 
 ### Conversion Funnel:
+
 - Trial signup rate (visitors → signups)
 - Trial activation rate (signups → first action)
 - Trial → Paid conversion rate
 - Time to conversion (days)
 
 ### Engagement:
+
 - Daily active users during trial
 - Feature usage (which features used)
 - Cookbook views/downloads
 - Documentation page views
 
 ### Revenue:
+
 - Trial → Paid conversion %
 - Average revenue per user (ARPU)
 - Monthly recurring revenue (MRR)
@@ -271,6 +288,7 @@
 ## Success Criteria
 
 ### Short-Term (30 days):
+
 - ✅ Content simplified and jargon removed
 - ✅ Clear "30-Day Free Trial" messaging everywhere
 - ✅ Funnel structure defined
@@ -278,6 +296,7 @@
 - ⚠️ Email cadence designed (pending email service)
 
 ### Medium-Term (90 days):
+
 - Trial signup rate increases
 - Trial → Paid conversion > 15%
 - Email engagement rate > 30%
@@ -288,6 +307,7 @@
 ## Questions or Concerns?
 
 If you have questions about:
+
 - **Implementation:** See `docs/implementation_notes.md`
 - **Content Strategy:** See `docs/content_audit.md`
 - **Funnel Design:** See `docs/funnel_strategy.md`

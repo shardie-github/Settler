@@ -24,7 +24,8 @@ function generateSuggestion(error, details) {
             };
             const firstError = fieldErrors[0];
             if (firstError?.code) {
-                return suggestions[firstError.code] || "Check the field requirements in the adapter documentation.";
+                return (suggestions[firstError.code] ||
+                    "Check the field requirements in the adapter documentation.");
             }
             return "Check the field requirements in the adapter documentation.";
         }
@@ -107,7 +108,7 @@ function handleEnhancedError(res, error, defaultMessage, statusCode = 500, conte
         };
         if (error.details) {
             if (Array.isArray(error.details)) {
-                errorResponse.details = error.details.map(d => {
+                errorResponse.details = error.details.map((d) => {
                     const detail = {
                         field: d.field,
                         message: d.message,
@@ -148,7 +149,7 @@ function handleEnhancedError(res, error, defaultMessage, statusCode = 500, conte
         return;
     }
     // Unknown error
-    (0, logger_1.logError)('Unknown error', error, context);
+    (0, logger_1.logError)("Unknown error", error, context);
     res.status(statusCode).json({
         error: {
             code: "INTERNAL_SERVER_ERROR",

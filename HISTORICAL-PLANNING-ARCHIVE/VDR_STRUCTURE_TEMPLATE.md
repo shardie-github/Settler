@@ -10,7 +10,9 @@
 ## VDR Setup Instructions
 
 ### Step 1: Choose VDR Platform
+
 **Options:**
+
 - **Dropbox Business** - Simple, cost-effective ($15/user/month)
 - **Google Drive** - Integrated with G Suite, easy sharing
 - **Dedicated VDR** - Intralinks, Datasite, Firmex ($500-$2000/month)
@@ -19,15 +21,18 @@
 **Recommendation:** Start with Dropbox Business or Google Drive, upgrade to dedicated VDR if needed.
 
 ### Step 2: Create Folder Structure
+
 Use the structure below to organize all documents.
 
 ### Step 3: Set Up Access Controls
+
 - **Read-only access** for investors
 - **Audit logging** for all access
 - **Watermarking** for sensitive documents (optional)
 - **Expiration dates** for access (if term sheet expires)
 
 ### Step 4: Upload Documents
+
 Upload all documents according to the Due Diligence Index.
 
 ---
@@ -195,15 +200,16 @@ Settler_Seed_Round_VDR/
 
 Create an Excel/Google Sheets file to track document status:
 
-| Document Name | Section | Status | Owner | Last Updated | Notes |
-|--------------|---------|--------|-------|--------------|-------|
-| Certificate of Incorporation | 1.1 | ✅ Complete | Legal | 2026-01-15 | - |
-| Cap Table | 1.2 | 🚧 In Progress | CFO | 2026-01-15 | Need to update with latest grants |
-| IP Assignments | 1.3 | ⚠️ Missing | Legal | - | Need to collect from all employees |
-| Financial Model | 2.2 | ✅ Complete | CFO | 2026-01-15 | - |
-| Pitch Deck | 5.1 | 🚧 In Progress | CEO | 2026-01-15 | Need to design slides |
+| Document Name                | Section | Status         | Owner | Last Updated | Notes                              |
+| ---------------------------- | ------- | -------------- | ----- | ------------ | ---------------------------------- |
+| Certificate of Incorporation | 1.1     | ✅ Complete    | Legal | 2026-01-15   | -                                  |
+| Cap Table                    | 1.2     | 🚧 In Progress | CFO   | 2026-01-15   | Need to update with latest grants  |
+| IP Assignments               | 1.3     | ⚠️ Missing     | Legal | -            | Need to collect from all employees |
+| Financial Model              | 2.2     | ✅ Complete    | CFO   | 2026-01-15   | -                                  |
+| Pitch Deck                   | 5.1     | 🚧 In Progress | CEO   | 2026-01-15   | Need to design slides              |
 
 **Status Legend:**
+
 - ✅ Complete - Document ready
 - 🚧 In Progress - Document being created/updated
 - ⚠️ Missing - Document not yet created
@@ -214,22 +220,26 @@ Create an Excel/Google Sheets file to track document status:
 ## VDR Access Instructions (For Investors)
 
 ### How to Request Access
+
 1. Contact: [Email/Contact]
 2. Sign NDA (if not already executed)
 3. Receive VDR link and credentials
 4. Access expires [X] days after term sheet expiration (if not executed)
 
 ### Access Levels
+
 - **Read-Only:** Standard investor access
 - **Download:** May be restricted for sensitive documents
 - **Print:** May be restricted (watermarking enabled)
 
 ### Document Organization
+
 - Documents are organized by section (see folder structure)
 - Use the Due Diligence Index to navigate
 - Document Status Tracker shows completion status
 
 ### Security
+
 - All access is logged and audited
 - Documents may be watermarked
 - Download restrictions may apply to sensitive documents
@@ -240,6 +250,7 @@ Create an Excel/Google Sheets file to track document status:
 ## Document Collection Checklist
 
 ### Corporate & Legal (Priority: High)
+
 - [ ] Certificate of Incorporation
 - [ ] Certificate of Good Standing (current, within 30 days)
 - [ ] Bylaws
@@ -251,6 +262,7 @@ Create an Excel/Google Sheets file to track document status:
 - [ ] Tax IDs
 
 ### Financial (Priority: High)
+
 - [ ] Historical Financials (P&L, Balance Sheet, Cash Flow)
 - [ ] 3-Year Financial Model
 - [ ] Unit Economics Model
@@ -258,6 +270,7 @@ Create an Excel/Google Sheets file to track document status:
 - [ ] Tax Returns (all years)
 
 ### Technical & Product (Priority: Medium)
+
 - [ ] System Architecture Diagram
 - [ ] Security Audit Report
 - [ ] Code Quality Report
@@ -265,6 +278,7 @@ Create an Excel/Google Sheets file to track document status:
 - [ ] API Documentation
 
 ### Business & Market (Priority: Medium)
+
 - [ ] Market Sizing Analysis
 - [ ] Competitive Analysis
 - [ ] GTM Plan
@@ -272,6 +286,7 @@ Create an Excel/Google Sheets file to track document status:
 - [ ] Letters of Intent
 
 ### Investor Materials (Priority: High)
+
 - [ ] Pitch Deck (designed)
 - [ ] Executive Summary
 - [ ] Product Demo Video
@@ -281,6 +296,7 @@ Create an Excel/Google Sheets file to track document status:
 ## VDR Setup Tasks
 
 ### Week 1: Platform Setup
+
 - [ ] Choose VDR platform
 - [ ] Set up account and folder structure
 - [ ] Configure access controls
@@ -288,18 +304,21 @@ Create an Excel/Google Sheets file to track document status:
 - [ ] Create Document Status Tracker
 
 ### Week 2: Document Collection
+
 - [ ] Identify all existing documents
 - [ ] Create list of missing documents
 - [ ] Assign owners for document collection
 - [ ] Begin uploading existing documents
 
 ### Week 3: Document Organization
+
 - [ ] Organize all documents by section
 - [ ] Update Document Status Tracker
 - [ ] Create VDR Access Instructions
 - [ ] Test access controls
 
 ### Week 4: Finalization
+
 - [ ] Complete all missing documents
 - [ ] Final review of VDR organization
 - [ ] Prepare for investor access
@@ -310,16 +329,19 @@ Create an Excel/Google Sheets file to track document status:
 ## VDR Maintenance
 
 ### Weekly Updates
+
 - [ ] Update Document Status Tracker
 - [ ] Upload new documents as they become available
 - [ ] Review access logs
 
 ### Monthly Updates
+
 - [ ] Update financial documents (if material changes)
 - [ ] Update traction metrics
 - [ ] Review and update Due Diligence Index
 
 ### As Needed
+
 - [ ] Add new documents as requested by investors
 - [ ] Update access controls
 - [ ] Respond to investor questions
@@ -332,4 +354,4 @@ Create an Excel/Google Sheets file to track document status:
 
 ---
 
-*This VDR structure template should be used to organize all documents for Seed Round due diligence. Keep the Document Status Tracker updated regularly.*
+_This VDR structure template should be used to organize all documents for Seed Round due diligence. Keep the Document Status Tracker updated regularly._

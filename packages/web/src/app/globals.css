@@ -120,23 +120,6 @@ html {
   border-radius: 4px;
 }
 
-/* Skip to main content link */
-.skip-to-main {
-  position: absolute;
-  left: -9999px;
-  z-index: 999;
-  padding: 1em;
-  background-color: theme('colors.primary.600');
-  color: white;
-  text-decoration: none;
-}
-
-.skip-to-main:focus {
-  left: 50%;
-  transform: translateX(-50%);
-  top: 1em;
-}
-
 /* Animation utilities */
 @keyframes fadeIn {
   from {

@@ -4,33 +4,39 @@
  * Future-forward: AI-powered resolution suggestions, auto-resolution, batch processing
  */
 
-import React, { useState, useEffect } from 'react';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Checkbox } from '@/components/ui/checkbox';
-import { CheckCircle2, XCircle, Filter, Download, Sparkles } from '@/lib/lucide-react';
+import React, { useState, useEffect } from "react";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
+import { CheckCircle2, XCircle, Filter, Download, Sparkles } from "@/lib/lucide-react";
 
 interface Exception {
   id: string;
   sourceId: string;
   category: string;
   description: string;
-  severity: 'low' | 'medium' | 'high';
+  severity: "low" | "medium" | "high";
   createdAt: string;
-  resolutionStatus: 'open' | 'resolved' | 'ignored';
+  resolutionStatus: "open" | "resolved" | "ignored";
 }
 
 export function ExceptionQueue({ jobId }: { jobId?: string }) {
   const [exceptions, setExceptions] = useState<Exception[]>([]);
   const [selectedExceptions, setSelectedExceptions] = useState<Set<string>>(new Set());
   const [filters, setFilters] = useState({
-    category: '',
-    severity: '',
-    status: 'open',
-    search: '',
+    category: "",
+    severity: "",
+    status: "open",
+    search: "",
   });
   const [loading, setLoading] = useState(false);
   const [stats, setStats] = useState({
@@ -49,17 +55,17 @@ export function ExceptionQueue({ jobId }: { jobId?: string }) {
     setLoading(true);
     try {
       const params = new URLSearchParams();
-      if (jobId) params.append('jobId', jobId);
-      if (filters.category) params.append('category', filters.category);
-      if (filters.severity) params.append('severity', filters.severity);
-      if (filters.status) params.append('resolutionStatus', filters.status);
-      if (filters.search) params.append('search', filters.search);
+      if (jobId) params.append("jobId", jobId);
+      if (filters.category) params.append("category", filters.category);
+      if (filters.severity) params.append("severity", filters.severity);
+      if (filters.status) params.append("resolutionStatus", filters.status);
+      if (filters.search) params.append("search", filters.search);
 
       const response = await fetch(`/api/v1/exceptions?${params.toString()}`);
       const data = await response.json();
       setExceptions(data.data || []);
     } catch (error) {
-      console.error('Failed to load exceptions:', error);
+      console.error("Failed to load exceptions:", error);
     } finally {
       setLoading(false);
     }
@@ -68,37 +74,41 @@ export function ExceptionQueue({ jobId }: { jobId?: string }) {
   const loadStats = async () => {
     try {
       const params = new URLSearchParams();
-      if (jobId) params.append('jobId', jobId);
+      if (jobId) params.append("jobId", jobId);
 
       const response = await fetch(`/api/v1/exceptions/stats?${params.toString()}`);
       const data = await response.json();
       setStats(data.data || { total: 0, open: 0, resolved: 0, high: 0 });
     } catch (error) {
-      console.error('Failed to load stats:', error);
+      console.error("Failed to load stats:", error);
     }
   };
 
-  const resolveException = async (id: string, resolution: 'matched' | 'manual' | 'ignored', notes?: string) => {
+  const resolveException = async (
+    id: string,
+    resolution: "matched" | "manual" | "ignored",
+    notes?: string
+  ) => {
     try {
       await fetch(`/api/v1/exceptions/${id}/resolve`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ resolution, notes }),
       });
       loadExceptions();
       loadStats();
     } catch (error) {
-      console.error('Failed to resolve exception:', error);
+      console.error("Failed to resolve exception:", error);
     }
   };
 
-  const bulkResolve = async (resolution: 'matched' | 'manual' | 'ignored') => {
+  const bulkResolve = async (resolution: "matched" | "manual" | "ignored") => {
     if (selectedExceptions.size === 0) return;
 
     try {
-      await fetch('/api/v1/exceptions/bulk-resolve', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      await fetch("/api/v1/exceptions/bulk-resolve", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           exceptionIds: Array.from(selectedExceptions),
           resolution,
@@ -108,7 +118,7 @@ export function ExceptionQueue({ jobId }: { jobId?: string }) {
       loadExceptions();
       loadStats();
     } catch (error) {
-      console.error('Failed to bulk resolve:', error);
+      console.error("Failed to bulk resolve:", error);
     }
   };
 
@@ -126,7 +136,7 @@ export function ExceptionQueue({ jobId }: { jobId?: string }) {
     if (selectedExceptions.size === exceptions.length) {
       setSelectedExceptions(new Set());
     } else {
-      setSelectedExceptions(new Set(exceptions.map(e => e.id)));
+      setSelectedExceptions(new Set(exceptions.map((e) => e.id)));
     }
   };
 
@@ -195,7 +205,10 @@ export function ExceptionQueue({ jobId }: { jobId?: string }) {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div>
               <label className="text-sm font-medium mb-2 block">Category</label>
-              <Select value={filters.category} onValueChange={(v: string) => setFilters({ ...filters, category: v })}>
+              <Select
+                value={filters.category}
+                onValueChange={(v: string) => setFilters({ ...filters, category: v })}
+              >
                 <SelectTrigger>
                   <SelectValue placeholder="All" />
                 </SelectTrigger>
@@ -209,7 +222,10 @@ export function ExceptionQueue({ jobId }: { jobId?: string }) {
             </div>
             <div>
               <label className="text-sm font-medium mb-2 block">Severity</label>
-              <Select value={filters.severity} onValueChange={(v: string) => setFilters({ ...filters, severity: v })}>
+              <Select
+                value={filters.severity}
+                onValueChange={(v: string) => setFilters({ ...filters, severity: v })}
+              >
                 <SelectTrigger>
                   <SelectValue placeholder="All" />
                 </SelectTrigger>
@@ -223,7 +239,10 @@ export function ExceptionQueue({ jobId }: { jobId?: string }) {
             </div>
             <div>
               <label className="text-sm font-medium mb-2 block">Status</label>
-              <Select value={filters.status} onValueChange={(v: string) => setFilters({ ...filters, status: v })}>
+              <Select
+                value={filters.status}
+                onValueChange={(v: string) => setFilters({ ...filters, status: v })}
+              >
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
@@ -239,7 +258,9 @@ export function ExceptionQueue({ jobId }: { jobId?: string }) {
               <Input
                 placeholder="Search exceptions..."
                 value={filters.search}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFilters({ ...filters, search: e.target.value })}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setFilters({ ...filters, search: e.target.value })
+                }
               />
             </div>
           </div>
@@ -252,13 +273,13 @@ export function ExceptionQueue({ jobId }: { jobId?: string }) {
             <div className="flex items-center justify-between">
               <span className="font-semibold">{selectedExceptions.size} selected</span>
               <div className="flex gap-2">
-                <Button size="sm" onClick={() => bulkResolve('matched')}>
+                <Button size="sm" onClick={() => bulkResolve("matched")}>
                   Mark as Matched
                 </Button>
-                <Button size="sm" variant="outline" onClick={() => bulkResolve('manual')}>
+                <Button size="sm" variant="outline" onClick={() => bulkResolve("manual")}>
                   Mark as Manual
                 </Button>
-                <Button size="sm" variant="outline" onClick={() => bulkResolve('ignored')}>
+                <Button size="sm" variant="outline" onClick={() => bulkResolve("ignored")}>
                   Ignore
                 </Button>
               </div>
@@ -282,7 +303,10 @@ export function ExceptionQueue({ jobId }: { jobId?: string }) {
           ) : (
             <div className="space-y-2">
               <div className="flex items-center gap-2 pb-2 border-b">
-                <Checkbox checked={selectedExceptions.size === exceptions.length} onCheckedChange={selectAll} />
+                <Checkbox
+                  checked={selectedExceptions.size === exceptions.length}
+                  onCheckedChange={selectAll}
+                />
                 <span className="text-sm font-medium">Select All</span>
               </div>
               {exceptions.map((exception) => (
@@ -297,7 +321,7 @@ export function ExceptionQueue({ jobId }: { jobId?: string }) {
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-2">
                       <span className="font-mono text-sm">{exception.sourceId}</span>
-                      <Badge variant={exception.severity === 'high' ? 'destructive' : 'secondary'}>
+                      <Badge variant={exception.severity === "high" ? "destructive" : "secondary"}>
                         {exception.severity}
                       </Badge>
                       <Badge variant="outline">{exception.category}</Badge>
@@ -311,7 +335,7 @@ export function ExceptionQueue({ jobId }: { jobId?: string }) {
                     <Button
                       size="sm"
                       variant="outline"
-                      onClick={() => resolveException(exception.id, 'matched')}
+                      onClick={() => resolveException(exception.id, "matched")}
                     >
                       <CheckCircle2 className="w-4 h-4 mr-1" />
                       Matched
@@ -319,14 +343,14 @@ export function ExceptionQueue({ jobId }: { jobId?: string }) {
                     <Button
                       size="sm"
                       variant="outline"
-                      onClick={() => resolveException(exception.id, 'manual')}
+                      onClick={() => resolveException(exception.id, "manual")}
                     >
                       Manual
                     </Button>
                     <Button
                       size="sm"
                       variant="outline"
-                      onClick={() => resolveException(exception.id, 'ignored')}
+                      onClick={() => resolveException(exception.id, "ignored")}
                     >
                       <XCircle className="w-4 h-4 mr-1" />
                       Ignore

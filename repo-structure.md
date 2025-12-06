@@ -66,6 +66,7 @@ packages/api/
 ```
 
 **Key Files:**
+
 - `src/index.ts` - Express app setup, middleware, route registration
 - `src/middleware/auth.ts` - API key and JWT authentication
 - `src/routes/jobs.ts` - Reconciliation job endpoints (create, list, get, run, delete)
@@ -92,6 +93,7 @@ packages/sdk/
 ```
 
 **Key Files:**
+
 - `src/client.ts` - Main client class with HTTP request handling
 - `src/types.ts` - All TypeScript interfaces and types
 - `src/clients/jobs.ts` - Job management methods
@@ -114,6 +116,7 @@ packages/cli/
 ```
 
 **Key Files:**
+
 - `src/index.ts` - Commander.js setup, command registration
 - `src/commands/jobs.ts` - `settler jobs list`, `settler jobs create`, etc.
 
@@ -140,6 +143,7 @@ packages/web/
 ```
 
 **Key Files:**
+
 - `src/app/page.tsx` - Landing page with quick start
 - `src/app/playground/page.tsx` - Interactive code playground
 
@@ -161,6 +165,7 @@ packages/adapters/
 ```
 
 **Key Files:**
+
 - `src/base.ts` - `Adapter` interface, `NormalizedData` type
 - `src/stripe.ts` - Stripe payment reconciliation adapter
 
@@ -169,6 +174,7 @@ packages/adapters/
 ### `docs/api.md`
 
 Complete API reference with:
+
 - Authentication methods
 - All endpoints with request/response examples
 - Error codes and formats
@@ -177,6 +183,7 @@ Complete API reference with:
 ### `docs/adapters.md`
 
 Adapter development guide:
+
 - Built-in adapters documentation
 - Creating custom adapters
 - Normalized data format
@@ -185,6 +192,7 @@ Adapter development guide:
 ### `docs/contributing.md`
 
 Contribution guidelines:
+
 - Development setup
 - Coding standards
 - PR process
@@ -193,6 +201,7 @@ Contribution guidelines:
 ### `docs/troubleshooting.md`
 
 Common issues and solutions:
+
 - Authentication problems
 - Rate limiting
 - Job execution issues

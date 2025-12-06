@@ -20,21 +20,23 @@ React.Settler now includes comprehensive integrations for MCP servers, marketpla
   - `create_reconciliation_workflow`
 
 **Usage:**
+
 ```tsx
-import { createMCPServer } from '@settler/react-settler';
+import { createMCPServer } from "@settler/react-settler";
 
 const mcpServer = createMCPServer({
-  name: 'react-settler',
-  version: '0.1.0'
+  name: "react-settler",
+  version: "0.1.0",
 });
 
-mcpServer.registerWorkflow('workflow-1', config);
-const result = await mcpServer.callTool('validate_transaction', { transaction });
+mcpServer.registerWorkflow("workflow-1", config);
+const result = await mcpServer.callTool("validate_transaction", { transaction });
 ```
 
 ### 2. Marketplace App Integrations ✅
 
 #### Shopify App Integration
+
 **Location:** `packages/react-settler/src/adapters/shopify.tsx`
 
 - ✅ Shopify App wrapper component
@@ -43,18 +45,20 @@ const result = await mcpServer.callTool('validate_transaction', { transaction })
 - ✅ Action handlers for Shopify events
 
 **Usage:**
+
 ```tsx
-import { ShopifyApp, useShopifyAppBridge } from '@settler/react-settler';
+import { ShopifyApp, useShopifyAppBridge } from "@settler/react-settler";
 
 <ShopifyApp
   shop="myshop.myshopify.com"
   apiKey="api-key"
   transactions={transactions}
   onAction={(action, data) => handleAction(action, data)}
-/>
+/>;
 ```
 
 #### Stripe Connect Integration
+
 **Location:** `packages/react-settler/src/adapters/stripe.tsx`
 
 - ✅ Stripe Connect app wrapper
@@ -63,19 +67,21 @@ import { ShopifyApp, useShopifyAppBridge } from '@settler/react-settler';
 - ✅ Account context support
 
 **Usage:**
+
 ```tsx
-import { StripeApp } from '@settler/react-settler';
+import { StripeApp } from "@settler/react-settler";
 
 <StripeApp
   accountId="acct_123"
   transactions={transactions}
   onExport={(format, data) => handleExport(format, data)}
-/>
+/>;
 ```
 
 ### 3. Mobile Responsiveness ✅
 
 #### Mobile Dashboard Component
+
 **Location:** `packages/react-settler/src/components/MobileDashboard.tsx`
 
 - ✅ Mobile-optimized layout
@@ -85,17 +91,19 @@ import { StripeApp } from '@settler/react-settler';
 - ✅ Responsive breakpoints
 
 **Usage:**
+
 ```tsx
-import { MobileDashboard } from '@settler/react-settler';
+import { MobileDashboard } from "@settler/react-settler";
 
 <MobileDashboard
   transactions={transactions}
   exceptions={exceptions}
   onTransactionSelect={(tx) => navigateToDetail(tx)}
-/>
+/>;
 ```
 
 #### Responsive Utilities
+
 **Location:** `packages/react-settler/src/utils/responsive.ts`
 
 - ✅ `useBreakpoint()` - Get current breakpoint
@@ -106,8 +114,9 @@ import { MobileDashboard } from '@settler/react-settler';
 - ✅ `getResponsiveColumns()` - Get responsive grid columns
 
 **Usage:**
+
 ```tsx
-import { useIsMobile, useBreakpoint } from '@settler/react-settler';
+import { useIsMobile, useBreakpoint } from "@settler/react-settler";
 
 const isMobile = useIsMobile();
 const breakpoint = useBreakpoint();
@@ -120,6 +129,7 @@ if (isMobile) {
 ### 4. Accessibility (a11y) ✅
 
 **Enhanced Components:**
+
 - ✅ **ARIA labels** on all components
 - ✅ **Keyboard navigation** (Tab, Enter, Space, Arrow keys)
 - ✅ **Screen reader support** (role attributes, aria-live regions)
@@ -129,6 +139,7 @@ if (isMobile) {
 - ✅ **Color contrast** (WCAG AA compliant)
 
 **TransactionTable Enhancements:**
+
 - ✅ `role="table"` with proper structure
 - ✅ `aria-label` for table description
 - ✅ `scope="col"` for column headers
@@ -151,39 +162,43 @@ if (isMobile) {
 - ✅ Stripe webhook adapter
 
 **Usage:**
+
 ```tsx
-import { createWebhookManager, createShopifyWebhookAdapter } from '@settler/react-settler';
+import { createWebhookManager, createShopifyWebhookAdapter } from "@settler/react-settler";
 
 // Basic webhook manager
-const manager = createWebhookManager('secret');
-manager.on('transaction.created', async (payload) => {
-  console.log('New transaction:', payload.data);
+const manager = createWebhookManager("secret");
+manager.on("transaction.created", async (payload) => {
+  console.log("New transaction:", payload.data);
 });
 
 // Shopify adapter
-const adapter = createShopifyWebhookAdapter('shopify-secret');
+const adapter = createShopifyWebhookAdapter("shopify-secret");
 await adapter.handleShopifyWebhook({
-  id: 'webhook-id',
-  event: 'orders/create',
-  data: orderData
+  id: "webhook-id",
+  event: "orders/create",
+  data: orderData,
 });
 ```
 
 ## 📦 Complete Integration Ecosystem
 
 ### Platform Integrations
+
 - ✅ **MCP Server** - AI assistant integration
 - ✅ **Shopify** - App store integration
 - ✅ **Stripe** - Connect app integration
 - ✅ **Webhooks** - Real-time event system
 
 ### Device Support
+
 - ✅ **Mobile** - Touch-optimized components
 - ✅ **Tablet** - Responsive layouts
 - ✅ **Desktop** - Full-featured dashboards
 - ✅ **Responsive** - Breakpoint utilities
 
 ### Accessibility
+
 - ✅ **WCAG 2.1 AA** compliant
 - ✅ **Keyboard navigation**
 - ✅ **Screen reader support**
@@ -193,23 +208,27 @@ await adapter.handleShopifyWebhook({
 ## 🎯 Why These Integrations Matter
 
 ### 1. **Ecosystem Integration**
+
 - Works seamlessly with Shopify, Stripe, and other platforms
 - MCP integration enables AI assistant support
 - Webhook system for real-time updates
 
 ### 2. **Mobile-First**
+
 - Touch-optimized components
 - Responsive breakpoints
 - Mobile dashboard component
 - Horizontal scrolling support
 
 ### 3. **Accessibility**
+
 - WCAG 2.1 AA compliant
 - Screen reader friendly
 - Keyboard navigation
 - Proper ARIA labels
 
 ### 4. **Developer Experience**
+
 - Easy integration with popular platforms
 - Comprehensive utilities
 - Clear documentation
@@ -230,20 +249,20 @@ import {
   MobileDashboard,
   ShopifyApp,
   useIsMobile,
-  createWebhookManager
-} from '@settler/react-settler';
+  createWebhookManager,
+} from "@settler/react-settler";
 
 function App() {
   const isMobile = useIsMobile();
-  
+
   // Set up webhooks
-  const webhookManager = createWebhookManager('secret');
-  webhookManager.on('transaction.created', handleNewTransaction);
-  
+  const webhookManager = createWebhookManager("secret");
+  webhookManager.on("transaction.created", handleNewTransaction);
+
   if (isMobile) {
     return <MobileDashboard transactions={transactions} />;
   }
-  
+
   return <ShopifyApp shop="myshop.myshopify.com" transactions={transactions} />;
 }
 ```
@@ -251,15 +270,15 @@ function App() {
 ### MCP Server Example
 
 ```tsx
-import { createMCPServer } from '@settler/react-settler';
+import { createMCPServer } from "@settler/react-settler";
 
 const server = createMCPServer({
-  name: 'react-settler',
-  version: '0.1.0'
+  name: "react-settler",
+  version: "0.1.0",
 });
 
 // Register workflows
-server.registerWorkflow('workflow-1', config);
+server.registerWorkflow("workflow-1", config);
 
 // Expose to MCP clients
 export default server;
@@ -268,6 +287,7 @@ export default server;
 ## ✅ All Features Complete
 
 React.Settler now includes:
+
 - ✅ MCP server integration
 - ✅ Marketplace app integrations (Shopify, Stripe)
 - ✅ Mobile-responsive components

@@ -8,6 +8,7 @@
 ## Executive Summary
 
 This document provides implementation guidance for the complete content strategy system, including:
+
 - All deliverables created
 - Implementation priorities
 - Code integration points
@@ -19,9 +20,11 @@ This document provides implementation guidance for the complete content strategy
 ## Deliverables Created
 
 ### 1. Content Surface Map
+
 **File:** `docs/content_surface_map.md`
 
 **Contents:**
+
 - Complete inventory of all content locations
 - Pages, components, system messages, notifications
 - Copy quality issues identified
@@ -29,6 +32,7 @@ This document provides implementation guidance for the complete content strategy
 - Automation opportunities
 
 **Use This For:**
+
 - Understanding all content surfaces
 - Prioritizing copy improvements
 - Identifying integration points
@@ -36,15 +40,18 @@ This document provides implementation guidance for the complete content strategy
 ---
 
 ### 2. Content Backfill Plan
+
 **File:** `docs/content_backfill_plan.md`
 
 **Contents:**
+
 - Prioritized list of all missing content
 - Proposed copy for each piece (short, medium, long variants)
 - Tone recommendations
 - Personalization opportunities
 
 **Use This For:**
+
 - Copy implementation
 - Content creation
 - Tone consistency
@@ -52,9 +59,11 @@ This document provides implementation guidance for the complete content strategy
 ---
 
 ### 3. Monthly Cadence Engine
+
 **File:** `docs/monthly_cadence_engine.md`
 
 **Contents:**
+
 - Complete 30-day trial sequence
 - Paid monthly subscription cadence
 - Email templates with dynamic fields
@@ -62,6 +71,7 @@ This document provides implementation guidance for the complete content strategy
 - Retention system
 
 **Use This For:**
+
 - Email automation setup
 - Lifecycle marketing
 - User engagement
@@ -69,9 +79,11 @@ This document provides implementation guidance for the complete content strategy
 ---
 
 ### 4. Email Template System
+
 **Location:** `emails/`
 
 **Structure:**
+
 ```
 /emails/
   lifecycle/          # Lifecycle email templates
@@ -83,6 +95,7 @@ This document provides implementation guidance for the complete content strategy
 ```
 
 **Use This For:**
+
 - Email template implementation
 - Dynamic field system
 - Email automation
@@ -90,9 +103,11 @@ This document provides implementation guidance for the complete content strategy
 ---
 
 ### 5. Marketing Strategy
+
 **File:** `docs/marketing_strategy.md`
 
 **Contents:**
+
 - 7 content pillars
 - Monthly publishing calendar
 - SEO and discovery optimization
@@ -100,6 +115,7 @@ This document provides implementation guidance for the complete content strategy
 - Social snippet generator
 
 **Use This For:**
+
 - Content marketing planning
 - SEO optimization
 - Content production
@@ -221,49 +237,52 @@ This document provides implementation guidance for the complete content strategy
 ### 1. Email System Integration
 
 **Current Implementation:**
+
 - File: `packages/api/src/lib/email.ts`
 - Status: Basic email sending with Resend
 
 **Integration Steps:**
 
 1. **Add Template Rendering:**
+
 ```typescript
 // packages/api/src/lib/email-templates.ts
-import Handlebars from 'handlebars';
-import { readFileSync } from 'fs';
-import { join } from 'path';
+import Handlebars from "handlebars";
+import { readFileSync } from "fs";
+import { join } from "path";
 
 export async function renderEmailTemplate(
   templateName: string,
   data: Record<string, any>
 ): Promise<string> {
-  const templatePath = join(process.cwd(), 'emails', 'lifecycle', `${templateName}.html`);
-  const templateSource = readFileSync(templatePath, 'utf8');
+  const templatePath = join(process.cwd(), "emails", "lifecycle", `${templateName}.html`);
+  const templateSource = readFileSync(templatePath, "utf8");
   const template = Handlebars.compile(templateSource);
   return template(data);
 }
 ```
 
 2. **Add Lifecycle Email Functions:**
+
 ```typescript
 // packages/api/src/lib/email-lifecycle.ts
-import { sendEmail } from './email';
-import { renderEmailTemplate } from './email-templates';
+import { sendEmail } from "./email";
+import { renderEmailTemplate } from "./email-templates";
 
 export async function sendTrialWelcomeEmail(
   user: { email: string; firstName: string },
   trialEndDate: string
 ) {
-  const html = await renderEmailTemplate('trial_welcome', {
+  const html = await renderEmailTemplate("trial_welcome", {
     user: { first_name: user.firstName },
     trial_end_date: trialEndDate,
     dashboard_url: `${process.env.APP_URL}/dashboard`,
     // ... other fields
   });
-  
+
   return sendEmail({
     to: user.email,
-    subject: 'Welcome to Settler! 🎉',
+    subject: "Welcome to Settler! 🎉",
     html,
     text: generatePlainText(html),
   });
@@ -271,6 +290,7 @@ export async function sendTrialWelcomeEmail(
 ```
 
 3. **Add Email Triggers:**
+
 ```typescript
 // packages/api/src/routes/users.ts (or similar)
 // Trigger on user signup
@@ -278,7 +298,7 @@ await sendTrialWelcomeEmail(user, trialEndDate);
 
 // packages/api/src/jobs/email-scheduler.ts
 // Scheduled job for lifecycle emails
-cron.schedule('0 9 * * *', async () => {
+cron.schedule("0 9 * * *", async () => {
   // Send Day 7, 14, 21, 27-29 emails based on trial date
 });
 ```
@@ -288,12 +308,14 @@ cron.schedule('0 9 * * *', async () => {
 ### 2. Content Gating Integration
 
 **Current Implementation:**
+
 - File: `packages/web/src/components/PlanFeatureGate.tsx`
 - File: `config/plans.ts`
 
 **Integration Steps:**
 
 1. **Add Gating to Cookbooks:**
+
 ```typescript
 // packages/web/src/app/cookbooks/page.tsx
 import { PlanFeatureGate } from '@/components/PlanFeatureGate';
@@ -312,6 +334,7 @@ import { PlanFeatureGate } from '@/components/PlanFeatureGate';
 ```
 
 2. **Add Gating to Documentation:**
+
 ```typescript
 // packages/web/src/app/docs/page.tsx
 <PlanFeatureGate
@@ -325,6 +348,7 @@ import { PlanFeatureGate } from '@/components/PlanFeatureGate';
 ```
 
 3. **Add Usage Limits:**
+
 ```typescript
 // packages/web/src/app/playground/page.tsx
 const { runsToday, runsLimit } = usePlaygroundUsage();
@@ -339,12 +363,14 @@ if (runsToday >= runsLimit && userPlan === 'free') {
 ### 3. Dashboard Integration
 
 **Current Implementation:**
+
 - File: `packages/web/src/app/dashboard/page.tsx`
 - Status: Shows public ecosystem metrics
 
 **Integration Steps:**
 
 1. **Create User Dashboard Component:**
+
 ```typescript
 // packages/web/src/components/UserDashboard.tsx
 export function UserDashboard({ user, userPlan, trialEndDate }) {
@@ -353,13 +379,13 @@ export function UserDashboard({ user, userPlan, trialEndDate }) {
       {userPlan === 'trial' && (
         <TrialCountdownBanner endDate={trialEndDate} />
       )}
-      
+
       <UsageStats userPlan={userPlan} />
-      
+
       <RecentReconciliations userId={user.id} />
-      
+
       <QuickActions />
-      
+
       <PersonalizedRecommendations user={user} />
     </div>
   );
@@ -367,11 +393,12 @@ export function UserDashboard({ user, userPlan, trialEndDate }) {
 ```
 
 2. **Add Trial Countdown Banner:**
+
 ```typescript
 // packages/web/src/components/TrialCountdownBanner.tsx
 export function TrialCountdownBanner({ endDate }: { endDate: string }) {
   const daysRemaining = calculateDaysRemaining(endDate);
-  
+
   return (
     <Banner variant="warning">
       Your trial ends in {daysRemaining} days.{" "}
@@ -386,11 +413,13 @@ export function TrialCountdownBanner({ endDate }: { endDate: string }) {
 ### 4. Onboarding Integration
 
 **Current Implementation:**
+
 - File: `packages/web/src/components/OnboardingFlow.tsx`
 
 **Integration Steps:**
 
 1. **Add Pre-Test Questionnaire:**
+
 ```typescript
 // packages/web/src/components/PreTestQuestionnaire.tsx
 export function PreTestQuestionnaire({ onComplete }) {
@@ -401,6 +430,7 @@ export function PreTestQuestionnaire({ onComplete }) {
 ```
 
 2. **Add Welcome Dashboard:**
+
 ```typescript
 // packages/web/src/app/dashboard/page.tsx
 // Show welcome content for first-time users
@@ -453,22 +483,26 @@ if (isFirstVisit) {
 ### Conversion Metrics
 
 **Trial → Paid:**
+
 - Baseline: [Current conversion rate]
 - Target: 25-30% conversion rate
 - Measure: Trial signups → Paid conversions
 
 **Content → Trial:**
+
 - Target: 10% of content visitors sign up for trial
 - Measure: Content views → Trial signups
 
 ### Engagement Metrics
 
 **Email Engagement:**
+
 - Open rate target: 30-40%
 - Click-through rate target: 5-10%
 - Conversion rate target: 2-5%
 
 **Content Engagement:**
+
 - Time on page: >2 minutes
 - Bounce rate: <60%
 - Social shares: Track per post
@@ -476,11 +510,13 @@ if (isFirstVisit) {
 ### Retention Metrics
 
 **Trial Completion:**
+
 - Target: 60% complete onboarding
 - Target: 40% create first job
 - Target: 30% run first reconciliation
 
 **Paid Retention:**
+
 - Monthly churn: <5%
 - Annual retention: >80%
 
@@ -518,6 +554,7 @@ if (isFirstVisit) {
 ## Support & Resources
 
 **Documentation:**
+
 - Content Surface Map: `docs/content_surface_map.md`
 - Content Backfill Plan: `docs/content_backfill_plan.md`
 - Monthly Cadence: `docs/monthly_cadence_engine.md`
@@ -525,6 +562,7 @@ if (isFirstVisit) {
 - Email System: `emails/README.md`
 
 **Questions:**
+
 - Content questions: content@settler.dev
 - Technical questions: dev@settler.dev
 - Marketing questions: marketing@settler.dev

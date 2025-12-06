@@ -2,7 +2,7 @@
  * Prometheus Metrics
  * Exports Prometheus-compatible metrics
  */
-import { Registry, Counter, Histogram, Gauge } from 'prom-client';
+import { Registry, Counter, Histogram, Gauge } from "prom-client";
 export declare const register: Registry<"text/plain; version=0.0.4; charset=utf-8">;
 export declare const httpRequestDuration: Histogram<"tenant_id" | "route" | "method" | "status_code" | "tier">;
 export declare const httpRequestTotal: Counter<"tenant_id" | "route" | "method" | "status_code" | "tier">;

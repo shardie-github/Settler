@@ -3,9 +3,9 @@
  * PostgreSQL implementation of IUserRepository
  */
 
-import { User, UserRole, UserProps } from '../../domain/entities/User';
-import { IUserRepository } from '../../domain/repositories/IUserRepository';
-import { query } from '../../db';
+import { User, UserRole, UserProps } from "../../domain/entities/User";
+import { IUserRepository } from "../../domain/repositories/IUserRepository";
+import { query } from "../../db";
 
 export class UserRepository implements IUserRepository {
   async findById(id: string): Promise<User | null> {

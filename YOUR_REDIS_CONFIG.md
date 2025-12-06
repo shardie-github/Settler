@@ -9,6 +9,7 @@ REDIS_URL=rediss://default:AVtkAAIncDJjZmUxNTlhNmMyMjI0YmNjYTk5YjY4YzI2YzEyZjUyN
 ```
 
 **Optional (for REST API operations):**
+
 ```bash
 UPSTASH_REDIS_REST_URL=https://pretty-buck-23396.upstash.io
 UPSTASH_REDIS_REST_TOKEN=AVtkAAIncDJjZmUxNTlhNmMyMjI0YmNjYTk5YjY4YzI2YzEyZjUyN3AyMjMzOTY
@@ -35,5 +36,6 @@ The code has been updated to automatically use `REDIS_URL` if provided, which ma
 ## Testing
 
 After setting the variable, your app will automatically test the connection on startup. Check logs for:
+
 - ✅ "Redis connected successfully"
 - ❌ "Redis connection failed" (if there's an issue)

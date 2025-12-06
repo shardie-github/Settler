@@ -37,10 +37,12 @@ const previewRuleSchema = zod_1.z.object({
             threshold: zod_1.z.number().optional(),
             days: zod_1.z.number().optional(),
         })),
-        sampleData: zod_1.z.object({
+        sampleData: zod_1.z
+            .object({
             source: zod_1.z.record(zod_1.z.unknown()),
             target: zod_1.z.record(zod_1.z.unknown()),
-        }).optional(),
+        })
+            .optional(),
     }),
 });
 const analyzeImpactSchema = zod_1.z.object({
@@ -52,11 +54,13 @@ const analyzeImpactSchema = zod_1.z.object({
             threshold: zod_1.z.number().optional(),
             days: zod_1.z.number().optional(),
         })),
-        historicalData: zod_1.z.object({
+        historicalData: zod_1.z
+            .object({
             totalTransactions: zod_1.z.number(),
             matchedTransactions: zod_1.z.number(),
             unmatchedTransactions: zod_1.z.number(),
-        }).optional(),
+        })
+            .optional(),
     }),
 });
 // List rules templates (AI-suggested configurations)
@@ -84,7 +88,7 @@ router.get("/rules/templates", (0, authorization_1.requirePermission)(Permission
                 description: "Balanced accuracy with tolerance for variations",
                 rules: [
                     { field: "order_id", type: "fuzzy", threshold: 0.85 },
-                    { field: "amount", type: "exact", tolerance: 0.10 },
+                    { field: "amount", type: "exact", tolerance: 0.1 },
                     { field: "date", type: "range", days: 2 },
                 ],
                 estimatedAccuracy: 0.92,
@@ -100,14 +104,14 @@ router.get("/rules/templates", (0, authorization_1.requirePermission)(Permission
                     { field: "amount", type: "exact", tolerance: 0.01 },
                     { field: "date", type: "range", days: 3 },
                 ],
-                estimatedAccuracy: 0.90,
-                estimatedMatchRate: 0.90,
+                estimatedAccuracy: 0.9,
+                estimatedMatchRate: 0.9,
                 useCase: "Multi-platform reconciliation with timing delays",
             },
         ];
         // Filter by adapter if specified
         const filteredTemplates = adapter
-            ? templates.filter(t => t.useCase.toLowerCase().includes(adapter.toLowerCase()))
+            ? templates.filter((t) => t.useCase.toLowerCase().includes(adapter.toLowerCase()))
             : templates;
         res.json({
             data: filteredTemplates,
@@ -141,7 +145,7 @@ router.post("/rules/preview", (0, authorization_1.requirePermission)(Permissions
         }, rules);
         // Generate preview insights
         const insights = {
-            wouldMatch: confidence.score >= 0.80,
+            wouldMatch: confidence.score >= 0.8,
             confidence: confidence.score,
             breakdown: confidence.breakdown,
             factors: confidence.factors,
@@ -214,10 +218,10 @@ router.post("/rules/suggest", (0, authorization_1.requirePermission)(Permissions
 // Helper functions
 function generateRecommendations(confidence, _rules) {
     const recommendations = [];
-    if (confidence.score < 0.80) {
+    if (confidence.score < 0.8) {
         recommendations.push("Consider adding more matching fields to increase confidence");
     }
-    const lowScoreRules = confidence.breakdown.filter(b => b.score < 0.5);
+    const lowScoreRules = confidence.breakdown.filter((b) => b.score < 0.5);
     if (lowScoreRules.length > 0) {
         recommendations.push(`${lowScoreRules.length} rule(s) have low confidence. Consider adjusting tolerance or using fuzzy matching.`);
     }
@@ -237,15 +241,15 @@ function calculateEstimatedMatchRate(rules) {
     baseRate += fuzzyRules * 0.05;
     baseRate += rangeRules * 0.03;
     baseRate -= exactRules * 0.02;
-    return Math.min(0.98, Math.max(0.70, baseRate));
+    return Math.min(0.98, Math.max(0.7, baseRate));
 }
 function calculateEstimatedAccuracy(rules) {
     const exactRules = rules.filter((r) => r.type === "exact").length;
     const fuzzyRules = rules.filter((r) => r.type === "fuzzy").length;
-    let baseAccuracy = 0.90;
+    let baseAccuracy = 0.9;
     baseAccuracy += exactRules * 0.02;
     baseAccuracy -= fuzzyRules * 0.03;
-    return Math.min(0.99, Math.max(0.80, baseAccuracy));
+    return Math.min(0.99, Math.max(0.8, baseAccuracy));
 }
 function estimateExecutionTime(rules) {
     const complexity = calculateComplexity(rules);
@@ -274,7 +278,7 @@ function generateImpactRecommendations(rules, historicalData) {
             recommendations.push(`These rules could improve match rate by ${((estimatedMatchRate - currentMatchRate) * 100).toFixed(1)}%`);
         }
     }
-    if (estimatedAccuracy < 0.90) {
+    if (estimatedAccuracy < 0.9) {
         recommendations.push("Consider adding more exact match rules to improve accuracy");
     }
     const complexity = calculateComplexity(rules);
@@ -322,7 +326,7 @@ function generateRuleSuggestions(sourceAdapter, targetAdapter, _useCase) {
                 { field: "transaction_id", type: "exact" },
                 { field: "amount", type: "exact", tolerance: 0.01 },
             ],
-            estimatedAccuracy: 0.90,
+            estimatedAccuracy: 0.9,
             estimatedMatchRate: 0.85,
             reasoning: "Standard exact matching on transaction ID and amount with small tolerance for rounding.",
         });

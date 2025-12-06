@@ -16,11 +16,23 @@ npm warn config       Default value does install optional deps unless otherwise 
    Checking validity of types ...
  ⚠ TypeScript project references are not fully supported. Attempting to build in incremental mode.
    Collecting page data ...
-   Generating static pages (0/24) ...
-   Generating static pages (6/24) 
-   Generating static pages (12/24) 
-   Generating static pages (18/24) 
- ✓ Generating static pages (24/24)
+2025-12-06T02:59:43.872Z [[33mwarn[39m]: RESEND_API_KEY not set - email sending will be disabled {"service":"settler-api","environment":"production"}
+2025-12-06T02:59:43.881Z [[33mwarn[39m]: RESEND_API_KEY not set - email sending will be disabled {"service":"settler-api","environment":"production"}
+2025-12-06T02:59:43.889Z [[33mwarn[39m]: RESEND_API_KEY not set - email sending will be disabled {"service":"settler-api","environment":"production"}
+   Generating static pages (0/30) ...
+[ERROR] Email lifecycle cron job failed {
+  error: "Dynamic server usage: Route /api/cron/email-lifecycle couldn't be rendered statically because it used `request.headers`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error"
+}
+[ERROR] Monthly summary cron job failed {
+  error: "Dynamic server usage: Route /api/cron/monthly-summary couldn't be rendered statically because it used `request.headers`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error"
+}
+[ERROR] Low activity cron job failed {
+  error: "Dynamic server usage: Route /api/cron/low-activity couldn't be rendered statically because it used `request.headers`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error"
+}
+   Generating static pages (7/30) 
+   Generating static pages (14/30) 
+   Generating static pages (22/30) 
+ ✓ Generating static pages (30/30)
    Finalizing page optimization ...
    Collecting build traces ...
 
@@ -28,10 +40,16 @@ Route (app)                              Size     First Load JS
 ┌ ○ /                                    49.1 kB         159 kB
 ├ ○ /_not-found                          876 B          88.4 kB
 ├ ƒ /api/analytics                       0 B                0 B
+├ ƒ /api/cron/email-lifecycle            0 B                0 B
+├ ƒ /api/cron/low-activity               0 B                0 B
+├ ƒ /api/cron/monthly-summary            0 B                0 B
 ├ ƒ /api/status/health                   0 B                0 B
+├ ƒ /api/user/pre-test                   0 B                0 B
+├ ƒ /api/user/upgrade                    0 B                0 B
 ├ ○ /community                           55.4 kB         166 kB
-├ ○ /cookbooks                           7.74 kB         114 kB
-├ ƒ /dashboard                           2.6 kB          106 kB
+├ ○ /cookbooks                           9.12 kB         116 kB
+├ ○ /dashboard                           147 B          87.6 kB
+├ ƒ /dashboard/user                      7.72 kB         111 kB
 ├ ○ /docs                                5.8 kB          112 kB
 ├ ○ /edge-ai                             182 B          96.4 kB
 ├ ○ /edge-ai/nodes                       182 B          96.4 kB

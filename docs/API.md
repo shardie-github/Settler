@@ -42,6 +42,7 @@ curl -X POST https://api.settler.io/api/v1/auth/login \
 ## API Versioning
 
 The API uses URL versioning:
+
 - `/api/v1/` - Current stable version
 - `/api/v2/` - Future version (currently mirrors v1)
 
@@ -50,11 +51,13 @@ The API uses URL versioning:
 ### Jobs
 
 #### List Jobs
+
 ```http
 GET /api/v1/jobs?page=1&limit=20
 ```
 
 **Response:**
+
 ```json
 {
   "data": [
@@ -74,11 +77,13 @@ GET /api/v1/jobs?page=1&limit=20
 ```
 
 #### Get Job
+
 ```http
 GET /api/v1/jobs/{id}
 ```
 
 #### Create Job
+
 ```http
 POST /api/v1/jobs
 Content-Type: application/json
@@ -109,6 +114,7 @@ Content-Type: application/json
 ```
 
 #### Run Job
+
 ```http
 POST /api/v1/jobs/{id}/run
 ```
@@ -116,11 +122,13 @@ POST /api/v1/jobs/{id}/run
 ### Reports
 
 #### Get Report
+
 ```http
 GET /api/v1/reports/{jobId}
 ```
 
 **Response:**
+
 ```json
 {
   "data": {
@@ -139,11 +147,13 @@ GET /api/v1/reports/{jobId}
 ### Webhooks
 
 #### List Webhooks
+
 ```http
 GET /api/v1/webhooks
 ```
 
 #### Create Webhook
+
 ```http
 POST /api/v1/webhooks
 Content-Type: application/json
@@ -157,16 +167,19 @@ Content-Type: application/json
 ### Health
 
 #### Basic Health Check
+
 ```http
 GET /health
 ```
 
 #### Detailed Health Check
+
 ```http
 GET /health/detailed
 ```
 
 **Response:**
+
 ```json
 {
   "status": "healthy",
@@ -224,6 +237,7 @@ GET /api/v1/jobs?cursor=eyJjcmVhdGVkX2F0IjoiMjAyNC0wMS0wMSIsImlkIjoiMTIzIn0=&lim
 ```
 
 **Response includes:**
+
 - `nextCursor` - Cursor for next page
 - `prevCursor` - Cursor for previous page
 - `hasMore` - Boolean indicating more results
@@ -251,6 +265,7 @@ Content-Type: application/json
 **Signature Verification:**
 
 The signature is computed as:
+
 ```
 HMAC-SHA256(timestamp + "." + JSON.stringify(payload), webhook_secret)
 ```
@@ -258,12 +273,14 @@ HMAC-SHA256(timestamp + "." + JSON.stringify(payload), webhook_secret)
 ## OpenAPI Specification
 
 Complete OpenAPI 3.0 specification available at:
+
 - JSON: `/api/v1/openapi.json`
 - Swagger UI: `/api/v1/docs`
 
 ## SDKs
 
 Official SDKs available:
+
 - **TypeScript/JavaScript:** `npm install @settler/sdk`
 - **Python:** `pip install settler-sdk`
 - **Go:** `go get github.com/settler/settler-go`

@@ -16,11 +16,13 @@ Automate payment reconciliation across Stripe, Shopify, QuickBooks, and 50+ plat
 **Category:** Finance, Payments, Accounting
 
 **Pricing:**
+
 - Free: 1,000 reconciliations/month
 - Starter: $29/month (10,000/month)
 - Growth: $99/month (100,000/month)
 
 **Features:**
+
 - Real-time reconciliation
 - Exception queue
 - Multi-currency support
@@ -42,6 +44,7 @@ Automate payment reconciliation across Stripe, Shopify, QuickBooks, and 50+ plat
 Reconciliation-as-a-Service API for automating payment reconciliation across multiple platforms.
 
 **Collection:**
+
 - Jobs (create, list, get, run, delete)
 - Reports (get, list, export)
 - Webhooks (create, list, get, update, delete)
@@ -83,6 +86,7 @@ Automate payment reconciliation across Stripe, Shopify, QuickBooks, and 50+ plat
 GitHub Action for automated payment reconciliation.
 
 **Features:**
+
 - Reconcile on pull request
 - Reconcile on schedule
 - Reconcile on webhook
@@ -96,6 +100,7 @@ GitHub Action for automated payment reconciliation.
 ## Submission Checklist
 
 ### RapidAPI
+
 - [ ] Create RapidAPI account
 - [ ] Submit API for review
 - [ ] Add API documentation
@@ -103,17 +108,20 @@ GitHub Action for automated payment reconciliation.
 - [ ] Add code examples
 
 ### Postman
+
 - [ ] Create Postman collection
 - [ ] Submit to Postman API Network
 - [ ] Add collection documentation
 - [ ] Add example requests
 
 ### API List
+
 - [ ] Submit API listing
 - [ ] Add description and tags
 - [ ] Link to documentation
 
 ### GitHub
+
 - [ ] Create GitHub Action
 - [ ] Submit to GitHub Marketplace
 - [ ] Add action documentation

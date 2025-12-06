@@ -3,7 +3,7 @@
  * Brand-neutral quantization helpers
  */
 
-export type QuantizationType = 'int4' | 'int8' | 'fp16' | 'fp32';
+export type QuantizationType = "int4" | "int8" | "fp16" | "fp32";
 
 export interface QuantizationConfig {
   type: QuantizationType;
@@ -39,17 +39,15 @@ export function getCompressionRatio(
 /**
  * Estimate accuracy impact
  */
-export function estimateAccuracyImpact(
-  quantization: QuantizationType
-): 'low' | 'medium' | 'high' {
+export function estimateAccuracyImpact(quantization: QuantizationType): "low" | "medium" | "high" {
   switch (quantization) {
-    case 'fp32':
-      return 'low';
-    case 'fp16':
-      return 'low';
-    case 'int8':
-      return 'medium';
-    case 'int4':
-      return 'high';
+    case "fp32":
+      return "low";
+    case "fp16":
+      return "low";
+    case "int8":
+      return "medium";
+    case "int4":
+      return "high";
   }
 }

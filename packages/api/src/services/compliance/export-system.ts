@@ -1,17 +1,18 @@
 /**
  * Compliance Export System
- * 
+ *
  * One-click compliance exports for any jurisdiction (GDPR, CCPA, SOC 2, etc.)
  */
 
-import { EventEmitter } from 'events';
+import { EventEmitter } from "events";
+import { logError } from "../../utils/logger";
 
 export interface ComplianceExport {
   id: string;
   customerId: string;
-  jurisdiction: 'GDPR' | 'CCPA' | 'SOC2' | 'PCI-DSS' | 'HIPAA' | 'custom';
-  format: 'json' | 'csv' | 'xml' | 'pdf';
-  status: 'pending' | 'processing' | 'completed' | 'failed';
+  jurisdiction: "GDPR" | "CCPA" | "SOC2" | "PCI-DSS" | "HIPAA" | "custom";
+  format: "json" | "csv" | "xml" | "pdf";
+  status: "pending" | "processing" | "completed" | "failed";
   createdAt: Date;
   completedAt?: Date;
   downloadUrl?: string;
@@ -21,7 +22,7 @@ export interface ComplianceExport {
 export interface ExportTemplate {
   jurisdiction: string;
   fields: string[];
-  format: ComplianceExport['format'];
+  format: ComplianceExport["format"];
   description: string;
 }
 
@@ -39,46 +40,35 @@ export class ComplianceExportSystem extends EventEmitter {
    */
   private initializeTemplates(): void {
     // GDPR Template
-    this.templates.set('GDPR', {
-      jurisdiction: 'GDPR',
+    this.templates.set("GDPR", {
+      jurisdiction: "GDPR",
       fields: [
-        'user_id',
-        'email',
-        'created_at',
-        'reconciliation_jobs',
-        'reports',
-        'webhooks',
-        'api_keys',
+        "user_id",
+        "email",
+        "created_at",
+        "reconciliation_jobs",
+        "reports",
+        "webhooks",
+        "api_keys",
       ],
-      format: 'json',
-      description: 'GDPR data export - all user data',
+      format: "json",
+      description: "GDPR data export - all user data",
     });
 
     // CCPA Template
-    this.templates.set('CCPA', {
-      jurisdiction: 'CCPA',
-      fields: [
-        'user_id',
-        'email',
-        'created_at',
-        'reconciliation_jobs',
-        'reports',
-      ],
-      format: 'json',
-      description: 'CCPA data export - California privacy rights',
+    this.templates.set("CCPA", {
+      jurisdiction: "CCPA",
+      fields: ["user_id", "email", "created_at", "reconciliation_jobs", "reports"],
+      format: "json",
+      description: "CCPA data export - California privacy rights",
     });
 
     // SOC 2 Template
-    this.templates.set('SOC2', {
-      jurisdiction: 'SOC2',
-      fields: [
-        'audit_logs',
-        'access_logs',
-        'configuration_changes',
-        'security_events',
-      ],
-      format: 'json',
-      description: 'SOC 2 audit logs and security events',
+    this.templates.set("SOC2", {
+      jurisdiction: "SOC2",
+      fields: ["audit_logs", "access_logs", "configuration_changes", "security_events"],
+      format: "json",
+      description: "SOC 2 audit logs and security events",
     });
   }
 
@@ -87,11 +77,11 @@ export class ComplianceExportSystem extends EventEmitter {
    */
   async createExport(
     customerId: string,
-    jurisdiction: ComplianceExport['jurisdiction'],
-    format: ComplianceExport['format'] = 'json'
+    jurisdiction: ComplianceExport["jurisdiction"],
+    format: ComplianceExport["format"] = "json"
   ): Promise<ComplianceExport> {
     const template = this.templates.get(jurisdiction);
-    
+
     if (!template) {
       throw new Error(`No template found for jurisdiction: ${jurisdiction}`);
     }
@@ -101,7 +91,7 @@ export class ComplianceExportSystem extends EventEmitter {
       customerId,
       jurisdiction,
       format,
-      status: 'pending',
+      status: "pending",
       createdAt: new Date(),
       data: {},
     };
@@ -109,13 +99,13 @@ export class ComplianceExportSystem extends EventEmitter {
     this.exports.set(export_.id, export_);
 
     // Process export asynchronously
-    this.processExport(export_).catch(error => {
-      console.error(`Failed to process export ${export_.id}:`, error);
-      export_.status = 'failed';
-      this.emit('export_failed', export_);
+    this.processExport(export_).catch((error) => {
+      logError(`Failed to process export ${export_.id}`, error as Error, { exportId: export_.id });
+      export_.status = "failed";
+      this.emit("export_failed", export_);
     });
 
-    this.emit('export_created', export_);
+    this.emit("export_created", export_);
     return export_;
   }
 
@@ -123,8 +113,8 @@ export class ComplianceExportSystem extends EventEmitter {
    * Process an export
    */
   private async processExport(export_: ComplianceExport): Promise<void> {
-    export_.status = 'processing';
-    this.emit('export_processing', export_);
+    export_.status = "processing";
+    this.emit("export_processing", export_);
 
     try {
       // Fetch data (would query database in production)
@@ -136,15 +126,15 @@ export class ComplianceExportSystem extends EventEmitter {
       // Generate download URL (would upload to S3/R2 in production)
       const downloadUrl = await this.generateDownloadUrl(export_.id, formattedData, export_.format);
 
-      export_.status = 'completed';
+      export_.status = "completed";
       export_.completedAt = new Date();
       export_.data = formattedData;
       export_.downloadUrl = downloadUrl;
 
-      this.emit('export_completed', export_);
+      this.emit("export_completed", export_);
     } catch (error: any) {
-      export_.status = 'failed';
-      this.emit('export_failed', { export_, error });
+      export_.status = "failed";
+      this.emit("export_failed", { export_, error });
       throw error;
     }
   }
@@ -154,7 +144,7 @@ export class ComplianceExportSystem extends EventEmitter {
    */
   private async fetchExportData(
     customerId: string,
-    _jurisdiction: ComplianceExport['jurisdiction']
+    _jurisdiction: ComplianceExport["jurisdiction"]
   ): Promise<Record<string, unknown>> {
     // TODO: Query database for actual data
     // For now, return mock data
@@ -174,31 +164,31 @@ export class ComplianceExportSystem extends EventEmitter {
    */
   private formatData(
     data: Record<string, unknown>,
-    _jurisdiction: ComplianceExport['jurisdiction'],
-    format: ComplianceExport['format']
+    _jurisdiction: ComplianceExport["jurisdiction"],
+    format: ComplianceExport["format"]
   ): Record<string, unknown> {
     switch (format) {
-      case 'json':
+      case "json":
         return data;
-      
-      case 'csv':
+
+      case "csv":
         // Convert to CSV format
         return {
           csv: this.objectToCSV(data),
         };
-      
-      case 'xml':
+
+      case "xml":
         // Convert to XML format
         return {
           xml: this.objectToXML(data),
         };
-      
-      case 'pdf':
+
+      case "pdf":
         // Would generate PDF
         return {
-          pdf: 'base64_encoded_pdf',
+          pdf: "base64_encoded_pdf",
         };
-      
+
       default:
         return data;
     }
@@ -209,8 +199,8 @@ export class ComplianceExportSystem extends EventEmitter {
    */
   private objectToCSV(data: Record<string, unknown>): string {
     const headers = Object.keys(data);
-    const values = headers.map(h => String(data[h] || ''));
-    return `${headers.join(',')}\n${values.join(',')}`;
+    const values = headers.map((h) => String(data[h] || ""));
+    return `${headers.join(",")}\n${values.join(",")}`;
   }
 
   /**
@@ -221,7 +211,7 @@ export class ComplianceExportSystem extends EventEmitter {
     for (const [key, value] of Object.entries(data)) {
       xml += `  <${key}>${value}</${key}>\n`;
     }
-    xml += '</data>';
+    xml += "</data>";
     return xml;
   }
 
@@ -231,7 +221,7 @@ export class ComplianceExportSystem extends EventEmitter {
   private async generateDownloadUrl(
     exportId: string,
     _data: Record<string, unknown>,
-    _format: ComplianceExport['format']
+    _format: ComplianceExport["format"]
   ): Promise<string> {
     // TODO: Upload to S3/R2 and generate signed URL
     // For now, return mock URL
@@ -250,7 +240,7 @@ export class ComplianceExportSystem extends EventEmitter {
    */
   listExports(customerId: string): ComplianceExport[] {
     return Array.from(this.exports.values())
-      .filter(e => e.customerId === customerId)
+      .filter((e) => e.customerId === customerId)
       .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
   }
 

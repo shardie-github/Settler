@@ -1,4 +1,5 @@
 # Integration Recipes
+
 ## Common Integration Patterns and Code Examples
 
 This guide provides ready-to-use code examples for common integration patterns with Settler.
@@ -21,12 +22,13 @@ This guide provides ready-to-use code examples for common integration patterns w
 ## Stripe → QuickBooks Reconciliation
 
 ### Use Case
+
 Reconcile Stripe payments with QuickBooks accounting entries for accurate financial reporting.
 
 ### Implementation
 
 ```typescript
-import { SettlerClient } from '@settler/sdk';
+import { SettlerClient } from "@settler/sdk";
 
 const client = new SettlerClient({
   apiKey: process.env.SETTLER_API_KEY,
@@ -34,68 +36,65 @@ const client = new SettlerClient({
 
 // Create reconciliation job
 const job = await client.jobs.create({
-  name: 'Stripe to QuickBooks Daily Reconciliation',
+  name: "Stripe to QuickBooks Daily Reconciliation",
   source: {
-    adapter: 'stripe',
+    adapter: "stripe",
     config: {
       apiKey: process.env.STRIPE_SECRET_KEY,
     },
   },
   target: {
-    adapter: 'quickbooks',
+    adapter: "quickbooks",
     config: {
       clientId: process.env.QB_CLIENT_ID,
       clientSecret: process.env.QB_CLIENT_SECRET,
       realmId: process.env.QB_REALM_ID,
-      sandbox: process.env.NODE_ENV !== 'production',
+      sandbox: process.env.NODE_ENV !== "production",
     },
   },
   rules: {
     matching: [
-      { field: 'transaction_id', type: 'exact' },
-      { field: 'amount', type: 'exact' },
-      { field: 'date', type: 'range', days: 1 },
+      { field: "transaction_id", type: "exact" },
+      { field: "amount", type: "exact" },
+      { field: "date", type: "range", days: 1 },
     ],
-    conflictResolution: 'last-wins',
+    conflictResolution: "last-wins",
   },
-  schedule: '0 2 * * *', // Daily at 2 AM
+  schedule: "0 2 * * *", // Daily at 2 AM
 });
 
 // Set up webhook for notifications
 await client.webhooks.create({
-  url: 'https://your-app.com/webhooks/settler',
-  events: [
-    'reconciliation.completed',
-    'reconciliation.mismatch',
-  ],
+  url: "https://your-app.com/webhooks/settler",
+  events: ["reconciliation.completed", "reconciliation.mismatch"],
 });
 
-console.log('Job created:', job.data.id);
+console.log("Job created:", job.data.id);
 ```
 
 ### Webhook Handler
 
 ```typescript
-import express from 'express';
-import { verifyWebhookSignature } from '@settler/sdk';
+import express from "express";
+import { verifyWebhookSignature } from "@settler/sdk";
 
 const app = express();
 
-app.post('/webhooks/settler', express.raw({ type: 'application/json' }), (req, res) => {
-  const signature = req.headers['x-settler-signature'] as string;
+app.post("/webhooks/settler", express.raw({ type: "application/json" }), (req, res) => {
+  const signature = req.headers["x-settler-signature"] as string;
   const secret = process.env.WEBHOOK_SECRET;
 
   if (!verifyWebhookSignature(req.body, signature, secret)) {
-    return res.status(401).send('Invalid signature');
+    return res.status(401).send("Invalid signature");
   }
 
   const event = JSON.parse(req.body.toString());
 
   switch (event.type) {
-    case 'reconciliation.completed':
+    case "reconciliation.completed":
       handleReconciliationCompleted(event.data);
       break;
-    case 'reconciliation.mismatch':
+    case "reconciliation.mismatch":
       handleMismatch(event.data);
       break;
   }
@@ -107,23 +106,23 @@ async function handleReconciliationCompleted(data: any) {
   console.log(`Reconciliation completed for job ${data.jobId}`);
   console.log(`Matched: ${data.summary.matched}`);
   console.log(`Unmatched: ${data.summary.unmatchedSource + data.summary.unmatchedTarget}`);
-  
+
   // Send notification to finance team
   await sendEmail({
-    to: 'finance@company.com',
-    subject: 'Daily Reconciliation Complete',
+    to: "finance@company.com",
+    subject: "Daily Reconciliation Complete",
     body: `Reconciliation completed with ${data.summary.matched} matched transactions.`,
   });
 }
 
 async function handleMismatch(data: any) {
-  console.log('Mismatch detected:', data);
-  
+  console.log("Mismatch detected:", data);
+
   // Create support ticket
   await createTicket({
     title: `Payment Mismatch: ${data.sourceId}`,
     description: `Expected: $${data.expectedAmount}, Actual: $${data.actualAmount}`,
-    priority: 'high',
+    priority: "high",
   });
 }
 ```
@@ -133,39 +132,40 @@ async function handleMismatch(data: any) {
 ## Shopify → Stripe Reconciliation
 
 ### Use Case
+
 Reconcile Shopify orders with Stripe payments to ensure all orders are paid correctly.
 
 ### Implementation
 
 ```typescript
-import { SettlerClient } from '@settler/sdk';
+import { SettlerClient } from "@settler/sdk";
 
 const client = new SettlerClient({
   apiKey: process.env.SETTLER_API_KEY,
 });
 
 const job = await client.jobs.create({
-  name: 'Shopify-Stripe Order Reconciliation',
+  name: "Shopify-Stripe Order Reconciliation",
   source: {
-    adapter: 'shopify',
+    adapter: "shopify",
     config: {
       apiKey: process.env.SHOPIFY_API_KEY,
       shopDomain: process.env.SHOPIFY_DOMAIN,
     },
   },
   target: {
-    adapter: 'stripe',
+    adapter: "stripe",
     config: {
       apiKey: process.env.STRIPE_SECRET_KEY,
     },
   },
   rules: {
     matching: [
-      { field: 'order_id', type: 'exact' },
-      { field: 'amount', type: 'exact', tolerance: 0.01 },
-      { field: 'customer_email', type: 'exact' },
+      { field: "order_id", type: "exact" },
+      { field: "amount", type: "exact", tolerance: 0.01 },
+      { field: "customer_email", type: "exact" },
     ],
-    conflictResolution: 'manual-review',
+    conflictResolution: "manual-review",
   },
 });
 
@@ -178,9 +178,11 @@ const report = await client.reports.get(job.data.id, {
   endDate: new Date().toISOString(),
 });
 
-console.log('Reconciliation Report:');
+console.log("Reconciliation Report:");
 console.log(`  Matched: ${report.data.summary.matched}`);
-console.log(`  Unmatched: ${report.data.summary.unmatchedSource + report.data.summary.unmatchedTarget}`);
+console.log(
+  `  Unmatched: ${report.data.summary.unmatchedSource + report.data.summary.unmatchedTarget}`
+);
 console.log(`  Accuracy: ${report.data.summary.accuracy}%`);
 ```
 
@@ -189,43 +191,44 @@ console.log(`  Accuracy: ${report.data.summary.accuracy}%`);
 ## Multi-Gateway Reconciliation
 
 ### Use Case
+
 Reconcile payments from multiple gateways (Stripe, PayPal, Square) to a single accounting system.
 
 ### Implementation
 
 ```typescript
-import { SettlerClient } from '@settler/sdk';
+import { SettlerClient } from "@settler/sdk";
 
 const client = new SettlerClient({
   apiKey: process.env.SETTLER_API_KEY,
 });
 
 const job = await client.jobs.create({
-  name: 'Multi-Gateway to QuickBooks',
+  name: "Multi-Gateway to QuickBooks",
   sources: [
     {
-      adapter: 'stripe',
+      adapter: "stripe",
       config: {
         apiKey: process.env.STRIPE_SECRET_KEY,
       },
     },
     {
-      adapter: 'paypal',
+      adapter: "paypal",
       config: {
         clientId: process.env.PAYPAL_CLIENT_ID,
         clientSecret: process.env.PAYPAL_SECRET,
       },
     },
     {
-      adapter: 'square',
+      adapter: "square",
       config: {
         accessToken: process.env.SQUARE_ACCESS_TOKEN,
-        environment: process.env.SQUARE_ENV || 'production',
+        environment: process.env.SQUARE_ENV || "production",
       },
     },
   ],
   target: {
-    adapter: 'quickbooks',
+    adapter: "quickbooks",
     config: {
       clientId: process.env.QB_CLIENT_ID,
       clientSecret: process.env.QB_CLIENT_SECRET,
@@ -234,16 +237,16 @@ const job = await client.jobs.create({
   },
   rules: {
     matching: [
-      { field: 'transaction_id', type: 'fuzzy', threshold: 0.8 },
-      { field: 'amount', type: 'exact' },
-      { field: 'customer_email', type: 'exact' },
-      { field: 'date', type: 'range', days: 2 },
+      { field: "transaction_id", type: "fuzzy", threshold: 0.8 },
+      { field: "amount", type: "exact" },
+      { field: "customer_email", type: "exact" },
+      { field: "date", type: "range", days: 2 },
     ],
-    conflictResolution: 'manual-review',
+    conflictResolution: "manual-review",
   },
 });
 
-console.log('Multi-gateway job created:', job.data.id);
+console.log("Multi-gateway job created:", job.data.id);
 ```
 
 ---
@@ -251,13 +254,14 @@ console.log('Multi-gateway job created:', job.data.id);
 ## Real-Time Webhook Reconciliation
 
 ### Use Case
+
 Reconcile payments in real-time as they occur, not in batch.
 
 ### Implementation
 
 ```typescript
-import express from 'express';
-import { SettlerClient } from '@settler/sdk';
+import express from "express";
+import { SettlerClient } from "@settler/sdk";
 
 const app = express();
 const client = new SettlerClient({
@@ -265,15 +269,15 @@ const client = new SettlerClient({
 });
 
 // Forward Stripe webhooks to Settler for real-time processing
-app.post('/webhooks/stripe', express.json(), async (req, res) => {
+app.post("/webhooks/stripe", express.json(), async (req, res) => {
   const event = req.body;
 
   // Forward to Settler
-  await fetch('https://api.settler.io/api/v1/webhooks/receive/stripe', {
-    method: 'POST',
+  await fetch("https://api.settler.io/api/v1/webhooks/receive/stripe", {
+    method: "POST",
     headers: {
-      'Content-Type': 'application/json',
-      'X-API-Key': process.env.SETTLER_API_KEY,
+      "Content-Type": "application/json",
+      "X-API-Key": process.env.SETTLER_API_KEY,
     },
     body: JSON.stringify(event),
   });
@@ -282,17 +286,17 @@ app.post('/webhooks/stripe', express.json(), async (req, res) => {
 });
 
 // Handle Settler reconciliation results
-app.post('/webhooks/settler', express.raw({ type: 'application/json' }), async (req, res) => {
-  const signature = req.headers['x-settler-signature'] as string;
+app.post("/webhooks/settler", express.raw({ type: "application/json" }), async (req, res) => {
+  const signature = req.headers["x-settler-signature"] as string;
   const secret = process.env.WEBHOOK_SECRET;
 
   if (!verifyWebhookSignature(req.body, signature, secret)) {
-    return res.status(401).send('Invalid signature');
+    return res.status(401).send("Invalid signature");
   }
 
   const event = JSON.parse(req.body.toString());
 
-  if (event.type === 'reconciliation.mismatch') {
+  if (event.type === "reconciliation.mismatch") {
     // Handle mismatch immediately
     await handleRealtimeMismatch(event.data);
   }
@@ -303,12 +307,12 @@ app.post('/webhooks/settler', express.raw({ type: 'application/json' }), async (
 async function handleRealtimeMismatch(data: any) {
   // Alert operations team
   await sendSlackMessage({
-    channel: '#operations',
+    channel: "#operations",
     text: `⚠️ Payment mismatch detected: ${data.sourceId}`,
   });
 
   // Pause order fulfillment if needed
-  if (data.severity === 'high') {
+  if (data.severity === "high") {
     await pauseOrderFulfillment(data.sourceId);
   }
 }
@@ -319,14 +323,15 @@ async function handleRealtimeMismatch(data: any) {
 ## Scheduled Daily Reconciliation
 
 ### Use Case
+
 Run reconciliation automatically on a schedule and email reports to finance.
 
 ### Implementation
 
 ```typescript
-import { SettlerClient } from '@settler/sdk';
-import cron from 'node-cron';
-import nodemailer from 'nodemailer';
+import { SettlerClient } from "@settler/sdk";
+import cron from "node-cron";
+import nodemailer from "nodemailer";
 
 const client = new SettlerClient({
   apiKey: process.env.SETTLER_API_KEY,
@@ -349,9 +354,9 @@ async function runDailyReconciliation() {
       let completed = false;
       let attempts = 0;
       while (!completed && attempts < 60) {
-        await new Promise(resolve => setTimeout(resolve, 5000));
+        await new Promise((resolve) => setTimeout(resolve, 5000));
         const jobStatus = await client.jobs.get(job.id);
-        if (jobStatus.data.status === 'completed' || jobStatus.data.status === 'failed') {
+        if (jobStatus.data.status === "completed" || jobStatus.data.status === "failed") {
           completed = true;
         }
         attempts++;
@@ -365,7 +370,7 @@ async function runDailyReconciliation() {
 
       // Email report
       await transporter.sendMail({
-        to: 'finance@company.com',
+        to: "finance@company.com",
         subject: `Daily Reconciliation Report: ${job.name}`,
         html: generateReportHTML(report.data),
         attachments: [
@@ -380,7 +385,7 @@ async function runDailyReconciliation() {
 }
 
 // Run daily at 3 AM
-cron.schedule('0 3 * * *', runDailyReconciliation);
+cron.schedule("0 3 * * *", runDailyReconciliation);
 ```
 
 ---
@@ -388,27 +393,28 @@ cron.schedule('0 3 * * *', runDailyReconciliation);
 ## Subscription Revenue Recognition
 
 ### Use Case
+
 Reconcile subscription payments with revenue recognition for ASC 606 compliance.
 
 ### Implementation
 
 ```typescript
-import { SettlerClient } from '@settler/sdk';
+import { SettlerClient } from "@settler/sdk";
 
 const client = new SettlerClient({
   apiKey: process.env.SETTLER_API_KEY,
 });
 
 const job = await client.jobs.create({
-  name: 'Stripe Subscriptions to QuickBooks Revenue',
+  name: "Stripe Subscriptions to QuickBooks Revenue",
   source: {
-    adapter: 'stripe',
+    adapter: "stripe",
     config: {
       apiKey: process.env.STRIPE_SECRET_KEY,
     },
   },
   target: {
-    adapter: 'quickbooks',
+    adapter: "quickbooks",
     config: {
       clientId: process.env.QB_CLIENT_ID,
       clientSecret: process.env.QB_CLIENT_SECRET,
@@ -417,27 +423,27 @@ const job = await client.jobs.create({
   },
   rules: {
     matching: [
-      { field: 'subscription_id', type: 'exact' },
-      { field: 'invoice_id', type: 'exact' },
-      { field: 'amount', type: 'exact' },
-      { field: 'period_start', type: 'range', days: 1 },
+      { field: "subscription_id", type: "exact" },
+      { field: "invoice_id", type: "exact" },
+      { field: "amount", type: "exact" },
+      { field: "period_start", type: "range", days: 1 },
     ],
-    conflictResolution: 'last-wins',
+    conflictResolution: "last-wins",
   },
   metadata: {
     revenueRecognition: true,
-    accountingStandard: 'ASC 606',
+    accountingStandard: "ASC 606",
   },
 });
 
 // Get revenue recognition report
 const report = await client.reports.get(job.data.id, {
-  startDate: '2026-01-01',
-  endDate: '2026-01-31',
+  startDate: "2026-01-01",
+  endDate: "2026-01-31",
   includeRevenueRecognition: true,
 });
 
-console.log('Revenue Recognition Report:');
+console.log("Revenue Recognition Report:");
 console.log(`  Recognized Revenue: $${report.data.revenueRecognition?.recognizedRevenue}`);
 console.log(`  Deferred Revenue: $${report.data.revenueRecognition?.deferredRevenue}`);
 ```
@@ -447,12 +453,13 @@ console.log(`  Deferred Revenue: $${report.data.revenueRecognition?.deferredReve
 ## Error Handling and Retries
 
 ### Use Case
+
 Handle errors gracefully and implement retry logic.
 
 ### Implementation
 
 ```typescript
-import { SettlerClient, NetworkError, RateLimitError } from '@settler/sdk';
+import { SettlerClient, NetworkError, RateLimitError } from "@settler/sdk";
 
 const client = new SettlerClient({
   apiKey: process.env.SETTLER_API_KEY,
@@ -478,13 +485,13 @@ async function createJobWithRetry(jobConfig: any) {
 
       if (error instanceof RateLimitError) {
         console.log(`Rate limited. Retrying after ${error.retryAfter} seconds...`);
-        await new Promise(resolve => setTimeout(resolve, error.retryAfter * 1000));
+        await new Promise((resolve) => setTimeout(resolve, error.retryAfter * 1000));
         continue;
       }
 
       if (error instanceof NetworkError) {
         console.log(`Network error. Retrying (attempt ${attempts}/${maxAttempts})...`);
-        await new Promise(resolve => setTimeout(resolve, 1000 * attempts));
+        await new Promise((resolve) => setTimeout(resolve, 1000 * attempts));
         continue;
       }
 
@@ -493,18 +500,18 @@ async function createJobWithRetry(jobConfig: any) {
     }
   }
 
-  throw new Error('Failed to create job after maximum attempts');
+  throw new Error("Failed to create job after maximum attempts");
 }
 
 // Usage
 try {
   const job = await createJobWithRetry({
-    name: 'My Job',
+    name: "My Job",
     // ... config
   });
-  console.log('Job created:', job.data.id);
+  console.log("Job created:", job.data.id);
 } catch (error) {
-  console.error('Failed to create job:', error);
+  console.error("Failed to create job:", error);
   // Alert team, log error, etc.
 }
 ```
@@ -514,12 +521,13 @@ try {
 ## Custom Adapter Integration
 
 ### Use Case
+
 Integrate a custom payment provider or system that doesn't have a built-in adapter.
 
 ### Implementation
 
 ```typescript
-import { SettlerClient } from '@settler/sdk';
+import { SettlerClient } from "@settler/sdk";
 
 const client = new SettlerClient({
   apiKey: process.env.SETTLER_API_KEY,
@@ -527,32 +535,32 @@ const client = new SettlerClient({
 
 // Use the generic adapter with custom normalization
 const job = await client.jobs.create({
-  name: 'Custom Provider Reconciliation',
+  name: "Custom Provider Reconciliation",
   source: {
-    adapter: 'generic', // Generic adapter
+    adapter: "generic", // Generic adapter
     config: {
-      apiEndpoint: 'https://custom-provider.com/api',
+      apiEndpoint: "https://custom-provider.com/api",
       apiKey: process.env.CUSTOM_PROVIDER_KEY,
       normalization: {
         // Map custom fields to Settler's canonical schema
-        id: 'transaction_id',
-        amount: 'total_amount',
-        currency: 'currency_code',
-        date: 'transaction_date',
-        customerEmail: 'customer.email',
+        id: "transaction_id",
+        amount: "total_amount",
+        currency: "currency_code",
+        date: "transaction_date",
+        customerEmail: "customer.email",
       },
     },
   },
   target: {
-    adapter: 'quickbooks',
+    adapter: "quickbooks",
     config: {
       // QuickBooks config
     },
   },
   rules: {
     matching: [
-      { field: 'transaction_id', type: 'exact' },
-      { field: 'amount', type: 'exact' },
+      { field: "transaction_id", type: "exact" },
+      { field: "amount", type: "exact" },
     ],
   },
 });

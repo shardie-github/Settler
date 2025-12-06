@@ -7,9 +7,11 @@ All GitHub Actions workflows have been created to automatically handle migration
 ## Workflows Created
 
 ### 1. `post-merge-validation.yml` ⭐ PRIMARY
+
 **Triggers:** Push to main
 
 **What it does:**
+
 - ✅ Validates environment schema
 - ✅ Type checks, lints, formats
 - ✅ Builds application
@@ -20,25 +22,31 @@ All GitHub Actions workflows have been created to automatically handle migration
 **This is the main workflow** that orchestrates everything.
 
 ### 2. `auto-migrate-on-merge.yml`
+
 **Triggers:** PR merged to main
 
 **What it does:**
+
 - Detects migration files in PR
 - Automatically runs migrations if detected
 - Creates migration summary
 
 ### 3. `migration-safety-check.yml`
+
 **Triggers:** PR with migration files
 
 **What it does:**
+
 - Checks migration syntax
 - Tests migrations on clean database
 - Verifies rollback capability
 
 ### 4. `deploy-production.yml` (Enhanced)
+
 **Triggers:** Push to main, Manual dispatch
 
 **What it does:**
+
 - Runs tests
 - Builds application
 - **Runs database migrations**
@@ -79,11 +87,13 @@ All GitHub Actions workflows have been created to automatically handle migration
 Go to **Settings → Secrets and variables → Actions**:
 
 **Required:**
+
 - `DATABASE_URL`
 - `JWT_SECRET`
 - `ENCRYPTION_KEY`
 
 **Optional:**
+
 - `VERCEL_TOKEN`, `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID`
 - `SNYK_TOKEN`
 
@@ -118,6 +128,7 @@ Go to **Settings → Secrets and variables → Actions**:
 ## Migration Detection
 
 Migrations run automatically if:
+
 - ✅ Migration files in `packages/api/src/db/migrations/` are added/modified
 - ✅ PR commit message contains `[migrate]` or `[migration]`
 - ✅ Workflow is manually triggered

@@ -1,6 +1,6 @@
 /**
  * Supabase Client Configuration
- * 
+ *
  * Configured for:
  * - PostgreSQL database (main data)
  * - Realtime subscriptions (stream processing)
@@ -8,15 +8,17 @@
  * - Edge Functions (serverless compute)
  */
 
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
-import { config } from '../../config';
+import { createClient, SupabaseClient } from "@supabase/supabase-js";
+import { config } from "../../config";
 
 // Supabase configuration
 const supabaseUrl = process.env.SUPABASE_URL || config.database.host;
-const supabaseKey = process.env.SUPABASE_ANON_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY || '';
+const supabaseKey = process.env.SUPABASE_ANON_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY || "";
 
 if (!supabaseUrl || !supabaseKey) {
-  throw new Error('Missing Supabase configuration. Set SUPABASE_URL and SUPABASE_ANON_KEY environment variables.');
+  throw new Error(
+    "Missing Supabase configuration. Set SUPABASE_URL and SUPABASE_ANON_KEY environment variables."
+  );
 }
 
 /**
@@ -28,11 +30,11 @@ export const supabase: SupabaseClient = createClient(supabaseUrl, supabaseKey, {
     persistSession: false, // Server-side, no session persistence needed
   },
   db: {
-    schema: 'public',
+    schema: "public",
   },
   global: {
     headers: {
-      'x-client-info': 'settler-api@1.0.0',
+      "x-client-info": "settler-api@1.0.0",
     },
   },
 });
@@ -52,11 +54,8 @@ export const supabaseRealtime = createClient(supabaseUrl, supabaseKey, {
 /**
  * Helper function to execute SQL queries
  */
-export async function executeSQL<T = any>(
-  query: string,
-  params?: any[]
-): Promise<T[]> {
-  const { data, error } = await supabase.rpc('execute_sql', {
+export async function executeSQL<T = any>(query: string, params?: any[]): Promise<T[]> {
+  const { data, error } = await supabase.rpc("execute_sql", {
     query_text: query,
     query_params: params || [],
   });
@@ -71,9 +70,7 @@ export async function executeSQL<T = any>(
 /**
  * Helper function for transactions
  */
-export async function transaction<T>(
-  callback: (client: SupabaseClient) => Promise<T>
-): Promise<T> {
+export async function transaction<T>(callback: (client: SupabaseClient) => Promise<T>): Promise<T> {
   // Supabase doesn't have explicit transactions in JS client
   // Use PostgreSQL transactions via RPC or direct SQL
   return await callback(supabase);
@@ -85,20 +82,20 @@ export async function transaction<T>(
 export async function initializeSupabaseExtensions(): Promise<void> {
   // Enable pgvector extension for vector database
   try {
-    await supabase.rpc('exec_sql', {
-      sql: 'CREATE EXTENSION IF NOT EXISTS vector;',
+    await supabase.rpc("exec_sql", {
+      sql: "CREATE EXTENSION IF NOT EXISTS vector;",
     });
   } catch {
     // Extension might already exist or not be available
-    console.warn('pgvector extension not available or already enabled');
+    console.warn("pgvector extension not available or already enabled");
   }
 
   // Enable uuid-ossp extension (if not already enabled)
   try {
-    await supabase.rpc('exec_sql', {
+    await supabase.rpc("exec_sql", {
       sql: 'CREATE EXTENSION IF NOT EXISTS "uuid-ossp";',
     });
   } catch {
-    console.warn('uuid-ossp extension not available or already enabled');
+    console.warn("uuid-ossp extension not available or already enabled");
   }
 }

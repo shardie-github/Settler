@@ -11,18 +11,19 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.InfrastructureOptimizerAgent = void 0;
 const orchestrator_1 = require("./orchestrator");
+const logger_1 = require("../../utils/logger");
 class InfrastructureOptimizerAgent extends orchestrator_1.BaseAgent {
-    id = 'infrastructure-optimizer';
-    name = 'Infrastructure Optimizer';
-    type = 'infrastructure';
+    id = "infrastructure-optimizer";
+    name = "Infrastructure Optimizer";
+    type = "infrastructure";
     lastOptimization;
     optimizationHistory = [];
     async initialize() {
         // Start periodic optimization checks
         setInterval(() => {
             if (this.enabled) {
-                this.analyzeInfrastructure().catch(error => {
-                    console.error('Infrastructure analysis failed:', error);
+                this.analyzeInfrastructure().catch((error) => {
+                    (0, logger_1.logError)("Infrastructure analysis failed", error);
                 });
             }
         }, 3600000); // Every hour
@@ -30,13 +31,13 @@ class InfrastructureOptimizerAgent extends orchestrator_1.BaseAgent {
     }
     async execute(action, params) {
         switch (action) {
-            case 'analyze':
+            case "analyze":
                 return await this.analyzeInfrastructure();
-            case 'optimize':
+            case "optimize":
                 return await this.optimizeInfrastructure(params);
-            case 'get_opportunities':
+            case "get_opportunities":
                 return this.optimizationHistory;
-            case 'get_stats':
+            case "get_stats":
                 return await this.getStatus();
             default:
                 throw new Error(`Unknown action: ${action}`);
@@ -51,7 +52,8 @@ class InfrastructureOptimizerAgent extends orchestrator_1.BaseAgent {
         }
         status.metrics = {
             opportunitiesFound: this.optimizationHistory.length,
-            autoApplied: this.optimizationHistory.filter(o => o.recommendedAction === 'auto-apply').length,
+            autoApplied: this.optimizationHistory.filter((o) => o.recommendedAction === "auto-apply")
+                .length,
         };
         return status;
     }
@@ -76,9 +78,12 @@ class InfrastructureOptimizerAgent extends orchestrator_1.BaseAgent {
         this.lastOptimization = new Date();
         // Auto-apply low-risk optimizations
         for (const opportunity of opportunities) {
-            if (opportunity.recommendedAction === 'auto-apply' && opportunity.expectedImpact.riskLevel === 'low') {
-                await this.applyOptimization(opportunity).catch(error => {
-                    console.error(`Failed to apply optimization ${opportunity.id}:`, error);
+            if (opportunity.recommendedAction === "auto-apply" &&
+                opportunity.expectedImpact.riskLevel === "low") {
+                await this.applyOptimization(opportunity).catch((error) => {
+                    (0, logger_1.logError)(`Failed to apply optimization ${opportunity.id}`, error, {
+                        opportunityId: opportunity.id,
+                    });
                 });
             }
         }
@@ -92,22 +97,22 @@ class InfrastructureOptimizerAgent extends orchestrator_1.BaseAgent {
         // For now, return mock data
         return [
             {
-                id: 'opt_query_1',
-                type: 'query',
-                description: 'Slow query detected: SELECT * FROM reconciliation_jobs WHERE status = ?',
+                id: "opt_query_1",
+                type: "query",
+                description: "Slow query detected: SELECT * FROM reconciliation_jobs WHERE status = ?",
                 currentState: {
-                    query: 'SELECT * FROM reconciliation_jobs WHERE status = ?',
+                    query: "SELECT * FROM reconciliation_jobs WHERE status = ?",
                     avgDuration: 250, // ms
                     callCount: 1000,
                 },
                 proposedChange: {
-                    addIndex: 'CREATE INDEX idx_reconciliation_jobs_status ON reconciliation_jobs(status)',
+                    addIndex: "CREATE INDEX idx_reconciliation_jobs_status ON reconciliation_jobs(status)",
                 },
                 expectedImpact: {
                     performanceImprovement: 80, // 80% faster
-                    riskLevel: 'low',
+                    riskLevel: "low",
                 },
-                recommendedAction: 'auto-apply',
+                recommendedAction: "auto-apply",
             },
         ];
     }
@@ -119,9 +124,9 @@ class InfrastructureOptimizerAgent extends orchestrator_1.BaseAgent {
         // For now, return mock data
         return [
             {
-                id: 'opt_cost_1',
-                type: 'cost',
-                description: 'Unused database connections detected',
+                id: "opt_cost_1",
+                type: "cost",
+                description: "Unused database connections detected",
                 currentState: {
                     connectionPoolSize: 100,
                     activeConnections: 20,
@@ -132,9 +137,9 @@ class InfrastructureOptimizerAgent extends orchestrator_1.BaseAgent {
                 },
                 expectedImpact: {
                     costSavings: 50, // $50/month
-                    riskLevel: 'low',
+                    riskLevel: "low",
                 },
-                recommendedAction: 'auto-apply',
+                recommendedAction: "auto-apply",
             },
         ];
     }
@@ -159,8 +164,11 @@ class InfrastructureOptimizerAgent extends orchestrator_1.BaseAgent {
      */
     async applyOptimization(opportunity) {
         // TODO: Implement actual optimization logic
-        console.log(`Applying optimization: ${opportunity.id}`);
-        this.emit('optimization_applied', opportunity);
+        (0, logger_1.logInfo)(`Applying optimization: ${opportunity.id}`, {
+            opportunityId: opportunity.id,
+            type: opportunity.type,
+        });
+        this.emit("optimization_applied", opportunity);
     }
     /**
      * Optimize infrastructure based on params
@@ -168,7 +176,7 @@ class InfrastructureOptimizerAgent extends orchestrator_1.BaseAgent {
     async optimizeInfrastructure(params) {
         const opportunities = await this.analyzeInfrastructure();
         if (params.autoApply === true) {
-            const lowRiskOpportunities = opportunities.filter(o => o.expectedImpact.riskLevel === 'low');
+            const lowRiskOpportunities = opportunities.filter((o) => o.expectedImpact.riskLevel === "low");
             for (const opportunity of lowRiskOpportunities) {
                 await this.applyOptimization(opportunity);
             }
@@ -179,7 +187,7 @@ class InfrastructureOptimizerAgent extends orchestrator_1.BaseAgent {
         }
         return {
             opportunities,
-            message: 'Review opportunities and apply manually',
+            message: "Review opportunities and apply manually",
         };
     }
 }

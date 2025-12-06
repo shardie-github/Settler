@@ -9,6 +9,10 @@
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
     },
+    "./lib/email-lifecycle": {
+      "types": "./dist/lib/email-lifecycle.d.ts",
+      "default": "./dist/lib/email-lifecycle.js"
+    },
     "./package.json": "./package.json"
   },
   "scripts": {
@@ -23,7 +27,10 @@
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "lint": "eslint src --ext .ts",
+    "lint:fix": "eslint src --ext .ts --fix",
     "typecheck": "tsc --noEmit",
+    "format": "prettier --write \"src/**/*.{ts,tsx,js,jsx,json}\"",
+    "format:check": "prettier --check \"src/**/*.{ts,tsx,js,jsx,json}\"",
     "clean": "rm -rf dist"
   },
   "dependencies": {

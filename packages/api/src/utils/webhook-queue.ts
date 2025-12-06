@@ -30,17 +30,14 @@ export async function processWebhookDelivery(delivery: WebhookDelivery): Promise
 
   while (attempt <= maxRetries) {
     try {
-      const signature = generateWebhookSignature(
-        JSON.stringify(delivery.payload),
-        delivery.secret
-      );
+      const signature = generateWebhookSignature(JSON.stringify(delivery.payload), delivery.secret);
 
       const response = await fetch(delivery.url, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
-          'X-Webhook-Signature': signature,
-          'X-Webhook-Timestamp': Math.floor(Date.now() / 1000).toString(),
+          "Content-Type": "application/json",
+          "X-Webhook-Signature": signature,
+          "X-Webhook-Timestamp": Math.floor(Date.now() / 1000).toString(),
         },
         body: JSON.stringify(delivery.payload),
         signal: AbortSignal.timeout(10000), // 10s timeout
@@ -61,7 +58,7 @@ export async function processWebhookDelivery(delivery: WebhookDelivery): Promise
         [response.status, attempt + 1, delivery.id]
       );
 
-      logInfo('Webhook delivered', {
+      logInfo("Webhook delivered", {
         deliveryId: delivery.id,
         webhookId: delivery.webhookId,
         attempt: attempt + 1,
@@ -79,14 +76,10 @@ export async function processWebhookDelivery(delivery: WebhookDelivery): Promise
                error = $1,
                attempts = $2
            WHERE id = $3`,
-          [
-            error.message,
-            attempt,
-            delivery.id,
-          ]
+          [error.message, attempt, delivery.id]
         );
 
-        logError('Webhook delivery failed after max retries', error, {
+        logError("Webhook delivery failed after max retries", error, {
           deliveryId: delivery.id,
           webhookId: delivery.webhookId,
           attempts: attempt,
@@ -108,15 +101,10 @@ export async function processWebhookDelivery(delivery: WebhookDelivery): Promise
              attempts = $2,
              next_retry_at = $3
          WHERE id = $4`,
-        [
-          error.message,
-          attempt,
-          nextRetryAt,
-          delivery.id,
-        ]
+        [error.message, attempt, nextRetryAt, delivery.id]
       );
 
-      logWarn('Webhook delivery failed, will retry', {
+      logWarn("Webhook delivery failed, will retry", {
         deliveryId: delivery.id,
         attempt,
         nextRetryAt: nextRetryAt.toISOString(),
@@ -146,22 +134,19 @@ export async function processPendingWebhooks(): Promise<void> {
 }
 
 // Queue webhook for delivery
-export async function queueWebhookDelivery(
-  webhookId: string,
-  payload: any
-): Promise<string> {
+export async function queueWebhookDelivery(webhookId: string, payload: any): Promise<string> {
   const webhooks = await query<{ url: string; secret: string }>(
     `SELECT url, secret FROM webhooks WHERE id = $1 AND status = 'active'`,
     [webhookId]
   );
 
   if (webhooks.length === 0) {
-    throw new Error('Webhook not found or inactive');
+    throw new Error("Webhook not found or inactive");
   }
 
   const webhook = webhooks[0];
   if (!webhook) {
-    throw new Error('Webhook not found or inactive');
+    throw new Error("Webhook not found or inactive");
   }
 
   const result = await query<{ id: string }>(
@@ -173,7 +158,7 @@ export async function queueWebhookDelivery(
 
   const deliveryId = result[0]?.id;
   if (!deliveryId) {
-    throw new Error('Failed to create webhook delivery');
+    throw new Error("Failed to create webhook delivery");
   }
 
   // Process immediately (in production, use job queue)
@@ -183,8 +168,8 @@ export async function queueWebhookDelivery(
     url: webhook.url,
     payload,
     secret: webhook.secret,
-  }).catch(error => {
-    logError('Failed to process webhook delivery', error, { deliveryId });
+  }).catch((error) => {
+    logError("Failed to process webhook delivery", error, { deliveryId });
   });
 
   return deliveryId;

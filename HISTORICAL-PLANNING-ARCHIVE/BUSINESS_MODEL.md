@@ -11,12 +11,14 @@ Settler operates a **dual-license business model** with open-source (OSS) and co
 ## Product Portfolio
 
 ### 1. Settler API (Proprietary SaaS)
+
 - **License:** Proprietary (Closed Source)
 - **Pricing:** Usage-based + subscription tiers
 - **Target:** Production businesses needing reconciliation infrastructure
 - **Value Prop:** Managed service, infrastructure, support
 
 ### 2. React.Settler (Open Source Protocol)
+
 - **License:** MIT (OSS) + Commercial License (Commercial Features)
 - **Pricing:** Free (OSS) / $99/month (Commercial) / Custom (Enterprise)
 - **Target:** Developers building reconciliation UIs
@@ -45,12 +47,14 @@ Settler operates a **dual-license business model** with open-source (OSS) and co
 ### Unit Economics
 
 **Settler API SaaS:**
+
 - Customer Acquisition Cost (CAC): $500-$1,500
 - Lifetime Value (LTV): $10,000-$50,000
 - LTV:CAC Ratio: 10:1 to 30:1
 - Gross Margin: 80-85%
 
 **React.Settler Commercial:**
+
 - CAC: $100-$300 (low-touch, self-serve)
 - LTV: $3,000-$15,000
 - LTV:CAC Ratio: 10:1 to 50:1
@@ -61,12 +65,14 @@ Settler operates a **dual-license business model** with open-source (OSS) and co
 ### Settler API SaaS
 
 **Starter Tier** - $99/month
+
 - Up to 1,000 reconciliation jobs/month
 - Basic adapters (Stripe, Shopify, PayPal)
 - Email support
 - 99.5% SLA
 
 **Pro Tier** - $499/month
+
 - Up to 10,000 reconciliation jobs/month
 - All adapters
 - Priority support (48-hour response)
@@ -74,6 +80,7 @@ Settler operates a **dual-license business model** with open-source (OSS) and co
 - Advanced features (webhooks, audit logging)
 
 **Enterprise Tier** - Custom Pricing
+
 - Unlimited reconciliation jobs
 - Custom adapters
 - Dedicated support (24/7)
@@ -84,6 +91,7 @@ Settler operates a **dual-license business model** with open-source (OSS) and co
 ### React.Settler
 
 **OSS Tier** - Free Forever
+
 - Core protocol types
 - Basic React components
 - Security basics
@@ -91,6 +99,7 @@ Settler operates a **dual-license business model** with open-source (OSS) and co
 - MIT License
 
 **Commercial Tier** - $99/month or $990/year
+
 - All OSS features
 - Platform integrations (Shopify, Stripe, MCP)
 - Virtualized tables
@@ -99,6 +108,7 @@ Settler operates a **dual-license business model** with open-source (OSS) and co
 - Commercial License
 
 **Enterprise Tier** - Custom Pricing
+
 - All Commercial features
 - SSO & RBAC
 - Custom integrations
@@ -111,6 +121,7 @@ Settler operates a **dual-license business model** with open-source (OSS) and co
 ### Stage 1: Awareness (Top of Funnel)
 
 **Channels:**
+
 - GitHub (OSS repositories)
 - npm (package downloads)
 - Developer communities (Reddit, Hacker News, Dev.to)
@@ -118,11 +129,13 @@ Settler operates a **dual-license business model** with open-source (OSS) and co
 - Conference talks and workshops
 
 **Goals:**
+
 - 10,000+ GitHub stars (Year 1)
 - 50,000+ npm downloads/month (Year 1)
 - 100+ blog posts/articles mentioning Settler
 
 **Metrics:**
+
 - GitHub stars growth: 20% month-over-month
 - npm downloads: 10,000+/month
 - Website traffic: 5,000+ unique visitors/month
@@ -130,6 +143,7 @@ Settler operates a **dual-license business model** with open-source (OSS) and co
 ### Stage 2: Consideration (Middle of Funnel)
 
 **Channels:**
+
 - Documentation site (docs.settler.dev)
 - Interactive playground
 - Example projects and tutorials
@@ -137,11 +151,13 @@ Settler operates a **dual-license business model** with open-source (OSS) and co
 - Community support (Discord, GitHub Discussions)
 
 **Goals:**
+
 - 1,000+ active OSS users
 - 500+ documentation page views/day
 - 100+ community members
 
 **Metrics:**
+
 - Documentation views: 10,000+/month
 - Playground usage: 500+ sessions/month
 - Community engagement: 50+ active members
@@ -149,17 +165,20 @@ Settler operates a **dual-license business model** with open-source (OSS) and co
 ### Stage 3: Evaluation (Bottom of Funnel)
 
 **Channels:**
+
 - Free trial (Settler API)
 - OSS usage (React.Settler)
 - Sales demos (Enterprise)
 - Case studies and testimonials
 
 **Goals:**
+
 - 100+ free trial signups/month
 - 50+ OSS projects using React.Settler
 - 10+ enterprise demos/month
 
 **Metrics:**
+
 - Trial signups: 100+/month
 - Trial-to-paid conversion: 10-15%
 - OSS-to-commercial conversion: 5-10%
@@ -167,16 +186,19 @@ Settler operates a **dual-license business model** with open-source (OSS) and co
 ### Stage 4: Purchase (Conversion)
 
 **Channels:**
+
 - Self-serve signup (Commercial)
 - Sales team (Enterprise)
 - In-app upgrade prompts
 
 **Goals:**
+
 - 10-20 new Commercial customers/month (Year 1)
 - 1-2 new Enterprise customers/month (Year 1)
 - 5% conversion rate (trial to paid)
 
 **Metrics:**
+
 - Monthly Recurring Revenue (MRR): $10K-$50K (Year 1)
 - Annual Recurring Revenue (ARR): $120K-$600K (Year 1)
 - Customer churn: <5% monthly
@@ -184,16 +206,19 @@ Settler operates a **dual-license business model** with open-source (OSS) and co
 ### Stage 5: Expansion (Retention & Growth)
 
 **Channels:**
+
 - Usage-based upsells (Settler API)
 - Feature upgrades (React.Settler Commercial → Enterprise)
 - Add-on services (Professional Services)
 
 **Goals:**
+
 - 20% expansion revenue
 - 90%+ customer satisfaction (NPS)
 - 95%+ retention rate
 
 **Metrics:**
+
 - Net Revenue Retention (NRR): 110%+
 - Customer Lifetime Value (LTV): $10K-$50K
 - Expansion revenue: 20% of total revenue
@@ -205,6 +230,7 @@ Settler operates a **dual-license business model** with open-source (OSS) and co
 **Focus:** Drive adoption and community growth
 
 **Activities:**
+
 - Open source React.Settler protocol
 - Launch GitHub repository
 - Publish to npm
@@ -213,6 +239,7 @@ Settler operates a **dual-license business model** with open-source (OSS) and co
 - Engage developer communities
 
 **Success Metrics:**
+
 - 1,000+ GitHub stars
 - 10,000+ npm downloads/month
 - 100+ OSS users
@@ -223,6 +250,7 @@ Settler operates a **dual-license business model** with open-source (OSS) and co
 **Focus:** Convert OSS users to Commercial, launch Settler API SaaS
 
 **Activities:**
+
 - Launch Commercial tier for React.Settler
 - Launch Settler API SaaS (beta)
 - Create upgrade prompts in OSS
@@ -231,6 +259,7 @@ Settler operates a **dual-license business model** with open-source (OSS) and co
 - Gather testimonials and case studies
 
 **Success Metrics:**
+
 - 50+ Commercial customers (React.Settler)
 - 20+ SaaS customers (Settler API)
 - $10K+ MRR
@@ -241,6 +270,7 @@ Settler operates a **dual-license business model** with open-source (OSS) and co
 **Focus:** Scale revenue, expand enterprise
 
 **Activities:**
+
 - Expand sales team
 - Launch Enterprise tier
 - Build partner ecosystem
@@ -249,6 +279,7 @@ Settler operates a **dual-license business model** with open-source (OSS) and co
 - International expansion
 
 **Success Metrics:**
+
 - $50K+ MRR
 - 200+ Commercial customers
 - 10+ Enterprise customers
@@ -259,12 +290,14 @@ Settler operates a **dual-license business model** with open-source (OSS) and co
 ### Segment 1: Developers & Startups (OSS → Commercial)
 
 **Profile:**
+
 - Early-stage startups
 - Solo developers
 - Small development teams
 - Building internal tools
 
 **Journey:**
+
 1. Discover OSS on GitHub
 2. Use free features
 3. Need Shopify/Stripe integration
@@ -275,12 +308,14 @@ Settler operates a **dual-license business model** with open-source (OSS) and co
 ### Segment 2: Growing Businesses (Commercial)
 
 **Profile:**
+
 - E-commerce platforms
 - SaaS companies
 - Marketplaces
 - 10-100 employees
 
 **Journey:**
+
 1. Building production app
 2. Need platform integrations
 3. Subscribe to Commercial
@@ -291,12 +326,14 @@ Settler operates a **dual-license business model** with open-source (OSS) and co
 ### Segment 3: Enterprise (Enterprise)
 
 **Profile:**
+
 - Large organizations (500+ employees)
 - High compliance requirements
 - Custom integration needs
 - Dedicated support requirements
 
 **Journey:**
+
 1. Evaluate multiple solutions
 2. Sales demo and POC
 3. Custom contract negotiation
@@ -309,6 +346,7 @@ Settler operates a **dual-license business model** with open-source (OSS) and co
 ### vs. Building In-House
 
 **Settler Advantage:**
+
 - Save 2-6 months of development time
 - Pre-built adapters for popular platforms
 - Ongoing maintenance and updates
@@ -317,6 +355,7 @@ Settler operates a **dual-license business model** with open-source (OSS) and co
 ### vs. Legacy Reconciliation Tools
 
 **Settler Advantage:**
+
 - Modern API-first architecture
 - Developer-friendly (React components)
 - Flexible and extensible
@@ -325,6 +364,7 @@ Settler operates a **dual-license business model** with open-source (OSS) and co
 ### vs. Generic Data Integration Platforms
 
 **Settler Advantage:**
+
 - Purpose-built for reconciliation
 - Specialized matching algorithms
 - Reconciliation-specific features
@@ -335,16 +375,19 @@ Settler operates a **dual-license business model** with open-source (OSS) and co
 ### Year 1 Targets
 
 **Revenue:**
+
 - Settler API SaaS: $50K ARR
 - React.Settler Commercial: $120K ARR
 - Total: $170K ARR
 
 **Customers:**
+
 - Settler API SaaS: 20 customers
 - React.Settler Commercial: 100 customers
 - Total: 120 customers
 
 **Unit Economics:**
+
 - CAC: $300 average
 - LTV: $15,000 average
 - LTV:CAC: 50:1
@@ -353,12 +396,14 @@ Settler operates a **dual-license business model** with open-source (OSS) and co
 ### Year 2 Targets
 
 **Revenue:**
+
 - Settler API SaaS: $500K ARR
 - React.Settler Commercial: $600K ARR
 - Enterprise: $250K ARR
 - Total: $1.35M ARR
 
 **Customers:**
+
 - Settler API SaaS: 200 customers
 - React.Settler Commercial: 500 customers
 - Enterprise: 10 customers
@@ -367,12 +412,14 @@ Settler operates a **dual-license business model** with open-source (OSS) and co
 ### Year 3 Targets
 
 **Revenue:**
+
 - Settler API SaaS: $2M ARR
 - React.Settler Commercial: $1.2M ARR
 - Enterprise: $1M ARR
 - Total: $4.2M ARR
 
 **Customers:**
+
 - Settler API SaaS: 800 customers
 - React.Settler Commercial: 1,000 customers
 - Enterprise: 20 customers
@@ -390,36 +437,44 @@ Settler operates a **dual-license business model** with open-source (OSS) and co
 ## Risk Mitigation
 
 ### Risk: Low Conversion Rate
+
 **Mitigation:** Improve upgrade prompts, add value messaging, optimize pricing
 
 ### Risk: High Churn
+
 **Mitigation:** Improve onboarding, add value features, proactive support
 
 ### Risk: Competition
+
 **Mitigation:** Focus on developer experience, build strong community, innovate faster
 
 ### Risk: Market Adoption
+
 **Mitigation:** Invest in content marketing, community building, partnerships
 
 ## Success Metrics Dashboard
 
 ### Acquisition Metrics
+
 - GitHub stars: 1,000+ (Year 1)
 - npm downloads: 10,000+/month
 - Website traffic: 5,000+ unique visitors/month
 - Trial signups: 100+/month
 
 ### Conversion Metrics
+
 - Trial-to-paid: 10-15%
 - OSS-to-Commercial: 5-10%
 - Demo-to-Enterprise: 20-30%
 
 ### Retention Metrics
+
 - Monthly churn: <5%
 - Annual retention: 95%+
 - Net Revenue Retention: 110%+
 
 ### Revenue Metrics
+
 - MRR growth: 20% month-over-month
 - ARR: $170K (Year 1), $1.35M (Year 2), $4.2M (Year 3)
 - Gross margin: 85%+
@@ -427,6 +482,7 @@ Settler operates a **dual-license business model** with open-source (OSS) and co
 ## Conclusion
 
 Settler's dual-license business model creates a sustainable path to profitability:
+
 - OSS drives adoption and community growth
 - Commercial tier monetizes platform integrations
 - Enterprise tier captures high-value customers

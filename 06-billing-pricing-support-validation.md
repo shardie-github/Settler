@@ -20,6 +20,7 @@
 #### Test Case 1: Signup & Subscription Creation
 
 **Steps:**
+
 1. User signs up for free account
 2. User upgrades to Starter plan ($29/mo)
 3. Verify subscription created in Stripe
@@ -27,17 +28,19 @@
 5. Verify access to Starter features
 
 **Expected Results:**
+
 - ✅ Subscription created in Stripe
 - ✅ User tier = "starter" in database
 - ✅ User can create 5 jobs (Starter limit)
 - ✅ Billing email sent
 
 **Test Data:**
+
 ```json
 {
   "email": "test@example.com",
   "plan": "starter",
-  "price": 29.00,
+  "price": 29.0,
   "currency": "usd"
 }
 ```
@@ -47,6 +50,7 @@
 #### Test Case 2: Upgrade Flow
 
 **Steps:**
+
 1. User on Starter plan ($29/mo)
 2. User upgrades to Growth plan ($99/mo)
 3. Verify prorated charge calculated
@@ -55,19 +59,21 @@
 6. Verify access to Growth features
 
 **Expected Results:**
-- ✅ Prorated charge = $70 (difference) * (days remaining / 30)
+
+- ✅ Prorated charge = $70 (difference) \* (days remaining / 30)
 - ✅ Subscription updated in Stripe
 - ✅ User tier = "growth"
 - ✅ User can create 20 jobs (Growth limit)
 - ✅ Upgrade email sent
 
 **Test Data:**
+
 ```json
 {
   "fromPlan": "starter",
   "toPlan": "growth",
-  "currentPrice": 29.00,
-  "newPrice": 99.00,
+  "currentPrice": 29.0,
+  "newPrice": 99.0,
   "billingDate": "2026-01-15"
 }
 ```
@@ -77,6 +83,7 @@
 #### Test Case 3: Downgrade Flow
 
 **Steps:**
+
 1. User on Growth plan ($99/mo)
 2. User downgrades to Starter plan ($29/mo)
 3. Verify downgrade scheduled for next billing cycle
@@ -84,18 +91,20 @@
 5. Verify refund NOT issued (downgrade at cycle end)
 
 **Expected Results:**
+
 - ✅ Downgrade scheduled for next billing date
 - ✅ User keeps Growth features until cycle ends
 - ✅ No immediate refund
 - ✅ Downgrade email sent
 
 **Test Data:**
+
 ```json
 {
   "fromPlan": "growth",
   "toPlan": "starter",
-  "currentPrice": 99.00,
-  "newPrice": 29.00,
+  "currentPrice": 99.0,
+  "newPrice": 29.0,
   "billingDate": "2026-02-15"
 }
 ```
@@ -105,6 +114,7 @@
 #### Test Case 4: Refund Flow
 
 **Steps:**
+
 1. User requests refund for current month
 2. Support processes refund
 3. Verify refund created in Stripe
@@ -112,6 +122,7 @@
 5. Verify refund email sent
 
 **Expected Results:**
+
 - ✅ Refund created in Stripe
 - ✅ Subscription canceled or paused
 - ✅ User tier = "free" or "canceled"
@@ -119,10 +130,11 @@
 - ✅ Refund appears in Stripe dashboard
 
 **Test Data:**
+
 ```json
 {
   "subscriptionId": "sub_123",
-  "amount": 99.00,
+  "amount": 99.0,
   "reason": "customer_request",
   "refundType": "full"
 }
@@ -133,6 +145,7 @@
 #### Test Case 5: Failed Payment
 
 **Steps:**
+
 1. User's payment method fails
 2. Stripe sends webhook for failed payment
 3. Verify user notified (email)
@@ -140,12 +153,14 @@
 5. Verify access restricted after grace period
 
 **Expected Results:**
+
 - ✅ Payment failure email sent
 - ✅ Subscription status = "past_due"
 - ✅ User access restricted after 7 days
 - ✅ Retry payment attempted (Stripe automatic)
 
 **Test Data:**
+
 ```json
 {
   "subscriptionId": "sub_123",
@@ -160,26 +175,29 @@
 #### Test Case 6: Usage-Based Billing
 
 **Steps:**
+
 1. User exceeds plan limits (e.g., 1,000 reconciliations on Starter)
 2. Verify overage charges calculated
 3. Verify invoice created for overage
 4. Verify user notified
 
 **Expected Results:**
+
 - ✅ Overage charges calculated correctly
 - ✅ Invoice created for overage
 - ✅ User notified via email
 - ✅ Usage tracked accurately
 
 **Test Data:**
+
 ```json
 {
   "plan": "starter",
   "limit": 1000,
   "usage": 1500,
   "overage": 500,
-  "overagePrice": 0.10,
-  "overageCharge": 50.00
+  "overagePrice": 0.1,
+  "overageCharge": 50.0
 }
 ```
 
@@ -188,6 +206,7 @@
 ### Billing Test Checklist
 
 **Signup & Subscription:**
+
 - [ ] Free signup works
 - [ ] Paid plan signup works
 - [ ] Subscription created in Stripe
@@ -195,6 +214,7 @@
 - [ ] Welcome email sent
 
 **Upgrades:**
+
 - [ ] Upgrade works
 - [ ] Prorated charge calculated correctly
 - [ ] Subscription updated in Stripe
@@ -202,24 +222,28 @@
 - [ ] Upgrade email sent
 
 **Downgrades:**
+
 - [ ] Downgrade scheduled correctly
 - [ ] User keeps features until cycle ends
 - [ ] No refund issued
 - [ ] Downgrade email sent
 
 **Refunds:**
+
 - [ ] Refund processed correctly
 - [ ] Refund created in Stripe
 - [ ] Subscription canceled/paused
 - [ ] Refund email sent
 
 **Failed Payments:**
+
 - [ ] Payment failure handled
 - [ ] User notified
 - [ ] Subscription paused (not canceled)
 - [ ] Retry logic works
 
 **Usage-Based:**
+
 - [ ] Overage calculated correctly
 - [ ] Invoice created for overage
 - [ ] User notified
@@ -232,11 +256,13 @@
 ### Step 1: Set Up Stripe Account
 
 **Create Stripe Account:**
+
 1. Sign up at [stripe.com](https://stripe.com)
 2. Complete account verification
 3. Get API keys (test and live)
 
 **API Keys:**
+
 ```bash
 # Test keys (for development)
 STRIPE_PUBLISHABLE_KEY=pk_test_...
@@ -260,32 +286,33 @@ npm install stripe
 ### Step 3: Create Products & Prices
 
 **Create Products:**
+
 ```typescript
 // scripts/create-stripe-products.ts
-import Stripe from 'stripe';
+import Stripe from "stripe";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
 const products = [
   {
-    name: 'Starter',
-    description: 'Perfect for small businesses',
+    name: "Starter",
+    description: "Perfect for small businesses",
     prices: [
-      { amount: 2900, currency: 'usd', interval: 'month' }, // $29/mo
+      { amount: 2900, currency: "usd", interval: "month" }, // $29/mo
     ],
   },
   {
-    name: 'Growth',
-    description: 'For growing businesses',
+    name: "Growth",
+    description: "For growing businesses",
     prices: [
-      { amount: 9900, currency: 'usd', interval: 'month' }, // $99/mo
+      { amount: 9900, currency: "usd", interval: "month" }, // $99/mo
     ],
   },
   {
-    name: 'Scale',
-    description: 'For large businesses',
+    name: "Scale",
+    description: "For large businesses",
     prices: [
-      { amount: 29900, currency: 'usd', interval: 'month' }, // $299/mo
+      { amount: 29900, currency: "usd", interval: "month" }, // $299/mo
     ],
   },
 ];
@@ -313,16 +340,12 @@ for (const product of products) {
 
 ```typescript
 // packages/api/src/services/BillingService.ts
-import Stripe from 'stripe';
+import Stripe from "stripe";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
 export class BillingService {
-  async createSubscription(
-    customerId: string,
-    priceId: string,
-    metadata: Record<string, string>
-  ) {
+  async createSubscription(customerId: string, priceId: string, metadata: Record<string, string>) {
     const subscription = await stripe.subscriptions.create({
       customer: customerId,
       items: [{ price: priceId }],
@@ -332,18 +355,17 @@ export class BillingService {
     return subscription;
   }
 
-  async updateSubscription(
-    subscriptionId: string,
-    newPriceId: string
-  ) {
+  async updateSubscription(subscriptionId: string, newPriceId: string) {
     const subscription = await stripe.subscriptions.retrieve(subscriptionId);
-    
+
     const updated = await stripe.subscriptions.update(subscriptionId, {
-      items: [{
-        id: subscription.items.data[0].id,
-        price: newPriceId,
-      }],
-      proration_behavior: 'create_prorations', // Prorate charges
+      items: [
+        {
+          id: subscription.items.data[0].id,
+          price: newPriceId,
+        },
+      ],
+      proration_behavior: "create_prorations", // Prorate charges
     });
 
     return updated;
@@ -361,16 +383,17 @@ export class BillingService {
 ### Step 5: Set Up Webhooks
 
 **Webhook Endpoint:**
+
 ```typescript
 // packages/api/src/routes/webhooks/stripe.ts
-import express from 'express';
-import Stripe from 'stripe';
+import express from "express";
+import Stripe from "stripe";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 const router = express.Router();
 
-router.post('/stripe', async (req, res) => {
-  const sig = req.headers['stripe-signature']!;
+router.post("/stripe", async (req, res) => {
+  const sig = req.headers["stripe-signature"]!;
   const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!;
 
   let event: Stripe.Event;
@@ -383,26 +406,26 @@ router.post('/stripe', async (req, res) => {
 
   // Handle events
   switch (event.type) {
-    case 'customer.subscription.created':
+    case "customer.subscription.created":
       await handleSubscriptionCreated(event.data.object as Stripe.Subscription);
       break;
-    
-    case 'customer.subscription.updated':
+
+    case "customer.subscription.updated":
       await handleSubscriptionUpdated(event.data.object as Stripe.Subscription);
       break;
-    
-    case 'customer.subscription.deleted':
+
+    case "customer.subscription.deleted":
       await handleSubscriptionDeleted(event.data.object as Stripe.Subscription);
       break;
-    
-    case 'invoice.payment_succeeded':
+
+    case "invoice.payment_succeeded":
       await handlePaymentSucceeded(event.data.object as Stripe.Invoice);
       break;
-    
-    case 'invoice.payment_failed':
+
+    case "invoice.payment_failed":
       await handlePaymentFailed(event.data.object as Stripe.Invoice);
       break;
-    
+
     default:
       console.log(`Unhandled event type: ${event.type}`);
   }
@@ -417,7 +440,7 @@ async function handleSubscriptionCreated(subscription: Stripe.Subscription) {
 
 async function handlePaymentFailed(invoice: Stripe.Invoice) {
   // Notify user, pause subscription
-  await notifyUser(invoice.customer as string, 'payment_failed');
+  await notifyUser(invoice.customer as string, "payment_failed");
   await pauseSubscription(invoice.subscription as string);
 }
 
@@ -425,6 +448,7 @@ export default router;
 ```
 
 **Webhook Secret:**
+
 - Get from Stripe Dashboard → Webhooks → Add endpoint
 - Use secret for webhook signature verification
 
@@ -433,11 +457,13 @@ export default router;
 ### Step 6: Test Integration
 
 **Test Cards:**
+
 - Success: `4242 4242 4242 4242`
 - Decline: `4000 0000 0000 0002`
 - 3D Secure: `4000 0027 6000 3184`
 
 **Test Webhooks:**
+
 - Use Stripe CLI: `stripe listen --forward-to localhost:3000/webhooks/stripe`
 - Or use Stripe Dashboard → Webhooks → Send test webhook
 
@@ -693,15 +719,16 @@ Best,
 
 ### Support Escalation Matrix
 
-| Issue Type | Level 1 | Level 2 | Level 3 |
-|------------|---------|---------|---------|
-| **Billing Error** | Support Agent | Billing Manager | CFO |
-| **Refund Request** | Support Agent | Billing Manager | CFO |
-| **Payment Failure** | Support Agent | Billing Manager | - |
-| **Subscription Issue** | Support Agent | Engineering | CTO |
-| **Feature Access** | Support Agent | Product Manager | - |
+| Issue Type             | Level 1       | Level 2         | Level 3 |
+| ---------------------- | ------------- | --------------- | ------- |
+| **Billing Error**      | Support Agent | Billing Manager | CFO     |
+| **Refund Request**     | Support Agent | Billing Manager | CFO     |
+| **Payment Failure**    | Support Agent | Billing Manager | -       |
+| **Subscription Issue** | Support Agent | Engineering     | CTO     |
+| **Feature Access**     | Support Agent | Product Manager | -       |
 
 **Response Times:**
+
 - Level 1: 24 hours
 - Level 2: 4 hours
 - Level 3: 1 hour
@@ -712,31 +739,31 @@ Best,
 
 ### Immediate Actions (This Week)
 
-| Task | Owner | Time Estimate | Priority |
-|------|-------|---------------|----------|
-| Set up Stripe account | Operations | 2 hours | P0 |
-| Create Stripe products/prices | Operations | 1 hour | P0 |
-| Implement subscription creation | Engineering | 1 day | P0 |
-| Set up webhook endpoint | Engineering | 4 hours | P0 |
-| Create invoice templates | Operations | 2 hours | P1 |
+| Task                            | Owner       | Time Estimate | Priority |
+| ------------------------------- | ----------- | ------------- | -------- |
+| Set up Stripe account           | Operations  | 2 hours       | P0       |
+| Create Stripe products/prices   | Operations  | 1 hour        | P0       |
+| Implement subscription creation | Engineering | 1 day         | P0       |
+| Set up webhook endpoint         | Engineering | 4 hours       | P0       |
+| Create invoice templates        | Operations  | 2 hours       | P1       |
 
 ### Short-Term (This Month)
 
-| Task | Owner | Time Estimate | Priority |
-|------|-------|---------------|----------|
-| Test billing flows end-to-end | QA | 1 day | P0 |
-| Create refund process | Operations | 4 hours | P1 |
-| Train support team on billing | Operations | 2 hours | P1 |
-| Set up billing monitoring | Engineering | 4 hours | P1 |
+| Task                          | Owner       | Time Estimate | Priority |
+| ----------------------------- | ----------- | ------------- | -------- |
+| Test billing flows end-to-end | QA          | 1 day         | P0       |
+| Create refund process         | Operations  | 4 hours       | P1       |
+| Train support team on billing | Operations  | 2 hours       | P1       |
+| Set up billing monitoring     | Engineering | 4 hours       | P1       |
 
 ### Long-Term (This Quarter)
 
-| Task | Owner | Time Estimate | Priority |
-|------|-------|---------------|----------|
-| Implement usage-based billing | Engineering | 1 week | P1 |
-| Add billing dashboard | Engineering | 1 week | P2 |
-| Create billing analytics | Engineering | 1 week | P2 |
-| Set up automated invoicing | Engineering | 2 days | P2 |
+| Task                          | Owner       | Time Estimate | Priority |
+| ----------------------------- | ----------- | ------------- | -------- |
+| Implement usage-based billing | Engineering | 1 week        | P1       |
+| Add billing dashboard         | Engineering | 1 week        | P2       |
+| Create billing analytics      | Engineering | 1 week        | P2       |
+| Set up automated invoicing    | Engineering | 2 days        | P2       |
 
 ---
 

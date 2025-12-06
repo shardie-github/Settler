@@ -1,14 +1,14 @@
 /**
  * Server Actions for Authentication
- * 
+ *
  * Interdependence Manifesto: These actions are the ONLY channels for client-side writes,
  * ensuring all data flows through Supabase with proper RLS checks.
  */
 
-'use server';
+"use server";
 
-import { createClient } from '@/lib/supabase/server';
-import { revalidatePath } from 'next/cache';
+import { createClient } from "@/lib/supabase/server";
+import { revalidatePath } from "next/cache";
 
 export interface SignUpResult {
   success: boolean;
@@ -18,7 +18,7 @@ export interface SignUpResult {
 
 /**
  * Server Action: User Sign-up
- * 
+ *
  * Data Flow: Vercel Form → Next.js Server Action → Supabase profiles table (RLS Check) → Profile Page Reload
  */
 export async function signUpUser(
@@ -35,7 +35,7 @@ export async function signUpUser(
       password,
       options: {
         data: {
-          name: name || email.split('@')[0],
+          name: name || email.split("@")[0],
         },
       },
     });
@@ -50,7 +50,7 @@ export async function signUpUser(
     if (!authData.user) {
       return {
         success: false,
-        error: 'Failed to create user',
+        error: "Failed to create user",
       };
     }
 
@@ -59,54 +59,50 @@ export async function signUpUser(
     const trialEndDate = new Date();
     trialEndDate.setDate(trialEndDate.getDate() + 30); // 30-day trial
 
-    const { error: profileError } = await supabase
-      .from('profiles')
-      .insert({
-        id: authData.user.id,
-        user_id: authData.user.id,
-        email: authData.user.email!,
-        name: name || authData.user.email!.split('@')[0],
-        impact_score: 0,
-        plan_type: 'trial',
-        trial_start_date: trialStartDate.toISOString(),
-        trial_end_date: trialEndDate.toISOString(),
-        pre_test_completed: false,
-        pre_test_answers: {},
-      } as any);
+    const { error: profileError } = await supabase.from("profiles").insert({
+      id: authData.user.id,
+      user_id: authData.user.id,
+      email: authData.user.email!,
+      name: name || authData.user.email!.split("@")[0],
+      impact_score: 0,
+      plan_type: "trial",
+      trial_start_date: trialStartDate.toISOString(),
+      trial_end_date: trialEndDate.toISOString(),
+      pre_test_completed: false,
+      pre_test_answers: {},
+    } as any);
 
     if (profileError) {
       // If profile creation fails, we should handle it gracefully
       // The user is created in auth, but profile might already exist
-      console.error('Profile creation error:', profileError);
+      console.error("Profile creation error:", profileError);
     }
 
     // 3. Log sign-up activity
-    const { error: activityError } = await supabase
-      .from('activity_log')
-      .insert({
-        user_id: authData.user.id,
-        activity_type: 'signup',
-        entity_type: 'profile',
-        entity_id: authData.user.id,
-        metadata: {
-          source: 'web_signup',
-          timestamp: new Date().toISOString(),
-        },
-      } as any);
+    const { error: activityError } = await supabase.from("activity_log").insert({
+      user_id: authData.user.id,
+      activity_type: "signup",
+      entity_type: "profile",
+      entity_id: authData.user.id,
+      metadata: {
+        source: "web_signup",
+        timestamp: new Date().toISOString(),
+      },
+    } as any);
 
     if (activityError) {
-      console.error('Activity log error:', activityError);
+      console.error("Activity log error:", activityError);
       // Don't fail the sign-up if activity logging fails
     }
 
     // 4. Send welcome email (trial welcome)
     try {
-      const { sendTrialWelcomeEmail } = await import('@settler/api/lib/email-lifecycle');
+      const { sendTrialWelcomeEmail } = await import("@settler/api/lib/email-lifecycle");
       await sendTrialWelcomeEmail(
         {
           email: authData.user.email!,
-          firstName: name || authData.user.email!.split('@')[0],
-          planType: 'trial',
+          firstName: name || authData.user.email!.split("@")[0],
+          planType: "trial",
         },
         {
           trialStartDate: trialStartDate.toISOString(),
@@ -115,30 +111,30 @@ export async function signUpUser(
         }
       );
     } catch (emailError) {
-      console.error('Failed to send welcome email:', emailError);
+      console.error("Failed to send welcome email:", emailError);
       // Don't fail signup if email fails
     }
 
     // 5. Revalidate relevant paths
-    revalidatePath('/');
-    revalidatePath('/dashboard');
+    revalidatePath("/");
+    revalidatePath("/dashboard");
 
     return {
       success: true,
       userId: authData.user.id,
     };
   } catch (error) {
-    console.error('Sign-up error:', error);
+    console.error("Sign-up error:", error);
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'An unexpected error occurred',
+      error: error instanceof Error ? error.message : "An unexpected error occurred",
     };
   }
 }
 
 /**
  * Server Action: Log Activity
- * 
+ *
  * Tracks user engagement (clicks, scrolls, views) for community metrics
  */
 export async function logActivity(
@@ -149,29 +145,29 @@ export async function logActivity(
 ): Promise<{ success: boolean; error?: string }> {
   try {
     const supabase = await createClient();
-    const { data: { user } } = await supabase.auth.getUser();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
 
-    const { error } = await supabase
-      .from('activity_log')
-      .insert({
-        user_id: user?.id || null, // Allow anonymous activity
-        activity_type: activityType,
-        entity_type: entityType,
-        entity_id: entityId,
-        metadata: metadata || {},
-      } as any);
+    const { error } = await supabase.from("activity_log").insert({
+      user_id: user?.id || null, // Allow anonymous activity
+      activity_type: activityType,
+      entity_type: entityType,
+      entity_id: entityId,
+      metadata: metadata || {},
+    } as any);
 
     if (error) {
-      console.error('Activity log error:', error);
+      console.error("Activity log error:", error);
       return { success: false, error: error.message };
     }
 
     return { success: true };
   } catch (error) {
-    console.error('Log activity error:', error);
+    console.error("Log activity error:", error);
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Failed to log activity',
+      error: error instanceof Error ? error.message : "Failed to log activity",
     };
   }
 }

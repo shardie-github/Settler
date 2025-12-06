@@ -50,6 +50,7 @@ settler-edge enroll \
 ```
 
 This will:
+
 - Register the node with Settler Cloud
 - Generate a node key (save this securely!)
 - Configure the node
@@ -119,7 +120,7 @@ docker run -d \
 #### Docker Compose
 
 ```yaml
-version: '3.8'
+version: "3.8"
 services:
   settler-edge:
     image: settler/edge-node:latest
@@ -159,23 +160,23 @@ spec:
         app: settler-edge
     spec:
       containers:
-      - name: settler-edge
-        image: settler/edge-node:latest
-        env:
-        - name: SETTLER_NODE_KEY
-          valueFrom:
-            secretKeyRef:
-              name: settler-edge-secrets
-              key: node-key
-        - name: SETTLER_CLOUD_API_URL
-          value: "https://api.settler.dev"
-        volumeMounts:
-        - name: data
-          mountPath: /app/data
+        - name: settler-edge
+          image: settler/edge-node:latest
+          env:
+            - name: SETTLER_NODE_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: settler-edge-secrets
+                  key: node-key
+            - name: SETTLER_CLOUD_API_URL
+              value: "https://api.settler.dev"
+          volumeMounts:
+            - name: data
+              mountPath: /app/data
       volumes:
-      - name: data
-        persistentVolumeClaim:
-          claimName: settler-edge-data
+        - name: data
+          persistentVolumeClaim:
+            claimName: settler-edge-data
 ```
 
 ### Systemd Service
@@ -275,11 +276,13 @@ journalctl -u settler-edge -f
 ### Node Not Connecting
 
 1. Check network connectivity:
+
    ```bash
    curl https://api.settler.dev/health
    ```
 
 2. Verify node key:
+
    ```bash
    echo $SETTLER_NODE_KEY
    ```
@@ -289,6 +292,7 @@ journalctl -u settler-edge -f
 ### Sync Failures
 
 1. Check sync queue:
+
    ```bash
    sqlite3 ./data/settler-edge.db "SELECT * FROM sync_queue WHERE retries > 0"
    ```
@@ -299,6 +303,7 @@ journalctl -u settler-edge -f
 ### Performance Issues
 
 1. Monitor resource usage:
+
    ```bash
    docker stats settler-edge
    ```

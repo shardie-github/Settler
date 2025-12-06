@@ -4,7 +4,7 @@
  * Handles multi-currency operations: FX rate tracking, base-currency conversion,
  * and currency-aware matching as specified in the Product & Technical Specification.
  */
-import { FXConversion, Money } from '@settler/types';
+import { FXConversion, Money } from "@settler/types";
 export interface FXRate {
     fromCurrency: string;
     toCurrency: string;

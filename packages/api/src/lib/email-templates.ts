@@ -1,12 +1,12 @@
 /**
  * Email Template Rendering System
- * 
+ *
  * Renders lifecycle email templates with dynamic field replacement
  */
 
-import { readFileSync } from 'fs';
-import { join } from 'path';
-import { logError, logWarn } from '../utils/logger';
+import { readFileSync } from "fs";
+import { join } from "path";
+import { logError, logWarn } from "../utils/logger";
 
 /**
  * Dynamic field data structure
@@ -95,12 +95,12 @@ export interface EmailTemplateData {
  */
 function renderTemplate(template: string, data: EmailTemplateData): string {
   let rendered = template;
-  
+
   // Flatten nested data structure for easier replacement
-  const flatten = (obj: any, prefix = ''): Record<string, any> => {
+  const flatten = (obj: any, prefix = ""): Record<string, any> => {
     const result: Record<string, any> = {};
     for (const key in obj) {
-      if (obj[key] && typeof obj[key] === 'object' && !Array.isArray(obj[key])) {
+      if (obj[key] && typeof obj[key] === "object" && !Array.isArray(obj[key])) {
         Object.assign(result, flatten(obj[key], `${prefix}${key}.`));
       } else {
         result[`${prefix}${key}`] = obj[key];
@@ -108,9 +108,9 @@ function renderTemplate(template: string, data: EmailTemplateData): string {
     }
     return result;
   };
-  
+
   const flatData = flatten(data);
-  
+
   // Replace {{field}} and {{field.path}} patterns
   rendered = rendered.replace(/\{\{([^}]+)\}\}/g, (match, field) => {
     const value = flatData[field] ?? data[field];
@@ -120,7 +120,7 @@ function renderTemplate(template: string, data: EmailTemplateData): string {
     }
     return String(value);
   });
-  
+
   return rendered;
 }
 
@@ -130,16 +130,16 @@ function renderTemplate(template: string, data: EmailTemplateData): string {
 function loadTemplate(templateName: string): string {
   try {
     // Try lifecycle templates first
-    const lifecyclePath = join(process.cwd(), 'emails', 'lifecycle', `${templateName}.html`);
+    const lifecyclePath = join(process.cwd(), "emails", "lifecycle", `${templateName}.html`);
     try {
-      return readFileSync(lifecyclePath, 'utf8');
+      return readFileSync(lifecyclePath, "utf8");
     } catch {
       // Try in root emails directory
-      const rootPath = join(process.cwd(), 'emails', `${templateName}.html`);
-      return readFileSync(rootPath, 'utf8');
+      const rootPath = join(process.cwd(), "emails", `${templateName}.html`);
+      return readFileSync(rootPath, "utf8");
     }
   } catch (error) {
-    logError('Failed to load email template', error as Error, { templateName });
+    logError("Failed to load email template", error as Error, { templateName });
     throw new Error(`Email template not found: ${templateName}`);
   }
 }
@@ -149,17 +149,17 @@ function loadTemplate(templateName: string): string {
  */
 function loadTemplateWithComponents(templateName: string): string {
   let template = loadTemplate(templateName);
-  
+
   // Load shared components
   try {
-    const headerPath = join(process.cwd(), 'emails', 'shared', 'components', 'header.html');
-    const footerPath = join(process.cwd(), 'emails', 'shared', 'components', 'footer.html');
-    const buttonPath = join(process.cwd(), 'emails', 'shared', 'components', 'button.html');
-    
-    const header = readFileSync(headerPath, 'utf8');
-    const footer = readFileSync(footerPath, 'utf8');
-    const button = readFileSync(buttonPath, 'utf8');
-    
+    const headerPath = join(process.cwd(), "emails", "shared", "components", "header.html");
+    const footerPath = join(process.cwd(), "emails", "shared", "components", "footer.html");
+    const buttonPath = join(process.cwd(), "emails", "shared", "components", "button.html");
+
+    const header = readFileSync(headerPath, "utf8");
+    const footer = readFileSync(footerPath, "utf8");
+    const button = readFileSync(buttonPath, "utf8");
+
     // Replace component includes
     template = template.replace(/\{\{>\s*header\s*\}\}/g, header);
     template = template.replace(/\{\{>\s*footer\s*\}\}/g, footer);
@@ -167,17 +167,17 @@ function loadTemplateWithComponents(templateName: string): string {
       // Parse button parameters (simplified)
       const buttonData: Record<string, string> = {};
       params.split(/\s+/).forEach((param: string) => {
-        const [key, value] = param.split('=');
+        const [key, value] = param.split("=");
         if (key && value) {
-          buttonData[key] = value.replace(/['"]/g, '');
+          buttonData[key] = value.replace(/['"]/g, "");
         }
       });
       return renderTemplate(button, buttonData);
     });
   } catch (error) {
-    logWarn('Failed to load shared components, using template as-is', { error });
+    logWarn("Failed to load shared components, using template as-is", { error });
   }
-  
+
   return template;
 }
 
@@ -198,41 +198,42 @@ export async function renderEmailTemplate(
 export function generatePlainText(html: string): string {
   // Simple HTML to text conversion
   let text = html
-    .replace(/<style[^>]*>.*?<\/style>/gis, '')
-    .replace(/<script[^>]*>.*?<\/script>/gis, '')
-    .replace(/<[^>]+>/g, '')
-    .replace(/&nbsp;/g, ' ')
-    .replace(/&amp;/g, '&')
-    .replace(/&lt;/g, '<')
-    .replace(/&gt;/g, '>')
+    .replace(/<style[^>]*>.*?<\/style>/gis, "")
+    .replace(/<script[^>]*>.*?<\/script>/gis, "")
+    .replace(/<[^>]+>/g, "")
+    .replace(/&nbsp;/g, " ")
+    .replace(/&amp;/g, "&")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
     .replace(/&quot;/g, '"')
     .replace(/&#39;/g, "'")
-    .replace(/\s+/g, ' ')
+    .replace(/\s+/g, " ")
     .trim();
-  
+
   // Extract links and add them as text
   const linkRegex = /<a[^>]+href=["']([^"']+)["'][^>]*>(.*?)<\/a>/gi;
   let match: RegExpExecArray | null;
   while ((match = linkRegex.exec(html)) !== null) {
     if (!match || !match[1] || !match[2]) continue;
     const url = match[1];
-    const linkText = match[2].replace(/<[^>]+>/g, '');
+    const linkText = match[2].replace(/<[^>]+>/g, "");
     text = text.replace(linkText, `${linkText} (${url})`);
   }
-  
+
   return text;
 }
 
 /**
  * Get default URLs based on environment
  */
-export function getDefaultUrls(): EmailTemplateData['product'] & EmailTemplateData['urls'] {
-  const appUrl = process.env.APP_URL || process.env.VERCEL_URL 
-    ? `https://${process.env.VERCEL_URL}` 
-    : 'https://app.settler.dev';
-  
+export function getDefaultUrls(): EmailTemplateData["product"] & EmailTemplateData["urls"] {
+  const appUrl =
+    process.env.APP_URL || process.env.VERCEL_URL
+      ? `https://${process.env.VERCEL_URL}`
+      : "https://app.settler.dev";
+
   return {
-    product_name: 'Settler',
+    product_name: "Settler",
     upgrade_url: `${appUrl}/pricing`,
     dashboard_url: `${appUrl}/dashboard`,
     support_url: `${appUrl}/support`,

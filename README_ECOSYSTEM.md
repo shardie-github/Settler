@@ -17,6 +17,7 @@ supabase migration up
 ```
 
 Migrations included:
+
 - `20251130000000_ecosystem_schema.sql` - Core ecosystem tables
 - `20251130000001_seed_demo_data.sql` - Demo data seeding
 - `20251130000002_kpi_rpc_function.sql` - KPI health check function
@@ -81,6 +82,7 @@ UI Refresh (Server Component or Realtime)
 **File**: `packages/web/src/app/dashboard/page.tsx`
 
 Displays:
+
 - Real-time KPI metrics
 - New users this week
 - Actions in last hour
@@ -110,6 +112,7 @@ Displays:
 **File**: `packages/web/src/app/api/status/health/route.ts`
 
 Returns `"Status: Loud and High ✓"` when all 3 KPIs pass:
+
 - New users this week > 50
 - Actions last hour > 100
 - Top post engagement > 100
@@ -158,6 +161,7 @@ All tables have Row-Level Security enabled:
 ## 🧪 Demo Data
 
 The `seed_demo_data.sql` migration creates:
+
 - 75 demo profiles
 - 25 demo posts
 - 150 activity log entries

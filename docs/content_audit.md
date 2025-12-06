@@ -15,18 +15,18 @@ This audit identifies content that is too technical, verbose, or jargon-heavy, a
 
 ### Table of Pages
 
-| Route | Purpose | Primary CTA | Secondary CTAs | Funnel Stage |
-|-------|---------|-------------|----------------|--------------|
-| `/` (Homepage) | Top-of-funnel awareness, problem framing | "Start Free Trial" → `/playground` | "View Documentation" → `/docs` | Awareness |
-| `/pricing` | Bottom-of-funnel conversion | "Start Free Trial" → `/playground` | "Contact Sales" → `/enterprise` | Conversion |
-| `/enterprise` | Mid-to-bottom funnel (enterprise leads) | "Contact Sales" → `#demo-form` | "View Pricing" → `/pricing` | Consideration → Conversion |
-| `/docs` | Mid-funnel education | "Try Playground" → `/playground` | "View Pricing" → `/pricing` | Consideration |
-| `/playground` | Top-to-mid funnel trial activation | "Get API Key" → `/pricing` | "View Documentation" → `/docs` | Awareness → Consideration |
-| `/signup` | Post-signup onboarding | "Create Account" → `/dashboard` | "Go to Dashboard" → `/dashboard` | Post-Signup |
-| `/dashboard` | Post-signup engagement | None (metrics display) | N/A | Retention |
-| `/cookbooks` | Mid-funnel education/use cases | "Try Playground" → `/playground` | "View Documentation" → `/docs` | Consideration |
-| `/community` | Retention/engagement | None (community engagement) | N/A | Retention |
-| `/edge-ai` | Feature education | "Deploy Edge Node" → `/edge-ai/nodes` | "Learn More" → `/edge-ai` | Consideration |
+| Route          | Purpose                                  | Primary CTA                           | Secondary CTAs                   | Funnel Stage               |
+| -------------- | ---------------------------------------- | ------------------------------------- | -------------------------------- | -------------------------- |
+| `/` (Homepage) | Top-of-funnel awareness, problem framing | "Start Free Trial" → `/playground`    | "View Documentation" → `/docs`   | Awareness                  |
+| `/pricing`     | Bottom-of-funnel conversion              | "Start Free Trial" → `/playground`    | "Contact Sales" → `/enterprise`  | Conversion                 |
+| `/enterprise`  | Mid-to-bottom funnel (enterprise leads)  | "Contact Sales" → `#demo-form`        | "View Pricing" → `/pricing`      | Consideration → Conversion |
+| `/docs`        | Mid-funnel education                     | "Try Playground" → `/playground`      | "View Pricing" → `/pricing`      | Consideration              |
+| `/playground`  | Top-to-mid funnel trial activation       | "Get API Key" → `/pricing`            | "View Documentation" → `/docs`   | Awareness → Consideration  |
+| `/signup`      | Post-signup onboarding                   | "Create Account" → `/dashboard`       | "Go to Dashboard" → `/dashboard` | Post-Signup                |
+| `/dashboard`   | Post-signup engagement                   | None (metrics display)                | N/A                              | Retention                  |
+| `/cookbooks`   | Mid-funnel education/use cases           | "Try Playground" → `/playground`      | "View Documentation" → `/docs`   | Consideration              |
+| `/community`   | Retention/engagement                     | None (community engagement)           | N/A                              | Retention                  |
+| `/edge-ai`     | Feature education                        | "Deploy Edge Node" → `/edge-ai/nodes` | "Learn More" → `/edge-ai`        | Consideration              |
 
 ---
 
@@ -49,7 +49,7 @@ This audit identifies content that is too technical, verbose, or jargon-heavy, a
      - "Fragmented SaaS and e-commerce ecosystems" is verbose
      - Doesn't clearly state the pain point or outcome
    - **Suggested Target:** Grade 7-9 reading level, 1-2 short sentences
-   - **Recommendation:** 
+   - **Recommendation:**
      - Heading: "Stop Wasting Hours on Manual Financial Matching"
      - Description: "Automatically match transactions between any platforms. Get accurate results in minutes, not hours."
 
@@ -77,7 +77,7 @@ This audit identifies content that is too technical, verbose, or jargon-heavy, a
    - **Problems:**
      - Full code example on homepage may intimidate non-technical visitors
      - Technical details (adapters, configs) should be gated
-   - **Recommendation:** 
+   - **Recommendation:**
      - Show simplified preview with "View Full Example" CTA
      - Gate detailed code behind trial signup
 
@@ -87,6 +87,7 @@ This audit identifies content that is too technical, verbose, or jargon-heavy, a
    - **Recommendation:** Move to mid-funnel or gate as paid feature
 
 #### Primary CTA Issues:
+
 - Hero CTA links to `/playground` instead of direct trial signup
 - Multiple CTAs compete for attention
 - No clear "30-Day Free Trial" messaging
@@ -129,6 +130,7 @@ This audit identifies content that is too technical, verbose, or jargon-heavy, a
    - **Recommendation:** Simplify and update to 30 days
 
 #### Primary CTA Issues:
+
 - "Start Free Trial" links to `/playground` - should link to signup/trial activation
 - No clear differentiation between free tier and paid trial
 
@@ -224,7 +226,7 @@ This audit identifies content that is too technical, verbose, or jargon-heavy, a
 
 2. **Cookbook Cards**
    - **Issue Type:** Some cookbooks should be gated (advanced features)
-   - **Recommendation:** 
+   - **Recommendation:**
      - Free: Basic e-commerce, scheduled reconciliations
      - Paid: Real-time webhooks, multi-currency, advanced analytics
 
@@ -263,7 +265,7 @@ This audit identifies content that is too technical, verbose, or jargon-heavy, a
    - **Problems:**
      - Shows ecosystem metrics, not user-specific data
      - No clear CTA for trial users
-   - **Recommendation:** 
+   - **Recommendation:**
      - If this is public: Add CTA to start trial
      - If this is user dashboard: Show user-specific reconciliation data
 
@@ -272,60 +274,70 @@ This audit identifies content that is too technical, verbose, or jargon-heavy, a
 ## Top 10 Priority Sections for Rewriting
 
 ### Priority 1: Homepage Hero (Critical - Highest Traffic)
+
 - **File:** `packages/web/src/app/page.tsx` (Lines 157-173)
 - **Issue:** Jargon-heavy, not benefit-driven
 - **Impact:** First impression, highest conversion potential
 - **Target:** Grade 7-9, 1-2 sentences, clear outcome
 
 ### Priority 2: Pricing Hero & Plan Descriptions
+
 - **File:** `packages/web/src/app/pricing/page.tsx` (Lines 120-124, 19-90)
 - **Issue:** Technical limits, unclear value
 - **Impact:** Direct conversion page
 - **Target:** Outcome-focused, clear free vs paid boundaries
 
 ### Priority 3: Homepage Features Section
+
 - **File:** `packages/web/src/app/page.tsx` (Lines 38-75)
 - **Issue:** Feature-focused, not benefit-focused
 - **Impact:** High visibility, conversion influence
 - **Target:** Benefit-first language, outcome metrics
 
 ### Priority 4: Signup Page Hero
+
 - **File:** `packages/web/src/app/signup/page.tsx` (Lines 104-109)
 - **Issue:** Unclear value, no trial messaging
 - **Impact:** Conversion friction
 - **Target:** Clear "30-Day Free Trial" messaging
 
 ### Priority 5: Playground Hero
+
 - **File:** `packages/web/src/app/playground/page.tsx` (Lines 114-118)
 - **Issue:** Technical focus, no trial emphasis
 - **Impact:** Trial activation page
 - **Target:** Trial-first messaging
 
 ### Priority 6: Enterprise Hero & Features
+
 - **File:** `packages/web/src/app/enterprise/page.tsx` (Lines 70-80, 25-56)
 - **Issue:** Jargon-heavy, acronym soup
 - **Impact:** Enterprise lead generation
 - **Target:** Simplified, outcome-focused
 
 ### Priority 7: Docs Introduction
+
 - **File:** `packages/web/src/app/docs/page.tsx` (Lines 26-34)
 - **Issue:** Technical definition, jargon
 - **Impact:** Mid-funnel education
 - **Target:** Plain language, benefit-first
 
 ### Priority 8: Homepage Code Example
+
 - **File:** `packages/web/src/app/page.tsx` (Lines 268-301)
 - **Issue:** Too technical, should be gated
 - **Impact:** May intimidate non-technical visitors
 - **Target:** Simplified preview, gate full code
 
 ### Priority 9: Cookbooks Hero
+
 - **File:** `packages/web/src/app/cookbooks/page.tsx` (Lines 454-463)
 - **Issue:** Technical language
 - **Impact:** Use case education
 - **Target:** Plain language, outcome-focused
 
 ### Priority 10: Pricing FAQ
+
 - **File:** `packages/web/src/app/pricing/page.tsx` (Lines 92-113)
 - **Issue:** Technical explanations, wrong trial length
 - **Impact:** Conversion objections
@@ -336,6 +348,7 @@ This audit identifies content that is too technical, verbose, or jargon-heavy, a
 ## Common Patterns & Recommendations
 
 ### Jargon to Replace:
+
 - "Reconciliation" → "Matching transactions" or "Matching payments"
 - "Reconciliation-as-a-Service API" → "Automatic transaction matching"
 - "Fragmented SaaS and e-commerce ecosystems" → "Different platforms"
@@ -344,11 +357,13 @@ This audit identifies content that is too technical, verbose, or jargon-heavy, a
 - "Real-time processing" → "Instant results" or "See results immediately"
 
 ### Verbosity Issues:
+
 - Long paragraphs should be split into 2-3 short sentences
 - Feature lists should be bullet points, not paragraphs
 - Technical explanations should be simplified or moved to docs
 
 ### Missing Elements:
+
 - Clear "30-Day Free Trial" messaging on key pages
 - Outcome-focused language (save time, reduce errors, increase accuracy)
 - Clear free vs paid boundaries

@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
@@ -14,76 +14,76 @@ import { AnimatedFAQ } from "@/components/AnimatedFAQ";
 import { EdgeAIMarketingSection } from "@/components/EdgeAIMarketingSection";
 
 export default function Pricing() {
-  const [billingCycle, setBillingCycle] = useState<'monthly' | 'annual'>('monthly');
+  const [billingCycle, setBillingCycle] = useState<"monthly" | "annual">("monthly");
 
   const plans = [
     {
-      name: 'Free',
-      tagline: 'Perfect for small businesses',
-      price: '$0',
-      period: 'forever',
-      description: 'Basic features for small transaction volumes',
+      name: "Free",
+      tagline: "Perfect for small businesses",
+      price: "$0",
+      period: "forever",
+      description: "Basic features for small transaction volumes",
       features: [
-        { text: 'Up to 1,000 transactions/month (perfect for small businesses)' },
-        { text: 'Connect 2 platforms (e.g., Shopify + Stripe)' },
-        { text: 'Basic matching and reports' },
-        { text: '7-day transaction history' },
-        { text: 'Community support' },
-        { text: 'Basic cookbooks and workflows' },
+        { text: "Up to 1,000 transactions/month (perfect for small businesses)" },
+        { text: "Connect 2 platforms (e.g., Shopify + Stripe)" },
+        { text: "Basic matching and reports" },
+        { text: "7-day transaction history" },
+        { text: "Community support" },
+        { text: "Basic cookbooks and workflows" },
       ],
-      cta: 'Get Started',
-      ctaLink: '/signup',
+      cta: "Get Started",
+      ctaLink: "/signup",
       popular: false,
-      badge: 'Free Forever',
+      badge: "Free Forever",
     },
     {
-      name: 'Commercial',
-      tagline: 'For growing businesses',
-      price: billingCycle === 'monthly' ? '$99' : '$990',
-      period: billingCycle === 'monthly' ? '/month' : '/year',
-      originalPrice: billingCycle === 'annual' ? '$1,188' : null,
-      description: 'Everything you need to scale your operations',
+      name: "Commercial",
+      tagline: "For growing businesses",
+      price: billingCycle === "monthly" ? "$99" : "$990",
+      period: billingCycle === "monthly" ? "/month" : "/year",
+      originalPrice: billingCycle === "annual" ? "$1,188" : null,
+      description: "Everything you need to scale your operations",
       features: [
-        { text: 'Up to 100,000 transactions/month (handles most businesses)' },
-        { text: 'Connect unlimited platforms' },
-        { text: 'All advanced features unlocked' },
-        { text: 'Real-time webhook reconciliation' },
-        { text: 'Advanced analytics and dashboards' },
-        { text: 'Full cookbook library (10+ workflows)' },
-        { text: '30-day transaction history' },
-        { text: 'Free 30-minute onboarding consultation' },
-        { text: 'Email support with priority response' },
-        { text: 'Edge AI available (add-on)' },
+        { text: "Up to 100,000 transactions/month (handles most businesses)" },
+        { text: "Connect unlimited platforms" },
+        { text: "All advanced features unlocked" },
+        { text: "Real-time webhook reconciliation" },
+        { text: "Advanced analytics and dashboards" },
+        { text: "Full cookbook library (10+ workflows)" },
+        { text: "30-day transaction history" },
+        { text: "Free 30-minute onboarding consultation" },
+        { text: "Email support with priority response" },
+        { text: "Edge AI available (add-on)" },
       ],
-      cta: 'Start 30-Day Free Trial',
-      ctaLink: '/signup',
+      cta: "Start 30-Day Free Trial",
+      ctaLink: "/signup",
       popular: true,
-      badge: 'Most Popular',
+      badge: "Most Popular",
     },
     {
-      name: 'Enterprise',
-      tagline: 'For large organizations',
-      price: 'Custom',
-      period: '',
-      description: 'Full-featured with dedicated support',
+      name: "Enterprise",
+      tagline: "For large organizations",
+      price: "Custom",
+      period: "",
+      description: "Full-featured with dedicated support",
       features: [
-        { text: 'Unlimited reconciliations' },
-        { text: 'Unlimited adapters' },
-        { text: 'Unlimited log retention' },
-        { text: 'Dedicated support (SLA)' },
-        { text: 'SSO & SAML' },
-        { text: 'Role-based access control (RBAC)' },
-        { text: 'White-label options' },
-        { text: 'Custom integrations' },
-        { text: 'On-premise deployment' },
-        { text: 'Dedicated account manager' },
-        { text: 'Custom SLA' },
-        { text: 'Edge AI included' },
+        { text: "Unlimited reconciliations" },
+        { text: "Unlimited adapters" },
+        { text: "Unlimited log retention" },
+        { text: "Dedicated support (SLA)" },
+        { text: "SSO & SAML" },
+        { text: "Role-based access control (RBAC)" },
+        { text: "White-label options" },
+        { text: "Custom integrations" },
+        { text: "On-premise deployment" },
+        { text: "Dedicated account manager" },
+        { text: "Custom SLA" },
+        { text: "Edge AI included" },
       ],
-      cta: 'Contact Sales',
-      ctaLink: '/enterprise',
+      cta: "Contact Sales",
+      ctaLink: "/enterprise",
       popular: false,
-      badge: 'Enterprise',
+      badge: "Enterprise",
     },
   ];
 
@@ -91,22 +91,22 @@ export default function Pricing() {
     {
       question: "What's the difference between Free and Commercial?",
       answer:
-        'Free tier is perfect for small businesses with up to 1,000 transactions per month. Commercial unlocks unlimited transactions, all advanced features, real-time webhooks, and includes a free 30-minute consultation.',
+        "Free tier is perfect for small businesses with up to 1,000 transactions per month. Commercial unlocks unlimited transactions, all advanced features, real-time webhooks, and includes a free 30-minute consultation.",
     },
     {
-      question: 'Can I switch plans later?',
+      question: "Can I switch plans later?",
       answer:
-        'Yes! You can upgrade, downgrade, or cancel at any time. Changes take effect immediately, and we\'ll prorate any charges.',
+        "Yes! You can upgrade, downgrade, or cancel at any time. Changes take effect immediately, and we'll prorate any charges.",
     },
     {
-      question: 'What payment methods do you accept?',
+      question: "What payment methods do you accept?",
       answer:
-        'We accept all major credit cards, ACH transfers, and wire transfers for Enterprise plans.',
+        "We accept all major credit cards, ACH transfers, and wire transfers for Enterprise plans.",
     },
     {
-      question: 'Is there a free trial?',
+      question: "Is there a free trial?",
       answer:
-        'Yes! Start your 30-day free trial with full access to all features. No credit card required. Cancel anytime during the trial.',
+        "Yes! Start your 30-day free trial with full access to all features. No credit card required. Cancel anytime during the trial.",
     },
   ];
 
@@ -127,38 +127,38 @@ export default function Pricing() {
           <div className="flex items-center justify-center gap-4">
             <span
               className={`text-sm ${
-                billingCycle === 'monthly'
-                  ? 'text-slate-900 dark:text-white font-semibold'
-                  : 'text-slate-600 dark:text-slate-400'
+                billingCycle === "monthly"
+                  ? "text-slate-900 dark:text-white font-semibold"
+                  : "text-slate-600 dark:text-slate-400"
               }`}
             >
               Monthly
             </span>
             <button
-              onClick={() => setBillingCycle(billingCycle === 'monthly' ? 'annual' : 'monthly')}
+              onClick={() => setBillingCycle(billingCycle === "monthly" ? "annual" : "monthly")}
               className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
-                billingCycle === 'annual' ? 'bg-blue-600' : 'bg-slate-300 dark:bg-slate-700'
+                billingCycle === "annual" ? "bg-blue-600" : "bg-slate-300 dark:bg-slate-700"
               }`}
-              aria-label={`Switch to ${billingCycle === 'monthly' ? 'annual' : 'monthly'} billing`}
-              aria-pressed={billingCycle === 'annual'}
+              aria-label={`Switch to ${billingCycle === "monthly" ? "annual" : "monthly"} billing`}
+              aria-pressed={billingCycle === "annual"}
             >
               <span
                 className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                  billingCycle === 'annual' ? 'translate-x-6' : 'translate-x-1'
+                  billingCycle === "annual" ? "translate-x-6" : "translate-x-1"
                 }`}
                 aria-hidden="true"
               />
             </button>
             <span
               className={`text-sm ${
-                billingCycle === 'annual'
-                  ? 'text-slate-900 dark:text-white font-semibold'
-                  : 'text-slate-600 dark:text-slate-400'
+                billingCycle === "annual"
+                  ? "text-slate-900 dark:text-white font-semibold"
+                  : "text-slate-600 dark:text-slate-400"
               }`}
             >
               Annual
             </span>
-            {billingCycle === 'annual' && (
+            {billingCycle === "annual" && (
               <Badge className="bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300">
                 Save 17%
               </Badge>
@@ -168,15 +168,9 @@ export default function Pricing() {
       </section>
 
       {/* Pricing Cards */}
-      <section
-        className="py-20 px-4 sm:px-6 lg:px-8"
-        aria-labelledby="pricing-heading"
-      >
+      <section className="py-20 px-4 sm:px-6 lg:px-8" aria-labelledby="pricing-heading">
         <div className="max-w-7xl mx-auto">
-          <h2
-            id="pricing-heading"
-            className="sr-only"
-          >
+          <h2 id="pricing-heading" className="sr-only">
             Pricing Plans
           </h2>
           <div

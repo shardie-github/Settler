@@ -24,6 +24,7 @@ All templates support dynamic merge fields defined in `fields/dynamic_fields.jso
 ### Usage
 
 Replace placeholders in templates with actual values:
+
 - `{{user.first_name}}` → "John"
 - `{{trial_end_date}}` → "2025-02-15"
 - `{{upgrade_url}}` → "https://settler.dev/pricing"
@@ -31,6 +32,7 @@ Replace placeholders in templates with actual values:
 ### Field Categories
 
 **User Fields:**
+
 - `{{user.first_name}}`
 - `{{user.last_name}}`
 - `{{user.email}}`
@@ -39,12 +41,14 @@ Replace placeholders in templates with actual values:
 - `{{user.plan_type}}`
 
 **Trial Fields:**
+
 - `{{trial_end_date}}`
 - `{{trial_start_date}}`
 - `{{days_remaining}}`
 - `{{charge_date}}`
 
 **Product Fields:**
+
 - `{{product_name}}`
 - `{{upgrade_url}}`
 - `{{dashboard_url}}`
@@ -55,6 +59,7 @@ Replace placeholders in templates with actual values:
 - `{{cookbooks_url}}`
 
 **Reconciliation Fields:**
+
 - `{{job_name}}`
 - `{{job_id}}`
 - `{{matched_count}}`
@@ -65,6 +70,7 @@ Replace placeholders in templates with actual values:
 - `{{platform_name}}`
 
 **Recommendation Fields:**
+
 - `{{next_recommendation}}`
 - `{{workflow_suggestion}}`
 - `{{analysis_summary}}`
@@ -74,12 +80,14 @@ Replace placeholders in templates with actual values:
 - `{{recommendation_2}}`
 
 **Metrics Fields:**
+
 - `{{total_reconciliations}}`
 - `{{jobs_created}}`
 - `{{accuracy}}`
 - `{{time_saved}}`
 
 **Workflow Fields:**
+
 - `{{workflow_name}}`
 - `{{workflow_description}}`
 - `{{use_case}}`
@@ -87,17 +95,20 @@ Replace placeholders in templates with actual values:
 - `{{workflow_url}}`
 
 **Case Study Fields:**
+
 - `{{similar_company}}`
 - `{{case_study_url}}`
 - `{{case_studies_url}}`
 
 **Monthly Fields:**
+
 - `{{month}}`
 - `{{renewal_date}}`
 - `{{milestone_name}}`
 - `{{milestone_metric}}`
 
 **URL Fields:**
+
 - `{{profile_setup_url}}`
 - `{{demo_url}}`
 - `{{free_tier_url}}`
@@ -114,14 +125,16 @@ Replace placeholders in templates with actual values:
 **File:** `shared/components/header.html`
 
 Includes:
+
 - Settler branding
 - Responsive layout
 - Email-safe styling
 
 **Usage:**
+
 ```html
 {{> header}}
-  <!-- Your email content here -->
+<!-- Your email content here -->
 {{> footer}}
 ```
 
@@ -130,14 +143,16 @@ Includes:
 **File:** `shared/components/footer.html`
 
 Includes:
+
 - Company information
 - Unsubscribe link
 - Email preferences link
 
 **Usage:**
+
 ```html
 {{> header}}
-  <!-- Your email content here -->
+<!-- Your email content here -->
 {{> footer}}
 ```
 
@@ -146,11 +161,13 @@ Includes:
 **File:** `shared/components/button.html`
 
 **Usage:**
+
 ```html
 {{> button button_text="Upgrade Now" button_url="{{upgrade_url}}" button_color="#2563eb"}}
 ```
 
 **Parameters:**
+
 - `button_text`: Button label
 - `button_url`: Button link URL
 - `button_color`: Button background color (default: #2563eb)
@@ -234,6 +251,7 @@ Includes:
 ### Integration with Email Service
 
 Templates are designed to work with:
+
 - Resend (current implementation)
 - SendGrid
 - Mailgun
@@ -242,6 +260,7 @@ Templates are designed to work with:
 ### Template Rendering
 
 Use a templating engine (Handlebars, Mustache, etc.) to:
+
 1. Load template file
 2. Replace merge fields with actual values
 3. Render HTML
@@ -250,22 +269,22 @@ Use a templating engine (Handlebars, Mustache, etc.) to:
 ### Example Integration
 
 ```typescript
-import { readFileSync } from 'fs';
-import Handlebars from 'handlebars';
-import { sendEmail } from '../lib/email';
+import { readFileSync } from "fs";
+import Handlebars from "handlebars";
+import { sendEmail } from "../lib/email";
 
 // Load template
-const templateSource = readFileSync('emails/lifecycle/trial_welcome.html', 'utf8');
+const templateSource = readFileSync("emails/lifecycle/trial_welcome.html", "utf8");
 const template = Handlebars.compile(templateSource);
 
 // Prepare data
 const data = {
   user: {
-    first_name: 'John',
-    email: 'john@example.com',
+    first_name: "John",
+    email: "john@example.com",
   },
-  trial_end_date: '2025-02-15',
-  dashboard_url: 'https://app.settler.dev/dashboard',
+  trial_end_date: "2025-02-15",
+  dashboard_url: "https://app.settler.dev/dashboard",
   // ... other fields
 };
 
@@ -275,7 +294,7 @@ const html = template(data);
 // Send email
 await sendEmail({
   to: data.user.email,
-  subject: 'Welcome to Settler! 🎉',
+  subject: "Welcome to Settler! 🎉",
   html,
   text: generatePlainText(html), // Convert HTML to plain text
 });
@@ -298,6 +317,7 @@ await sendEmail({
 ### A/B Testing
 
 Test variations of:
+
 - Subject lines
 - CTA button text
 - Email timing
@@ -317,6 +337,7 @@ Test variations of:
 ### Performance Metrics
 
 Track:
+
 - Open rates
 - Click-through rates
 - Conversion rates
@@ -328,6 +349,7 @@ Track:
 ## Support
 
 For questions or issues with email templates:
+
 - Check `docs/monthly_cadence_engine.md` for email strategy
 - Review `fields/dynamic_fields.json` for available fields
 - Contact: support@settler.dev

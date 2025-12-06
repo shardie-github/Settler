@@ -1,129 +1,84 @@
 /**
  * Environment Variable Validation
  * Uses envalid for type-safe environment variable validation
+ *
+ * Note: Validation is skipped during Next.js builds to avoid requiring
+ * runtime-only environment variables at build time.
  */
-export declare const env: Readonly<{
-    NODE_ENV: "development" | "test" | "production" | "staging" | "preview";
-    PORT: number;
-    HOST: string;
-    DB_HOST: string;
-    DB_PORT: number;
-    DB_NAME: string;
-    DB_USER: string;
-    DB_PASSWORD: string;
-    DB_SSL: boolean;
-    DB_POOL_MIN: number;
-    DB_POOL_MAX: number;
-    DB_CONNECTION_TIMEOUT: number;
-    DB_STATEMENT_TIMEOUT: number;
-    REDIS_HOST: string;
-    REDIS_PORT: number;
-    REDIS_URL: string | undefined;
-    REDIS_PASSWORD: string | undefined;
-    REDIS_TLS: boolean;
-    JWT_SECRET: string;
-    JWT_ACCESS_EXPIRY: string;
-    JWT_REFRESH_EXPIRY: string;
-    JWT_REFRESH_SECRET: string | undefined;
-    ENCRYPTION_KEY: string;
-    RATE_LIMIT_DEFAULT: number;
-    RATE_LIMIT_WINDOW_MS: number;
-    WEBHOOK_MAX_RETRIES: number;
-    WEBHOOK_INITIAL_DELAY: number;
-    WEBHOOK_MAX_DELAY: number;
-    DATA_RETENTION_DAYS: number;
-    ALLOWED_ORIGINS: string;
-    LOG_LEVEL: "error" | "warn" | "info" | "debug";
-    LOG_SAMPLING_RATE: number;
-    SERVICE_NAME: string;
-    OTLP_ENDPOINT: string | undefined;
-    JAEGER_ENDPOINT: string | undefined;
-    SENTRY_DSN: string | undefined;
-    SENTRY_ENVIRONMENT: string | undefined;
-    SENTRY_TRACES_SAMPLE_RATE: number;
-    ENABLE_SCHEMA_PER_TENANT: boolean;
-    ENABLE_REQUEST_TIMEOUT: boolean;
-    ENABLE_API_DOCS: boolean;
-    DEPLOYMENT_ENV: "production" | "staging" | "local";
-    TRUST_PROXY: boolean;
-    SECURE_COOKIES: boolean;
-    METRICS_ENABLED: boolean;
-    HEALTH_CHECK_ENABLED: boolean;
-} & import("envalid").CleanedEnvAccessors>;
 export declare const validatedConfig: {
-    nodeEnv: "development" | "test" | "production" | "staging" | "preview";
-    port: number;
-    host: string;
+    nodeEnv: any;
+    port: any;
+    host: any;
     database: {
-        host: string;
-        port: number;
-        name: string;
-        user: string;
-        password: string;
-        ssl: boolean;
-        poolMin: number;
-        poolMax: number;
-        connectionTimeout: number;
-        statementTimeout: number;
+        host: any;
+        port: any;
+        name: any;
+        user: any;
+        password: any;
+        ssl: any;
+        poolMin: any;
+        poolMax: any;
+        connectionTimeout: any;
+        statementTimeout: any;
     };
     redis: {
-        host: string;
-        port: number;
-        url: string | undefined;
-        password: string | undefined;
-        tls: boolean;
+        host: any;
+        port: any;
+        url: any;
+        password: any;
+        tls: any;
     };
     jwt: {
-        secret: string;
-        accessTokenExpiry: string;
-        refreshTokenExpiry: string;
-        refreshSecret: string;
+        secret: any;
+        accessTokenExpiry: any;
+        refreshTokenExpiry: any;
+        refreshSecret: any;
     };
     encryption: {
-        key: string;
+        key: any;
     };
     rateLimiting: {
-        defaultLimit: number;
-        windowMs: number;
+        defaultLimit: any;
+        windowMs: any;
     };
     webhook: {
-        maxRetries: number;
-        initialDelay: number;
-        maxDelay: number;
+        maxRetries: any;
+        initialDelay: any;
+        maxDelay: any;
     };
     dataRetention: {
-        defaultDays: number;
+        defaultDays: any;
     };
-    allowedOrigins: string[];
+    allowedOrigins: any;
     logging: {
-        level: "error" | "warn" | "info" | "debug";
-        samplingRate: number;
+        level: any;
+        samplingRate: any;
     };
     observability: {
-        serviceName: string;
-        otlpEndpoint: string | undefined;
-        jaegerEndpoint: string | undefined;
+        serviceName: any;
+        otlpEndpoint: any;
+        jaegerEndpoint: any;
     };
     sentry: {
-        dsn: string | undefined;
-        environment: string;
-        tracesSampleRate: number;
+        dsn: any;
+        environment: any;
+        tracesSampleRate: any;
     };
     features: {
-        enableSchemaPerTenant: boolean;
-        enableRequestTimeout: boolean;
-        enableApiDocs: boolean;
+        enableSchemaPerTenant: any;
+        enableRequestTimeout: any;
+        enableApiDocs: any;
     };
     deployment: {
-        env: "production" | "staging" | "local";
+        env: any;
     };
     security: {
-        trustProxy: boolean;
-        secureCookies: boolean;
+        trustProxy: any;
+        secureCookies: any;
     };
     monitoring: {
-        metricsEnabled: boolean;
-        healthCheckEnabled: boolean;
+        metricsEnabled: any;
+        healthCheckEnabled: any;
     };
 };
 //# sourceMappingURL=validation.d.ts.map

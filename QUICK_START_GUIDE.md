@@ -9,6 +9,7 @@ This codebase has undergone a comprehensive TypeScript refactoring to improve ty
 ### 1. Error Handling Pattern
 
 **Old Way** (❌ Don't use):
+
 ```typescript
 catch (error: any) {
   logError('Failed', error);
@@ -17,6 +18,7 @@ catch (error: any) {
 ```
 
 **New Way** (✅ Use this):
+
 ```typescript
 import { handleRouteError } from "../utils/error-handler";
 
@@ -41,11 +43,13 @@ throw new RateLimitError("Rate limit exceeded", 60, 1000, 0);
 ### 3. Database Queries
 
 **Old Way**:
+
 ```typescript
 const results = await query<any>("SELECT * FROM users");
 ```
 
 **New Way**:
+
 ```typescript
 interface UserRow {
   id: string;
@@ -79,6 +83,7 @@ if (!job) {
 For route files with remaining `any` types:
 
 1. ✅ Import `handleRouteError`:
+
    ```typescript
    import { handleRouteError } from "../utils/error-handler";
    ```
@@ -92,6 +97,7 @@ For route files with remaining `any` types:
 ## TypeScript Strict Mode
 
 The codebase now uses maximum strictness:
+
 - `strictNullChecks`: Must handle null/undefined explicitly
 - `noUncheckedIndexedAccess`: Array/object access may be undefined
 - `noImplicitReturns`: Functions must explicitly return
@@ -100,9 +106,10 @@ The codebase now uses maximum strictness:
 ## Common Patterns
 
 ### Type Guards
+
 ```typescript
 function isString(value: unknown): value is string {
-  return typeof value === 'string';
+  return typeof value === "string";
 }
 
 if (isString(value)) {
@@ -112,6 +119,7 @@ if (isString(value)) {
 ```
 
 ### Error Handling
+
 ```typescript
 try {
   await operation();
@@ -124,6 +132,7 @@ try {
 ```
 
 ### Database Queries
+
 ```typescript
 // Always type your query results
 const users = await query<{
@@ -136,6 +145,7 @@ const users = await query<{
 ## Questions?
 
 See:
+
 - `TYPESCRIPT_REFACTOR_PROGRESS.md` - Detailed progress
 - `REFACTOR_COMPLETE_SUMMARY.md` - Complete summary
 - `packages/api/src/utils/typed-errors.ts` - Error classes

@@ -13,7 +13,8 @@ Settler Edge AI uses machine learning models for reconciliation matching, anomal
 **Input**: Transaction features (amount, date, description, metadata)
 **Output**: Match confidence score (0.0 - 1.0), match probability
 
-**Architecture**: 
+**Architecture**:
+
 - Base: Transformer-based sequence matching
 - Optimized: Quantized (int8/int4) for edge deployment
 
@@ -27,10 +28,12 @@ Settler Edge AI uses machine learning models for reconciliation matching, anomal
 **Output**: Anomaly score (0.0 - 1.0), anomaly type, severity
 
 **Architecture**:
+
 - Base: Isolation Forest + Autoencoder
 - Optimized: Lightweight neural network for edge
 
 **Anomaly Types**:
+
 - Amount mismatches
 - Duplicate transactions
 - Missing transactions
@@ -47,6 +50,7 @@ Settler Edge AI uses machine learning models for reconciliation matching, anomal
 **Architecture**: Rule-based + ML classifier
 
 **Detected Types**:
+
 - String, Number, Date, Boolean
 - Email, SSN, Credit Card, Phone, Name (PII)
 
@@ -58,6 +62,7 @@ Settler Edge AI uses machine learning models for reconciliation matching, anomal
 **Output**: PII type, confidence score
 
 **Methods**:
+
 - Pattern matching (regex)
 - ML classification
 - Contextual analysis

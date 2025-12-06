@@ -1,9 +1,10 @@
 import { Router, Request, Response } from "express";
 import { query } from "../db";
+import { logError } from "../utils/logger";
 
 /**
  * Observability Routes
- * 
+ *
  * GET /api/v1/observability/metrics - Get metrics
  * GET /api/v1/observability/logs - Query logs
  * GET /api/v1/observability/traces - Query traces
@@ -119,7 +120,7 @@ observabilityRouter.get("/metrics", async (req: Request, res: Response) => {
       },
     });
   } catch (error) {
-    console.error("Error fetching metrics:", error);
+    logError("Error fetching metrics", error as Error);
     res.status(500).json({
       error: "Failed to fetch metrics",
       message: error instanceof Error ? error.message : "Unknown error",
@@ -135,14 +136,7 @@ observabilityRouter.get("/logs", async (req: Request, res: Response) => {
   try {
     const userId = (req as any).userId;
     const tenantId = (req as any).tenantId;
-    const {
-      level,
-      jobId,
-      startDate,
-      endDate,
-      limit = "100",
-      offset = "0",
-    } = req.query;
+    const { level, jobId, startDate, endDate, limit = "100", offset = "0" } = req.query;
 
     let queryStr = `
       SELECT 
@@ -196,7 +190,7 @@ observabilityRouter.get("/logs", async (req: Request, res: Response) => {
       },
     });
   } catch (error) {
-    console.error("Error fetching logs:", error);
+    logError("Error fetching logs", error as Error);
     res.status(500).json({
       error: "Failed to fetch logs",
       message: error instanceof Error ? error.message : "Unknown error",
@@ -231,7 +225,7 @@ observabilityRouter.get("/traces", async (req: Request, res: Response) => {
       documentation: "https://docs.settler.io/observability/tracing",
     });
   } catch (error) {
-    console.error("Error fetching traces:", error);
+    logError("Error fetching traces", error as Error);
     res.status(500).json({
       error: "Failed to fetch traces",
       message: error instanceof Error ? error.message : "Unknown error",

@@ -1,17 +1,17 @@
 /**
  * User Dashboard Data Access
- * 
+ *
  * Fetches user-specific dashboard data from Supabase
  */
 
-import { createClient } from '@/lib/supabase/server';
+import { createClient } from "@/lib/supabase/server";
 
 export interface UserDashboardData {
   user: {
     id: string;
     email: string;
     firstName?: string;
-    planType: 'free' | 'trial' | 'commercial' | 'enterprise';
+    planType: "free" | "trial" | "commercial" | "enterprise";
     trialEndDate?: string;
     industry?: string;
     companyName?: string;
@@ -20,17 +20,17 @@ export interface UserDashboardData {
   usage: {
     reconciliations: {
       current: number;
-      limit: number | 'unlimited';
+      limit: number | "unlimited";
     };
     playgroundRuns: {
       current: number;
-      limit: number | 'unlimited';
+      limit: number | "unlimited";
     };
   };
   recentJobs: Array<{
     id: string;
     name: string;
-    status: 'completed' | 'running' | 'failed';
+    status: "completed" | "running" | "failed";
     matchedCount: number;
     unmatchedCount: number;
     accuracy: number;
@@ -51,20 +51,23 @@ export interface UserDashboardData {
 export async function getUserDashboardData(): Promise<UserDashboardData | null> {
   try {
     const supabase = await createClient();
-    
+
     // Get current user
-    const { data: { user: authUser }, error: authError } = await supabase.auth.getUser();
-    
+    const {
+      data: { user: authUser },
+      error: authError,
+    } = await supabase.auth.getUser();
+
     if (authError || !authUser) {
       return null;
     }
 
     // Get user profile
-    const { data: profile, error: profileError } = await supabase
-      .from('profiles')
-      .select('*')
-      .eq('id', authUser.id)
-      .single() as { data: any; error: any };
+    const { data: profile, error: profileError } = (await supabase
+      .from("profiles")
+      .select("*")
+      .eq("id", authUser.id)
+      .single()) as { data: any; error: any };
 
     if (profileError || !profile) {
       return null;
@@ -72,27 +75,31 @@ export async function getUserDashboardData(): Promise<UserDashboardData | null> 
 
     // Check if first visit (no activity log entries)
     const { count: activityCount } = await supabase
-      .from('activity_log')
-      .select('*', { count: 'exact', head: true })
-      .eq('user_id', authUser.id);
+      .from("activity_log")
+      .select("*", { count: "exact", head: true })
+      .eq("user_id", authUser.id);
 
     const isFirstVisit = (activityCount || 0) === 0;
 
     // Get usage stats (in production, calculate from actual usage)
-    const planType = (profile?.plan_type as any) || 'free';
+    const planType = (profile?.plan_type as any) || "free";
     const usage = {
       reconciliations: {
         current: 0, // Calculate from reconciliation jobs
-        limit: (planType === 'trial' || planType === 'commercial' ? 'unlimited' : 1000) as number | 'unlimited',
+        limit: (planType === "trial" || planType === "commercial" ? "unlimited" : 1000) as
+          | number
+          | "unlimited",
       },
       playgroundRuns: {
         current: 0, // Calculate from playground usage
-        limit: (planType === 'trial' || planType === 'commercial' ? 'unlimited' : 3) as number | 'unlimited',
+        limit: (planType === "trial" || planType === "commercial" ? "unlimited" : 3) as
+          | number
+          | "unlimited",
       },
     };
 
     // Get recent jobs (in production, fetch from jobs table)
-    const recentJobs: UserDashboardData['recentJobs'] = [];
+    const recentJobs: UserDashboardData["recentJobs"] = [];
 
     // Calculate metrics (in production, calculate from actual data)
     const metrics = {
@@ -104,9 +111,9 @@ export async function getUserDashboardData(): Promise<UserDashboardData | null> 
 
     return {
       user: {
-        id: profile?.id || '',
-        email: profile?.email || '',
-        firstName: profile?.name?.split(' ')[0],
+        id: profile?.id || "",
+        email: profile?.email || "",
+        firstName: profile?.name?.split(" ")[0],
         planType: planType,
         trialEndDate: profile?.trial_end_date,
         industry: profile?.industry,
@@ -119,7 +126,7 @@ export async function getUserDashboardData(): Promise<UserDashboardData | null> 
       isFirstVisit,
     };
   } catch (error) {
-    console.error('Error fetching user dashboard data:', error);
+    console.error("Error fetching user dashboard data:", error);
     return null;
   }
 }
@@ -127,24 +134,27 @@ export async function getUserDashboardData(): Promise<UserDashboardData | null> 
 /**
  * Save pre-test questionnaire answers
  */
-export async function savePreTestAnswers(answers: Record<string, any>): Promise<{ success: boolean; error?: string }> {
+export async function savePreTestAnswers(
+  answers: Record<string, any>
+): Promise<{ success: boolean; error?: string }> {
   try {
     const supabase = await createClient();
-    const { data: { user } } = await supabase.auth.getUser();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
 
     if (!user) {
-      return { success: false, error: 'Not authenticated' };
+      return { success: false, error: "Not authenticated" };
     }
 
-    const { error } = await supabase
-      .from('profiles')
+    const { error } = (await (supabase.from("profiles") as any)
       .update({
         pre_test_completed: true,
         pre_test_answers: answers,
         industry: answers.industry,
         updated_at: new Date().toISOString(),
-      } as any)
-      .eq('id', user.id) as { error: any };
+      })
+      .eq("id", user.id)) as { error: any };
 
     if (error) {
       return { success: false, error: error.message };
@@ -154,7 +164,7 @@ export async function savePreTestAnswers(answers: Record<string, any>): Promise<
   } catch (error) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Failed to save answers',
+      error: error instanceof Error ? error.message : "Failed to save answers",
     };
   }
 }

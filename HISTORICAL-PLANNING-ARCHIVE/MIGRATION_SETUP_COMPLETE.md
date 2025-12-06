@@ -9,6 +9,7 @@ All database migrations and deployment workflows have been set up to finalize th
 ### 1. Migration Runner Script (`packages/api/src/db/migrate.ts`)
 
 Created a comprehensive migration runner that:
+
 - Executes all migrations in order:
   1. `001-initial-schema.sql` - Core database schema
   2. `002-strategic-initiatives.sql` - Strategic features (reconciliation graph, AI, etc.)
@@ -22,6 +23,7 @@ Created a comprehensive migration runner that:
 ### 2. Updated Database Initialization (`packages/api/src/db/index.ts`)
 
 Modified `initDatabase()` to:
+
 - Use the new migration runner by default
 - Fall back to basic schema creation if migration runner fails
 - Ensures migrations run automatically on server startup
@@ -29,17 +31,20 @@ Modified `initDatabase()` to:
 ### 3. NPM Scripts (`packages/api/package.json`)
 
 Added migration scripts:
+
 - `npm run migrate` - Run migrations in development (uses tsx)
 - `npm run migrate:prod` - Run migrations in production (uses compiled JS)
 
 ### 4. GitHub Actions Workflows
 
 #### CI Workflow (`.github/workflows/ci.yml`)
+
 - Added migration step to test job (runs migrations before tests)
 - Added migration step to E2E job (runs migrations before starting server)
 - Migrations run with `continue-on-error: true` to not block CI if database isn't available
 
 #### Production Deployment (`.github/workflows/deploy-production.yml`)
+
 - New workflow that runs on push to `main` branch
 - Builds the application
 - Runs database migrations with production credentials
@@ -47,6 +52,7 @@ Added migration scripts:
 - Includes all necessary environment variables
 
 #### Preview Deployment (`.github/workflows/deploy-preview.yml`)
+
 - Updated to run migrations before deploying preview
 - Supports separate preview database credentials (falls back to production)
 - Deploys to Vercel preview environment
@@ -55,7 +61,9 @@ Added migration scripts:
 ## Supabase Integration
 
 ### Connection Handling
+
 The migration runner intelligently handles Supabase connections:
+
 1. **Priority 1**: `DATABASE_URL` environment variable (direct connection string)
 2. **Priority 2**: Supabase connection string constructed from:
    - `SUPABASE_URL` (extracts host)
@@ -63,18 +71,22 @@ The migration runner intelligently handles Supabase connections:
 3. **Priority 3**: Config-based connection (fallback)
 
 ### Extension Initialization
+
 Automatically initializes Supabase extensions:
+
 - `uuid-ossp` - UUID generation
 - `pgcrypto` - Cryptographic functions
 - `vector` - pgvector extension for AI/vector database
 
 ### SSL Configuration
+
 - Automatically enables SSL for Supabase connections
 - Uses `rejectUnauthorized: true` in production for security
 
 ## Environment Variables Required
 
 ### For Migrations
+
 - `DATABASE_URL` - PostgreSQL connection string (optional if using Supabase)
 - `SUPABASE_URL` - Supabase project URL
 - `SUPABASE_DB_PASSWORD` - Supabase database password
@@ -84,9 +96,11 @@ Automatically initializes Supabase extensions:
 - `ENCRYPTION_KEY` - Encryption key (32 chars)
 
 ### For GitHub Actions Secrets
+
 Add these to your GitHub repository secrets:
 
 **Production:**
+
 - `DATABASE_URL`
 - `SUPABASE_URL`
 - `SUPABASE_ANON_KEY`
@@ -100,6 +114,7 @@ Add these to your GitHub repository secrets:
 - `REDIS_URL` (or `UPSTASH_REDIS_REST_URL` + `UPSTASH_REDIS_REST_TOKEN`)
 
 **Preview (optional, falls back to production):**
+
 - `DATABASE_URL_PREVIEW`
 - `SUPABASE_URL_PREVIEW`
 - `SUPABASE_ANON_KEY_PREVIEW`
@@ -109,6 +124,7 @@ Add these to your GitHub repository secrets:
 ## How It Works
 
 ### Local Development
+
 ```bash
 # Run migrations manually
 cd packages/api
@@ -169,27 +185,32 @@ npm run dev
 ## Troubleshooting
 
 ### Migrations Fail in CI
+
 - Check that database credentials are set in GitHub Secrets
 - Verify database is accessible from GitHub Actions runners
 - Check migration logs for specific errors
 
 ### Supabase Connection Issues
+
 - Verify `SUPABASE_URL` format: `https://project-id.supabase.co`
 - Ensure `SUPABASE_DB_PASSWORD` is the database password (not API key)
 - Check that SSL is properly configured
 
 ### Migration Already Exists Errors
+
 - These are expected and ignored (migrations are idempotent)
 - If you see other errors, check the migration SQL files
 
 ## Files Modified/Created
 
 ### Created
+
 - `packages/api/src/db/migrate.ts` - Migration runner script
 - `.github/workflows/deploy-production.yml` - Production deployment workflow
 - `MIGRATION_SETUP_COMPLETE.md` - This document
 
 ### Modified
+
 - `packages/api/src/db/index.ts` - Updated to use migration runner
 - `packages/api/package.json` - Added migration scripts
 - `.github/workflows/ci.yml` - Added migration steps
@@ -206,6 +227,7 @@ npm run dev
 ✅ Extension initialization configured
 
 All migrations will now run automatically:
+
 - On server startup (via `initDatabase()`)
 - In CI/CD pipeline (via GitHub Actions)
 - Before Vercel deployments (via GitHub Actions)

@@ -8,6 +8,7 @@
 ## 🎯 Quick Status
 
 **Current State:**
+
 - ✅ Code is ready for production
 - ⚠️ External services need to be provisioned
 - ⚠️ Environment variables need to be set
@@ -25,10 +26,12 @@
 These are **critical** for security and core functionality.
 
 #### 1. Supabase Setup (Database & Auth)
+
 **Time:** 30 minutes  
 **Cost:** Free tier available
 
 **Steps:**
+
 1. Go to [supabase.com](https://supabase.com) and create account
 2. Click "New Project"
 3. Fill in:
@@ -43,6 +46,7 @@ These are **critical** for security and core functionality.
    - **service_role key** (long string starting with `eyJ` - keep this secret!)
 
 **Set in Vercel:**
+
 - Go to Vercel Dashboard → Your Project → Settings → Environment Variables
 - Add:
   - `SUPABASE_URL` = your project URL
@@ -50,6 +54,7 @@ These are **critical** for security and core functionality.
   - `SUPABASE_SERVICE_ROLE_KEY` = your service role key
 
 **Run Migrations:**
+
 - Contact your developer or follow `docs/infra-setup.md` section 1
 
 **✅ Done when:** Database tables are created and you can see them in Supabase Dashboard → Table Editor
@@ -57,12 +62,14 @@ These are **critical** for security and core functionality.
 ---
 
 #### 2. Upstash Redis Setup (Job Queues)
+
 **Time:** 15 minutes  
 **Cost:** Free tier (10K commands/day) or ~$6-10/month
 
 **Why:** Required for background job processing (reconciliation, webhooks, etc.)
 
 **Steps:**
+
 1. Go to [console.upstash.com](https://console.upstash.com) and create account
 2. Click "Create Database"
 3. Fill in:
@@ -78,6 +85,7 @@ These are **critical** for security and core functionality.
    - **TCP Password** (long password string)
 
 **Set in Vercel:**
+
 - `UPSTASH_REDIS_REST_URL` = REST URL
 - `UPSTASH_REDIS_REST_TOKEN` = REST Token
 - `REDIS_HOST` = TCP endpoint hostname (without `:6379`)
@@ -90,20 +98,24 @@ These are **critical** for security and core functionality.
 ---
 
 #### 3. Resend Email Setup (Transactional Emails) ✅
+
 **Time:** 5 minutes (you already have the API key!)  
 **Cost:** Free tier (100 emails/day) or $20/month for 50K emails
 
 **Why:** Required for sign-up verification, password reset, welcome emails
 
 **✅ You Already Have:**
+
 - API Key: `re_jD36Bjud_DcRF2FJuajKNrPVVTy8pQsYp`
 
 **Set in Vercel:**
+
 - `RESEND_API_KEY` = `re_jD36Bjud_DcRF2FJuajKNrPVVTy8pQsYp`
 - `RESEND_FROM_EMAIL` = `onboarding@resend.dev` (test domain - works immediately)
 - `RESEND_FROM_NAME` = `Settler`
 
 **For Production (Later):**
+
 - Go to [resend.com/domains](https://resend.com/domains)
 - Add your domain (e.g., `settler.dev`)
 - Add DNS records as instructed (TXT, MX records)
@@ -115,12 +127,14 @@ These are **critical** for security and core functionality.
 ---
 
 #### 4. Security Keys Setup
+
 **Time:** 5 minutes  
 **Cost:** Free
 
-**Why:** Required for production security**
+**Why:** Required for production security\*\*
 
 **On Mac/Linux Terminal:**
+
 ```bash
 # Generate JWT Secret (32+ characters)
 openssl rand -base64 32
@@ -130,6 +144,7 @@ openssl rand -hex 16
 ```
 
 **On Windows (PowerShell):**
+
 ```powershell
 # Generate JWT Secret
 [Convert]::ToBase64String((1..32 | ForEach-Object { Get-Random -Maximum 256 }))
@@ -139,6 +154,7 @@ openssl rand -hex 16
 ```
 
 **Set in Vercel:**
+
 - `JWT_SECRET` = generated JWT secret
 - `ENCRYPTION_KEY` = generated encryption key (must be exactly 32 characters)
 
@@ -151,12 +167,14 @@ openssl rand -hex 16
 These improve monitoring and reliability but aren't blocking.
 
 #### 5. Sentry Error Tracking (Optional but Recommended)
+
 **Time:** 15 minutes  
 **Cost:** Free tier (5K events/month) or $26/month
 
 **Why:** Automatically captures and alerts on errors in production
 
 **Steps:**
+
 1. Go to [sentry.io](https://sentry.io) and create account
 2. Click "Create Project"
 3. Select: **Node.js** platform
@@ -164,6 +182,7 @@ These improve monitoring and reliability but aren't blocking.
 5. Copy the **DSN** (looks like: `https://abc@123.ingest.sentry.io/456`)
 
 **Set in Vercel:**
+
 - `SENTRY_DSN` = your DSN
 - `SENTRY_ENVIRONMENT` = `production`
 - `SENTRY_TRACES_SAMPLE_RATE` = `0.1`
@@ -173,12 +192,14 @@ These improve monitoring and reliability but aren't blocking.
 ---
 
 #### 6. Supabase Storage Setup (Optional)
+
 **Time:** 10 minutes  
 **Cost:** Included in Supabase plan
 
 **Why:** Needed if you want to store file exports, user uploads, etc.
 
 **Steps:**
+
 1. In Supabase Dashboard → **Storage**
 2. Create buckets:
    - `exports` (Private)
@@ -190,6 +211,7 @@ These improve monitoring and reliability but aren't blocking.
 ---
 
 #### 7. Supabase Edge Functions (Optional)
+
 **Time:** 30 minutes (developer task)  
 **Cost:** Included in Supabase plan
 
@@ -204,10 +226,12 @@ These improve monitoring and reliability but aren't blocking.
 ### 🟢 LOW PRIORITY (Nice to Have)
 
 #### 8. Log Aggregation (Optional)
+
 **Time:** 15 minutes  
 **Cost:** Free tier available
 
 **Options:**
+
 - **Logflare** (Supabase-integrated) - Free tier
 - **Datadog** - $31/month starter
 - **Vercel Logs** - Built-in (may be sufficient)
@@ -217,15 +241,18 @@ These improve monitoring and reliability but aren't blocking.
 ---
 
 #### 9. Uptime Monitoring (Optional)
+
 **Time:** 10 minutes  
 **Cost:** Free
 
 **Options:**
+
 - **UptimeRobot** - Free (50 monitors)
 - **Pingdom** - Paid
 - **StatusCake** - Free tier available
 
 **Steps:**
+
 1. Sign up for UptimeRobot
 2. Add monitor:
    - URL: `https://your-api.vercel.app/health`
@@ -239,6 +266,7 @@ These improve monitoring and reliability but aren't blocking.
 ## 📊 Summary: What You Need
 
 ### Minimum for Testing (Free Tier)
+
 - ✅ Supabase (Free)
 - ✅ Upstash Redis (Free - 10K commands/day)
 - ✅ Resend (Free - 100 emails/day)
@@ -248,6 +276,7 @@ These improve monitoring and reliability but aren't blocking.
 **Setup Time:** ~1 hour
 
 ### Production Ready (Small Scale)
+
 - ✅ Supabase Pro ($25/month)
 - ✅ Upstash Redis (~$6-10/month)
 - ✅ Resend ($20/month)
@@ -262,25 +291,33 @@ These improve monitoring and reliability but aren't blocking.
 ## 🚨 Common Issues & Solutions
 
 ### Issue: "Supabase connection failed"
-**Solution:** 
+
+**Solution:**
+
 - Check `SUPABASE_URL` is correct (no trailing slash)
 - Verify API keys are copied correctly (no extra spaces)
 - Check Supabase project is running (Dashboard → Project Status)
 
 ### Issue: "Redis connection timeout"
+
 **Solution:**
+
 - Verify `REDIS_TLS=true` is set (required for Upstash)
 - Check `REDIS_HOST` doesn't include `https://` (just hostname)
 - Verify TCP password (not REST token) is used for `REDIS_PASSWORD`
 
 ### Issue: "Email not sending"
+
 **Solution:**
+
 - Check `RESEND_API_KEY` is correct
 - Verify `RESEND_FROM_EMAIL` matches verified domain (or use test domain)
 - Check Resend dashboard for delivery status
 
 ### Issue: "Migrations failed"
+
 **Solution:**
+
 - Check `SUPABASE_SERVICE_ROLE_KEY` is set (not anon key)
 - Verify database is accessible (Supabase Dashboard)
 - Check migration logs for specific errors
@@ -290,6 +327,7 @@ These improve monitoring and reliability but aren't blocking.
 ## 📚 Additional Resources
 
 ### Documentation
+
 - **Stack Overview:** `docs/stack-overview.md`
 - **Supabase Gaps:** `docs/supabase-gaps.md`
 - **Redis Decision:** `docs/redis-decision.md`
@@ -298,6 +336,7 @@ These improve monitoring and reliability but aren't blocking.
 - **Observability:** `docs/observability.md`
 
 ### Support
+
 - **Supabase Support:** [supabase.com/support](https://supabase.com/support)
 - **Upstash Support:** [docs.upstash.com](https://docs.upstash.com)
 - **Resend Support:** [resend.com/support](https://resend.com/support)
@@ -327,12 +366,14 @@ Before going live with real users:
 Once all HIGH PRIORITY items are complete, your stack is production-ready!
 
 **Next Steps:**
+
 1. Test all core flows (sign-up, login, reconciliation)
 2. Monitor error rates in Sentry (if set up)
 3. Check logs for any issues
 4. Gradually roll out to users
 
 **Remember:**
+
 - Start with free tiers to test
 - Upgrade to paid plans as you scale
 - Monitor costs monthly

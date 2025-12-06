@@ -3,7 +3,7 @@
  * Detects device capabilities and generates profiles for model optimization
  */
 
-import * as os from 'os';
+import * as os from "os";
 
 export interface DeviceCapabilities {
   cpu: boolean;
@@ -39,11 +39,11 @@ export function detectDeviceCapabilities(): DeviceCapabilities {
     gpu: false, // Would need actual detection
     npu: false, // Would need actual detection
     tpu: false, // Would need actual detection
-    onnx_runtime: checkRuntimeAvailable('onnx'),
-    tensorrt: checkRuntimeAvailable('tensorrt'),
-    executorch: checkRuntimeAvailable('executorch'),
-    webgpu: checkRuntimeAvailable('webgpu'),
-    wasm: checkRuntimeAvailable('wasm'),
+    onnx_runtime: checkRuntimeAvailable("onnx"),
+    tensorrt: checkRuntimeAvailable("tensorrt"),
+    executorch: checkRuntimeAvailable("executorch"),
+    webgpu: checkRuntimeAvailable("webgpu"),
+    wasm: checkRuntimeAvailable("wasm"),
   };
 }
 
@@ -55,15 +55,20 @@ export function generateDeviceProfile(deviceType?: string): DeviceProfile {
   const arch = os.arch();
   const capabilities = detectDeviceCapabilities();
 
+  const cpuModel = os.cpus()[0]?.model;
+  const specs: DeviceProfile["specs"] = {
+    ramGb: Math.round(os.totalmem() / 1024 / 1024 / 1024),
+  };
+  if (cpuModel) {
+    specs.cpuModel = cpuModel;
+  }
+
   return {
     deviceType: deviceType || inferDeviceType(platform),
     os: platform,
     arch: arch,
     capabilities,
-    specs: {
-      cpuModel: os.cpus()[0]?.model,
-      ramGb: Math.round(os.totalmem() / 1024 / 1024 / 1024),
-    },
+    specs,
   };
 }
 
@@ -72,23 +77,23 @@ export function generateDeviceProfile(deviceType?: string): DeviceProfile {
  */
 function inferDeviceType(platform: string): string {
   switch (platform) {
-    case 'linux':
-      return 'server';
-    case 'darwin':
-      return 'server';
-    case 'win32':
-      return 'server';
-    case 'android':
-      return 'mobile';
+    case "linux":
+      return "server";
+    case "darwin":
+      return "server";
+    case "win32":
+      return "server";
+    case "android":
+      return "mobile";
     default:
-      return 'embedded';
+      return "embedded";
   }
 }
 
 /**
  * Check if a runtime is available
  */
-function checkRuntimeAvailable(runtime: string): boolean {
+function checkRuntimeAvailable(_runtime: string): boolean {
   // Placeholder - would check actual runtime availability
   // This would involve checking for installed libraries, environment variables, etc.
   try {

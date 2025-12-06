@@ -3,11 +3,13 @@
 ## ✅ What You Have Ready
 
 ### 1. Redis (Upstash)
+
 ```bash
 REDIS_URL=rediss://default:AVtkAAIncDJjZmUxNTlhNmMyMjI0YmNjYTk5YjY4YzI2YzEyZjUyN3AyMjMzOTY@pretty-buck-23396.upstash.io:6379
 ```
 
 ### 2. Email (Resend)
+
 ```bash
 RESEND_API_KEY=re_jD36Bjud_DcRF2FJuajKNrPVVTy8pQsYp
 RESEND_FROM_EMAIL=onboarding@resend.dev
@@ -37,6 +39,7 @@ RESEND_FROM_NAME=Settler
 ### 2. Still Need: Supabase
 
 You still need to:
+
 1. Create Supabase project
 2. Get API keys (`SUPABASE_URL`, `SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`)
 3. Run database migrations
@@ -57,6 +60,7 @@ openssl rand -hex 16
 ```
 
 Then set in Vercel:
+
 - `JWT_SECRET` = (generated value)
 - `ENCRYPTION_KEY` = (generated value)
 

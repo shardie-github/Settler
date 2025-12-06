@@ -32,9 +32,9 @@
     ]
   },
   "app/page.tsx -> @/components/EdgeAIMarketingSection": {
-    "id": 2532,
+    "id": 3633,
     "files": [
-      "static/chunks/2532-51215ee648d5a758.js"
+      "static/chunks/3633-a9075aba31d42294.js"
     ]
   },
   "app/page.tsx -> @/components/NewsletterSignup": {

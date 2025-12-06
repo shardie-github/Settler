@@ -9,11 +9,13 @@ All GitHub Actions workflows have been created to automatically handle migration
 ## Workflows Created: 5
 
 ### 1. `post-merge-validation.yml` ⭐ PRIMARY WORKFLOW
+
 **Purpose:** Main orchestration workflow
 
 **Triggers:** Push to main
 
 **Jobs:**
+
 - Comprehensive validation (type check, lint, format, build)
 - **Run migrations on staging** (automatic)
 - **Run migrations on production** (requires approval)
@@ -22,31 +24,37 @@ All GitHub Actions workflows have been created to automatically handle migration
 **Key Feature:** Automatically runs migrations when PR is merged to main
 
 ### 2. `auto-migrate-on-merge.yml`
+
 **Purpose:** Detect and run migrations automatically
 
 **Triggers:** PR merged to main
 
 **Features:**
+
 - Detects migration files in PR
 - Automatically runs migrations if detected
 - Creates migration summary
 
 ### 3. `migration-safety-check.yml`
+
 **Purpose:** Safety checks for migrations in PRs
 
 **Triggers:** PR with migration files
 
 **Features:**
+
 - Checks migration syntax
 - Tests migrations on clean database
 - Verifies rollback capability
 
 ### 4. `deploy-production.yml` (Enhanced)
+
 **Purpose:** Production deployment with migrations
 
 **Triggers:** Push to main, Manual dispatch
 
 **Features:**
+
 - Runs tests
 - Builds application
 - **Runs database migrations**
@@ -54,11 +62,13 @@ All GitHub Actions workflows have been created to automatically handle migration
 - Verifies deployment
 
 ### 5. `production-migrations.yml`
+
 **Purpose:** Standalone production migration workflow
 
 **Triggers:** After post-merge validation completes
 
 **Features:**
+
 - Runs production migrations
 - Verifies migration success
 - Health check after migration
@@ -72,6 +82,7 @@ All GitHub Actions workflows have been created to automatically handle migration
 **Go to:** Repository Settings → Environments
 
 #### Create `staging` Environment:
+
 - **Name:** `staging`
 - **Secrets Required:**
   - `STAGING_DATABASE_URL`
@@ -80,6 +91,7 @@ All GitHub Actions workflows have been created to automatically handle migration
   - `STAGING_URL`
 
 #### Create `production` Environment:
+
 - **Name:** `production`
 - **Required Reviewers:** ✅ Enable (1-2 recommended)
 - **Deployment Branches:** `main` only
@@ -101,6 +113,7 @@ All GitHub Actions workflows have been created to automatically handle migration
 **Go to:** Settings → Secrets and variables → Actions
 
 **Add:**
+
 - `DATABASE_URL` - Production database connection string
 - `JWT_SECRET` - Production JWT secret (min 32 chars)
 - `ENCRYPTION_KEY` - Production encryption key (exactly 32 chars)
@@ -161,6 +174,7 @@ Migrations run automatically if:
 ## Safety Features
 
 ### Production Migrations
+
 - ✅ **Staging first** - Always runs on staging before production
 - ✅ **Approval required** - Production migrations require manual approval
 - ✅ **Health checks** - Verifies migrations didn't break anything
@@ -168,6 +182,7 @@ Migrations run automatically if:
 - ✅ **Idempotent** - Safe to run multiple times
 
 ### Validation
+
 - ✅ **Environment validation** - Validates all required env vars
 - ✅ **Type checking** - Ensures type safety
 - ✅ **Linting** - Code quality checks
@@ -180,6 +195,7 @@ Migrations run automatically if:
 ## What Gets Automated
 
 ### ✅ Automatic (No Manual Steps)
+
 - Environment validation
 - Type checking
 - Linting
@@ -190,6 +206,7 @@ Migrations run automatically if:
 - Health checks
 
 ### ⚠️ Requires Approval
+
 - Production migrations (safety feature)
 
 ---
@@ -197,15 +214,18 @@ Migrations run automatically if:
 ## Monitoring
 
 ### GitHub Actions Tab
+
 - View workflow runs
 - See migration status
 - Check for errors
 - Review logs
 
 ### Workflow Summaries
+
 Each workflow creates a summary showing:
+
 - ✅ Completed actions
-- ⚠️  Warnings
+- ⚠️ Warnings
 - ❌ Errors
 - 📋 Next steps
 
@@ -214,18 +234,21 @@ Each workflow creates a summary showing:
 ## Troubleshooting
 
 ### Migrations Not Running
+
 1. Check if migration files are in PR
 2. Verify environment secrets are set
 3. Check workflow logs for errors
 4. Verify GitHub environments are configured
 
 ### Production Approval Not Appearing
+
 1. Check production environment is configured
 2. Verify required reviewers are set
 3. Check branch protection settings
 4. Review environment configuration
 
 ### Migration Failures
+
 1. Check migration file syntax
 2. Verify database connection string
 3. Review migration logs

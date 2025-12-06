@@ -11,6 +11,7 @@ This document tracks the comprehensive TypeScript refactoring effort to transfor
 ## Phase 0: Context Ingestion ✅ COMPLETE
 
 ### Repository Structure Mapped
+
 - **Monorepo**: Turbo-based workspace with 7+ packages
 - **Packages**: `api`, `sdk`, `web`, `adapters`, `types`, `cli`
 - **Architecture**: Express API, Next.js frontend, TypeScript SDK
@@ -18,6 +19,7 @@ This document tracks the comprehensive TypeScript refactoring effort to transfor
 - **Testing**: Jest/Vitest, Playwright E2E
 
 ### Key Findings
+
 - ✅ Already using Zod for API validation
 - ✅ Environment validation with `envalid` in place
 - ✅ Good separation of concerns (domain, application, infrastructure)
@@ -32,9 +34,11 @@ This document tracks the comprehensive TypeScript refactoring effort to transfor
 ### ✅ Completed
 
 #### 1.1 TypeScript Configuration Hardening
+
 **File**: `tsconfig.json`
 
 **Changes Made**:
+
 - ✅ Added `strictNullChecks: true`
 - ✅ Added `strictFunctionTypes: true`
 - ✅ Added `strictBindCallApply: true`
@@ -52,9 +56,11 @@ This document tracks the comprehensive TypeScript refactoring effort to transfor
 **Impact**: Maximum type safety enforced at compiler level.
 
 #### 1.2 ESLint Configuration Hardening
+
 **Files**: `.eslintrc.js`, `packages/api/.eslintrc.js`
 
 **Changes Made**:
+
 - ✅ Changed `@typescript-eslint/no-explicit-any` from `warn` to `error`
 - ✅ Added `@typescript-eslint/no-unsafe-assignment: error`
 - ✅ Added `@typescript-eslint/no-unsafe-member-access: error`
@@ -71,6 +77,7 @@ This document tracks the comprehensive TypeScript refactoring effort to transfor
 #### 1.3 Removed `any` Types from Core Utilities
 
 **Files Fixed**:
+
 1. **`packages/api/src/index.ts`**
    - ✅ `countDepth(obj: any)` → `countDepth(obj: unknown)`
    - ✅ `catch (error: any)` → `catch (error: unknown)` with proper type guards
@@ -112,9 +119,11 @@ This document tracks the comprehensive TypeScript refactoring effort to transfor
 ### 🔄 In Progress
 
 #### 1.4 Remaining `any` Types in Route Handlers
+
 **Status**: 75+ instances found across route files
 
 **Files with `any` in error handlers**:
+
 - `packages/api/src/routes/jobs.ts` (4 instances)
 - `packages/api/src/routes/webhooks.ts` (5 instances)
 - `packages/api/src/routes/auth.ts` (4 instances)
@@ -122,14 +131,16 @@ This document tracks the comprehensive TypeScript refactoring effort to transfor
 - `packages/api/src/routes/v1/*` (10+ instances)
 - And more...
 
-**Solution Created**: 
+**Solution Created**:
+
 - ✅ Created `packages/api/src/utils/error-handler.ts` with:
   - `getErrorMessage(error: unknown): string`
   - `getErrorStack(error: unknown): string | undefined`
   - `isHttpError(error: unknown): error is HttpError`
   - `handleRouteError()` helper function
 
-**Next Steps**: 
+**Next Steps**:
+
 - Replace all `catch (error: any)` with `catch (error: unknown)`
 - Use `handleRouteError()` helper for consistent error handling
 - Or use `getErrorMessage()` + `getErrorStack()` directly
@@ -137,6 +148,7 @@ This document tracks the comprehensive TypeScript refactoring effort to transfor
 ### 📋 Pending
 
 #### 1.5 Audit `unknown` Usage
+
 - Review all `unknown` types to ensure proper type guards
 - Add discriminated unions where appropriate
 - Strengthen type narrowing patterns
@@ -146,15 +158,18 @@ This document tracks the comprehensive TypeScript refactoring effort to transfor
 ## Phase 2: API & Backend Robustness 📋 PENDING
 
 ### 2.1 API Validation ✅ Already Strong
+
 - ✅ Zod schemas in place for all endpoints
 - ✅ Input sanitization in adapter configs
 - ✅ Prototype pollution prevention
 
 ### 2.2 Error Handling 🔄 IN PROGRESS
+
 - ✅ Created standardized error handler utility
 - 🔄 Need to apply across all routes (75+ instances)
 
 ### 2.3 Security Hardening 📋 PENDING
+
 - Review auth middleware
 - Review rate limiting implementation
 - Audit input sanitization
@@ -172,6 +187,7 @@ See original TODO list for full scope.
 ## Quick Reference: Error Handling Pattern
 
 ### Before (❌ Bad)
+
 ```typescript
 catch (error: any) {
   logError('Failed', error);
@@ -180,6 +196,7 @@ catch (error: any) {
 ```
 
 ### After (✅ Good)
+
 ```typescript
 catch (error: unknown) {
   handleRouteError(res, error, "Failed to perform operation", 500, { context });
@@ -187,6 +204,7 @@ catch (error: unknown) {
 ```
 
 ### Or Manual (✅ Also Good)
+
 ```typescript
 catch (error: unknown) {
   const message = getErrorMessage(error);

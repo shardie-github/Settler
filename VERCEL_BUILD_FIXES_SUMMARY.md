@@ -7,11 +7,13 @@ This document summarizes all the fixes applied to resolve TypeScript, dependency
 ### 1. TypeScript Configuration Issues in `@settler/react-settler`
 
 **Problem**: TypeScript errors preventing build:
+
 - Files from `@settler/protocol` not under `rootDir` of `react-settler`
 - `exactOptionalPropertyTypes: true` causing strict type compatibility issues
 - Unused variables causing compilation errors
 
 **Fixes Applied**:
+
 - **File**: `packages/react-settler/tsconfig.json`
   - Disabled `exactOptionalPropertyTypes` to allow more flexible optional property handling
   - This resolves type compatibility issues with optional props that can be `undefined`
@@ -19,11 +21,13 @@ This document summarizes all the fixes applied to resolve TypeScript, dependency
 ### 2. Unused Variables and Linting Errors
 
 **Problem**: Multiple unused variables causing TypeScript errors:
+
 - `component` in `compiler.tsx`
 - `React` imports in `ErrorBoundary.tsx`, `ReconciliationDashboard.tsx`, `RuleSet.tsx`
 - `useMemo` import in `SearchBar.tsx`
 
 **Fixes Applied**:
+
 - **File**: `packages/react-settler/src/compiler.tsx`
   - Prefixed unused `component` parameter with `_` to indicate intentional non-use
 - **File**: `packages/react-settler/src/components/SearchBar.tsx`
@@ -35,6 +39,7 @@ This document summarizes all the fixes applied to resolve TypeScript, dependency
 **Problem**: `exactOptionalPropertyTypes` causing issues with conditional prop spreading where `undefined` values don't match optional property types.
 
 **Fixes Applied**:
+
 - **File**: `packages/react-settler/src/components/MobileDashboard.tsx`
   - Changed conditional prop spreading from `!== undefined` checks to truthy checks
   - Updated `className`, `onTransactionSelect`, and `onExceptionResolve` prop handling
@@ -46,6 +51,7 @@ This document summarizes all the fixes applied to resolve TypeScript, dependency
 **Problem**: Deprecated npm command in Vercel configuration.
 
 **Fixes Applied**:
+
 - **File**: `packages/web/vercel.json`
   - Changed `installCommand` from `npm install --frozen-lockfile` to `npm ci`
   - The `--frozen-lockfile` flag is deprecated; `npm ci` is the modern equivalent
@@ -55,6 +61,7 @@ This document summarizes all the fixes applied to resolve TypeScript, dependency
 **Problem**: Duplicate `scripts` section in `packages/web/package.json` causing potential conflicts.
 
 **Fixes Applied**:
+
 - **File**: `packages/web/package.json`
   - Removed duplicate `scripts` section
   - Kept the complete scripts section with all necessary commands
@@ -99,12 +106,14 @@ The build process now works as follows:
 To verify the fixes work:
 
 1. **Local Build Test**:
+
    ```bash
    npm ci
    npm run build
    ```
 
 2. **Typecheck Test**:
+
    ```bash
    npm run typecheck
    ```

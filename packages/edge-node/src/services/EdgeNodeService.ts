@@ -3,20 +3,20 @@
  * Main service orchestrating local reconciliation, AI inference, and cloud sync
  */
 
-import axios, { AxiosInstance } from 'axios';
-import Database from 'better-sqlite3';
-import { logger } from '../utils/logger';
-import { config } from '../config';
-import { IngestionService } from './IngestionService';
-import { MatchingService } from './MatchingService';
-import { AnomalyDetectionService } from './AnomalyDetectionService';
-import { SyncService } from './SyncService';
-import { ModelManager } from './ModelManager';
-import { PIIRedactionService } from './PIIRedactionService';
-import { v4 as uuidv4 } from 'uuid';
-import * as os from 'os';
-import * as fs from 'fs';
-import * as path from 'path';
+import axios, { AxiosInstance } from "axios";
+import Database from "better-sqlite3";
+import { logger } from "../utils/logger";
+import { config } from "../config";
+import { IngestionService } from "./IngestionService";
+import { MatchingService } from "./MatchingService";
+import { AnomalyDetectionService } from "./AnomalyDetectionService";
+import { SyncService } from "./SyncService";
+import { ModelManager } from "./ModelManager";
+import { PIIRedactionService } from "./PIIRedactionService";
+import { v4 as uuidv4 } from "uuid";
+import * as os from "os";
+import * as fs from "fs";
+import * as path from "path";
 
 export interface EdgeNodeConfig {
   nodeKey: string;
@@ -50,7 +50,7 @@ export class EdgeNodeService {
   private dataDir: string;
   private nodeId?: string;
   private isRunning: boolean = false;
-  
+
   private ingestionService: IngestionService;
   private matchingService: MatchingService;
   private anomalyDetectionService: AnomalyDetectionService;
@@ -64,14 +64,14 @@ export class EdgeNodeService {
   constructor(config: EdgeNodeConfig) {
     this.nodeKey = config.nodeKey;
     this.dataDir = config.dataDir;
-    
+
     // Ensure data directory exists
     if (!fs.existsSync(this.dataDir)) {
       fs.mkdirSync(this.dataDir, { recursive: true });
     }
 
     // Initialize SQLite database
-    const dbPath = path.join(this.dataDir, 'settler-edge.db');
+    const dbPath = path.join(this.dataDir, "settler-edge.db");
     this.db = new Database(dbPath);
     this.initializeDatabase();
 
@@ -79,7 +79,7 @@ export class EdgeNodeService {
     this.cloudApi = axios.create({
       baseURL: config.cloudApiUrl,
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       timeout: 30000,
     });
@@ -145,15 +145,15 @@ export class EdgeNodeService {
   async enroll(request: EnrollmentRequest): Promise<EnrollmentResult> {
     try {
       const deviceInfo = this.getDeviceInfo();
-      
-      const response = await this.cloudApi.post('/api/edge-ai/nodes/enroll', {
+
+      const response = await this.cloudApi.post("/api/edge-ai/nodes/enroll", {
         enrollment_key: request.enrollmentKey,
         name: request.name,
         device_type: request.deviceType,
         device_os: deviceInfo.os,
         device_arch: deviceInfo.arch,
         capabilities: deviceInfo.capabilities,
-        version: '1.0.0',
+        version: "1.0.0",
       });
 
       const result: EnrollmentResult = {
@@ -167,26 +167,26 @@ export class EdgeNodeService {
       // Save node key to file
       await this.saveNodeKey(result.nodeKey);
 
-      logger.info('Node enrolled successfully', { nodeId: result.nodeId });
+      logger.info("Node enrolled successfully", { nodeId: result.nodeId });
       return result;
     } catch (error) {
-      logger.error('Enrollment failed', error);
+      logger.error("Enrollment failed", error);
       throw error;
     }
   }
 
   async start(): Promise<void> {
     if (this.isRunning) {
-      logger.warn('Edge node is already running');
+      logger.warn("Edge node is already running");
       return;
     }
 
     if (!this.nodeKey) {
-      throw new Error('Node key is required. Please enroll the node first.');
+      throw new Error("Node key is required. Please enroll the node first.");
     }
 
     this.isRunning = true;
-    logger.info('Starting edge node service...');
+    logger.info("Starting edge node service...");
 
     // Start heartbeat
     this.startHeartbeat();
@@ -197,7 +197,7 @@ export class EdgeNodeService {
     // Load models
     await this.modelManager.loadModels();
 
-    logger.info('Edge node service started');
+    logger.info("Edge node service started");
   }
 
   async stop(): Promise<void> {
@@ -206,7 +206,7 @@ export class EdgeNodeService {
     }
 
     this.isRunning = false;
-    logger.info('Stopping edge node service...');
+    logger.info("Stopping edge node service...");
 
     if (this.heartbeatInterval) {
       clearInterval(this.heartbeatInterval);
@@ -219,12 +219,12 @@ export class EdgeNodeService {
     await this.syncService.flush();
     this.db.close();
 
-    logger.info('Edge node service stopped');
+    logger.info("Edge node service stopped");
   }
 
   private startHeartbeat(): void {
     this.sendHeartbeat();
-    
+
     this.heartbeatInterval = setInterval(() => {
       this.sendHeartbeat();
     }, config.heartbeatInterval);
@@ -232,14 +232,14 @@ export class EdgeNodeService {
 
   private async sendHeartbeat(): Promise<void> {
     try {
-      await this.cloudApi.post('/api/edge-ai/heartbeat', {
+      await this.cloudApi.post("/api/edge-ai/heartbeat", {
         node_key: this.nodeKey,
-        status: 'healthy',
-        version: '1.0.0',
+        status: "healthy",
+        version: "1.0.0",
       });
-      logger.debug('Heartbeat sent');
+      logger.debug("Heartbeat sent");
     } catch (error) {
-      logger.error('Heartbeat failed', error);
+      logger.error("Heartbeat failed", error);
     }
   }
 
@@ -248,21 +248,21 @@ export class EdgeNodeService {
       try {
         await this.syncService.sync();
       } catch (error) {
-        logger.error('Sync failed', error);
+        logger.error("Sync failed", error);
       }
     }, config.syncInterval);
   }
 
   async processIngestion(data: unknown[], schemaHints?: Record<string, string>): Promise<string> {
     const jobId = uuidv4();
-    
+
     try {
       // Store job
       const stmt = this.db.prepare(`
         INSERT INTO local_jobs (id, job_type, status, input_data, created_at, updated_at)
         VALUES (?, ?, ?, ?, ?, ?)
       `);
-      stmt.run(jobId, 'ingestion', 'running', JSON.stringify(data), Date.now(), Date.now());
+      stmt.run(jobId, "ingestion", "running", JSON.stringify(data), Date.now(), Date.now());
 
       // Process ingestion
       const result = await this.ingestionService.process(data, schemaHints);
@@ -273,10 +273,10 @@ export class EdgeNodeService {
         SET status = ?, output_data = ?, updated_at = ?
         WHERE id = ?
       `);
-      updateStmt.run('completed', JSON.stringify(result), Date.now(), jobId);
+      updateStmt.run("completed", JSON.stringify(result), Date.now(), jobId);
 
       // Queue for sync
-      await this.syncService.queueSync('batch_ingestion', {
+      await this.syncService.queueSync("batch_ingestion", {
         job_id: jobId,
         data: result.processedData,
         schema: result.inferredSchema,
@@ -284,15 +284,15 @@ export class EdgeNodeService {
 
       return jobId;
     } catch (error) {
-      logger.error('Ingestion processing failed', error);
-      
+      logger.error("Ingestion processing failed", error);
+
       const errorStmt = this.db.prepare(`
         UPDATE local_jobs 
         SET status = ?, output_data = ?, updated_at = ?
         WHERE id = ?
       `);
-      errorStmt.run('failed', JSON.stringify({ error: String(error) }), Date.now(), jobId);
-      
+      errorStmt.run("failed", JSON.stringify({ error: String(error) }), Date.now(), jobId);
+
       throw error;
     }
   }
@@ -321,7 +321,7 @@ export class EdgeNodeService {
     }
 
     // Queue for sync
-    await this.syncService.queueSync('candidate_scores', {
+    await this.syncService.queueSync("candidate_scores", {
       candidates: candidates.map((c, i) => ({
         ...c,
         id: candidateIds[i],
@@ -354,7 +354,7 @@ export class EdgeNodeService {
     }
 
     // Queue for sync
-    await this.syncService.queueSync('anomalies', {
+    await this.syncService.queueSync("anomalies", {
       anomalies: anomalies.map((a, i) => ({
         ...a,
         id: anomalyIds[i],
@@ -365,21 +365,27 @@ export class EdgeNodeService {
   }
 
   async getStatus(): Promise<NodeStatus> {
-    const nodeInfo = this.db.prepare('SELECT * FROM local_jobs LIMIT 1').get();
-    const jobCount = this.db.prepare('SELECT COUNT(*) as count FROM local_jobs').get() as { count: number };
-    
-    return {
-      nodeId: this.nodeId,
-      status: this.isRunning ? 'running' : 'stopped',
+    const jobCount = this.db.prepare("SELECT COUNT(*) as count FROM local_jobs").get() as {
+      count: number;
+    };
+
+    const status: NodeStatus = {
+      status: this.isRunning ? "running" : "stopped",
       lastHeartbeat: new Date().toISOString(), // TODO: Track actual last heartbeat
       jobsProcessed: jobCount?.count || 0,
       localStorageUsed: this.getStorageSize(),
     };
+
+    if (this.nodeId) {
+      status.nodeId = this.nodeId;
+    }
+
+    return status;
   }
 
   private getStorageSize(): number {
     try {
-      const stats = fs.statSync(path.join(this.dataDir, 'settler-edge.db'));
+      const stats = fs.statSync(path.join(this.dataDir, "settler-edge.db"));
       return Math.round(stats.size / 1024 / 1024); // MB
     } catch {
       return 0;
@@ -408,8 +414,8 @@ export class EdgeNodeService {
   }
 
   async saveNodeKey(nodeKey: string): Promise<void> {
-    const keyPath = path.join(this.dataDir, '.node-key');
+    const keyPath = path.join(this.dataDir, ".node-key");
     fs.writeFileSync(keyPath, nodeKey, { mode: 0o600 }); // Read/write for owner only
-    logger.info('Node key saved', { path: keyPath });
+    logger.info("Node key saved", { path: keyPath });
   }
 }

@@ -13,10 +13,11 @@ Your Supabase database migrations are ready to run! Follow these steps to get ev
    - Or note your project URL and database password
 
 2. **Set environment variables:**
+
    ```bash
    # Create .env file from template
    cp .env.template .env
-   
+
    # Edit .env and add your connection string:
    DATABASE_URL=postgresql://postgres:[YOUR-PASSWORD]@db.[YOUR-PROJECT-REF].supabase.co:5432/postgres
    ```
@@ -29,6 +30,7 @@ Your Supabase database migrations are ready to run! Follow these steps to get ev
 ### Option 2: Local Supabase (Development)
 
 1. **Install Supabase CLI** (if not already installed):
+
    ```bash
    npm install -g supabase
    # OR
@@ -36,6 +38,7 @@ Your Supabase database migrations are ready to run! Follow these steps to get ev
    ```
 
 2. **Start local Supabase:**
+
    ```bash
    supabase start
    ```
@@ -86,24 +89,29 @@ Your database is now fully set up and ready to use!
 ### Connection Errors
 
 **Error: `ECONNREFUSED`**
+
 - Local Supabase: Make sure `supabase start` is running
 - Remote Supabase: Check your connection string and ensure your IP is allowed
 
 **Error: `password authentication failed`**
+
 - Verify your database password in Supabase dashboard
 - Make sure you're using the correct connection string
 
 **Error: `SSL required`**
+
 - For remote Supabase, SSL is required (handled automatically)
 - For local, SSL is disabled by default
 
 ### Migration Errors
 
 **"already exists" warnings**
+
 - These are safe to ignore - migrations are idempotent
 - The script handles them automatically
 
 **Permission errors**
+
 - Ensure you're using a database user with sufficient privileges
 - For Supabase, use the `postgres` user with your database password
 

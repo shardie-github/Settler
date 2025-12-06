@@ -13,6 +13,7 @@ Successfully refactored Settler.dev Edge AI implementation to maintain complete 
 **Purpose**: Brand-neutral technical utilities used by both AIAS and Settler.dev
 
 **Components**:
+
 - Device profiling (`device-profiling.ts`)
 - Model optimization (`model-optimization.ts`)
 - Inference engines (`inference.ts`)
@@ -27,6 +28,7 @@ Successfully refactored Settler.dev Edge AI implementation to maintain complete 
 ### 2. Refactored Settler.dev to Use Shared Module ✅
 
 **Changes**:
+
 - Replaced local `generateNodeKey()` with `@settler/edge-ai-core` version
 - Replaced local `hashNodeKey()` with shared utility
 - Replaced local `generateEnrollmentKey()` with shared utility
@@ -39,12 +41,14 @@ Successfully refactored Settler.dev Edge AI implementation to maintain complete 
 **Pattern**: HTTP API client, NOT direct code dependency
 
 **Implementation**:
+
 - `getAIASClient()` returns HTTP API client
 - All AIAS interactions via REST API
 - No direct code imports from AIAS
 - Can be replaced with alternative provider
 
 **Benefits**:
+
 - Product independence
 - Independent versioning
 - Deployment flexibility
@@ -53,24 +57,28 @@ Successfully refactored Settler.dev Edge AI implementation to maintain complete 
 ### 4. Verified Complete Separation ✅
 
 **UI & Branding**:
+
 - ✅ Settler.dev Edge AI pages: Settler.dev branding only
 - ✅ No AIAS branding in Settler.dev UI
 - ✅ Separate navigation structures
 - ✅ Independent marketing content
 
 **Pricing**:
+
 - ✅ Settler.dev pricing: Independent tiers
 - ✅ No AIAS pricing in Settler.dev
 - ✅ Separate pricing logic
 - ✅ Independent billing
 
 **Database**:
+
 - ✅ Settler.dev tables: `edge_nodes`, `model_versions`, etc.
 - ✅ No shared tables with AIAS
 - ✅ Separate schemas
 - ✅ No cross-product queries
 
 **Code**:
+
 - ✅ Shared: `@settler/edge-ai-core` (brand-neutral)
 - ✅ API: AIAS integration via HTTP
 - ✅ No direct code coupling
@@ -152,11 +160,7 @@ Successfully refactored Settler.dev Edge AI implementation to maintain complete 
 
 ```typescript
 // Settler.dev imports shared utilities
-import { 
-  generateNodeKey, 
-  hashNodeKey, 
-  generateEnrollmentKey 
-} from '@settler/edge-ai-core';
+import { generateNodeKey, hashNodeKey, generateEnrollmentKey } from "@settler/edge-ai-core";
 ```
 
 ### Settler.dev → AIAS
@@ -173,7 +177,7 @@ const result = await aiasClient.optimizeModel({...});
 
 ```typescript
 // AIAS (in separate codebase) also imports shared utilities
-import { generateDeviceProfile } from '@settler/edge-ai-core';
+import { generateDeviceProfile } from "@settler/edge-ai-core";
 ```
 
 ## Guardrails Enforced

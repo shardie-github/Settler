@@ -45,7 +45,7 @@
      - **Environment:** All
    - Click **"Save"**
 
-8. **Redeploy (Optional but not required - Vercel will use new vars on next deploy)
+8. \*\*Redeploy (Optional but not required - Vercel will use new vars on next deploy)
    - Go to **"Deployments"** tab
    - Click **"..."** on latest deployment
    - Click **"Redeploy"**
@@ -56,16 +56,19 @@
 ## Method 2: Vercel CLI (If You Have It)
 
 ### Install Vercel CLI (if not installed):
+
 ```bash
 npm i -g vercel
 ```
 
 ### Login:
+
 ```bash
 vercel login
 ```
 
 ### Add Environment Variables:
+
 ```bash
 # Resend API Key
 vercel env add RESEND_API_KEY production
@@ -87,6 +90,7 @@ vercel env add REDIS_URL production
 ```
 
 ### Pull Environment Variables (for local development):
+
 ```bash
 vercel env pull .env.local
 ```
@@ -138,12 +142,14 @@ After adding, you can verify:
 ## Troubleshooting
 
 **Variable not working?**
+
 - Check spelling (case-sensitive)
 - Make sure environment is selected (Production/Preview/Development)
 - Redeploy after adding variables
 - Check Vercel build logs for errors
 
 **Can't see variables?**
+
 - Make sure you're logged in to correct Vercel account
 - Check you're in the correct project
 - Refresh the page
