@@ -93,7 +93,7 @@ export class DeadLetterQueue {
 
     const result = await this.db.query(query, [limit]);
 
-    return result.map((row): DeadLetterEntry => {
+    return result.rows.map((row: any): DeadLetterEntry => {
       const entry: DeadLetterEntry = {
         id: row.id,
         error_type: row.error_type,
@@ -175,7 +175,7 @@ export class DeadLetterQueue {
 
     const result = await this.db.query(query, [tenantId, limit]);
 
-    return result.map((row): DeadLetterEntry => {
+    return result.rows.map((row: any): DeadLetterEntry => {
       const entry: DeadLetterEntry = {
         id: row.id,
         error_type: row.error_type,

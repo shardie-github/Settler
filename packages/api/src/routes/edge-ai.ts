@@ -148,7 +148,7 @@ async function authenticateEdgeNode(nodeKey: string): Promise<{ nodeId: string; 
     [nodeKeyHash]
   );
 
-  if (result.rows.length === 0) {
+  if (result.length === 0) {
     return null;
   }
 
@@ -266,7 +266,7 @@ router.post(
     }
 
     if (!matchedNode) {
-      return sendError(res, "Invalid enrollment key", 401);
+      return sendError(res, 401, "UNAUTHORIZED", "Invalid enrollment key");
     }
 
     // Use shared edge-ai-core utilities
@@ -333,7 +333,7 @@ router.get(
        WHERE tenant_id = $1 AND deleted_at IS NULL
        ORDER BY created_at DESC
        LIMIT $2 OFFSET $3`,
-      [tenantId, limit, offset]
+      [tenantId, String(limit), String(offset)] as (string | number | boolean | Date | null)[]
     );
 
     const countResult = await query<{ count: string }>(
@@ -347,7 +347,7 @@ router.get(
       pagination: {
         page: Number(page),
         limit: Number(limit),
-        total: Number(countResult[0].count),
+        total: Number(countResult[0]?.count || 0),
       },
     });
   })
@@ -387,19 +387,22 @@ router.get(
               version, metadata, created_at
        FROM edge_nodes
        WHERE id = $1 AND tenant_id = $2 AND deleted_at IS NULL`,
-      [id, tenantId]
+      [id, tenantId] as (string | number | boolean | Date | null)[]
     );
 
     if (result.length === 0) {
-      return sendError(res, "Edge node not found", 404);
+      return sendError(res, 404, "NOT_FOUND", "Edge node not found");
     }
 
     const node = result[0];
+    if (!node) {
+      return sendError(res, 404, "NOT_FOUND", "Edge node not found");
+    }
     sendSuccess(res, {
       ...node,
-      capabilities: JSON.parse(node.capabilities || '{}'),
-      location: JSON.parse(node.location || '{}'),
-      metadata: JSON.parse(node.metadata || '{}'),
+      capabilities: JSON.parse(node?.capabilities || '{}'),
+      location: JSON.parse(node?.location || '{}'),
+      metadata: JSON.parse(node?.metadata || '{}'),
     });
   })
 );
@@ -443,17 +446,20 @@ router.patch(
     }
 
     if (updates.length === 0) {
-      return sendError(res, "No fields to update", 400);
+      return sendError(res, 400, "BAD_REQUEST", "No fields to update");
     }
 
+    if (!id || !tenantId) {
+      return sendError(res, 400, "BAD_REQUEST", "Missing required parameters");
+    }
     values.push(id, tenantId);
 
     await query(
       `UPDATE edge_nodes 
        SET ${updates.join(', ')}, updated_at = NOW()
        WHERE id = $${paramIndex++} AND tenant_id = $${paramIndex++}`,
-      values
-    );
+        values as (string | number | boolean | Date | null)[]
+      );
 
     await trackEventAsync(tenantId, 'edge_node_updated', { node_id: id });
 
@@ -475,11 +481,15 @@ router.delete(
     const { id } = req.params;
     const tenantId = req.tenantId!;
 
+    if (!id || !tenantId) {
+      return sendError(res, 400, "BAD_REQUEST", "Missing required parameters");
+    }
+
     await query(
       `UPDATE edge_nodes 
        SET deleted_at = NOW(), status = 'revoked', updated_at = NOW()
        WHERE id = $1 AND tenant_id = $2`,
-      [id, tenantId]
+      [id, tenantId] as (string | number | boolean | Date | null)[]
     );
 
     await trackEventAsync(tenantId, 'edge_node_deleted', { node_id: id });
@@ -504,7 +514,7 @@ router.post(
 
     const auth = await authenticateEdgeNode(node_key);
     if (!auth) {
-      return sendError(res, "Invalid node key", 401);
+      return sendError(res, 401, "UNAUTHORIZED", "Invalid node key");
     }
 
     const updates: string[] = ['last_heartbeat_at = NOW()'];
@@ -520,7 +530,7 @@ router.post(
       values.push(auth.nodeId);
       await query(
         `UPDATE edge_nodes SET ${updates.join(', ')} WHERE id = $${paramIndex}`,
-        values
+        values as (string | number | boolean | Date | null)[]
       );
     }
 
@@ -540,7 +550,7 @@ router.post(
 
     const auth = await authenticateEdgeNode(node_key);
     if (!auth) {
-      return sendError(res, "Invalid node key", 401);
+      return sendError(res, 401, "UNAUTHORIZED", "Invalid node key");
     }
 
     // Create edge job record
@@ -557,7 +567,10 @@ router.post(
       ]
     );
 
-    const edgeJobId = jobResult[0].id;
+    const edgeJobId = jobResult[0]?.id;
+    if (!edgeJobId) {
+      return sendError(res, 500, "INTERNAL_ERROR", "Failed to create edge job");
+    }
 
     // TODO: Process ingestion (schema inference, PII detection, etc.)
     // For now, mark as completed
@@ -598,7 +611,7 @@ router.post(
 
     const auth = await authenticateEdgeNode(node_key);
     if (!auth) {
-      return sendError(res, "Invalid node key", 401);
+      return sendError(res, 401, "UNAUTHORIZED", "Invalid node key");
     }
 
     // Insert candidates
@@ -625,7 +638,10 @@ router.post(
           JSON.stringify(candidate.features || {}),
         ]
       );
-      candidateIds.push(result[0].id);
+      const candidateId = result[0]?.id;
+      if (candidateId) {
+        candidateIds.push(candidateId);
+      }
     }
 
     await trackEventAsync(auth.tenantId, 'edge_candidates_submitted', {
@@ -653,7 +669,7 @@ router.post(
 
     const auth = await authenticateEdgeNode(node_key);
     if (!auth) {
-      return sendError(res, "Invalid node key", 401);
+      return sendError(res, 401, "UNAUTHORIZED", "Invalid node key");
     }
 
     const anomalyIds: string[] = [];
@@ -676,7 +692,10 @@ router.post(
           anomaly.anomaly_score || null,
         ]
       );
-      anomalyIds.push(result[0].id);
+      const anomalyId = result[0]?.id;
+      if (anomalyId) {
+        anomalyIds.push(anomalyId);
+      }
     }
 
     await trackEventAsync(auth.tenantId, 'edge_anomalies_reported', {
@@ -704,7 +723,7 @@ router.post(
 
     const auth = await authenticateEdgeNode(node_key);
     if (!auth) {
-      return sendError(res, "Invalid node key", 401);
+      return sendError(res, 401, "UNAUTHORIZED", "Invalid node key");
     }
 
     const result = await query<{ id: string }>(
@@ -728,8 +747,12 @@ router.post(
       ]
     );
 
+    const profileId = result[0]?.id;
+    if (!profileId) {
+      return sendError(res, 500, "INTERNAL_ERROR", "Failed to create device profile");
+    }
     sendSuccess(res, {
-      profile_id: result[0].id,
+      profile_id: profileId,
       status: 'created',
     });
   })

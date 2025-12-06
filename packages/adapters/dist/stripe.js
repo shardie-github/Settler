@@ -1,32 +1,36 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.StripeAdapter = void 0;
+const stripe_1 = __importDefault(require("stripe"));
 class StripeAdapter {
     name = "stripe";
     version = "1.0.0";
     async fetch(options) {
-        const { config } = options;
+        const { config, dateRange } = options;
         const apiKey = config.apiKey;
         if (!apiKey) {
             throw new Error("Stripe API key is required");
         }
-        // In production, use Stripe SDK
-        // const stripe = new Stripe(apiKey);
-        // const charges = await stripe.charges.list({
-        //   created: { gte: Math.floor(dateRange.start.getTime() / 1000) }
-        // });
-        // Mock implementation
-        return [
-            {
-                id: "ch_1234567890",
-                amount: 99.99,
-                currency: "usd",
-                date: new Date(),
-                metadata: { order_id: "order_123" },
-                sourceId: "ch_1234567890",
-                referenceId: "order_123",
-            },
-        ];
+        const stripe = new stripe_1.default(apiKey, {
+            apiVersion: "2023-10-16",
+        });
+        const listParams = {
+            limit: 100,
+        };
+        if (dateRange?.start || dateRange?.end) {
+            listParams.created = {};
+            if (dateRange.start) {
+                listParams.created.gte = Math.floor(dateRange.start.getTime() / 1000);
+            }
+            if (dateRange.end) {
+                listParams.created.lte = Math.floor(dateRange.end.getTime() / 1000);
+            }
+        }
+        const charges = await stripe.charges.list(listParams);
+        return charges.data.map((charge) => this.normalize(charge));
     }
     normalize(data) {
         // In production, normalize Stripe charge/payment object

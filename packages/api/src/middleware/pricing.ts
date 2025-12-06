@@ -38,7 +38,10 @@ export async function pricingMiddleware(
       return next();
     }
 
-    const tier = result[0].tier as PricingTier;
+    const tier = result[0]?.tier as PricingTier | undefined;
+    if (!tier) {
+      return next();
+    }
     req.pricingTier = tier;
     req.featureLimits = {
       edgeNodes: getFeatureLimit(tier, 'edgeNodes'),
@@ -63,8 +66,9 @@ export function requireFeature(feature: keyof typeof PRICING_TIERS[PricingTier.S
     if (!hasFeature(tier, feature)) {
       return sendError(
         res,
-        `Feature '${feature}' is not available in your pricing tier. Please upgrade to access this feature.`,
         403,
+        "FEATURE_NOT_AVAILABLE",
+        `Feature '${feature}' is not available in your pricing tier. Please upgrade to access this feature.`,
         {
           requiredTier: getRequiredTierForFeature(feature),
           currentTier: tier,
@@ -141,8 +145,9 @@ export function checkFeatureLimit(feature: 'edgeNodes' | 'modelOptimizations' | 
       if (currentUsage >= limit) {
         return sendError(
           res,
-          `Feature limit reached for '${feature}'. Current usage: ${currentUsage}/${limit}. Please upgrade your plan.`,
           403,
+          "FEATURE_LIMIT_REACHED",
+          `Feature limit reached for '${feature}'. Current usage: ${currentUsage}/${limit}. Please upgrade your plan.`,
           {
             feature,
             currentUsage,

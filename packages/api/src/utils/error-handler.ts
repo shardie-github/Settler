@@ -79,7 +79,7 @@ export function handleRouteError(
 export function asyncHandler(
   handler: (req: any, res: Response) => Promise<void>
 ) {
-  return async (req: any, res: Response, next: NextFunction): Promise<void> => {
+  return async (req: any, res: Response, _next: NextFunction): Promise<void> => {
     try {
       await handler(req, res);
     } catch (error) {

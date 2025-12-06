@@ -5,42 +5,9 @@
  */
 
 import { logInfo, logError } from '../utils/logger';
-import {
-  sendTrialWelcomeEmail,
-  sendTrialValueEmail,
-  sendTrialGatedFeaturesEmail,
-  sendTrialCaseStudyEmail,
-  sendTrialComparisonEmail,
-  sendTrialUrgencyEmail,
-  sendTrialEndedEmail,
-  sendPaidWelcomeEmail,
-  sendMonthlySummaryEmail,
-  sendLowActivityEmail,
-  LifecycleUser,
-  TrialData,
-} from '../lib/email-lifecycle';
 
-// Note: These imports are used in the scheduled job functions
-
-/**
- * Calculate days remaining in trial
- */
-function calculateDaysRemaining(trialEndDate: string): number {
-  const end = new Date(trialEndDate);
-  const now = new Date();
-  const diff = end.getTime() - now.getTime();
-  const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
-  return Math.max(0, days);
-}
-
-/**
- * Check if trial email should be sent based on days remaining
- */
-// Note: shouldSendTrialEmail is kept for future use in email scheduling logic
-function _shouldSendTrialEmail(trialEndDate: string, targetDays: number): boolean {
-  const daysRemaining = calculateDaysRemaining(trialEndDate);
-  return daysRemaining === targetDays;
-}
+// Note: These functions are kept for future use when email scheduling is fully implemented
+// They are currently commented out in the implementation but will be used later
 
 /**
  * Process trial lifecycle emails

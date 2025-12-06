@@ -136,10 +136,11 @@ export function requestSigningMiddleware(config: RequestSigningConfig) {
         path: req.path,
         method: req.method,
       });
-      return res.status(401).json({
+      res.status(401).json({
         error: 'Unauthorized',
         message: 'Missing signature headers',
       });
+      return;
     }
 
     // Get request body as string
@@ -161,10 +162,11 @@ export function requestSigningMiddleware(config: RequestSigningConfig) {
         method: req.method,
         reason: verification.reason,
       });
-      return res.status(401).json({
+      res.status(401).json({
         error: 'Unauthorized',
         message: verification.reason || 'Invalid signature',
       });
+      return;
     }
 
     // Attach signature info to request
@@ -188,10 +190,11 @@ export function webhookSignatureMiddleware(secret: string) {
     const timestamp = req.headers['x-webhook-timestamp'] as string;
 
     if (!signature || !timestamp) {
-      return res.status(401).json({
+      res.status(401).json({
         error: 'Unauthorized',
         message: 'Missing webhook signature',
       });
+      return;
     }
 
     const rawBody = typeof req.body === 'string' 
@@ -210,10 +213,11 @@ export function webhookSignatureMiddleware(secret: string) {
         path: req.path,
         reason: verification.reason,
       });
-      return res.status(401).json({
+      res.status(401).json({
         error: 'Unauthorized',
         message: 'Invalid webhook signature',
       });
+      return;
     }
 
     req.signature = {

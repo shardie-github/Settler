@@ -198,15 +198,16 @@ router.post(
         // Events table might not exist yet, ignore
       });
 
-      if (!result[0]) {
+      const apiKeyId = result[0]?.id;
+      if (!apiKeyId) {
         throw new Error('Failed to create API key');
       }
-      logInfo('API key created', { userId, apiKeyId: result[0].id });
+      logInfo('API key created', { userId, apiKeyId });
 
       // Return key only once (never again)
       res.status(201).json({
         data: {
-          id: result[0]?.id || '',
+          id: apiKeyId,
           key, // Only returned on creation
           name,
           scopes: scopes || ['jobs:read', 'jobs:write', 'reports:read'],
@@ -373,7 +374,7 @@ router.post(
           [
             'api_key_regenerated',
             userId,
-            JSON.stringify({ oldApiKeyId: id, newApiKeyId: result[0]?.id || '' }),
+            JSON.stringify({ oldApiKeyId: id, newApiKeyId: result.rows[0]?.id || '' }),
           ]
         );
 
@@ -386,20 +387,20 @@ router.post(
             'APIKeyRegenerated',
             JSON.stringify({
               oldApiKeyId: id,
-              newApiKeyId: result[0]?.id || '',
+              newApiKeyId: result.rows[0]?.id || '',
             }),
           ]
         ).catch(() => {
           // Events table might not exist yet, ignore
         });
 
-        if (!result[0]) {
+        if (!result.rows[0]) {
           throw new Error('Failed to regenerate API key');
         }
-        logInfo('API key regenerated', { userId, oldApiKeyId: id, newApiKeyId: result[0].id });
+        logInfo('API key regenerated', { userId, oldApiKeyId: id, newApiKeyId: result.rows[0].id });
         res.status(201).json({
           data: {
-            id: result[0].id,
+            id: result.rows[0].id,
             key, // Only returned on regeneration
             name: oldKey.name,
             scopes: oldKey.scopes,

@@ -21,11 +21,11 @@ export declare class StripeEnhancedAdapter implements EnhancedAdapter {
     /**
      * Poll transactions from Stripe API
      */
-    pollTransactions(config: AdapterConfig, _dateRange: DateRange): Promise<Transaction[]>;
+    pollTransactions(config: AdapterConfig, dateRange: DateRange): Promise<Transaction[]>;
     /**
      * Poll settlements from Stripe API
      */
-    pollSettlements(config: AdapterConfig, _dateRange: DateRange): Promise<Settlement[]>;
+    pollSettlements(config: AdapterConfig, dateRange: DateRange): Promise<Settlement[]>;
     /**
      * Extract fees from transaction payload
      */

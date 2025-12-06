@@ -87,7 +87,6 @@ router.post(
   asyncHandler(async (req: AuthRequest, res: Response) => {
     const { modelName, modelType, modelFile, format, metadata } = req.body;
     const tenantId = req.tenantId!;
-    const userId = req.userId!;
 
     const aiasClient = getAIASClient();
     const uploadResult = await aiasClient.uploadModel({
@@ -117,15 +116,19 @@ router.post(
       ]
     );
 
+    const modelId = modelResult[0]?.id;
+    if (!modelId) {
+      return sendError(res, 500, "INTERNAL_ERROR", "Failed to create model record");
+    }
     await trackEventAsync(tenantId, 'aias_model_uploaded', {
-      model_id: modelResult[0].id,
+      model_id: modelId,
       aias_job_id: uploadResult.jobId,
     });
 
-    logInfo(`Model uploaded to AIAS: ${modelResult[0].id}`);
+    logInfo(`Model uploaded to AIAS: ${modelId}`);
 
     sendSuccess(res, {
-      modelId: modelResult[0].id,
+      modelId: modelId,
       aiasJobId: uploadResult.jobId,
       aiasModelId: uploadResult.modelId,
       status: 'uploaded',
@@ -146,19 +149,26 @@ router.post(
     const { targetDevices, quantization, optimizationLevel } = req.body;
     const tenantId = req.tenantId!;
 
+    if (!modelId || !tenantId) {
+      return sendError(res, 400, "BAD_REQUEST", "Missing required parameters");
+    }
+
     // Verify model belongs to tenant
     const modelCheck = await query<{ id: string }>(
       `SELECT id FROM model_versions 
        WHERE id = $1 AND tenant_id = $2`,
-      [modelId, tenantId]
+      [modelId, tenantId] as (string | number | boolean | Date | null)[]
     );
 
     if (modelCheck.length === 0) {
-      return sendError(res, "Model not found", 404);
+      return sendError(res, 404, "NOT_FOUND", "Model not found");
     }
 
     const aiasClient = getAIASClient();
     const aiasModelId = await getAIASModelId(modelId);
+    if (!aiasModelId) {
+      return sendError(res, 404, "NOT_FOUND", "AIAS model ID not found");
+    }
     
     const optimizeResult = await aiasClient.optimizeModel({
       modelId: aiasModelId,
@@ -202,15 +212,24 @@ router.get(
     const { jobId } = req.params;
     const tenantId = req.tenantId!;
 
+    if (!jobId || !tenantId) {
+      return sendError(res, 400, "BAD_REQUEST", "Missing required parameters");
+    }
+
     // Verify job belongs to tenant's model
     const modelCheck = await query<{ id: string }>(
       `SELECT id FROM model_versions 
        WHERE aias_job_id = $1 AND tenant_id = $2`,
-      [jobId, tenantId]
+      [jobId, tenantId] as (string | number | boolean | Date | null)[]
     );
 
     if (modelCheck.length === 0) {
-      return sendError(res, "Job not found", 404);
+      return sendError(res, 404, "NOT_FOUND", "Job not found");
+    }
+
+    const modelVersionId = modelCheck[0]?.id;
+    if (!modelVersionId) {
+      return sendError(res, 404, "NOT_FOUND", "Model version not found");
     }
 
     const aiasClient = getAIASClient();
@@ -224,8 +243,8 @@ router.get(
          WHERE id = $2`,
         [
           JSON.stringify(status.result.benchmarkResults),
-          modelCheck[0].id,
-        ]
+          modelVersionId,
+        ] as (string | number | boolean | Date | null)[]
       );
     }
 
@@ -246,19 +265,26 @@ router.post(
     const { deviceProfile, testData } = req.body;
     const tenantId = req.tenantId!;
 
+    if (!modelId || !tenantId) {
+      return sendError(res, 400, "BAD_REQUEST", "Missing required parameters");
+    }
+
     // Verify model belongs to tenant
     const modelCheck = await query<{ id: string }>(
       `SELECT id FROM model_versions 
        WHERE id = $1 AND tenant_id = $2`,
-      [modelId, tenantId]
+      [modelId, tenantId] as (string | number | boolean | Date | null)[]
     );
 
     if (modelCheck.length === 0) {
-      return sendError(res, "Model not found", 404);
+      return sendError(res, 404, "NOT_FOUND", "Model not found");
     }
 
     const aiasClient = getAIASClient();
     const aiasModelId = await getAIASModelId(modelId);
+    if (!aiasModelId) {
+      return sendError(res, 404, "NOT_FOUND", "AIAS model ID not found");
+    }
     
     const benchmarkResult = await aiasClient.benchmarkModel({
       modelId: aiasModelId,
@@ -292,15 +318,24 @@ router.get(
     const { jobId } = req.params;
     const tenantId = req.tenantId!;
 
+    if (!jobId || !tenantId) {
+      return sendError(res, 400, "BAD_REQUEST", "Missing required parameters");
+    }
+
     // Verify job belongs to tenant's model
     const modelCheck = await query<{ id: string }>(
       `SELECT id FROM model_versions 
        WHERE aias_job_id = $1 AND tenant_id = $2`,
-      [jobId, tenantId]
+      [jobId, tenantId] as (string | number | boolean | Date | null)[]
     );
 
     if (modelCheck.length === 0) {
-      return sendError(res, "Job not found", 404);
+      return sendError(res, 404, "NOT_FOUND", "Job not found");
+    }
+
+    const modelVersionId = modelCheck[0]?.id;
+    if (!modelVersionId) {
+      return sendError(res, 404, "NOT_FOUND", "Model version not found");
     }
 
     const aiasClient = getAIASClient();
@@ -313,8 +348,8 @@ router.get(
        WHERE id = $2`,
       [
         JSON.stringify(results),
-        modelCheck.rows[0].id,
-      ]
+        modelVersionId,
+      ] as (string | number | boolean | Date | null)[]
     );
 
     sendSuccess(res, results);
@@ -334,15 +369,19 @@ router.post(
     const { format, targetDevice } = req.body;
     const tenantId = req.tenantId!;
 
+    if (!modelId || !tenantId) {
+      return sendError(res, 400, "BAD_REQUEST", "Missing required parameters");
+    }
+
     // Verify model belongs to tenant
     const modelCheck = await query<{ id: string }>(
       `SELECT id FROM model_versions 
        WHERE id = $1 AND tenant_id = $2`,
-      [modelId, tenantId]
+      [modelId, tenantId] as (string | number | boolean | Date | null)[]
     );
 
     if (modelCheck.length === 0) {
-      return sendError(res, "Model not found", 404);
+      return sendError(res, 404, "NOT_FOUND", "Model not found");
     }
 
     const aiasClient = getAIASClient();
@@ -401,7 +440,7 @@ router.get(
        WHERE tenant_id = $1
        ORDER BY created_at DESC
        LIMIT $2 OFFSET $3`,
-      [tenantId, limit, offset]
+      [tenantId, String(limit), String(offset)] as (string | number | boolean | Date | null)[]
     );
 
     const countResult = await query<{ count: string }>(
@@ -414,7 +453,7 @@ router.get(
       pagination: {
         page: Number(page),
         limit: Number(limit),
-        total: Number(countResult[0].count),
+        total: Number(countResult[0]?.count || 0),
       },
     });
   })
@@ -433,6 +472,10 @@ router.get(
   asyncHandler(async (req: AuthRequest, res: Response) => {
     const { modelId } = req.params;
     const tenantId = req.tenantId!;
+
+    if (!modelId || !tenantId) {
+      return sendError(res, 400, "BAD_REQUEST", "Missing required parameters");
+    }
 
     const result = await query<{
       id: string;
@@ -457,11 +500,14 @@ router.get(
       [modelId, tenantId]
     );
 
-    if (result.rows.length === 0) {
-      return sendError(res, "Model not found", 404);
+    if (result.length === 0) {
+      return sendError(res, 404, "NOT_FOUND", "Model not found");
     }
 
-    const model = result.rows[0];
+    const model = result[0];
+    if (!model) {
+      return sendError(res, 404, "NOT_FOUND", "Model not found");
+    }
     sendSuccess(res, {
       ...model,
       benchmark_results: model.benchmark_results ? JSON.parse(model.benchmark_results) : null,
@@ -483,11 +529,15 @@ async function getAIASModelId(modelVersionId: string): Promise<string> {
     [modelVersionId]
   );
 
-  if (result.rows.length === 0) {
+  if (result.length === 0) {
     throw new Error('Model not found');
   }
 
-  const metadata = JSON.parse(result[0].metadata || '{}');
+  const metadataRow = result[0];
+  if (!metadataRow) {
+    throw new Error('Model not found');
+  }
+  const metadata = JSON.parse(metadataRow.metadata || '{}');
   return metadata.aiasModelId || modelVersionId; // Fallback to model version ID
 }
 
