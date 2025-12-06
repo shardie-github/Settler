@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { SettlerClient } from "@settler/sdk";
+import { Skeleton, SkeletonCard, SkeletonText } from "@/components/ui/skeleton";
 
 interface DashboardProps {
   apiKey: string;
@@ -53,8 +54,40 @@ export default function Dashboard({ apiKey }: DashboardProps) {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-lg">Loading...</div>
+      <div className="min-h-screen bg-gray-50 p-8">
+        <div className="max-w-7xl mx-auto">
+          <div className="mb-8">
+            <Skeleton className="h-9 w-64 mb-2" />
+            <Skeleton className="h-5 w-96" />
+          </div>
+
+          {/* Stats Overview Skeleton */}
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <SkeletonCard key={i} showFooter={false} />
+            ))}
+          </div>
+
+          {/* Jobs List Skeleton */}
+          <div className="bg-white rounded-lg shadow">
+            <div className="px-6 py-4 border-b border-gray-200">
+              <Skeleton className="h-6 w-48" />
+            </div>
+            <div className="divide-y divide-gray-200">
+              {Array.from({ length: 5 }).map((_, i) => (
+                <div key={i} className="px-6 py-4">
+                  <div className="flex items-center justify-between">
+                    <div className="flex-1">
+                      <Skeleton className="h-5 w-48 mb-2" />
+                      <SkeletonText lines={2} lastLineShort={true} />
+                    </div>
+                    <Skeleton className="h-9 w-24" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
       </div>
     );
   }

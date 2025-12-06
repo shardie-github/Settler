@@ -12,25 +12,39 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Navigation } from "@/components/Navigation";
 import { Footer } from "@/components/Footer";
-import { UserPlus, AlertCircle } from "lucide-react";
+import { UserPlus, AlertCircle, CheckCircle2 } from "lucide-react";
 import Link from "next/link";
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { validateEmail, validatePassword } from "@/lib/utils/error-messages";
+import { cn } from "@/lib/utils";
 
 function SignUpForm() {
   const router = useRouter();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [emailError, setEmailError] = useState<string | null>(null);
+  const [passwordError, setPasswordError] = useState<string | null>(null);
+  const [passwordStrength, setPasswordStrength] = useState<"weak" | "medium" | "strong" | null>(null);
+  const [touched, setTouched] = useState({ email: false, password: false });
+
   const [state, formAction, isPending] = useActionState(
     async (_prevState: { error?: string } | null, formData: FormData) => {
-      const email = formData.get("email") as string;
-      const password = formData.get("password") as string;
+      const emailValue = formData.get("email") as string;
+      const passwordValue = formData.get("password") as string;
       const name = formData.get("name") as string;
 
-      if (!email || !password) {
-        return { error: "Email and password are required" };
+      // Client-side validation
+      const emailValidation = validateEmail(emailValue);
+      const passwordValidation = validatePassword(passwordValue);
+
+      if (!emailValidation.valid || !passwordValidation.valid) {
+        return {
+          error: emailValidation.error || passwordValidation.error || "Please fix the errors above",
+        };
       }
 
-      const result = await signUpUser(email, password, name);
+      const result = await signUpUser(emailValue, passwordValue, name);
 
       if (result.success) {
         router.push("/dashboard");
@@ -42,8 +56,41 @@ function SignUpForm() {
     null
   );
 
+  // Real-time email validation
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setEmail(value);
+    if (touched.email || value.length > 0) {
+      const validation = validateEmail(value);
+      setEmailError(validation.valid ? null : validation.error || null);
+    }
+  };
+
+  // Real-time password validation
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setPassword(value);
+    if (touched.password || value.length > 0) {
+      const validation = validatePassword(value);
+      setPasswordError(validation.valid ? null : validation.error || null);
+      setPasswordStrength(validation.strength || null);
+    }
+  };
+
+  const handleBlur = (field: "email" | "password") => {
+    setTouched((prev) => ({ ...prev, [field]: true }));
+    if (field === "email") {
+      const validation = validateEmail(email);
+      setEmailError(validation.valid ? null : validation.error || null);
+    } else if (field === "password") {
+      const validation = validatePassword(password);
+      setPasswordError(validation.valid ? null : validation.error || null);
+      setPasswordStrength(validation.strength || null);
+    }
+  };
+
   return (
-    <form action={formAction} className="space-y-6" noValidate>
+    <form action={formAction} className="space-y-6" noValidate method="POST">
       <div>
         <Label htmlFor="name" className="mb-2 block">
           Name (Optional)
@@ -55,36 +102,112 @@ function SignUpForm() {
         <Label htmlFor="email" className="mb-2 block">
           Email *
         </Label>
-        <Input
-          id="email"
-          name="email"
-          type="email"
-          placeholder="you@example.com"
-          required
-          className="w-full"
-          aria-describedby={state?.error ? "email-error" : undefined}
-          aria-invalid={state?.error ? "true" : "false"}
-        />
+        <div className="relative">
+          <Input
+            id="email"
+            name="email"
+            type="email"
+            placeholder="you@example.com"
+            required
+            value={email}
+            onChange={handleEmailChange}
+            onBlur={() => handleBlur("email")}
+            className={cn(
+              "w-full pr-10",
+              emailError && "border-red-500 focus:border-red-500 focus:ring-red-500",
+              !emailError && email && "border-green-500 focus:border-green-500 focus:ring-green-500"
+            )}
+            aria-describedby={emailError ? "email-error" : email ? "email-success" : undefined}
+            aria-invalid={emailError ? "true" : "false"}
+          />
+          {email && !emailError && (
+            <CheckCircle2
+              className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-green-500"
+              aria-hidden="true"
+            />
+          )}
+        </div>
+        {emailError && (
+          <p id="email-error" className="text-xs text-red-600 dark:text-red-400 mt-1 flex items-center gap-1">
+            <AlertCircle className="w-3 h-3" aria-hidden="true" />
+            {emailError}
+          </p>
+        )}
+        {email && !emailError && (
+          <p id="email-success" className="text-xs text-green-600 dark:text-green-400 mt-1">
+            Email looks good
+          </p>
+        )}
       </div>
 
       <div>
         <Label htmlFor="password" className="mb-2 block">
           Password *
         </Label>
-        <Input
-          id="password"
-          name="password"
-          type="password"
-          placeholder="••••••••"
-          required
-          minLength={8}
-          className="w-full"
-          aria-describedby="password-help password-error"
-          aria-invalid={state?.error ? "true" : "false"}
-        />
+        <div className="relative">
+          <Input
+            id="password"
+            name="password"
+            type="password"
+            placeholder="••••••••"
+            required
+            minLength={8}
+            value={password}
+            onChange={handlePasswordChange}
+            onBlur={() => handleBlur("password")}
+            className={cn(
+              "w-full pr-10",
+              passwordError && "border-red-500 focus:border-red-500 focus:ring-red-500",
+              !passwordError && password && passwordStrength && "border-green-500 focus:border-green-500 focus:ring-green-500"
+            )}
+            aria-describedby="password-help password-error password-strength"
+            aria-invalid={passwordError ? "true" : "false"}
+          />
+          {password && !passwordError && passwordStrength && (
+            <CheckCircle2
+              className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-green-500"
+              aria-hidden="true"
+            />
+          )}
+        </div>
         <p id="password-help" className="text-xs text-slate-500 dark:text-slate-400 mt-1">
           Must be at least 8 characters
         </p>
+        {passwordStrength && !passwordError && (
+          <div id="password-strength" className="mt-2">
+            <div className="flex items-center gap-2 mb-1">
+              <span className="text-xs font-medium text-slate-700 dark:text-slate-300">
+                Password strength:
+              </span>
+              <span
+                className={cn(
+                  "text-xs font-semibold",
+                  passwordStrength === "strong" && "text-green-600 dark:text-green-400",
+                  passwordStrength === "medium" && "text-yellow-600 dark:text-yellow-400",
+                  passwordStrength === "weak" && "text-red-600 dark:text-red-400"
+                )}
+              >
+                {passwordStrength.charAt(0).toUpperCase() + passwordStrength.slice(1)}
+              </span>
+            </div>
+            <div className="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-1.5">
+              <div
+                className={cn(
+                  "h-1.5 rounded-full transition-all duration-300",
+                  passwordStrength === "strong" && "w-full bg-green-500",
+                  passwordStrength === "medium" && "w-2/3 bg-yellow-500",
+                  passwordStrength === "weak" && "w-1/3 bg-red-500"
+                )}
+              />
+            </div>
+          </div>
+        )}
+        {passwordError && (
+          <p id="password-error" className="text-xs text-red-600 dark:text-red-400 mt-1 flex items-center gap-1">
+            <AlertCircle className="w-3 h-3" aria-hidden="true" />
+            {passwordError}
+          </p>
+        )}
       </div>
 
       {state?.error && (

@@ -12,6 +12,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import { ErrorBoundary } from "@/components/ui/error-boundary";
 import { QueryProvider } from "@/lib/providers/query-provider";
 import { ThemeInitializer } from "@/components/ThemeInitializer";
+import { SkipToMainContent } from "@/components/SkipToMainContent";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -125,6 +126,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body>
         <ThemeInitializer />
+        <SkipToMainContent />
         <ErrorBoundary componentName="RootLayout">
           <QueryProvider>
             <SmoothScroll>{children}</SmoothScroll>

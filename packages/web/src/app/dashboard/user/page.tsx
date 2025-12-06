@@ -18,6 +18,7 @@ import { Activity, TrendingUp, Clock, CheckCircle2, AlertCircle } from "lucide-r
 import Link from "next/link";
 import { UsageUpgradeBanner } from "@/components/UsageUpgradeBanner";
 import { OnboardingProgressClient } from "@/components/OnboardingProgressClient";
+import { Skeleton, SkeletonCard, SkeletonText } from "@/components/ui/skeleton";
 
 // Force dynamic rendering
 export const dynamic = "force-dynamic";
@@ -287,11 +288,25 @@ export default function UserDashboardPage() {
       fallback={
         <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-slate-900 dark:via-slate-800 dark:to-black">
           <Navigation />
-          <div className="flex items-center justify-center min-h-[60vh]">
-            <div className="text-center">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 dark:border-electric-cyan mx-auto mb-4"></div>
-              <p className="text-slate-600 dark:text-slate-400">Loading dashboard...</p>
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 pt-24">
+            {/* Usage Limits Skeleton */}
+            <div className="grid md:grid-cols-2 gap-4 mb-8">
+              <SkeletonCard showFooter={false} />
+              <SkeletonCard showFooter={false} />
             </div>
+
+            {/* Quick Stats Skeleton */}
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+              {Array.from({ length: 4 }).map((_, i) => (
+                <SkeletonCard key={i} showFooter={false} />
+              ))}
+            </div>
+
+            {/* Recent Jobs Skeleton */}
+            <SkeletonCard showFooter={true} className="mb-8" />
+
+            {/* Quick Actions Skeleton */}
+            <SkeletonCard showFooter={true} />
           </div>
           <Footer />
         </div>
