@@ -51,7 +51,9 @@ export async function sendTrialWelcomeEmail(
         trial_end_date: trialData.trialEndDate,
         trial_start_date: trialData.trialStartDate,
         days_remaining: trialData.daysRemaining,
-        charge_date: new Date(new Date(trialData.trialEndDate).getTime() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+        ...(trialData.trialEndDate && {
+          charge_date: new Date(new Date(trialData.trialEndDate).getTime() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+        }),
       },
       product: urls,
       urls: urls,

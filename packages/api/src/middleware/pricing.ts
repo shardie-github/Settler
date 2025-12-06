@@ -34,11 +34,11 @@ export async function pricingMiddleware(
       [tenantId]
     );
 
-    if (result.rows.length === 0) {
+    if (result.length === 0) {
       return next();
     }
 
-    const tier = result.rows[0].tier as PricingTier;
+    const tier = result[0].tier as PricingTier;
     req.pricingTier = tier;
     req.featureLimits = {
       edgeNodes: getFeatureLimit(tier, 'edgeNodes'),
@@ -104,7 +104,7 @@ export function checkFeatureLimit(feature: 'edgeNodes' | 'modelOptimizations' | 
              WHERE tenant_id = $1 AND deleted_at IS NULL`,
             [tenantId]
           );
-          currentUsage = Number(nodesResult.rows[0]?.count || 0);
+          currentUsage = Number(nodesResult[0]?.count || 0);
           break;
 
         case 'modelOptimizations':
@@ -115,7 +115,7 @@ export function checkFeatureLimit(feature: 'edgeNodes' | 'modelOptimizations' | 
              AND created_at >= date_trunc('month', CURRENT_DATE)`,
             [tenantId]
           );
-          currentUsage = Number(optimizationsResult.rows[0]?.count || 0);
+          currentUsage = Number(optimizationsResult[0]?.count || 0);
           break;
 
         case 'monthlyReconciliations':
@@ -126,7 +126,7 @@ export function checkFeatureLimit(feature: 'edgeNodes' | 'modelOptimizations' | 
              AND created_at >= date_trunc('month', CURRENT_DATE)`,
             [tenantId]
           );
-          currentUsage = Number(reconciliationsResult.rows[0]?.count || 0);
+          currentUsage = Number(reconciliationsResult[0]?.count || 0);
           break;
 
         case 'apiCalls':
