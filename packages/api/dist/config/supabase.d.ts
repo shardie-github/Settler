@@ -2,7 +2,7 @@
  * Supabase Configuration
  */
 export declare const supabaseConfig: {
-    url: string;
+    url: any;
     anonKey: string;
     serviceRoleKey: string;
     realtime: {

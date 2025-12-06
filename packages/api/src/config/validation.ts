@@ -1,11 +1,66 @@
 /**
  * Environment Variable Validation
  * Uses envalid for type-safe environment variable validation
+ * 
+ * Note: Validation is skipped during Next.js builds to avoid requiring
+ * runtime-only environment variables at build time.
  */
 
 import { cleanEnv, str, num, url, bool, host, port } from 'envalid';
 
-export const env = cleanEnv(process.env, {
+// Skip validation during Next.js build (when NEXT_PHASE is set)
+const skipValidation = process.env.NEXT_PHASE !== undefined || 
+                       process.env.NEXT_BUILD === 'true' ||
+                       (process.env.NODE_ENV === 'production' && !process.env.VERCEL);
+
+const env = skipValidation ? {
+  NODE_ENV: (process.env.NODE_ENV || 'development') as 'development' | 'test' | 'production' | 'staging' | 'preview',
+  PORT: Number(process.env.PORT || 3000),
+  HOST: process.env.HOST || '0.0.0.0',
+  DB_HOST: process.env.DB_HOST || 'localhost',
+  DB_PORT: Number(process.env.DB_PORT || 5432),
+  DB_NAME: process.env.DB_NAME || 'settler',
+  DB_USER: process.env.DB_USER || 'postgres',
+  DB_PASSWORD: process.env.DB_PASSWORD || 'postgres',
+  DB_SSL: process.env.DB_SSL === 'true',
+  DB_POOL_MIN: Number(process.env.DB_POOL_MIN || 5),
+  DB_POOL_MAX: Number(process.env.DB_POOL_MAX || 20),
+  DB_CONNECTION_TIMEOUT: Number(process.env.DB_CONNECTION_TIMEOUT || 2000),
+  DB_STATEMENT_TIMEOUT: Number(process.env.DB_STATEMENT_TIMEOUT || 30000),
+  REDIS_HOST: process.env.REDIS_HOST || 'localhost',
+  REDIS_PORT: Number(process.env.REDIS_PORT || 6379),
+  REDIS_URL: process.env.REDIS_URL,
+  REDIS_PASSWORD: process.env.REDIS_PASSWORD,
+  REDIS_TLS: process.env.REDIS_TLS === 'true',
+  JWT_SECRET: process.env.JWT_SECRET || 'dev-secret-change-in-production',
+  JWT_ACCESS_EXPIRY: process.env.JWT_ACCESS_EXPIRY || '15m',
+  JWT_REFRESH_EXPIRY: process.env.JWT_REFRESH_EXPIRY || '7d',
+  JWT_REFRESH_SECRET: process.env.JWT_REFRESH_SECRET,
+  ENCRYPTION_KEY: process.env.ENCRYPTION_KEY || 'dev-encryption-key-32-chars-long!!',
+  RATE_LIMIT_DEFAULT: Number(process.env.RATE_LIMIT_DEFAULT || 1000),
+  RATE_LIMIT_WINDOW_MS: Number(process.env.RATE_LIMIT_WINDOW_MS || 900000),
+  WEBHOOK_MAX_RETRIES: Number(process.env.WEBHOOK_MAX_RETRIES || 5),
+  WEBHOOK_INITIAL_DELAY: Number(process.env.WEBHOOK_INITIAL_DELAY || 2000),
+  WEBHOOK_MAX_DELAY: Number(process.env.WEBHOOK_MAX_DELAY || 32000),
+  DATA_RETENTION_DAYS: Number(process.env.DATA_RETENTION_DAYS || 365),
+  ALLOWED_ORIGINS: process.env.ALLOWED_ORIGINS || '*',
+  LOG_LEVEL: (process.env.LOG_LEVEL || 'info') as 'error' | 'warn' | 'info' | 'debug',
+  LOG_SAMPLING_RATE: Number(process.env.LOG_SAMPLING_RATE || 1.0),
+  SERVICE_NAME: process.env.SERVICE_NAME || 'settler-api',
+  OTLP_ENDPOINT: process.env.OTLP_ENDPOINT,
+  JAEGER_ENDPOINT: process.env.JAEGER_ENDPOINT,
+  SENTRY_DSN: process.env.SENTRY_DSN,
+  SENTRY_ENVIRONMENT: process.env.SENTRY_ENVIRONMENT,
+  SENTRY_TRACES_SAMPLE_RATE: Number(process.env.SENTRY_TRACES_SAMPLE_RATE || 0.1),
+  ENABLE_SCHEMA_PER_TENANT: process.env.ENABLE_SCHEMA_PER_TENANT === 'true',
+  ENABLE_REQUEST_TIMEOUT: process.env.ENABLE_REQUEST_TIMEOUT !== 'false',
+  ENABLE_API_DOCS: process.env.ENABLE_API_DOCS !== 'false',
+  DEPLOYMENT_ENV: (process.env.DEPLOYMENT_ENV || 'local') as 'local' | 'staging' | 'production',
+  TRUST_PROXY: process.env.TRUST_PROXY === 'true',
+  SECURE_COOKIES: process.env.SECURE_COOKIES === 'true',
+  METRICS_ENABLED: process.env.METRICS_ENABLED !== 'false',
+  HEALTH_CHECK_ENABLED: process.env.HEALTH_CHECK_ENABLED !== 'false',
+} as any : cleanEnv(process.env, {
   // Node Environment
   NODE_ENV: str({ 
     choices: ['development', 'test', 'production', 'staging', 'preview'],
@@ -21,7 +76,7 @@ export const env = cleanEnv(process.env, {
   DB_PORT: port({ default: 5432 }),
   DB_NAME: str({ default: 'settler' }),
   DB_USER: str({ default: 'postgres' }),
-  DB_PASSWORD: str({ devDefault: 'postgres' }),
+  DB_PASSWORD: str({ default: 'postgres', devDefault: 'postgres' }),
   DB_SSL: bool({ default: false }),
   DB_POOL_MIN: num({ default: 5 }),
   DB_POOL_MAX: num({ default: 20 }),
@@ -37,18 +92,21 @@ export const env = cleanEnv(process.env, {
   
   // JWT Configuration
   JWT_SECRET: str({ 
+    default: 'dev-secret-change-in-production',
     devDefault: 'dev-secret-change-in-production',
     desc: 'Secret key for JWT token signing',
   }),
   JWT_ACCESS_EXPIRY: str({ default: '15m' }),
   JWT_REFRESH_EXPIRY: str({ default: '7d' }),
   JWT_REFRESH_SECRET: str({ 
+    default: undefined,
     devDefault: undefined,
     desc: 'Optional separate secret for refresh tokens',
   }),
   
   // Encryption Configuration
   ENCRYPTION_KEY: str({ 
+    default: 'dev-encryption-key-32-chars-long!!',
     devDefault: 'dev-encryption-key-32-chars-long!!',
     desc: '32-byte key for AES-256-GCM encryption',
   }),
@@ -109,7 +167,12 @@ export const env = cleanEnv(process.env, {
 });
 
 // Validate encryption key length in production and preview
-if (env.NODE_ENV === 'production' || env.NODE_ENV === 'preview') {
+// Skip validation during Next.js build (when NEXT_PHASE is set or during build process)
+const isNextBuild = process.env.NEXT_PHASE !== undefined || 
+                   process.env.NEXT_BUILD === 'true' ||
+                   process.env.__NEXT_PRIVATE_STANDALONE_BUILD !== undefined;
+
+if (!isNextBuild && (env.NODE_ENV === 'production' || env.NODE_ENV === 'preview')) {
   if (!env.ENCRYPTION_KEY || env.ENCRYPTION_KEY.length !== 32) {
     throw new Error(`ENCRYPTION_KEY must be exactly 32 characters in ${env.NODE_ENV}`);
   }

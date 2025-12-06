@@ -16,29 +16,63 @@ npm warn config       Default value does install optional deps unless otherwise 
    Checking validity of types ...
  ⚠ TypeScript project references are not fully supported. Attempting to build in incremental mode.
    Collecting page data ...
-[37m================================[0m
- [33mMissing[0m environment variables:
-    [34mDB_PASSWORD[0m: undefined
-    [34mENCRYPTION_KEY[0m: 32-byte key for AES-256-GCM encryption
-    [34mJWT_REFRESH_SECRET[0m: Optional separate secret for refresh tokens
-    [34mJWT_SECRET[0m: Secret key for JWT token signing
-[37m================================[0m
-[33m
- Exiting with error code 1[0m
-[37m================================[0m
- [33mMissing[0m environment variables:
-    [34mDB_PASSWORD[0m: undefined
-    [34mENCRYPTION_KEY[0m: 32-byte key for AES-256-GCM encryption
-    [34mJWT_REFRESH_SECRET[0m: Optional separate secret for refresh tokens
-    [34mJWT_SECRET[0m: Secret key for JWT token signing
-[37m================================[0m
-[33m
- Exiting with error code 1[0m
- ⨯ Next.js build worker exited with code: 1 and signal: null
-npm error Lifecycle script `build` failed with error:
-npm error code 1
-npm error path /workspace/packages/web
-npm error workspace @settler/web@1.0.0
-npm error location /workspace/packages/web
-npm error command failed
-npm error command sh -c next build
+2025-12-06T02:59:43.872Z [[33mwarn[39m]: RESEND_API_KEY not set - email sending will be disabled {"service":"settler-api","environment":"production"}
+2025-12-06T02:59:43.881Z [[33mwarn[39m]: RESEND_API_KEY not set - email sending will be disabled {"service":"settler-api","environment":"production"}
+2025-12-06T02:59:43.889Z [[33mwarn[39m]: RESEND_API_KEY not set - email sending will be disabled {"service":"settler-api","environment":"production"}
+   Generating static pages (0/30) ...
+[ERROR] Email lifecycle cron job failed {
+  error: "Dynamic server usage: Route /api/cron/email-lifecycle couldn't be rendered statically because it used `request.headers`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error"
+}
+[ERROR] Monthly summary cron job failed {
+  error: "Dynamic server usage: Route /api/cron/monthly-summary couldn't be rendered statically because it used `request.headers`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error"
+}
+[ERROR] Low activity cron job failed {
+  error: "Dynamic server usage: Route /api/cron/low-activity couldn't be rendered statically because it used `request.headers`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error"
+}
+   Generating static pages (7/30) 
+   Generating static pages (14/30) 
+   Generating static pages (22/30) 
+ ✓ Generating static pages (30/30)
+   Finalizing page optimization ...
+   Collecting build traces ...
+
+Route (app)                              Size     First Load JS
+┌ ○ /                                    49.1 kB         159 kB
+├ ○ /_not-found                          876 B          88.4 kB
+├ ƒ /api/analytics                       0 B                0 B
+├ ƒ /api/cron/email-lifecycle            0 B                0 B
+├ ƒ /api/cron/low-activity               0 B                0 B
+├ ƒ /api/cron/monthly-summary            0 B                0 B
+├ ƒ /api/status/health                   0 B                0 B
+├ ƒ /api/user/pre-test                   0 B                0 B
+├ ƒ /api/user/upgrade                    0 B                0 B
+├ ○ /community                           55.4 kB         166 kB
+├ ○ /cookbooks                           9.12 kB         116 kB
+├ ○ /dashboard                           147 B          87.6 kB
+├ ƒ /dashboard/user                      7.72 kB         111 kB
+├ ○ /docs                                5.8 kB          112 kB
+├ ○ /edge-ai                             182 B          96.4 kB
+├ ○ /edge-ai/nodes                       182 B          96.4 kB
+├ ○ /edge-ai/nodes/new                   3.78 kB         107 kB
+├ ○ /enterprise                          6.9 kB          117 kB
+├ ○ /legal/license                       2.79 kB         106 kB
+├ ○ /legal/privacy                       2.79 kB         106 kB
+├ ○ /legal/terms                         2.79 kB         106 kB
+├ ○ /mobile                              5.71 kB         229 kB
+├ ○ /playground                          5.25 kB         112 kB
+├ ○ /pricing                             7.24 kB         117 kB
+├ ○ /react-settler-demo                  20.7 kB         269 kB
+├ ƒ /realtime-dashboard                  2.39 kB         109 kB
+├ ○ /robots.txt                          0 B                0 B
+├ ○ /signup                              2.6 kB          106 kB
+├ ○ /sitemap.xml                         0 B                0 B
+└ ○ /support                             6.82 kB         113 kB
++ First Load JS shared by all            87.5 kB
+  ├ chunks/1528-fad2963338cdfd0a.js      31.7 kB
+  ├ chunks/1dd3208c-8c82fb782261432e.js  53.6 kB
+  └ other shared chunks (total)          2.15 kB
+
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+
