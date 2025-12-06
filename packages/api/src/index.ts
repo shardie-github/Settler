@@ -41,6 +41,8 @@ import { v4 as uuidv4 } from "uuid";
 import { startDataRetentionJob } from "./jobs/data-retention";
 import { startMaterializedViewRefreshJob } from "./jobs/materialized-view-refresh";
 import { processPendingWebhooks } from "./utils/webhook-queue";
+import { initializeScheduledJobs, shutdownScheduler } from "./infrastructure/jobs/scheduler";
+import { checkUsageQuota } from "./middleware/usage-quota";
 import { versionMiddleware } from "./middleware/versioning";
 import { v1Router } from "./routes/v1";
 import { v2Router } from "./routes/v2";
@@ -220,6 +222,10 @@ app.use("/api", versionMiddleware);
 app.use("/api/v1", idempotencyMiddleware());
 app.use("/api/v2", idempotencyMiddleware());
 
+// Usage quota checking (before rate limiting)
+app.use("/api/v1", authMiddleware, checkUsageQuota);
+app.use("/api/v2", authMiddleware, checkUsageQuota);
+
 // Rate limiting per API key
 app.use("/api/v1", authMiddleware, rateLimitMiddleware());
 app.use("/api/v2", authMiddleware, rateLimitMiddleware());
@@ -313,6 +319,10 @@ app.use("/api/v2/notifications", authMiddleware, notificationsRouter);
 app.use("/api/v1/usage", authMiddleware, usageRouter);
 app.use("/api/v2/usage", authMiddleware, usageRouter);
 
+// User routes (requires auth)
+import userRouter from "./routes/user";
+app.use("/api/user", authMiddleware, userRouter);
+
 // Batch processing routes (requires auth)
 app.use("/api/v1/batch", authMiddleware, batchRouter);
 app.use("/api/v2/batch", authMiddleware, batchRouter);
@@ -369,11 +379,18 @@ async function startServer() {
     await initDatabase();
     logInfo("Database initialized");
 
-    // Start background jobs
-    startDataRetentionJob();
-    startMaterializedViewRefreshJob();
+    // Initialize BullMQ scheduled jobs (replaces setTimeout/setInterval)
+    try {
+      await initializeScheduledJobs();
+      logInfo("Scheduled jobs initialized");
+    } catch (error) {
+      logError("Failed to initialize scheduled jobs", error);
+      // Fallback to old system if BullMQ fails
+      startDataRetentionJob();
+      startMaterializedViewRefreshJob();
+    }
 
-    // Process pending webhooks every minute
+    // Process pending webhooks (now handled by BullMQ, but keep as fallback)
     const webhookInterval = setInterval(() => {
       processPendingWebhooks().catch((error) => {
         logError("Failed to process pending webhooks", error);
@@ -384,6 +401,11 @@ async function startServer() {
     registerShutdownHandler(async () => {
       clearInterval(webhookInterval);
       logInfo("Webhook processing stopped");
+    });
+    
+    // Register scheduler shutdown
+    registerShutdownHandler(async () => {
+      await shutdownScheduler();
     });
 
     const httpServer = createServer(app);

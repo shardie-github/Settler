@@ -1,20 +1,20 @@
 # Getting Started with Settler
 
-**Automate financial reconciliation across all your platforms in 5 minutes.**
+**Automate financial reconciliation across your platforms. Quick setup in under 30 minutes.**
 
 ---
 
 ## What is Settler?
 
-Settler is **Reconciliation-as-a-Service**—an API that automatically matches and reconciles transactions across Stripe, Shopify, QuickBooks, PayPal, and 15+ other platforms. Think "Resend for reconciliation"—dead-simple onboarding, pure API, usage-based pricing.
+Settler is **Reconciliation-as-a-Service**—an API that automatically matches and reconciles transactions across Stripe, Shopify, QuickBooks, PayPal, Square, Xero, and more. Think "Resend for reconciliation"—simple onboarding, pure API, usage-based pricing.
 
 **The Problem:** Modern businesses operate across 10+ platforms. Data inconsistencies cause revenue leakage, compliance risks, and hours of manual work.
 
-**The Solution:** Settler normalizes, validates, and reconciles data across all sources in real-time—with instant alerts, audit trails, and compliance built-in.
+**The Solution:** Settler normalizes, validates, and reconciles data across all sources with event-driven processing—with alerts, audit trails, and compliance features built-in.
 
 ---
 
-## Quick Start (5 Minutes)
+## Quick Start (15-30 Minutes)
 
 ### Step 1: Sign Up
 
@@ -230,31 +230,25 @@ const job = await settler.jobs.create({
 
 ## Supported Platforms
 
-### Payment Processors
+### Currently Available
 
+**Payment Processors:**
 - ✅ Stripe
 - ✅ PayPal
 - ✅ Square
-- ✅ Adyen
-- ✅ Braintree
 
-### E-commerce Platforms
-
+**E-commerce Platforms:**
 - ✅ Shopify
-- ✅ WooCommerce
-- ✅ BigCommerce
-- ✅ Magento
 
-### Accounting Systems
-
+**Accounting Systems:**
 - ✅ QuickBooks
 - ✅ Xero
-- ✅ NetSuite
-- ✅ Sage
 
-### More Coming Soon
+### Coming Soon
 
-We're adding new adapters every month. [Request an adapter →](https://settler.io/adapters/request)
+We're adding new adapters regularly. Coming soon: Adyen, Braintree, WooCommerce, BigCommerce, Magento, NetSuite, Sage.
+
+[Request an adapter →](https://settler.io/adapters/request)
 
 ---
 
@@ -264,9 +258,9 @@ We're adding new adapters every month. [Request an adapter →](https://settler.
 
 Connect to Stripe, Shopify, QuickBooks, PayPal, and more with one line of code.
 
-### ⚡ Real-Time Processing
+### ⚡ Event-Driven Processing
 
-Webhook-driven reconciliation as events happen—no polling required.
+Webhook-driven reconciliation with flexible scheduling—no manual polling required.
 
 ### 🎯 Smart Matching
 
@@ -282,7 +276,7 @@ JSON, CSV, and PDF exports with detailed insights and audit trails.
 
 ### 🔐 Enterprise Security
 
-SOC 2 Type II ready, GDPR compliant, PCI-DSS ready. Compliance built-in.
+AES-256 encryption, GDPR compliant, secure API key storage. SOC 2 Type II certification in progress (Q2 2026).
 
 ### 📈 Scales Automatically
 
@@ -298,13 +292,9 @@ Full type safety and IntelliSense support. Works with your existing stack.
 
 **Free Forever:** 1,000 reconciliations/month — Perfect for testing
 
-**Starter:** $29/month — 10,000 reconciliations — Small businesses
+**Commercial:** $99/month — 100,000 reconciliations — Growing companies
 
-**Growth:** $99/month — 100,000 reconciliations — Growing companies
-
-**Scale:** $299/month — 1,000,000 reconciliations — High-volume operations
-
-**Enterprise:** Custom — Unlimited usage, dedicated infrastructure, custom SLAs
+**Enterprise:** Custom — Unlimited usage, dedicated support, custom SLAs
 
 [View full pricing →](https://settler.io/pricing)
 

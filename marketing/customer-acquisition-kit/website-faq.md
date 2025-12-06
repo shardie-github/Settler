@@ -8,7 +8,7 @@
 
 ### What is Settler?
 
-Settler is **Reconciliation-as-a-Service**—an API that automatically matches and reconciles transactions across Stripe, Shopify, QuickBooks, PayPal, and 15+ other platforms. Think "Resend for reconciliation"—dead-simple onboarding, pure API, usage-based pricing.
+Settler is **Reconciliation-as-a-Service**—an API that automatically matches and reconciles transactions across Stripe, Shopify, QuickBooks, PayPal, Square, Xero, and more. Think "Resend for reconciliation"—simple onboarding, pure API, usage-based pricing.
 
 ### Who is Settler for?
 
@@ -24,17 +24,17 @@ Settler is **Reconciliation-as-a-Service**—an API that automatically matches a
 
 ### How is Settler different from QuickBooks/Xero reconciliation?
 
-QuickBooks and Xero have **manual** reconciliation features. Settler is **fully automated** via API:
+QuickBooks and Xero have **manual** reconciliation features. Settler provides **automated reconciliation** via API:
 
-- ✅ Real-time webhook reconciliation (no manual steps)
+- ✅ Event-driven webhook reconciliation (with flexible scheduling)
 - ✅ Multi-platform reconciliation (not just accounting systems)
 - ✅ Programmatic access (integrate into your workflows)
-- ✅ Smart matching rules (fuzzy matching, custom logic)
+- ✅ Smart matching rules (exact, fuzzy, range matching)
 - ✅ Developer-friendly (TypeScript SDK, full API)
 
 ### Do I need to be a developer to use Settler?
 
-**For production use:** Yes, you'll need a developer to integrate the SDK (takes ~5 minutes).
+**For production use:** Yes, you'll need a developer to integrate the SDK (takes ~15-30 minutes for first job).
 
 **For testing:** No! Try our [Playground](https://settler.io/playground) to test integrations visually without code.
 
@@ -44,12 +44,13 @@ QuickBooks and Xero have **manual** reconciliation features. Settler is **fully 
 
 ### How long does it take to set up?
 
-**First reconciliation job:** ~5 minutes
+**First reconciliation job:** ~15-30 minutes
 
 1. Install SDK (`npm install @settler/sdk`)
 2. Get API key (from dashboard)
-3. Create job (one API call)
-4. Done!
+3. Configure adapter connections
+4. Create job with matching rules
+5. Test and verify
 
 **Full production setup:** 1-2 hours
 
@@ -170,13 +171,14 @@ rules: {
 
 ### Which platforms do you support?
 
-**Payment Processors:** Stripe, PayPal, Square, Adyen, Braintree
+**Currently Available (7+ adapters):**
+- **Payment Processors:** Stripe, PayPal, Square
+- **E-commerce:** Shopify
+- **Accounting:** QuickBooks, Xero
 
-**E-commerce:** Shopify, WooCommerce, BigCommerce, Magento
+**Coming Soon:** Adyen, Braintree, WooCommerce, BigCommerce, Magento, NetSuite, Sage
 
-**Accounting:** QuickBooks, Xero, NetSuite, Sage
-
-**More:** See [full list →](https://docs.settler.io/adapters)
+See [full list →](https://docs.settler.io/adapters)
 
 ### Can I add a platform that's not supported?
 
@@ -347,14 +349,18 @@ We follow SOC 2 controls today and will be fully certified soon.
 ### What's included in Enterprise?
 
 - ✅ Unlimited reconciliations
-- ✅ Dedicated infrastructure
-- ✅ SOC 2 Type II certification
-- ✅ SSO (SAML, OIDC)
-- ✅ Custom SLAs (99.99% uptime)
+- ✅ Dedicated support (SLA)
+- ✅ Custom SLAs
 - ✅ Dedicated account manager
-- ✅ VPC peering / private endpoints
 - ✅ Custom adapters
-- ✅ White-label reports
+- ✅ Extended log retention (up to 7 years)
+- ✅ Priority feature requests
+
+**Coming Soon:**
+- SSO (SAML, OIDC) - Q2 2026
+- SOC 2 Type II certification - Q2 2026
+- PCI-DSS Level 1 - Q3 2026
+- White-label reports - Q2 2026
 
 [Contact Enterprise Sales →](https://settler.io/contact/enterprise)
 

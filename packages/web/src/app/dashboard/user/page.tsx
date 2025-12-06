@@ -4,7 +4,7 @@
  * Shows user's reconciliation data, trial status, usage stats, and personalized recommendations
  */
 
-import { Suspense } from "react";
+import { Suspense, use } from "react";
 import { redirect } from "next/navigation";
 import { Navigation } from "@/components/Navigation";
 import { Footer } from "@/components/Footer";
@@ -16,6 +16,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Activity, TrendingUp, Clock, CheckCircle2, AlertCircle } from "lucide-react";
 import Link from "next/link";
+import { UsageUpgradeBanner } from "@/components/UsageUpgradeBanner";
+import { OnboardingProgressClient } from "@/components/OnboardingProgressClient";
 
 // Force dynamic rendering
 export const dynamic = "force-dynamic";
@@ -27,8 +29,8 @@ async function fetchUserDashboard(): Promise<UserDashboardData | null> {
   return getUserDashboardData();
 }
 
-async function UserDashboardContent() {
-  const data = await fetchUserDashboard();
+function UserDashboardContent() {
+  const data = use(fetchUserDashboard());
 
   // Redirect to signup if not authenticated
   if (!data) {
@@ -55,6 +57,16 @@ async function UserDashboardContent() {
       <Navigation />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 pt-24">
+        {/* Usage Upgrade Banner */}
+        {typeof data.usage.reconciliations.limit === "number" && (
+          <UsageUpgradeBanner
+            currentUsage={data.usage.reconciliations.current}
+            limit={data.usage.reconciliations.limit}
+            planType={data.user.planType}
+            metricType="reconciliations"
+          />
+        )}
+
         {/* Trial Countdown Banner */}
         {data.user.planType === "trial" && data.user.trialEndDate && (
           <TrialCountdownBanner
@@ -62,6 +74,11 @@ async function UserDashboardContent() {
             userPlan={data.user.planType}
           />
         )}
+
+        {/* Onboarding Progress */}
+        <div className="mb-8">
+          <OnboardingProgressClient />
+        </div>
 
         {/* Usage Limits */}
         <div className="grid md:grid-cols-2 gap-4 mb-8">
@@ -153,14 +170,32 @@ async function UserDashboardContent() {
           </CardHeader>
           <CardContent>
             {data.recentJobs.length === 0 ? (
-              <EmptyState
-                title="No jobs yet"
-                description="Create your first reconciliation job to get started"
-                action={{
-                  label: "Create Job",
-                  onClick: () => (window.location.href = "/playground"),
-                }}
-              />
+              <div className="space-y-4">
+                <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-6">
+                  <h3 className="font-semibold text-blue-900 dark:text-blue-300 mb-2">
+                    🚀 Get Started with Your First Reconciliation
+                  </h3>
+                  <p className="text-sm text-blue-800 dark:text-blue-400 mb-4">
+                    Create your first reconciliation job in just a few minutes. Our step-by-step guide will walk you through the process.
+                  </p>
+                  <div className="flex flex-col sm:flex-row gap-3">
+                    <Button asChild className="bg-blue-600 hover:bg-blue-700">
+                      <Link href="/playground">Start Onboarding</Link>
+                    </Button>
+                    <Button asChild variant="outline">
+                      <Link href="/docs/getting-started">View Guide</Link>
+                    </Button>
+                  </div>
+                </div>
+                <EmptyState
+                  title="No jobs yet"
+                  description="Create your first reconciliation job to get started"
+                  action={{
+                    label: "Create Job",
+                    onClick: () => (window.location.href = "/playground"),
+                  }}
+                />
+              </div>
             ) : (
               <div className="space-y-4">
                 {data.recentJobs.map((job) => (
