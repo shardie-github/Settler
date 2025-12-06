@@ -210,11 +210,11 @@ export async function GET(request: NextRequest) {
           await sendTrialEndedEmail(lifecycleUser);
           
           // Update plan to free if not upgraded
-          await supabase
-            .from('profiles')
-            .update({ plan_type: 'free' } as any)
+          await ((supabase
+            .from('profiles') as any)
+            .update({ plan_type: 'free' })
             .eq('id', user.id)
-            .eq('plan_type', 'trial') as any;
+            .eq('plan_type', 'trial'));
           
           await supabase.rpc('update_email_sent', {
             p_user_id: user.id,

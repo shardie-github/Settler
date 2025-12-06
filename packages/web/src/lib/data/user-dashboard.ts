@@ -136,15 +136,15 @@ export async function savePreTestAnswers(answers: Record<string, any>): Promise<
       return { success: false, error: 'Not authenticated' };
     }
 
-    const { error } = await supabase
-      .from('profiles')
+    const { error } = await ((supabase
+      .from('profiles') as any)
       .update({
         pre_test_completed: true,
         pre_test_answers: answers,
         industry: answers.industry,
         updated_at: new Date().toISOString(),
-      } as any)
-      .eq('id', user.id) as { error: any };
+      })
+      .eq('id', user.id)) as { error: any };
 
     if (error) {
       return { success: false, error: error.message };

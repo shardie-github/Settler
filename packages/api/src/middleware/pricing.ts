@@ -3,7 +3,7 @@
  * Enforces feature gates based on pricing tier
  */
 
-import { Request, Response, NextFunction } from 'express';
+import { Response, NextFunction } from 'express';
 import { AuthRequest } from './auth';
 import { query } from '../db';
 import { PricingTier, PRICING_TIERS, hasFeature, getFeatureLimit } from '../config/pricing';
@@ -19,7 +19,7 @@ export interface PricingRequest extends AuthRequest {
  */
 export async function pricingMiddleware(
   req: PricingRequest,
-  res: Response,
+  _res: Response,
   next: NextFunction
 ): Promise<void> {
   try {
@@ -34,11 +34,11 @@ export async function pricingMiddleware(
       [tenantId]
     );
 
-    if (result.rows.length === 0) {
+    if (result.length === 0) {
       return next();
     }
 
-    const tier = result.rows[0].tier as PricingTier;
+    const tier = result[0]?.tier as PricingTier;
     req.pricingTier = tier;
     req.featureLimits = {
       edgeNodes: getFeatureLimit(tier, 'edgeNodes'),
@@ -61,15 +61,17 @@ export function requireFeature(feature: keyof typeof PRICING_TIERS[PricingTier.S
     const tier = req.pricingTier || PricingTier.SAAS_ONLY;
 
     if (!hasFeature(tier, feature)) {
-      return sendError(
+      sendError(
         res,
-        `Feature '${feature}' is not available in your pricing tier. Please upgrade to access this feature.`,
         403,
+        'FEATURE_NOT_AVAILABLE',
+        `Feature '${feature}' is not available in your pricing tier. Please upgrade to access this feature.`,
         {
           requiredTier: getRequiredTierForFeature(feature),
           currentTier: tier,
         }
       );
+      return;
     }
 
     next();
@@ -104,7 +106,7 @@ export function checkFeatureLimit(feature: 'edgeNodes' | 'modelOptimizations' | 
              WHERE tenant_id = $1 AND deleted_at IS NULL`,
             [tenantId]
           );
-          currentUsage = Number(nodesResult.rows[0]?.count || 0);
+          currentUsage = Number(nodesResult[0]?.count || 0);
           break;
 
         case 'modelOptimizations':
@@ -115,7 +117,7 @@ export function checkFeatureLimit(feature: 'edgeNodes' | 'modelOptimizations' | 
              AND created_at >= date_trunc('month', CURRENT_DATE)`,
             [tenantId]
           );
-          currentUsage = Number(optimizationsResult.rows[0]?.count || 0);
+          currentUsage = Number(optimizationsResult[0]?.count || 0);
           break;
 
         case 'monthlyReconciliations':
@@ -126,7 +128,7 @@ export function checkFeatureLimit(feature: 'edgeNodes' | 'modelOptimizations' | 
              AND created_at >= date_trunc('month', CURRENT_DATE)`,
             [tenantId]
           );
-          currentUsage = Number(reconciliationsResult.rows[0]?.count || 0);
+          currentUsage = Number(reconciliationsResult[0]?.count || 0);
           break;
 
         case 'apiCalls':
@@ -139,10 +141,11 @@ export function checkFeatureLimit(feature: 'edgeNodes' | 'modelOptimizations' | 
       }
 
       if (currentUsage >= limit) {
-        return sendError(
+        sendError(
           res,
-          `Feature limit reached for '${feature}'. Current usage: ${currentUsage}/${limit}. Please upgrade your plan.`,
           403,
+          'FEATURE_LIMIT_REACHED',
+          `Feature limit reached for '${feature}'. Current usage: ${currentUsage}/${limit}. Please upgrade your plan.`,
           {
             feature,
             currentUsage,
@@ -150,6 +153,7 @@ export function checkFeatureLimit(feature: 'edgeNodes' | 'modelOptimizations' | 
             tier,
           }
         );
+        return;
       }
 
       next();

@@ -33,6 +33,13 @@ var Permission;
     Permission["ADMIN_READ"] = "admin:read";
     Permission["ADMIN_WRITE"] = "admin:write";
     Permission["ADMIN_AUDIT"] = "admin:audit";
+    // Edge AI
+    Permission["EDGE_NODES_READ"] = "edge_nodes:read";
+    Permission["EDGE_NODES_WRITE"] = "edge_nodes:write";
+    Permission["EDGE_NODES_DELETE"] = "edge_nodes:delete";
+    Permission["EDGE_MODELS_READ"] = "edge_models:read";
+    Permission["EDGE_MODELS_WRITE"] = "edge_models:write";
+    Permission["EDGE_AIAS_ACCESS"] = "edge_aias:access";
 })(Permission || (exports.Permission = Permission = {}));
 exports.ROLE_PERMISSIONS = {
     [User_1.UserRole.OWNER]: [
@@ -53,6 +60,12 @@ exports.ROLE_PERMISSIONS = {
         Permission.TENANT_WRITE,
         Permission.TENANT_DELETE,
         Permission.TENANT_BILLING,
+        Permission.EDGE_NODES_READ,
+        Permission.EDGE_NODES_WRITE,
+        Permission.EDGE_NODES_DELETE,
+        Permission.EDGE_MODELS_READ,
+        Permission.EDGE_MODELS_WRITE,
+        Permission.EDGE_AIAS_ACCESS,
     ],
     [User_1.UserRole.ADMIN]: [
         Permission.JOBS_READ,
@@ -68,6 +81,11 @@ exports.ROLE_PERMISSIONS = {
         Permission.USERS_WRITE,
         Permission.TENANT_READ,
         Permission.TENANT_WRITE,
+        Permission.EDGE_NODES_READ,
+        Permission.EDGE_NODES_WRITE,
+        Permission.EDGE_MODELS_READ,
+        Permission.EDGE_MODELS_WRITE,
+        Permission.EDGE_AIAS_ACCESS,
     ],
     [User_1.UserRole.DEVELOPER]: [
         Permission.JOBS_READ,
@@ -78,6 +96,8 @@ exports.ROLE_PERMISSIONS = {
         Permission.WEBHOOKS_READ,
         Permission.WEBHOOKS_WRITE,
         Permission.USERS_READ,
+        Permission.EDGE_NODES_READ,
+        Permission.EDGE_MODELS_READ,
     ],
     [User_1.UserRole.VIEWER]: [
         Permission.JOBS_READ,

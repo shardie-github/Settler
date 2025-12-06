@@ -17,7 +17,7 @@ import { handleRouteError } from "../utils/error-handler";
 import { sendSuccess, sendError } from "../utils/api-response";
 import { getAIASClient } from "../services/aias/client";
 import { query } from "../db";
-import { logInfo, logError } from "../utils/logger";
+import { logInfo } from "../utils/logger";
 import { trackEventAsync } from "../utils/event-tracker";
 
 const router = Router();
@@ -84,10 +84,10 @@ router.post(
   "/models/upload",
   validateRequest(uploadModelSchema),
   requirePermission(Permission.EDGE_AIAS_ACCESS),
-  handleRouteError(async (req: AuthRequest, res: Response) => {
+  async (req: AuthRequest, res: Response) => {
+    try {
     const { modelName, modelType, modelFile, format, metadata } = req.body;
     const tenantId = req.tenantId!;
-    const userId = req.userId!;
 
     const aiasClient = getAIASClient();
     const uploadResult = await aiasClient.uploadModel({
@@ -118,19 +118,22 @@ router.post(
     );
 
     await trackEventAsync(tenantId, 'aias_model_uploaded', {
-      model_id: modelResult.rows[0].id,
+      model_id: modelResult[0]?.id || '',
       aias_job_id: uploadResult.jobId,
     });
 
-    logInfo(`Model uploaded to AIAS: ${modelResult.rows[0].id}`);
+    logInfo(`Model uploaded to AIAS: ${modelResult[0]?.id || ''}`);
 
     sendSuccess(res, {
-      modelId: modelResult.rows[0].id,
+      modelId: modelResult[0]?.id || '',
       aiasJobId: uploadResult.jobId,
       aiasModelId: uploadResult.modelId,
       status: 'uploaded',
     });
-  })
+    } catch (error) {
+      handleRouteError(res, error, 'Failed to upload model', 500);
+    }
+  }
 );
 
 /**
@@ -141,8 +144,13 @@ router.post(
   "/models/:modelId/optimize",
   validateRequest(optimizeModelSchema),
   requirePermission(Permission.EDGE_AIAS_ACCESS),
-  handleRouteError(async (req: AuthRequest, res: Response) => {
+  async (req: AuthRequest, res: Response) => {
+    try {
     const { modelId } = req.params;
+    if (!modelId) {
+      sendError(res, 400, 'MODEL_ID_REQUIRED', "Model ID is required");
+      return;
+    }
     const { targetDevices, quantization, optimizationLevel } = req.body;
     const tenantId = req.tenantId!;
 
@@ -150,11 +158,12 @@ router.post(
     const modelCheck = await query<{ id: string }>(
       `SELECT id FROM model_versions 
        WHERE id = $1 AND tenant_id = $2`,
-      [modelId, tenantId]
+      [modelId, tenantId || '']
     );
 
-    if (modelCheck.rows.length === 0) {
-      return sendError(res, "Model not found", 404);
+    if (modelCheck.length === 0) {
+      sendError(res, 404, 'MODEL_NOT_FOUND', "Model not found");
+      return;
     }
 
     const aiasClient = getAIASClient();
@@ -172,7 +181,7 @@ router.post(
       `UPDATE model_versions 
        SET aias_job_id = $1, updated_at = NOW()
        WHERE id = $2`,
-      [optimizeResult.jobId, modelId]
+      [optimizeResult.jobId || '', modelId || '']
     );
 
     await trackEventAsync(tenantId, 'aias_model_optimization_requested', {
@@ -185,7 +194,10 @@ router.post(
       jobId: optimizeResult.jobId,
       status: 'pending',
     });
-  })
+    } catch (error) {
+      handleRouteError(res, error, 'Failed to optimize model', 500);
+    }
+  }
 );
 
 /**
@@ -198,23 +210,29 @@ router.get(
     params: z.object({ jobId: z.string() }),
   })),
   requirePermission(Permission.EDGE_AIAS_ACCESS),
-  handleRouteError(async (req: AuthRequest, res: Response) => {
+  async (req: AuthRequest, res: Response) => {
+    try {
     const { jobId } = req.params;
+    if (!jobId) {
+      sendError(res, 400, 'JOB_ID_REQUIRED', "Job ID is required");
+      return;
+    }
     const tenantId = req.tenantId!;
 
     // Verify job belongs to tenant's model
     const modelCheck = await query<{ id: string }>(
       `SELECT id FROM model_versions 
        WHERE aias_job_id = $1 AND tenant_id = $2`,
-      [jobId, tenantId]
+      [jobId, tenantId || '']
     );
 
-    if (modelCheck.rows.length === 0) {
-      return sendError(res, "Job not found", 404);
+    if (modelCheck.length === 0) {
+      sendError(res, 404, 'JOB_NOT_FOUND', "Job not found");
+      return;
     }
 
     const aiasClient = getAIASClient();
-    const status = await aiasClient.getOptimizationStatus(jobId);
+    const status = await aiasClient.getOptimizationStatus(jobId!);
 
     // If completed, update model version
     if (status.status === 'completed' && status.result) {
@@ -224,13 +242,16 @@ router.get(
          WHERE id = $2`,
         [
           JSON.stringify(status.result.benchmarkResults),
-          modelCheck.rows[0].id,
+          (modelCheck[0]?.id || '') as string,
         ]
       );
     }
 
     sendSuccess(res, status);
-  })
+    } catch (error) {
+      handleRouteError(res, error, 'Failed to get job status', 500);
+    }
+  }
 );
 
 /**
@@ -241,8 +262,13 @@ router.post(
   "/models/:modelId/benchmark",
   validateRequest(benchmarkModelSchema),
   requirePermission(Permission.EDGE_AIAS_ACCESS),
-  handleRouteError(async (req: AuthRequest, res: Response) => {
+  async (req: AuthRequest, res: Response) => {
+    try {
     const { modelId } = req.params;
+    if (!modelId) {
+      sendError(res, 400, 'MODEL_ID_REQUIRED', "Model ID is required");
+      return;
+    }
     const { deviceProfile, testData } = req.body;
     const tenantId = req.tenantId!;
 
@@ -250,11 +276,12 @@ router.post(
     const modelCheck = await query<{ id: string }>(
       `SELECT id FROM model_versions 
        WHERE id = $1 AND tenant_id = $2`,
-      [modelId, tenantId]
+      [modelId, tenantId || '']
     );
 
-    if (modelCheck.rows.length === 0) {
-      return sendError(res, "Model not found", 404);
+    if (modelCheck.length === 0) {
+      sendError(res, 404, 'MODEL_NOT_FOUND', "Model not found");
+      return;
     }
 
     const aiasClient = getAIASClient();
@@ -275,7 +302,10 @@ router.post(
       jobId: benchmarkResult.jobId,
       status: 'pending',
     });
-  })
+    } catch (error) {
+      handleRouteError(res, error, 'Failed to benchmark model', 500);
+    }
+  }
 );
 
 /**
@@ -288,37 +318,46 @@ router.get(
     params: z.object({ jobId: z.string() }),
   })),
   requirePermission(Permission.EDGE_AIAS_ACCESS),
-  handleRouteError(async (req: AuthRequest, res: Response) => {
+  async (req: AuthRequest, res: Response) => {
+    try {
     const { jobId } = req.params;
+    if (!jobId) {
+      sendError(res, 400, 'JOB_ID_REQUIRED', "Job ID is required");
+      return;
+    }
     const tenantId = req.tenantId!;
 
     // Verify job belongs to tenant's model
     const modelCheck = await query<{ id: string }>(
       `SELECT id FROM model_versions 
        WHERE aias_job_id = $1 AND tenant_id = $2`,
-      [jobId, tenantId]
+      [jobId, tenantId || '']
     );
 
-    if (modelCheck.rows.length === 0) {
-      return sendError(res, "Job not found", 404);
+    if (modelCheck.length === 0) {
+      sendError(res, 404, 'JOB_NOT_FOUND', "Job not found");
+      return;
     }
 
     const aiasClient = getAIASClient();
-    const results = await aiasClient.getBenchmarkResults(jobId);
+    const results = await aiasClient.getBenchmarkResults(jobId!);
 
     // Update model version with benchmark results
     await query(
       `UPDATE model_versions 
        SET benchmark_results = $1, updated_at = NOW()
        WHERE id = $2`,
-      [
-        JSON.stringify(results),
-        modelCheck.rows[0].id,
-      ]
+        [
+          JSON.stringify(results),
+          (modelCheck[0]?.id || '') as string,
+        ]
     );
 
     sendSuccess(res, results);
-  })
+    } catch (error) {
+      handleRouteError(res, error, 'Failed to get benchmark results', 500);
+    }
+  }
 );
 
 /**
@@ -329,8 +368,13 @@ router.post(
   "/models/:modelId/export",
   validateRequest(exportModelSchema),
   requirePermission(Permission.EDGE_AIAS_ACCESS),
-  handleRouteError(async (req: AuthRequest, res: Response) => {
+  async (req: AuthRequest, res: Response) => {
+    try {
     const { modelId } = req.params;
+    if (!modelId) {
+      sendError(res, 400, 'MODEL_ID_REQUIRED', "Model ID is required");
+      return;
+    }
     const { format, targetDevice } = req.body;
     const tenantId = req.tenantId!;
 
@@ -338,11 +382,12 @@ router.post(
     const modelCheck = await query<{ id: string }>(
       `SELECT id FROM model_versions 
        WHERE id = $1 AND tenant_id = $2`,
-      [modelId, tenantId]
+      [modelId, tenantId || '']
     );
 
-    if (modelCheck.rows.length === 0) {
-      return sendError(res, "Model not found", 404);
+    if (modelCheck.length === 0) {
+      sendError(res, 404, 'MODEL_NOT_FOUND', "Model not found");
+      return;
     }
 
     const aiasClient = getAIASClient();
@@ -372,7 +417,10 @@ router.post(
     });
 
     sendSuccess(res, exportResult);
-  })
+    } catch (error) {
+      handleRouteError(res, error, 'Failed to export model', 500);
+    }
+  }
 );
 
 /**
@@ -382,7 +430,8 @@ router.post(
 router.get(
   "/models",
   requirePermission(Permission.EDGE_MODELS_READ),
-  handleRouteError(async (req: AuthRequest, res: Response) => {
+  async (req: AuthRequest, res: Response) => {
+    try {
     const tenantId = req.tenantId!;
     const { page = "1", limit = "100" } = req.query;
     const offset = (Number(page) - 1) * Number(limit);
@@ -401,7 +450,7 @@ router.get(
        WHERE tenant_id = $1
        ORDER BY created_at DESC
        LIMIT $2 OFFSET $3`,
-      [tenantId, limit, offset]
+      [tenantId, Number(limit), offset]
     );
 
     const countResult = await query<{ count: string }>(
@@ -410,14 +459,17 @@ router.get(
     );
 
     sendSuccess(res, {
-      models: result.rows,
+      models: result,
       pagination: {
         page: Number(page),
         limit: Number(limit),
-        total: Number(countResult.rows[0].count),
+        total: Number(countResult[0]?.count || 0),
       },
     });
-  })
+    } catch (error) {
+      handleRouteError(res, error, 'Failed to list models', 500);
+    }
+  }
 );
 
 /**
@@ -430,8 +482,13 @@ router.get(
     params: z.object({ modelId: z.string().uuid() }),
   })),
   requirePermission(Permission.EDGE_MODELS_READ),
-  handleRouteError(async (req: AuthRequest, res: Response) => {
+  async (req: AuthRequest, res: Response) => {
+    try {
     const { modelId } = req.params;
+    if (!modelId) {
+      sendError(res, 400, 'MODEL_ID_REQUIRED', "Model ID is required");
+      return;
+    }
     const tenantId = req.tenantId!;
 
     const result = await query<{
@@ -454,21 +511,29 @@ router.get(
               metadata, is_active, created_at
        FROM model_versions
        WHERE id = $1 AND tenant_id = $2`,
-      [modelId, tenantId]
+      [modelId, tenantId || '']
     );
 
-    if (result.rows.length === 0) {
-      return sendError(res, "Model not found", 404);
+    if (result.length === 0) {
+      sendError(res, 404, 'MODEL_NOT_FOUND', "Model not found");
+      return;
     }
 
-    const model = result.rows[0];
+    const model = result[0];
+    if (!model) {
+      sendError(res, 404, 'MODEL_NOT_FOUND', "Model not found");
+      return;
+    }
     sendSuccess(res, {
       ...model,
       benchmark_results: model.benchmark_results ? JSON.parse(model.benchmark_results) : null,
       device_targets: model.device_targets || [],
       metadata: JSON.parse(model.metadata || '{}'),
     });
-  })
+    } catch (error) {
+      handleRouteError(res, error, 'Failed to get model details', 500);
+    }
+  }
 );
 
 // ============================================================================
@@ -483,11 +548,11 @@ async function getAIASModelId(modelVersionId: string): Promise<string> {
     [modelVersionId]
   );
 
-  if (result.rows.length === 0) {
+  if (result.length === 0) {
     throw new Error('Model not found');
   }
 
-  const metadata = JSON.parse(result.rows[0].metadata || '{}');
+  const metadata = JSON.parse(result[0]?.metadata || '{}');
   return metadata.aiasModelId || modelVersionId; // Fallback to model version ID
 }
 

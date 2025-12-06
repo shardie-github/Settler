@@ -84,12 +84,17 @@ export function verifyRequestSignature(
       Buffer.from(signatureValue)
     );
 
-    return {
+    const result: SignatureVerificationResult = {
       valid: isValid,
       algorithm,
       timestamp: timestampNum,
-      reason: isValid ? undefined : 'Signature mismatch',
     };
+    
+    if (!isValid) {
+      result.reason = 'Signature mismatch';
+    }
+    
+    return result;
   } catch (error) {
     return {
       valid: false,
@@ -124,7 +129,7 @@ export function generateRequestSignature(
  * Request signing middleware factory
  */
 export function requestSigningMiddleware(config: RequestSigningConfig) {
-  return (req: SignedRequest, res: Response, next: NextFunction) => {
+  return (req: SignedRequest, res: Response, next: NextFunction): void => {
     const signatureHeader = req.headers[config.headerName || 'x-signature'] as string;
     const timestampHeader = req.headers[config.timestampHeaderName || 'x-signature-timestamp'] as string;
 
@@ -133,10 +138,11 @@ export function requestSigningMiddleware(config: RequestSigningConfig) {
         path: req.path,
         method: req.method,
       });
-      return res.status(401).json({
+      res.status(401).json({
         error: 'Unauthorized',
         message: 'Missing signature headers',
       });
+      return;
     }
 
     // Get request body as string
@@ -158,10 +164,11 @@ export function requestSigningMiddleware(config: RequestSigningConfig) {
         method: req.method,
         reason: verification.reason,
       });
-      return res.status(401).json({
+      res.status(401).json({
         error: 'Unauthorized',
         message: verification.reason || 'Invalid signature',
       });
+      return;
     }
 
     // Attach signature info to request
@@ -180,15 +187,16 @@ export function requestSigningMiddleware(config: RequestSigningConfig) {
  * Webhook signature verification middleware (for incoming webhooks)
  */
 export function webhookSignatureMiddleware(secret: string) {
-  return (req: SignedRequest, res: Response, next: NextFunction) => {
+  return (req: SignedRequest, res: Response, next: NextFunction): void => {
     const signature = req.headers['x-webhook-signature'] as string;
     const timestamp = req.headers['x-webhook-timestamp'] as string;
 
     if (!signature || !timestamp) {
-      return res.status(401).json({
+      res.status(401).json({
         error: 'Unauthorized',
         message: 'Missing webhook signature',
       });
+      return;
     }
 
     const rawBody = typeof req.body === 'string' 
@@ -207,10 +215,11 @@ export function webhookSignatureMiddleware(secret: string) {
         path: req.path,
         reason: verification.reason,
       });
-      return res.status(401).json({
+      res.status(401).json({
         error: 'Unauthorized',
         message: 'Invalid webhook signature',
       });
+      return;
     }
 
     req.signature = {

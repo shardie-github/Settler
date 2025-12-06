@@ -22,14 +22,14 @@ export async function POST(request: NextRequest) {
     }
 
     // Update user plan
-    const { error: updateError } = await supabase
-      .from('profiles')
+    const { error: updateError } = await ((supabase
+      .from('profiles') as any)
       .update({
         plan_type: planType,
         subscription_start_date: new Date().toISOString(),
         updated_at: new Date().toISOString(),
-      } as any)
-      .eq('id', user.id) as { error: any };
+      })
+      .eq('id', user.id)) as { error: any };
 
     if (updateError) {
       return NextResponse.json({ error: updateError.message }, { status: 400 });

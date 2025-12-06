@@ -149,7 +149,7 @@ exports.validatedConfig = {
     dataRetention: {
         defaultDays: exports.env.DATA_RETENTION_DAYS,
     },
-    allowedOrigins: exports.env.ALLOWED_ORIGINS.split(',').map(o => o.trim()),
+    allowedOrigins: exports.env.ALLOWED_ORIGINS.split(',').map((o) => o.trim()),
     logging: {
         level: exports.env.LOG_LEVEL,
         samplingRate: exports.env.LOG_SAMPLING_RATE,

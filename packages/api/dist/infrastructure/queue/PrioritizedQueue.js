@@ -30,14 +30,28 @@ class PrioritizedQueue {
     constructor(queueName, processor) {
         this.queueName = queueName;
         this.processor = processor;
-        const redisOptions = {
-            host: config_1.config.redis.host,
-            port: config_1.config.redis.port,
-        };
+        // Prefer REDIS_URL if provided (Upstash format: rediss://default:password@host:6379)
         if (config_1.config.redis.url) {
-            redisOptions.url = config_1.config.redis.url;
+            this.redis = new ioredis_1.default(config_1.config.redis.url, {
+                maxRetriesPerRequest: 3,
+                enableReadyCheck: true,
+                lazyConnect: true,
+            });
         }
-        this.redis = new ioredis_1.default(redisOptions);
+        else {
+            // Fallback to individual host/port configuration
+            const redisOptions = {
+                host: config_1.config.redis.host,
+                port: config_1.config.redis.port,
+            };
+            if (config_1.config.redis.password) {
+                redisOptions.password = config_1.config.redis.password;
+            }
+            if (process.env.REDIS_TLS === 'true') {
+                redisOptions.tls = {};
+            }
+            this.redis = new ioredis_1.default(redisOptions);
+        }
         this.queue = new bullmq_1.Queue(queueName, {
             connection: this.redis,
             defaultJobOptions: {

@@ -5,20 +5,6 @@
  */
 
 import { logInfo, logError } from '../utils/logger';
-import {
-  sendTrialWelcomeEmail,
-  sendTrialValueEmail,
-  sendTrialGatedFeaturesEmail,
-  sendTrialCaseStudyEmail,
-  sendTrialComparisonEmail,
-  sendTrialUrgencyEmail,
-  sendTrialEndedEmail,
-  sendPaidWelcomeEmail,
-  sendMonthlySummaryEmail,
-  sendLowActivityEmail,
-  LifecycleUser,
-  TrialData,
-} from '../lib/email-lifecycle';
 
 
 /**

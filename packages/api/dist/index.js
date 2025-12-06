@@ -30,7 +30,14 @@ const cli_wizard_1 = require("./routes/cli-wizard");
 const export_enhanced_1 = require("./routes/export-enhanced");
 const ai_assistant_1 = require("./routes/ai-assistant");
 const audit_trail_1 = require("./routes/audit-trail");
+const webhook_management_1 = require("./routes/webhook-management");
+const notifications_1 = require("./routes/notifications");
+const usage_1 = require("./routes/usage");
+const batch_1 = require("./routes/batch");
+const exports_1 = require("./routes/exports");
 const test_mode_2 = require("./middleware/test-mode");
+const feature_flags_1 = require("./middleware/feature-flags");
+const usage_tracking_1 = require("./middleware/usage-tracking");
 const rate_limiter_1 = require("./utils/rate-limiter");
 const db_1 = require("./db");
 const config_1 = require("./config");
@@ -43,6 +50,8 @@ const versioning_1 = require("./middleware/versioning");
 const v1_1 = require("./routes/v1");
 const v2_1 = require("./routes/v2");
 const reconciliation_summary_1 = require("./routes/reconciliation-summary");
+const edge_ai_1 = require("./routes/edge-ai");
+const aias_1 = require("./routes/aias");
 const SecretsManager_1 = require("./infrastructure/security/SecretsManager");
 const tracing_1 = require("./infrastructure/observability/tracing");
 const compression_1 = require("./middleware/compression");
@@ -56,6 +65,8 @@ const csrf_1 = require("./middleware/csrf");
 const input_sanitization_1 = require("./middleware/input-sanitization");
 const startup_validation_1 = require("./utils/startup-validation");
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
+const websocket_1 = require("./infrastructure/websocket");
+const http_1 = require("http");
 const app = (0, express_1.default)();
 const PORT = config_1.config.port;
 // Initialize Sentry before other middleware
@@ -93,6 +104,10 @@ app.use(csrf_1.setCsrfToken);
 app.use(csrf_1.csrfProtection);
 // Event tracking middleware (for analytics)
 app.use("/api", event_tracking_1.eventTrackingMiddleware);
+// Feature flags middleware (loads feature flags for each request)
+app.use("/api", (0, feature_flags_1.featureFlagsMiddleware)());
+// Usage tracking middleware (tracks API usage for billing)
+app.use("/api", (0, usage_tracking_1.usageTrackingMiddleware)());
 // Request timeout middleware (must be before routes)
 if (config_1.config.features.enableRequestTimeout) {
     app.use((req, res, next) => {
@@ -231,11 +246,34 @@ app.use("/api/v2", auth_1.authMiddleware, ai_assistant_1.aiAssistantRouter);
 // Audit trail routes (requires auth)
 app.use("/api/v1", auth_1.authMiddleware, audit_trail_1.auditTrailRouter);
 app.use("/api/v2", auth_1.authMiddleware, audit_trail_1.auditTrailRouter);
+// Webhook management routes (requires auth)
+app.use("/api/v1/webhooks", auth_1.authMiddleware, webhook_management_1.webhookManagementRouter);
+app.use("/api/v2/webhooks", auth_1.authMiddleware, webhook_management_1.webhookManagementRouter);
+// Notification routes (requires auth)
+app.use("/api/v1/notifications", auth_1.authMiddleware, notifications_1.notificationsRouter);
+app.use("/api/v2/notifications", auth_1.authMiddleware, notifications_1.notificationsRouter);
+// Usage tracking routes (requires auth)
+app.use("/api/v1/usage", auth_1.authMiddleware, usage_1.usageRouter);
+app.use("/api/v2/usage", auth_1.authMiddleware, usage_1.usageRouter);
+// Batch processing routes (requires auth)
+app.use("/api/v1/batch", auth_1.authMiddleware, batch_1.batchRouter);
+app.use("/api/v2/batch", auth_1.authMiddleware, batch_1.batchRouter);
+// Export routes (requires auth)
+app.use("/api/v1/exports", auth_1.authMiddleware, exports_1.exportsRouter);
+app.use("/api/v2/exports", auth_1.authMiddleware, exports_1.exportsRouter);
 // Versioned API routes
 app.use("/api/v1", auth_1.authMiddleware, v1_1.v1Router);
 app.use("/api/v2", auth_1.authMiddleware, v2_1.v2Router);
 // Optimized reconciliation summary endpoint
 app.use("/api/v1/reconciliations", auth_1.authMiddleware, reconciliation_summary_1.reconciliationSummaryRouter);
+// Edge AI routes (public endpoints for node operations, authenticated by node_key)
+app.use("/api/edge-ai", edge_ai_1.edgeAiRouter);
+// Edge AI routes (requires auth for management)
+app.use("/api/v1/edge-ai", auth_1.authMiddleware, edge_ai_1.edgeAiRouter);
+app.use("/api/v2/edge-ai", auth_1.authMiddleware, edge_ai_1.edgeAiRouter);
+// AIAS Edge AI Accelerator Studio routes (requires auth)
+app.use("/api/v1/aias", auth_1.authMiddleware, aias_1.aiasRouter);
+app.use("/api/v2/aias", auth_1.authMiddleware, aias_1.aiasRouter);
 // Sentry error handler (before custom error handler)
 app.use((0, sentry_1.sentryErrorHandler)());
 // Error handling
@@ -277,7 +315,10 @@ async function startServer() {
             clearInterval(webhookInterval);
             (0, logger_1.logInfo)('Webhook processing stopped');
         });
-        const server = app.listen(PORT, () => {
+        const httpServer = (0, http_1.createServer)(app);
+        // Initialize WebSocket server
+        (0, websocket_1.initializeWebSocket)(httpServer);
+        const server = httpServer.listen(PORT, () => {
             (0, logger_1.logInfo)(`Settler API server running on port ${PORT}`, { port: PORT });
         });
         // Setup graceful shutdown handlers

@@ -14,13 +14,11 @@ import { AuthRequest } from "../middleware/auth";
 import { requirePermission } from "../middleware/authorization";
 import { Permission } from "../infrastructure/security/Permissions";
 import { query } from "../db";
-import { logInfo, logError } from "../utils/logger";
+import { logInfo } from "../utils/logger";
 import { sendSuccess, sendError, sendCreated, sendNoContent } from "../utils/api-response";
 import { handleRouteError } from "../utils/error-handler";
 import { trackEventAsync } from "../utils/event-tracker";
-import { v4 as uuidv4 } from "uuid";
 import bcrypt from "bcrypt";
-import crypto from "crypto";
 // Import shared edge-ai-core utilities (brand-neutral)
 import { generateNodeKey, hashNodeKey, generateEnrollmentKey } from "@settler/edge-ai-core";
 
@@ -150,19 +148,19 @@ async function authenticateEdgeNode(nodeKey: string): Promise<{ nodeId: string; 
     [nodeKeyHash]
   );
 
-  if (result.rows.length === 0) {
+  if (result.length === 0) {
     return null;
   }
 
   // Update last heartbeat
   await query(
     `UPDATE edge_nodes SET last_heartbeat_at = NOW() WHERE id = $1`,
-    [result.rows[0].id]
+    [result[0]?.id || '']
   );
 
   return {
-    nodeId: result.rows[0].id,
-    tenantId: result.rows[0].tenant_id,
+    nodeId: result[0]?.id || '',
+    tenantId: result[0]?.tenant_id || '',
   };
 }
 
@@ -183,7 +181,8 @@ router.post(
   "/nodes",
   validateRequest(createEdgeNodeSchema),
   requirePermission(Permission.EDGE_NODES_WRITE),
-  handleRouteError(async (req: AuthRequest, res: Response) => {
+  async (req: AuthRequest, res: Response) => {
+    try {
     const { name, device_type, device_os, device_arch, capabilities, location, metadata } = req.body;
     const tenantId = req.tenantId!;
 
@@ -215,7 +214,7 @@ router.post(
       ]
     );
 
-    const nodeId = result.rows[0].id;
+    const nodeId = result[0]?.id || '';
 
     await trackEventAsync(tenantId, 'edge_node_created', {
       node_id: nodeId,
@@ -232,7 +231,10 @@ router.post(
       status: 'pending',
       created_at: new Date().toISOString(),
     });
-  })
+    } catch (error) {
+      handleRouteError(res, error, 'Failed to create edge node', 500);
+    }
+  }
 );
 
 /**
@@ -242,7 +244,8 @@ router.post(
 router.post(
   "/nodes/enroll",
   validateRequest(enrollEdgeNodeSchema),
-  handleRouteError(async (req: AuthRequest, res: Response) => {
+  async (req: AuthRequest, res: Response) => {
+    try {
     const { enrollment_key, name, device_type, device_os, device_arch, capabilities, version } = req.body;
 
     // Find node by enrollment key
@@ -259,7 +262,7 @@ router.post(
 
     let matchedNode: { id: string; tenant_id: string } | null = null;
 
-    for (const node of nodes.rows) {
+    for (const node of nodes) {
       const isValid = await bcrypt.compare(enrollment_key, node.enrollment_key_hash);
       if (isValid) {
         matchedNode = { id: node.id, tenant_id: node.tenant_id };
@@ -268,7 +271,8 @@ router.post(
     }
 
     if (!matchedNode) {
-      return sendError(res, "Invalid enrollment key", 401);
+      sendError(res, 401, 'INVALID_ENROLLMENT_KEY', "Invalid enrollment key");
+      return;
     }
 
     // Use shared edge-ai-core utilities
@@ -307,7 +311,10 @@ router.post(
       node_key: nodeKey, // Only returned once
       status: 'active',
     });
-  })
+    } catch (error) {
+      handleRouteError(res, error, 'Failed to enroll edge node', 500);
+    }
+  }
 );
 
 /**
@@ -317,7 +324,8 @@ router.post(
 router.get(
   "/nodes",
   requirePermission(Permission.EDGE_NODES_READ),
-  handleRouteError(async (req: AuthRequest, res: Response) => {
+  async (req: AuthRequest, res: Response) => {
+    try {
     const tenantId = req.tenantId!;
     const { page = "1", limit = "100" } = req.query;
     const offset = (Number(page) - 1) * Number(limit);
@@ -335,7 +343,7 @@ router.get(
        WHERE tenant_id = $1 AND deleted_at IS NULL
        ORDER BY created_at DESC
        LIMIT $2 OFFSET $3`,
-      [tenantId, limit, offset]
+      [tenantId, Number(limit), offset]
     );
 
     const countResult = await query<{ count: string }>(
@@ -345,14 +353,17 @@ router.get(
     );
 
     sendSuccess(res, {
-      nodes: result.rows,
+      nodes: result,
       pagination: {
         page: Number(page),
         limit: Number(limit),
-        total: Number(countResult.rows[0].count),
+        total: Number(countResult[0]?.count || 0),
       },
     });
-  })
+    } catch (error) {
+      handleRouteError(res, error, 'Failed to list edge nodes', 500);
+    }
+  }
 );
 
 /**
@@ -365,7 +376,8 @@ router.get(
     params: z.object({ id: z.string().uuid() }),
   })),
   requirePermission(Permission.EDGE_NODES_READ),
-  handleRouteError(async (req: AuthRequest, res: Response) => {
+  async (req: AuthRequest, res: Response) => {
+    try {
     const { id } = req.params;
     const tenantId = req.tenantId!;
 
@@ -389,21 +401,29 @@ router.get(
               version, metadata, created_at
        FROM edge_nodes
        WHERE id = $1 AND tenant_id = $2 AND deleted_at IS NULL`,
-      [id, tenantId]
+      [id || '', tenantId || '']
     );
 
-    if (result.rows.length === 0) {
-      return sendError(res, "Edge node not found", 404);
+    if (result.length === 0) {
+      sendError(res, 404, 'EDGE_NODE_NOT_FOUND', "Edge node not found");
+      return;
     }
 
-    const node = result.rows[0];
+    const node = result[0];
+    if (!node) {
+      sendError(res, 404, 'EDGE_NODE_NOT_FOUND', "Edge node not found");
+      return;
+    }
     sendSuccess(res, {
       ...node,
       capabilities: JSON.parse(node.capabilities || '{}'),
       location: JSON.parse(node.location || '{}'),
       metadata: JSON.parse(node.metadata || '{}'),
     });
-  })
+    } catch (error) {
+      handleRouteError(res, error, 'Failed to get edge node', 500);
+    }
+  }
 );
 
 /**
@@ -414,13 +434,14 @@ router.patch(
   "/nodes/:id",
   validateRequest(updateEdgeNodeSchema),
   requirePermission(Permission.EDGE_NODES_WRITE),
-  handleRouteError(async (req: AuthRequest, res: Response) => {
+  async (req: AuthRequest, res: Response) => {
+    try {
     const { id } = req.params;
     const { name, status, capabilities, location, metadata } = req.body;
     const tenantId = req.tenantId!;
 
     const updates: string[] = [];
-    const values: unknown[] = [];
+    const values: (string | number | boolean | Date | null)[] = [];
     let paramIndex = 1;
 
     if (name !== undefined) {
@@ -445,10 +466,11 @@ router.patch(
     }
 
     if (updates.length === 0) {
-      return sendError(res, "No fields to update", 400);
+      sendError(res, 400, 'NO_FIELDS_TO_UPDATE', "No fields to update");
+      return;
     }
 
-    values.push(id, tenantId);
+    values.push(id || '', tenantId || '');
 
     await query(
       `UPDATE edge_nodes 
@@ -460,7 +482,10 @@ router.patch(
     await trackEventAsync(tenantId, 'edge_node_updated', { node_id: id });
 
     sendNoContent(res);
-  })
+    } catch (error) {
+      handleRouteError(res, error, 'Failed to update edge node', 500);
+    }
+  }
 );
 
 /**
@@ -473,7 +498,8 @@ router.delete(
     params: z.object({ id: z.string().uuid() }),
   })),
   requirePermission(Permission.EDGE_NODES_WRITE),
-  handleRouteError(async (req: AuthRequest, res: Response) => {
+  async (req: AuthRequest, res: Response) => {
+    try {
     const { id } = req.params;
     const tenantId = req.tenantId!;
 
@@ -481,13 +507,16 @@ router.delete(
       `UPDATE edge_nodes 
        SET deleted_at = NOW(), status = 'revoked', updated_at = NOW()
        WHERE id = $1 AND tenant_id = $2`,
-      [id, tenantId]
+      [id || '', tenantId || '']
     );
 
     await trackEventAsync(tenantId, 'edge_node_deleted', { node_id: id });
 
     sendNoContent(res);
-  })
+    } catch (error) {
+      handleRouteError(res, error, 'Failed to update edge node', 500);
+    }
+  }
 );
 
 // ============================================================================
@@ -501,16 +530,18 @@ router.delete(
 router.post(
   "/heartbeat",
   validateRequest(heartbeatSchema),
-  handleRouteError(async (req: AuthRequest, res: Response) => {
-    const { node_key, status, version, metrics } = req.body;
+  async (req: AuthRequest, res: Response) => {
+    try {
+    const { node_key, version } = req.body;
 
     const auth = await authenticateEdgeNode(node_key);
     if (!auth) {
-      return sendError(res, "Invalid node key", 401);
+      sendError(res, 401, 'INVALID_NODE_KEY', "Invalid node key");
+      return;
     }
 
     const updates: string[] = ['last_heartbeat_at = NOW()'];
-    const values: unknown[] = [];
+    const values: (string | number | boolean | Date | null)[] = [];
     let paramIndex = 1;
 
     if (version !== undefined) {
@@ -519,7 +550,7 @@ router.post(
     }
 
     if (updates.length > 1) {
-      values.push(auth.nodeId);
+      values.push(auth.nodeId || '');
       await query(
         `UPDATE edge_nodes SET ${updates.join(', ')} WHERE id = $${paramIndex}`,
         values
@@ -527,7 +558,10 @@ router.post(
     }
 
     sendSuccess(res, { status: 'ok', timestamp: new Date().toISOString() });
-  })
+    } catch (error) {
+      handleRouteError(res, error, 'Failed to process heartbeat', 500);
+    }
+  }
 );
 
 /**
@@ -537,12 +571,14 @@ router.post(
 router.post(
   "/batch-ingestion",
   validateRequest(batchIngestionSchema),
-  handleRouteError(async (req: AuthRequest, res: Response) => {
+  async (req: AuthRequest, res: Response) => {
+    try {
     const { node_key, job_id, data, schema_hints, metadata } = req.body;
 
     const auth = await authenticateEdgeNode(node_key);
     if (!auth) {
-      return sendError(res, "Invalid node key", 401);
+      sendError(res, 401, 'INVALID_NODE_KEY', "Invalid node key");
+      return;
     }
 
     // Create edge job record
@@ -559,7 +595,7 @@ router.post(
       ]
     );
 
-    const edgeJobId = jobResult.rows[0].id;
+    const edgeJobId = jobResult[0]?.id || '';
 
     // TODO: Process ingestion (schema inference, PII detection, etc.)
     // For now, mark as completed
@@ -585,7 +621,10 @@ router.post(
       records_processed: data.length,
       status: 'completed',
     });
-  })
+    } catch (error) {
+      handleRouteError(res, error, 'Failed to ingest batch data', 500);
+    }
+  }
 );
 
 /**
@@ -595,12 +634,14 @@ router.post(
 router.post(
   "/candidate-scores",
   validateRequest(candidateScoresSchema),
-  handleRouteError(async (req: AuthRequest, res: Response) => {
+  async (req: AuthRequest, res: Response) => {
+    try {
     const { node_key, job_id, execution_id, candidates, model_version_id } = req.body;
 
     const auth = await authenticateEdgeNode(node_key);
     if (!auth) {
-      return sendError(res, "Invalid node key", 401);
+      sendError(res, 401, 'INVALID_NODE_KEY', "Invalid node key");
+      return;
     }
 
     // Insert candidates
@@ -627,7 +668,7 @@ router.post(
           JSON.stringify(candidate.features || {}),
         ]
       );
-      candidateIds.push(result.rows[0].id);
+      if (result[0]?.id) candidateIds.push(result[0].id);
     }
 
     await trackEventAsync(auth.tenantId, 'edge_candidates_submitted', {
@@ -640,7 +681,10 @@ router.post(
       candidates_created: candidateIds.length,
       candidate_ids: candidateIds,
     });
-  })
+    } catch (error) {
+      handleRouteError(res, error, 'Failed to submit candidate scores', 500);
+    }
+  }
 );
 
 /**
@@ -650,12 +694,14 @@ router.post(
 router.post(
   "/anomalies",
   validateRequest(anomalyReportSchema),
-  handleRouteError(async (req: AuthRequest, res: Response) => {
+  async (req: AuthRequest, res: Response) => {
+    try {
     const { node_key, job_id, execution_id, anomalies, model_version_id } = req.body;
 
     const auth = await authenticateEdgeNode(node_key);
     if (!auth) {
-      return sendError(res, "Invalid node key", 401);
+      sendError(res, 401, 'INVALID_NODE_KEY', "Invalid node key");
+      return;
     }
 
     const anomalyIds: string[] = [];
@@ -678,7 +724,7 @@ router.post(
           anomaly.anomaly_score || null,
         ]
       );
-      anomalyIds.push(result.rows[0].id);
+      if (result[0]?.id) anomalyIds.push(result[0].id);
     }
 
     await trackEventAsync(auth.tenantId, 'edge_anomalies_reported', {
@@ -691,7 +737,10 @@ router.post(
       anomalies_created: anomalyIds.length,
       anomaly_ids: anomalyIds,
     });
-  })
+    } catch (error) {
+      handleRouteError(res, error, 'Failed to report anomalies', 500);
+    }
+  }
 );
 
 /**
@@ -701,12 +750,14 @@ router.post(
 router.post(
   "/device-profile",
   validateRequest(deviceProfileSchema),
-  handleRouteError(async (req: AuthRequest, res: Response) => {
+  async (req: AuthRequest, res: Response) => {
+    try {
     const { node_key, device_specs, benchmark_results, optimization_settings } = req.body;
 
     const auth = await authenticateEdgeNode(node_key);
     if (!auth) {
-      return sendError(res, "Invalid node key", 401);
+      sendError(res, 401, 'INVALID_NODE_KEY', "Invalid node key");
+      return;
     }
 
     const result = await query<{ id: string }>(
@@ -731,10 +782,13 @@ router.post(
     );
 
     sendSuccess(res, {
-      profile_id: result.rows[0].id,
+      profile_id: result[0]?.id || '',
       status: 'created',
     });
-  })
+    } catch (error) {
+      handleRouteError(res, error, 'Failed to submit device profile', 500);
+    }
+  }
 );
 
 export { router as edgeAiRouter };

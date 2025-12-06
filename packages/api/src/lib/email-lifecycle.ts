@@ -15,9 +15,28 @@ function createEmailData(base: Partial<EmailTemplateData>): EmailTemplateData {
   const urls = getDefaultUrls();
   const data: EmailTemplateData = { ...base };
   
-  // Always include product and urls since getDefaultUrls() always returns a value
-  data.product = urls as EmailTemplateData['product'];
-  data.urls = urls as EmailTemplateData['urls'];
+  // Conditionally add product properties only if defined
+  const product: EmailTemplateData['product'] = {};
+  if (urls?.product_name !== undefined) product.product_name = urls.product_name;
+  if (urls?.upgrade_url !== undefined) product.upgrade_url = urls.upgrade_url;
+  if (urls?.dashboard_url !== undefined) product.dashboard_url = urls.dashboard_url;
+  if (urls?.support_url !== undefined) product.support_url = urls.support_url;
+  if (urls?.pricing_url !== undefined) product.pricing_url = urls.pricing_url;
+  if (urls?.docs_url !== undefined) product.docs_url = urls.docs_url;
+  if (urls?.playground_url !== undefined) product.playground_url = urls.playground_url;
+  if (urls?.cookbooks_url !== undefined) product.cookbooks_url = urls.cookbooks_url;
+  
+  // Conditionally add urls properties only if defined
+  const urlsData: EmailTemplateData['urls'] = {};
+  if (urls?.profile_setup_url !== undefined) urlsData.profile_setup_url = urls.profile_setup_url;
+  if (urls?.demo_url !== undefined) urlsData.demo_url = urls.demo_url;
+  if (urls?.free_tier_url !== undefined) urlsData.free_tier_url = urls.free_tier_url;
+  if (urls?.free_tier_info_url !== undefined) urlsData.free_tier_info_url = urls.free_tier_info_url;
+  if (urls?.consultation_url !== undefined) urlsData.consultation_url = urls.consultation_url;
+  if (urls?.insights_url !== undefined) urlsData.insights_url = urls.insights_url;
+  
+  data.product = product;
+  data.urls = urlsData;
   
   return data;
 }
@@ -151,7 +170,6 @@ export async function sendTrialGatedFeaturesEmail(
   trialData: TrialData
 ): Promise<{ id: string } | null> {
   try {
-    const urls = getDefaultUrls();
     const firstName = user.firstName || user.email.split('@')[0] || 'User';
     const data: EmailTemplateData = {
       user: {
@@ -233,7 +251,6 @@ export async function sendTrialComparisonEmail(
   trialData: TrialData
 ): Promise<{ id: string } | null> {
   try {
-    const urls = getDefaultUrls();
     const firstName = user.firstName || user.email.split('@')[0] || 'User';
     const data: EmailTemplateData = {
       user: {
@@ -270,7 +287,6 @@ export async function sendTrialUrgencyEmail(
   day: 27 | 28 | 29
 ): Promise<{ id: string } | null> {
   try {
-    const urls = getDefaultUrls();
     const firstName = user.firstName || user.email.split('@')[0] || 'User';
     const data: EmailTemplateData = {
       user: {
@@ -326,7 +342,6 @@ export async function sendTrialEndedEmail(
   user: LifecycleUser
 ): Promise<{ id: string } | null> {
   try {
-    const urls = getDefaultUrls();
     const firstName = user.firstName || user.email.split('@')[0] || 'User';
     const data: EmailTemplateData = {
       user: {
@@ -358,7 +373,6 @@ export async function sendPaidWelcomeEmail(
   user: LifecycleUser
 ): Promise<{ id: string } | null> {
   try {
-    const urls = getDefaultUrls();
     const firstName = user.firstName || user.email.split('@')[0] || 'User';
     const data: EmailTemplateData = {
       user: {
@@ -400,7 +414,6 @@ export async function sendMonthlySummaryEmail(
   }
 ): Promise<{ id: string } | null> {
   try {
-    const urls = getDefaultUrls();
     const month = new Date().toLocaleString('en-US', { month: 'long' });
     const firstName = user.firstName || user.email.split('@')[0] || 'User';
     const data: EmailTemplateData = {
@@ -448,7 +461,6 @@ export async function sendLowActivityEmail(
   user: LifecycleUser
 ): Promise<{ id: string } | null> {
   try {
-    const urls = getDefaultUrls();
     const firstName = user.firstName || user.email.split('@')[0] || 'User';
     const data: EmailTemplateData = {
       user: {

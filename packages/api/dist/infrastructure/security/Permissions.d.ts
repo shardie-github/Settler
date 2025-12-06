@@ -22,7 +22,13 @@ export declare enum Permission {
     TENANT_BILLING = "tenant:billing",
     ADMIN_READ = "admin:read",
     ADMIN_WRITE = "admin:write",
-    ADMIN_AUDIT = "admin:audit"
+    ADMIN_AUDIT = "admin:audit",
+    EDGE_NODES_READ = "edge_nodes:read",
+    EDGE_NODES_WRITE = "edge_nodes:write",
+    EDGE_NODES_DELETE = "edge_nodes:delete",
+    EDGE_MODELS_READ = "edge_models:read",
+    EDGE_MODELS_WRITE = "edge_models:write",
+    EDGE_AIAS_ACCESS = "edge_aias:access"
 }
 export declare const ROLE_PERMISSIONS: Record<UserRole, Permission[]>;
 export declare class PermissionChecker {
