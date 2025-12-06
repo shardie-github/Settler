@@ -281,14 +281,24 @@ function getEnvOverride(key: FlagKey): boolean | string | null {
 }
 
 /**
- * Get remote config value (placeholder for future integration)
- * Can integrate with LaunchDarkly, GrowthBook, Unleash, etc.
+ * Get remote config value from Vercel Edge Config
+ * Falls back to other providers if Edge Config is not configured
  */
-async function getRemoteConfig(_key: FlagKey): Promise<boolean | string | null> {
-  // TODO: Integrate with remote config provider
-  // Example:
-  // const config = await fetchRemoteConfig(key);
-  // return config?.value || null;
+async function getRemoteConfig(key: FlagKey): Promise<boolean | string | null> {
+  // Try Vercel Edge Config first
+  try {
+    const { getFeatureFlagFromEdgeConfig } = await import("@/lib/vercel/edge-config");
+    const edgeConfigValue = await getFeatureFlagFromEdgeConfig(key);
+    if (edgeConfigValue !== null) {
+      return edgeConfigValue;
+    }
+  } catch (error) {
+    // Edge Config not configured or error, continue to other providers
+    console.debug(`[Feature Flags] Edge Config not available for key "${key}"`);
+  }
+
+  // TODO: Integrate with other remote config providers if needed
+  // LaunchDarkly, GrowthBook, Unleash, etc.
   return null;
 }
 
