@@ -1,6 +1,7 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
+    "baseUrl": ".",
     "target": "ES2020",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
@@ -16,8 +17,8 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
-    "baseUrl": ".",
     "exactOptionalPropertyTypes": false,
+    "composite": false,
     "plugins": [
       {
         "name": "next"
@@ -34,9 +35,29 @@
       "@settler/types": ["../types/dist"],
       "@settler/types/*": ["../types/dist/*"],
       "@settler/api": ["../api/dist"],
-      "@settler/api/*": ["../api/dist/*"]
-    }
+      "@settler/api/*": ["../api/dist/*"],
+      "@settler/adapters": ["../adapters/dist"],
+      "@settler/adapters/*": ["../adapters/dist/*"]
+    },
+    "rootDirs": ["./src"]
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
-  "exclude": ["node_modules", "**/*.test.ts", "**/*.test.tsx", "**/*.spec.ts", "**/*.spec.tsx", "**/__tests__/**", "../api"]
+  "include": [
+    "next-env.d.ts",
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    ".next/types/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "**/*.test.ts",
+    "**/*.test.tsx",
+    "**/*.spec.ts",
+    "**/*.spec.tsx",
+    "**/__tests__/**",
+    "../**/src/**",
+    "../**/__tests__/**",
+    "../**/*.test.ts",
+    "../**/*.spec.ts"
+  ],
+  "typeRoots": ["./node_modules/@types"]
 }
