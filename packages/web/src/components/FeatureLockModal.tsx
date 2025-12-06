@@ -21,14 +21,13 @@ interface FeatureLockModalProps {
     description: string;
     benefits: string[];
   };
-  currentPlan: string;
+  currentPlan?: string;
 }
 
 export function FeatureLockModal({
   open,
   onOpenChange,
   feature,
-  currentPlan,
 }: FeatureLockModalProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>

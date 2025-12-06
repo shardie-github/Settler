@@ -18,7 +18,6 @@ import { Activity, TrendingUp, Clock, CheckCircle2, AlertCircle } from "lucide-r
 import Link from "next/link";
 import { UsageUpgradeBanner } from "@/components/UsageUpgradeBanner";
 import { OnboardingProgressClient } from "@/components/OnboardingProgressClient";
-import { UpgradeButton } from "@/components/UpgradeButton";
 
 // Force dynamic rendering
 export const dynamic = "force-dynamic";
@@ -59,12 +58,14 @@ function UserDashboardContent() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 pt-24">
         {/* Usage Upgrade Banner */}
-        <UsageUpgradeBanner
-          currentUsage={data.usage.reconciliations.current}
-          limit={data.usage.reconciliations.limit}
-          planType={data.user.planType}
-          metricType="reconciliations"
-        />
+        {typeof data.usage.reconciliations.limit === "number" && (
+          <UsageUpgradeBanner
+            currentUsage={data.usage.reconciliations.current}
+            limit={data.usage.reconciliations.limit}
+            planType={data.user.planType}
+            metricType="reconciliations"
+          />
+        )}
 
         {/* Trial Countdown Banner */}
         {data.user.planType === "trial" && data.user.trialEndDate && (

@@ -2,7 +2,20 @@
 
 import { Banner } from "@/components/ui/banner";
 import { Button } from "@/components/ui/button";
-import { formatDistanceToNow } from "date-fns";
+// Simple date formatting without date-fns dependency
+function formatDistanceToNow(date: Date): string {
+  const now = new Date();
+  const diffMs = date.getTime() - now.getTime();
+  const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+  
+  if (diffDays < 0) return "past";
+  if (diffDays === 0) return "today";
+  if (diffDays === 1) return "1 day";
+  if (diffDays < 7) return `${diffDays} days`;
+  if (diffDays < 30) return `${Math.floor(diffDays / 7)} weeks`;
+  if (diffDays < 365) return `${Math.floor(diffDays / 30)} months`;
+  return `${Math.floor(diffDays / 365)} years`;
+}
 import Link from "next/link";
 import { AlertTriangle } from "lucide-react";
 
