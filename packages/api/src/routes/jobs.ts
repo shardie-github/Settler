@@ -11,6 +11,8 @@ import { JobRouteService } from "../application/services/JobRouteService";
 import { sendSuccess, sendError, sendCreated, sendNoContent } from "../utils/api-response";
 import { handleRouteError } from "../utils/error-handler";
 import { trackEventAsync } from "../utils/event-tracker";
+import { trackActivationEvent, trackUsageEvent } from "../services/analytics/events";
+import { trackReconciliationExecution } from "../services/usage/tracker";
 import { validateAdapterConfig } from "../utils/adapter-config-validator";
 
 const router = Router();

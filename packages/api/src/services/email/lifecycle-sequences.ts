@@ -7,6 +7,16 @@ import { query } from "../../db";
 import { logInfo, logError } from "../../utils/logger";
 import { getOnboardingProgress, isOnboardingComplete } from "../onboarding/tracker";
 import { getUserUsageMetrics } from "../analytics/metrics";
+import { sendEmail, renderEmailTemplate } from "./email-service";
+import {
+  getDay7SuccessTemplate,
+  getDay7ReminderTemplate,
+  getDay14ProgressTemplate,
+  getDay21FeatureTemplate,
+  getDay27ExpirationTemplate,
+  getDay29FinalTemplate,
+  getDay30TrialEndedTemplate,
+} from "./templates";
 
 interface User {
   id: string;
@@ -44,16 +54,25 @@ export async function sendDay7FirstValueEmail(userId: string): Promise<void> {
       hasCompletedFirstJob: !!hasCompletedFirstJob,
     });
 
-    // TODO: Integrate with email service
-    // await emailService.send({
-    //   to: user.email,
-    //   template: hasCompletedFirstJob ? 'day7-success' : 'day7-reminder',
-    //   data: {
-    //     name: user.name || 'there',
-    //     hasCompletedFirstJob,
-    //     nextStep: progress?.steps.find(s => !s.completed)?.step
-    //   }
-    // });
+    const template = hasCompletedFirstJob
+      ? getDay7SuccessTemplate()
+      : getDay7ReminderTemplate();
+
+    const nextStep = progress?.steps.find((s) => !s.completed)?.step || "first_job";
+    const frontendUrl = process.env.FRONTEND_URL || process.env.NEXT_PUBLIC_APP_URL || "https://settler.dev";
+
+    await sendEmail({
+      to: user.email,
+      subject: hasCompletedFirstJob
+        ? "You're making great progress! 🎉"
+        : "Let's get you started with Settler",
+      html: renderEmailTemplate(template, {
+        name: user.name || "there",
+        hasCompletedFirstJob: hasCompletedFirstJob ? "true" : "false",
+        nextStep,
+        dashboardUrl: `${frontendUrl}/dashboard`,
+      }),
+    });
   } catch (error) {
     logError("Failed to send Day 7 email", error, { userId });
   }
@@ -85,17 +104,19 @@ export async function sendDay14ProgressEmail(userId: string): Promise<void> {
       reconciliations: usage.reconciliations,
     });
 
-    // TODO: Integrate with email service
-    // await emailService.send({
-    //   to: user.email,
-    //   template: 'day14-progress',
-    //   data: {
-    //     name: user.name || 'there',
-    //     completionPercentage: progress?.completionPercentage || 0,
-    //     reconciliations: usage.reconciliations,
-    //     daysRemaining: 16
-    //   }
-    // });
+    const frontendUrl = process.env.FRONTEND_URL || process.env.NEXT_PUBLIC_APP_URL || "https://settler.dev";
+
+    await sendEmail({
+      to: user.email,
+      subject: "Your Progress Update",
+      html: renderEmailTemplate(getDay14ProgressTemplate(), {
+        name: user.name || "there",
+        completionPercentage: String(progress?.completionPercentage || 0),
+        reconciliations: String(usage.reconciliations),
+        daysRemaining: "16",
+        dashboardUrl: `${frontendUrl}/dashboard`,
+      }),
+    });
   } catch (error) {
     logError("Failed to send Day 14 email", error, { userId });
   }
@@ -122,15 +143,17 @@ export async function sendDay21FeatureEmail(userId: string): Promise<void> {
       email: user.email,
     });
 
-    // TODO: Integrate with email service
-    // await emailService.send({
-    //   to: user.email,
-    //   template: 'day21-features',
-    //   data: {
-    //     name: user.name || 'there',
-    //     daysRemaining: 9
-    //   }
-    // });
+    const frontendUrl = process.env.FRONTEND_URL || process.env.NEXT_PUBLIC_APP_URL || "https://settler.dev";
+
+    await sendEmail({
+      to: user.email,
+      subject: "Explore Advanced Features",
+      html: renderEmailTemplate(getDay21FeatureTemplate(), {
+        name: user.name || "there",
+        daysRemaining: "9",
+        dashboardUrl: `${frontendUrl}/dashboard`,
+      }),
+    });
   } catch (error) {
     logError("Failed to send Day 21 email", error, { userId });
   }
@@ -160,17 +183,18 @@ export async function sendDay27ExpirationWarning(userId: string): Promise<void> 
       reconciliations: usage.reconciliations,
     });
 
-    // TODO: Integrate with email service
-    // await emailService.send({
-    //   to: user.email,
-    //   template: 'day27-expiration',
-    //   data: {
-    //     name: user.name || 'there',
-    //     daysRemaining: 3,
-    //     reconciliations: usage.reconciliations,
-    //     upgradeUrl: '/pricing'
-    //   }
-    // });
+    const frontendUrl = process.env.FRONTEND_URL || process.env.NEXT_PUBLIC_APP_URL || "https://settler.dev";
+
+    await sendEmail({
+      to: user.email,
+      subject: "⏰ Your Trial Ends in 3 Days",
+      html: renderEmailTemplate(getDay27ExpirationTemplate(), {
+        name: user.name || "there",
+        daysRemaining: "3",
+        reconciliations: String(usage.reconciliations),
+        upgradeUrl: `${frontendUrl}/pricing`,
+      }),
+    });
   } catch (error) {
     logError("Failed to send Day 27 email", error, { userId });
   }
@@ -199,17 +223,18 @@ export async function sendDay29FinalReminder(userId: string): Promise<void> {
       email: user.email,
     });
 
-    // TODO: Integrate with email service
-    // await emailService.send({
-    //   to: user.email,
-    //   template: 'day29-final',
-    //   data: {
-    //     name: user.name || 'there',
-    //     daysRemaining: 1,
-    //     reconciliations: usage.reconciliations,
-    //     upgradeUrl: '/pricing'
-    //   }
-    // });
+    const frontendUrl = process.env.FRONTEND_URL || process.env.NEXT_PUBLIC_APP_URL || "https://settler.dev";
+
+    await sendEmail({
+      to: user.email,
+      subject: "⚠️ Last Chance: Your Trial Ends Tomorrow",
+      html: renderEmailTemplate(getDay29FinalTemplate(), {
+        name: user.name || "there",
+        daysRemaining: "1",
+        reconciliations: String(usage.reconciliations),
+        upgradeUrl: `${frontendUrl}/pricing`,
+      }),
+    });
   } catch (error) {
     logError("Failed to send Day 29 email", error, { userId });
   }
@@ -236,16 +261,17 @@ export async function sendDay30TrialEnded(userId: string): Promise<void> {
       email: user.email,
     });
 
-    // TODO: Integrate with email service
-    // await emailService.send({
-    //   to: user.email,
-    //   template: 'day30-ended',
-    //   data: {
-    //     name: user.name || 'there',
-    //     upgradeUrl: '/pricing',
-    //     freeTierUrl: '/dashboard'
-    //   }
-    // });
+    const frontendUrl = process.env.FRONTEND_URL || process.env.NEXT_PUBLIC_APP_URL || "https://settler.dev";
+
+    await sendEmail({
+      to: user.email,
+      subject: "Your Trial Has Ended",
+      html: renderEmailTemplate(getDay30TrialEndedTemplate(), {
+        name: user.name || "there",
+        upgradeUrl: `${frontendUrl}/pricing`,
+        freeTierUrl: `${frontendUrl}/dashboard`,
+      }),
+    });
   } catch (error) {
     logError("Failed to send Day 30 email", error, { userId });
   }
