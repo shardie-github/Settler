@@ -12,6 +12,8 @@ import { processTrialLifecycleEmails, processMonthlySummaryEmails, processLowAct
 import { syncFXRatesJob } from "../../jobs/fx-rate-sync";
 import { processPendingWebhooks } from "../../utils/webhook-queue";
 import { processLifecycleEmails } from "../../services/email/lifecycle-sequences";
+import { aggregateInsights } from "../../services/ai-insights/insight-aggregator";
+import { suggestImprovements, saveImprovementSuggestions } from "../../services/ai-insights/improvement-suggester";
 
 // Redis connection for BullMQ
 const redisConnection = new Redis({
@@ -92,6 +94,18 @@ const jobHandlers: Record<string, () => Promise<void>> = {
     logInfo("Starting lifecycle email sequence");
     await processLifecycleEmails();
     logInfo("Lifecycle email sequence completed");
+  },
+  "ai-insights": async () => {
+    logInfo("Starting AI insights aggregation");
+    const insights = await aggregateInsights("week");
+    logInfo("AI insights aggregated", { summary: insights.summary });
+    
+    // Generate improvement suggestions
+    const suggestions = await suggestImprovements();
+    if (suggestions.length > 0) {
+      await saveImprovementSuggestions(suggestions);
+      logInfo("Improvement suggestions generated", { count: suggestions.length });
+    }
   },
 };
 
@@ -245,6 +259,19 @@ export async function initializeScheduledJobs(): Promise<void> {
       }
     );
 
+    // AI insights: Weekly on Monday at 8 AM UTC
+    await jobQueue.add(
+      "ai-insights",
+      {},
+      {
+        repeat: {
+          pattern: "0 8 * * 1", // Monday at 8 AM
+          tz: "UTC",
+        },
+        jobId: "ai-insights-weekly",
+      }
+    );
+
     logInfo("Scheduled jobs initialized", {
       jobs: [
         "data-retention (daily 2 AM)",
@@ -252,6 +279,8 @@ export async function initializeScheduledJobs(): Promise<void> {
         "email-monthly (1st of month 9 AM)",
         "fx-rate-sync (daily 1 AM)",
         "webhook-retry (every 5 minutes)",
+        "lifecycle-emails (daily 11 AM)",
+        "ai-insights (weekly Monday 8 AM)",
       ],
     });
   } catch (error) {
