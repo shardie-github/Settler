@@ -6,6 +6,7 @@
  */
 
 import { EventEmitter } from "events";
+import { logError } from "../../utils/logger";
 
 export interface EdgeAgentConfig {
   customerId: string;
@@ -284,7 +285,7 @@ export class EdgeAgent extends EventEmitter {
         throw new Error(`Failed to send metadata: ${response.statusText}`);
       }
     } catch (error) {
-      console.error("Failed to send metadata to cloud:", error);
+      logError("Failed to send metadata to cloud", error as Error);
       // Don't throw - metadata sending failure shouldn't break reconciliation
     }
   }

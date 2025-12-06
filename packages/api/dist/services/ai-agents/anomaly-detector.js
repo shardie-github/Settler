@@ -7,6 +7,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AnomalyDetectorAgent = void 0;
 const orchestrator_1 = require("./orchestrator");
+const logger_1 = require("../../utils/logger");
 class AnomalyDetectorAgent extends orchestrator_1.BaseAgent {
     id = "anomaly-detector";
     name = "Anomaly & Exploit Detector";
@@ -23,7 +24,7 @@ class AnomalyDetectorAgent extends orchestrator_1.BaseAgent {
         setInterval(() => {
             if (this.enabled) {
                 this.detectAnomalies().catch((error) => {
-                    console.error("Anomaly detection failed:", error);
+                    (0, logger_1.logError)("Anomaly detection failed", error);
                 });
             }
         }, 60000); // Every minute
@@ -162,7 +163,11 @@ class AnomalyDetectorAgent extends orchestrator_1.BaseAgent {
      */
     async sendAlert(anomaly) {
         // TODO: Send to alerting system (PagerDuty, Slack, etc.)
-        console.log(`ALERT: ${anomaly.severity.toUpperCase()} - ${anomaly.description}`);
+        (0, logger_1.logInfo)(`ALERT: ${anomaly.severity.toUpperCase()} - ${anomaly.description}`, {
+            anomalyId: anomaly.id,
+            severity: anomaly.severity,
+            type: anomaly.type,
+        });
         this.emit("alert_sent", anomaly);
     }
 }

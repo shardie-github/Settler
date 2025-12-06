@@ -5,6 +5,7 @@
  */
 
 import { BaseAgent } from "./orchestrator";
+import { logError, logInfo } from "../../utils/logger";
 
 export interface Anomaly {
   id: string;
@@ -36,7 +37,7 @@ export class AnomalyDetectorAgent extends BaseAgent {
     setInterval(() => {
       if (this.enabled) {
         this.detectAnomalies().catch((error) => {
-          console.error("Anomaly detection failed:", error);
+          logError("Anomaly detection failed", error as Error);
         });
       }
     }, 60000); // Every minute
@@ -205,7 +206,11 @@ export class AnomalyDetectorAgent extends BaseAgent {
    */
   private async sendAlert(anomaly: Anomaly): Promise<void> {
     // TODO: Send to alerting system (PagerDuty, Slack, etc.)
-    console.log(`ALERT: ${anomaly.severity.toUpperCase()} - ${anomaly.description}`);
+    logInfo(`ALERT: ${anomaly.severity.toUpperCase()} - ${anomaly.description}`, {
+      anomalyId: anomaly.id,
+      severity: anomaly.severity,
+      type: anomaly.type,
+    });
     this.emit("alert_sent", anomaly);
   }
 }

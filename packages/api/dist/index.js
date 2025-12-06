@@ -170,6 +170,7 @@ if (config_1.config.nodeEnv === "production" || config_1.config.nodeEnv === "pre
     }
     catch (error) {
         const message = error instanceof Error ? error.message : "Unknown error";
+        // eslint-disable-next-line no-console
         console.error("Secret validation failed:", message);
         process.exit(1);
     }

@@ -9,6 +9,7 @@
  */
 
 import { BaseAgent } from "./orchestrator";
+import { logError, logInfo } from "../../utils/logger";
 
 export interface OptimizationOpportunity {
   id: string;
@@ -37,7 +38,7 @@ export class InfrastructureOptimizerAgent extends BaseAgent {
     setInterval(() => {
       if (this.enabled) {
         this.analyzeInfrastructure().catch((error) => {
-          console.error("Infrastructure analysis failed:", error);
+          logError("Infrastructure analysis failed", error as Error);
         });
       }
     }, 3600000); // Every hour
@@ -119,7 +120,9 @@ export class InfrastructureOptimizerAgent extends BaseAgent {
         opportunity.expectedImpact.riskLevel === "low"
       ) {
         await this.applyOptimization(opportunity).catch((error) => {
-          console.error(`Failed to apply optimization ${opportunity.id}:`, error);
+          logError(`Failed to apply optimization ${opportunity.id}`, error as Error, {
+            opportunityId: opportunity.id,
+          });
         });
       }
     }
@@ -206,7 +209,10 @@ export class InfrastructureOptimizerAgent extends BaseAgent {
    */
   private async applyOptimization(opportunity: OptimizationOpportunity): Promise<void> {
     // TODO: Implement actual optimization logic
-    console.log(`Applying optimization: ${opportunity.id}`);
+    logInfo(`Applying optimization: ${opportunity.id}`, {
+      opportunityId: opportunity.id,
+      type: opportunity.type,
+    });
     this.emit("optimization_applied", opportunity);
   }
 

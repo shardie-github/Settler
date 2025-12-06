@@ -7,6 +7,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.agentOrchestrator = exports.AgentOrchestrator = exports.BaseAgent = void 0;
 const events_1 = require("events");
+const logger_1 = require("../../utils/logger");
 class BaseAgent extends events_1.EventEmitter {
     config = {};
     enabled = false;
@@ -136,7 +137,7 @@ class AgentOrchestrator extends events_1.EventEmitter {
      */
     async initializeAll() {
         const initPromises = Array.from(this.agents.values()).map((agent) => agent.initialize().catch((error) => {
-            console.error(`Failed to initialize agent ${agent.id}:`, error);
+            (0, logger_1.logError)(`Failed to initialize agent ${agent.id}`, error, { agentId: agent.id });
         }));
         await Promise.all(initPromises);
         this.emit("all_agents_initialized");

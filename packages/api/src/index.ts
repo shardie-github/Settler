@@ -198,6 +198,7 @@ if (config.nodeEnv === "production" || config.nodeEnv === "preview") {
     SecretsManager.validateSecrets(REQUIRED_SECRETS);
   } catch (error: unknown) {
     const message = error instanceof Error ? error.message : "Unknown error";
+    // eslint-disable-next-line no-console
     console.error("Secret validation failed:", message);
     process.exit(1);
   }

@@ -5,6 +5,7 @@
  */
 
 import { EventEmitter } from "events";
+import { logError } from "../../utils/logger";
 
 export interface AgentConfig {
   id: string;
@@ -201,7 +202,7 @@ export class AgentOrchestrator extends EventEmitter {
   async initializeAll(): Promise<void> {
     const initPromises = Array.from(this.agents.values()).map((agent) =>
       agent.initialize().catch((error) => {
-        console.error(`Failed to initialize agent ${agent.id}:`, error);
+        logError(`Failed to initialize agent ${agent.id}`, error as Error, { agentId: agent.id });
       })
     );
 

@@ -15,7 +15,10 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "lint": "eslint src --ext .ts",
+    "lint:fix": "eslint src --ext .ts --fix",
     "typecheck": "tsc --noEmit",
+    "format": "prettier --write \"src/**/*.{ts,tsx,js,jsx,json}\"",
+    "format:check": "prettier --check \"src/**/*.{ts,tsx,js,jsx,json}\"",
     "clean": "rm -rf dist"
   },
   "dependencies": {

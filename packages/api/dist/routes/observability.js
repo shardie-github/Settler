@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.observabilityRouter = void 0;
 const express_1 = require("express");
 const db_1 = require("../db");
+const logger_1 = require("../utils/logger");
 /**
  * Observability Routes
  *
@@ -84,7 +85,7 @@ exports.observabilityRouter.get("/metrics", async (req, res) => {
         });
     }
     catch (error) {
-        console.error("Error fetching metrics:", error);
+        (0, logger_1.logError)("Error fetching metrics", error);
         res.status(500).json({
             error: "Failed to fetch metrics",
             message: error instanceof Error ? error.message : "Unknown error",
@@ -146,7 +147,7 @@ exports.observabilityRouter.get("/logs", async (req, res) => {
         });
     }
     catch (error) {
-        console.error("Error fetching logs:", error);
+        (0, logger_1.logError)("Error fetching logs", error);
         res.status(500).json({
             error: "Failed to fetch logs",
             message: error instanceof Error ? error.message : "Unknown error",
@@ -180,7 +181,7 @@ exports.observabilityRouter.get("/traces", async (req, res) => {
         });
     }
     catch (error) {
-        console.error("Error fetching traces:", error);
+        (0, logger_1.logError)("Error fetching traces", error);
         res.status(500).json({
             error: "Failed to fetch traces",
             message: error instanceof Error ? error.message : "Unknown error",

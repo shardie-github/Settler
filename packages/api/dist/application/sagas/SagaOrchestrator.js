@@ -6,6 +6,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SagaOrchestrator = exports.SagaStatus = void 0;
 const db_1 = require("../../db");
+const logger_1 = require("../../utils/logger");
 var SagaStatus;
 (function (SagaStatus) {
     SagaStatus["RUNNING"] = "running";
@@ -57,7 +58,7 @@ class SagaOrchestrator {
         await this.saveSagaState(state);
         // Start executing the saga
         this.executeSaga(state).catch((error) => {
-            console.error(`Saga ${sagaId} failed:`, error);
+            (0, logger_1.logError)(`Saga ${sagaId} failed`, error, { sagaId });
         });
         return sagaId;
     }
@@ -200,7 +201,10 @@ class SagaOrchestrator {
                         await this.recordStepCompensated(state, step.name);
                     }
                     catch (error) {
-                        console.error(`Compensation failed for step ${step.name}:`, error);
+                        (0, logger_1.logError)(`Compensation failed for step ${step.name}`, error, {
+                            sagaId: state.sagaId,
+                            stepName: step.name,
+                        });
                         // Continue with other compensations
                     }
                 }

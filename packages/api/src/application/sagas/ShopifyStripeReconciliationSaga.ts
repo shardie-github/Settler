@@ -10,6 +10,7 @@ import { IEventStore } from "../../infrastructure/eventsourcing/EventStore";
 import { ReconciliationEvents } from "../../domain/eventsourcing/reconciliation/ReconciliationEvents";
 import { createCircuitBreaker } from "../../infrastructure/resilience/circuit-breaker";
 import { CircuitBreaker } from "opossum";
+import { logInfo } from "../../utils/logger";
 
 export class ShopifyStripeReconciliationSaga {
   private shopifyCircuitBreaker: CircuitBreaker<any>;
@@ -117,7 +118,7 @@ export class ShopifyStripeReconciliationSaga {
       },
       compensate: async (state: SagaState): Promise<void> => {
         // No compensation needed for read-only fetch
-        console.log(`Compensating fetch_shopify_orders for ${state.aggregateId}`);
+        logInfo(`Compensating fetch_shopify_orders`, { aggregateId: state.aggregateId });
       },
     };
   }
@@ -188,7 +189,7 @@ export class ShopifyStripeReconciliationSaga {
       },
       compensate: async (state: SagaState): Promise<void> => {
         // No compensation needed
-        console.log(`Compensating fetch_stripe_payments for ${state.aggregateId}`);
+        logInfo(`Compensating fetch_stripe_payments`, { aggregateId: state.aggregateId });
       },
     };
   }
@@ -373,7 +374,7 @@ export class ShopifyStripeReconciliationSaga {
       },
       compensate: async (state: SagaState): Promise<void> => {
         // Could delete persisted results if needed
-        console.log(`Compensating persist_results for ${state.aggregateId}`);
+        logInfo(`Compensating persist_results`, { aggregateId: state.aggregateId });
       },
     };
   }
@@ -391,7 +392,7 @@ export class ShopifyStripeReconciliationSaga {
         try {
           // In production, send webhooks to configured endpoints
           // For now, just log
-          console.log(`Sending webhook notifications for ${state.aggregateId}`);
+          logInfo(`Sending webhook notifications`, { aggregateId: state.aggregateId });
 
           return {
             success: true,
@@ -412,7 +413,7 @@ export class ShopifyStripeReconciliationSaga {
       },
       compensate: async (state: SagaState): Promise<void> => {
         // Webhooks are typically fire-and-forget, no compensation needed
-        console.log(`Compensating notify_webhooks for ${state.aggregateId}`);
+        logInfo(`Compensating notify_webhooks`, { aggregateId: state.aggregateId });
       },
     };
   }

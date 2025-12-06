@@ -7,6 +7,7 @@ import { Pool } from "pg";
 import { pool } from "../../db";
 import { IEventStore } from "../../infrastructure/eventsourcing/EventStore";
 import { IEventBus } from "../../infrastructure/events/IEventBus";
+import { logError } from "../../utils/logger";
 
 export enum SagaStatus {
   RUNNING = "running",
@@ -112,7 +113,7 @@ export class SagaOrchestrator {
 
     // Start executing the saga
     this.executeSaga(state).catch((error) => {
-      console.error(`Saga ${sagaId} failed:`, error);
+      logError(`Saga ${sagaId} failed`, error as Error, { sagaId });
     });
 
     return sagaId;
@@ -278,7 +279,10 @@ export class SagaOrchestrator {
             await step.compensate(state);
             await this.recordStepCompensated(state, step.name);
           } catch (error) {
-            console.error(`Compensation failed for step ${step.name}:`, error);
+            logError(`Compensation failed for step ${step.name}`, error as Error, {
+              sagaId: state.sagaId,
+              stepName: step.name,
+            });
             // Continue with other compensations
           }
         }

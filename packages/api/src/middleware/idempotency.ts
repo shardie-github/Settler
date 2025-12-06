@@ -2,6 +2,7 @@ import { Response, NextFunction } from "express";
 import { AuthRequest } from "./auth";
 import { query } from "../db";
 import { v4 as uuidv4 } from "uuid";
+import { logError } from "../utils/logger";
 
 export function idempotencyMiddleware() {
   return async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
@@ -64,7 +65,9 @@ export function idempotencyMiddleware() {
              VALUES ($1, $2, $3, NOW() + INTERVAL '24 hours')
              ON CONFLICT (user_id, key) DO NOTHING`,
             [req.userId || null, idempotencyKey, JSON.stringify({ statusCode, data: responseData })]
-          ).catch((err) => console.error("Failed to cache idempotency key", err));
+          ).catch((err) => {
+            logError("Failed to cache idempotency key", err as Error);
+          });
         }
         if (encoding !== undefined && typeof encoding === "string") {
           originalEnd(chunk, encoding, cb);
