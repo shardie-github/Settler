@@ -14,13 +14,11 @@ import { AuthRequest } from "../middleware/auth";
 import { requirePermission } from "../middleware/authorization";
 import { Permission } from "../infrastructure/security/Permissions";
 import { query } from "../db";
-import { logInfo, logError } from "../utils/logger";
+import { logInfo } from "../utils/logger";
 import { sendSuccess, sendError, sendCreated, sendNoContent } from "../utils/api-response";
-import { handleRouteError } from "../utils/error-handler";
+import { asyncHandler } from "../utils/error-handler";
 import { trackEventAsync } from "../utils/event-tracker";
-import { v4 as uuidv4 } from "uuid";
 import bcrypt from "bcrypt";
-import crypto from "crypto";
 // Import shared edge-ai-core utilities (brand-neutral)
 import { generateNodeKey, hashNodeKey, generateEnrollmentKey } from "@settler/edge-ai-core";
 
@@ -157,12 +155,12 @@ async function authenticateEdgeNode(nodeKey: string): Promise<{ nodeId: string; 
   // Update last heartbeat
   await query(
     `UPDATE edge_nodes SET last_heartbeat_at = NOW() WHERE id = $1`,
-    [result.rows[0].id]
+    [result[0].id]
   );
 
   return {
-    nodeId: result.rows[0].id,
-    tenantId: result.rows[0].tenant_id,
+    nodeId: result[0].id,
+    tenantId: result[0].tenant_id,
   };
 }
 
@@ -183,7 +181,7 @@ router.post(
   "/nodes",
   validateRequest(createEdgeNodeSchema),
   requirePermission(Permission.EDGE_NODES_WRITE),
-  handleRouteError(async (req: AuthRequest, res: Response) => {
+  asyncHandler(async (req: AuthRequest, res: Response) => {
     const { name, device_type, device_os, device_arch, capabilities, location, metadata } = req.body;
     const tenantId = req.tenantId!;
 
@@ -215,7 +213,7 @@ router.post(
       ]
     );
 
-    const nodeId = result.rows[0].id;
+    const nodeId = result[0].id;
 
     await trackEventAsync(tenantId, 'edge_node_created', {
       node_id: nodeId,
@@ -242,7 +240,7 @@ router.post(
 router.post(
   "/nodes/enroll",
   validateRequest(enrollEdgeNodeSchema),
-  handleRouteError(async (req: AuthRequest, res: Response) => {
+  asyncHandler(async (req: AuthRequest, res: Response) => {
     const { enrollment_key, name, device_type, device_os, device_arch, capabilities, version } = req.body;
 
     // Find node by enrollment key
@@ -259,7 +257,7 @@ router.post(
 
     let matchedNode: { id: string; tenant_id: string } | null = null;
 
-    for (const node of nodes.rows) {
+    for (const node of nodes) {
       const isValid = await bcrypt.compare(enrollment_key, node.enrollment_key_hash);
       if (isValid) {
         matchedNode = { id: node.id, tenant_id: node.tenant_id };
@@ -317,7 +315,7 @@ router.post(
 router.get(
   "/nodes",
   requirePermission(Permission.EDGE_NODES_READ),
-  handleRouteError(async (req: AuthRequest, res: Response) => {
+  asyncHandler(async (req: AuthRequest, res: Response) => {
     const tenantId = req.tenantId!;
     const { page = "1", limit = "100" } = req.query;
     const offset = (Number(page) - 1) * Number(limit);
@@ -345,11 +343,11 @@ router.get(
     );
 
     sendSuccess(res, {
-      nodes: result.rows,
+      nodes: result,
       pagination: {
         page: Number(page),
         limit: Number(limit),
-        total: Number(countResult.rows[0].count),
+        total: Number(countResult[0].count),
       },
     });
   })
@@ -365,7 +363,7 @@ router.get(
     params: z.object({ id: z.string().uuid() }),
   })),
   requirePermission(Permission.EDGE_NODES_READ),
-  handleRouteError(async (req: AuthRequest, res: Response) => {
+  asyncHandler(async (req: AuthRequest, res: Response) => {
     const { id } = req.params;
     const tenantId = req.tenantId!;
 
@@ -392,11 +390,11 @@ router.get(
       [id, tenantId]
     );
 
-    if (result.rows.length === 0) {
+    if (result.length === 0) {
       return sendError(res, "Edge node not found", 404);
     }
 
-    const node = result.rows[0];
+    const node = result[0];
     sendSuccess(res, {
       ...node,
       capabilities: JSON.parse(node.capabilities || '{}'),
@@ -414,7 +412,7 @@ router.patch(
   "/nodes/:id",
   validateRequest(updateEdgeNodeSchema),
   requirePermission(Permission.EDGE_NODES_WRITE),
-  handleRouteError(async (req: AuthRequest, res: Response) => {
+  asyncHandler(async (req: AuthRequest, res: Response) => {
     const { id } = req.params;
     const { name, status, capabilities, location, metadata } = req.body;
     const tenantId = req.tenantId!;
@@ -473,7 +471,7 @@ router.delete(
     params: z.object({ id: z.string().uuid() }),
   })),
   requirePermission(Permission.EDGE_NODES_WRITE),
-  handleRouteError(async (req: AuthRequest, res: Response) => {
+  asyncHandler(async (req: AuthRequest, res: Response) => {
     const { id } = req.params;
     const tenantId = req.tenantId!;
 
@@ -501,8 +499,8 @@ router.delete(
 router.post(
   "/heartbeat",
   validateRequest(heartbeatSchema),
-  handleRouteError(async (req: AuthRequest, res: Response) => {
-    const { node_key, status, version, metrics } = req.body;
+  asyncHandler(async (req: AuthRequest, res: Response) => {
+    const { node_key, version, status: _status, metrics: _metrics } = req.body;
 
     const auth = await authenticateEdgeNode(node_key);
     if (!auth) {
@@ -537,7 +535,7 @@ router.post(
 router.post(
   "/batch-ingestion",
   validateRequest(batchIngestionSchema),
-  handleRouteError(async (req: AuthRequest, res: Response) => {
+  asyncHandler(async (req: AuthRequest, res: Response) => {
     const { node_key, job_id, data, schema_hints, metadata } = req.body;
 
     const auth = await authenticateEdgeNode(node_key);
@@ -559,7 +557,7 @@ router.post(
       ]
     );
 
-    const edgeJobId = jobResult.rows[0].id;
+    const edgeJobId = jobResult[0].id;
 
     // TODO: Process ingestion (schema inference, PII detection, etc.)
     // For now, mark as completed
@@ -595,7 +593,7 @@ router.post(
 router.post(
   "/candidate-scores",
   validateRequest(candidateScoresSchema),
-  handleRouteError(async (req: AuthRequest, res: Response) => {
+  asyncHandler(async (req: AuthRequest, res: Response) => {
     const { node_key, job_id, execution_id, candidates, model_version_id } = req.body;
 
     const auth = await authenticateEdgeNode(node_key);
@@ -627,7 +625,7 @@ router.post(
           JSON.stringify(candidate.features || {}),
         ]
       );
-      candidateIds.push(result.rows[0].id);
+      candidateIds.push(result[0].id);
     }
 
     await trackEventAsync(auth.tenantId, 'edge_candidates_submitted', {
@@ -650,7 +648,7 @@ router.post(
 router.post(
   "/anomalies",
   validateRequest(anomalyReportSchema),
-  handleRouteError(async (req: AuthRequest, res: Response) => {
+  asyncHandler(async (req: AuthRequest, res: Response) => {
     const { node_key, job_id, execution_id, anomalies, model_version_id } = req.body;
 
     const auth = await authenticateEdgeNode(node_key);
@@ -678,7 +676,7 @@ router.post(
           anomaly.anomaly_score || null,
         ]
       );
-      anomalyIds.push(result.rows[0].id);
+      anomalyIds.push(result[0].id);
     }
 
     await trackEventAsync(auth.tenantId, 'edge_anomalies_reported', {
@@ -701,7 +699,7 @@ router.post(
 router.post(
   "/device-profile",
   validateRequest(deviceProfileSchema),
-  handleRouteError(async (req: AuthRequest, res: Response) => {
+  asyncHandler(async (req: AuthRequest, res: Response) => {
     const { node_key, device_specs, benchmark_results, optimization_settings } = req.body;
 
     const auth = await authenticateEdgeNode(node_key);
@@ -731,7 +729,7 @@ router.post(
     );
 
     sendSuccess(res, {
-      profile_id: result.rows[0].id,
+      profile_id: result[0].id,
       status: 'created',
     });
   })

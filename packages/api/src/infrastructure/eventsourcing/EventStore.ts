@@ -135,7 +135,7 @@ export class PostgresEventStore implements IEventStore {
 
     const result = await this.db.query(query, params);
 
-    return result.rows.map((row) => ({
+    return result.map((row) => ({
       id: row.id,
       aggregate_id: row.aggregate_id,
       aggregate_type: row.aggregate_type,
@@ -166,7 +166,7 @@ export class PostgresEventStore implements IEventStore {
 
     const result = await this.db.query(query, [eventType, limit]);
 
-    return result.rows.map((row) => ({
+    return result.map((row) => ({
       id: row.id,
       aggregate_id: row.aggregate_id,
       aggregate_type: row.aggregate_type,
@@ -196,7 +196,7 @@ export class PostgresEventStore implements IEventStore {
 
     const result = await this.db.query(query, [correlationId]);
 
-    return result.rows.map((row) => ({
+    return result.map((row) => ({
       id: row.id,
       aggregate_id: row.aggregate_id,
       aggregate_type: row.aggregate_type,
@@ -231,7 +231,7 @@ export class PostgresEventStore implements IEventStore {
       'SELECT metadata FROM event_store WHERE event_id = $1',
       [snapshot.event_id]
     );
-    const tenantId = event.rows[0]?.metadata?.tenant_id || null;
+    const tenantId = event[0]?.metadata?.tenant_id || null;
 
     await this.db.query(query, [
       snapshot.aggregate_id,
@@ -264,11 +264,11 @@ export class PostgresEventStore implements IEventStore {
 
     const result = await this.db.query(query, [aggregateId, aggregateType]);
 
-    if (result.rows.length === 0) {
+    if (result.length === 0) {
       return null;
     }
 
-    const row = result.rows[0];
+    const row = result[0];
     return {
       aggregate_id: row.aggregate_id,
       aggregate_type: row.aggregate_type,
@@ -295,12 +295,12 @@ export class PostgresEventStore implements IEventStore {
       [aggregateId, aggregateType, snapshotVersion]
     );
 
-    if (snapshotResult.rows.length === 0) {
+    if (snapshotResult.length === 0) {
       // No snapshot found, return all events
       return this.getEvents(aggregateId, aggregateType);
     }
 
-    const snapshotEventId = snapshotResult.rows[0].event_id;
+    const snapshotEventId = snapshotResult[0].event_id;
 
     // Get the event_store.id for the snapshot event
     const eventStoreIdResult = await this.db.query(
@@ -308,11 +308,11 @@ export class PostgresEventStore implements IEventStore {
       [snapshotEventId]
     );
 
-    if (eventStoreIdResult.rows.length === 0) {
+    if (eventStoreIdResult.length === 0) {
       return this.getEvents(aggregateId, aggregateType);
     }
 
-    const snapshotEventStoreId = eventStoreIdResult.rows[0].id;
+    const snapshotEventStoreId = eventStoreIdResult[0].id;
 
     // Get all events after the snapshot event
     const query = `
@@ -338,7 +338,7 @@ export class PostgresEventStore implements IEventStore {
       snapshotEventStoreId,
     ]);
 
-    return result.rows.map((row) => ({
+    return result.map((row) => ({
       id: row.id,
       aggregate_id: row.aggregate_id,
       aggregate_type: row.aggregate_type,

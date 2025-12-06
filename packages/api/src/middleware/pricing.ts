@@ -3,7 +3,7 @@
  * Enforces feature gates based on pricing tier
  */
 
-import { Request, Response, NextFunction } from 'express';
+import { Response, NextFunction } from 'express';
 import { AuthRequest } from './auth';
 import { query } from '../db';
 import { PricingTier, PRICING_TIERS, hasFeature, getFeatureLimit } from '../config/pricing';
@@ -19,7 +19,7 @@ export interface PricingRequest extends AuthRequest {
  */
 export async function pricingMiddleware(
   req: PricingRequest,
-  res: Response,
+  _res: Response,
   next: NextFunction
 ): Promise<void> {
   try {

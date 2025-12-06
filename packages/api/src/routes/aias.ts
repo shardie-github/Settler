@@ -13,11 +13,11 @@ import { validateRequest } from "../middleware/validation";
 import { AuthRequest } from "../middleware/auth";
 import { requirePermission } from "../middleware/authorization";
 import { Permission } from "../infrastructure/security/Permissions";
-import { handleRouteError } from "../utils/error-handler";
+import { asyncHandler } from "../utils/error-handler";
 import { sendSuccess, sendError } from "../utils/api-response";
 import { getAIASClient } from "../services/aias/client";
 import { query } from "../db";
-import { logInfo, logError } from "../utils/logger";
+import { logInfo } from "../utils/logger";
 import { trackEventAsync } from "../utils/event-tracker";
 
 const router = Router();
@@ -84,7 +84,7 @@ router.post(
   "/models/upload",
   validateRequest(uploadModelSchema),
   requirePermission(Permission.EDGE_AIAS_ACCESS),
-  handleRouteError(async (req: AuthRequest, res: Response) => {
+  asyncHandler(async (req: AuthRequest, res: Response) => {
     const { modelName, modelType, modelFile, format, metadata } = req.body;
     const tenantId = req.tenantId!;
     const userId = req.userId!;
@@ -118,14 +118,14 @@ router.post(
     );
 
     await trackEventAsync(tenantId, 'aias_model_uploaded', {
-      model_id: modelResult.rows[0].id,
+      model_id: modelResult[0].id,
       aias_job_id: uploadResult.jobId,
     });
 
-    logInfo(`Model uploaded to AIAS: ${modelResult.rows[0].id}`);
+    logInfo(`Model uploaded to AIAS: ${modelResult[0].id}`);
 
     sendSuccess(res, {
-      modelId: modelResult.rows[0].id,
+      modelId: modelResult[0].id,
       aiasJobId: uploadResult.jobId,
       aiasModelId: uploadResult.modelId,
       status: 'uploaded',
@@ -141,7 +141,7 @@ router.post(
   "/models/:modelId/optimize",
   validateRequest(optimizeModelSchema),
   requirePermission(Permission.EDGE_AIAS_ACCESS),
-  handleRouteError(async (req: AuthRequest, res: Response) => {
+  asyncHandler(async (req: AuthRequest, res: Response) => {
     const { modelId } = req.params;
     const { targetDevices, quantization, optimizationLevel } = req.body;
     const tenantId = req.tenantId!;
@@ -153,7 +153,7 @@ router.post(
       [modelId, tenantId]
     );
 
-    if (modelCheck.rows.length === 0) {
+    if (modelCheck.length === 0) {
       return sendError(res, "Model not found", 404);
     }
 
@@ -198,7 +198,7 @@ router.get(
     params: z.object({ jobId: z.string() }),
   })),
   requirePermission(Permission.EDGE_AIAS_ACCESS),
-  handleRouteError(async (req: AuthRequest, res: Response) => {
+  asyncHandler(async (req: AuthRequest, res: Response) => {
     const { jobId } = req.params;
     const tenantId = req.tenantId!;
 
@@ -209,7 +209,7 @@ router.get(
       [jobId, tenantId]
     );
 
-    if (modelCheck.rows.length === 0) {
+    if (modelCheck.length === 0) {
       return sendError(res, "Job not found", 404);
     }
 
@@ -224,7 +224,7 @@ router.get(
          WHERE id = $2`,
         [
           JSON.stringify(status.result.benchmarkResults),
-          modelCheck.rows[0].id,
+          modelCheck[0].id,
         ]
       );
     }
@@ -241,7 +241,7 @@ router.post(
   "/models/:modelId/benchmark",
   validateRequest(benchmarkModelSchema),
   requirePermission(Permission.EDGE_AIAS_ACCESS),
-  handleRouteError(async (req: AuthRequest, res: Response) => {
+  asyncHandler(async (req: AuthRequest, res: Response) => {
     const { modelId } = req.params;
     const { deviceProfile, testData } = req.body;
     const tenantId = req.tenantId!;
@@ -253,7 +253,7 @@ router.post(
       [modelId, tenantId]
     );
 
-    if (modelCheck.rows.length === 0) {
+    if (modelCheck.length === 0) {
       return sendError(res, "Model not found", 404);
     }
 
@@ -288,7 +288,7 @@ router.get(
     params: z.object({ jobId: z.string() }),
   })),
   requirePermission(Permission.EDGE_AIAS_ACCESS),
-  handleRouteError(async (req: AuthRequest, res: Response) => {
+  asyncHandler(async (req: AuthRequest, res: Response) => {
     const { jobId } = req.params;
     const tenantId = req.tenantId!;
 
@@ -299,7 +299,7 @@ router.get(
       [jobId, tenantId]
     );
 
-    if (modelCheck.rows.length === 0) {
+    if (modelCheck.length === 0) {
       return sendError(res, "Job not found", 404);
     }
 
@@ -329,7 +329,7 @@ router.post(
   "/models/:modelId/export",
   validateRequest(exportModelSchema),
   requirePermission(Permission.EDGE_AIAS_ACCESS),
-  handleRouteError(async (req: AuthRequest, res: Response) => {
+  asyncHandler(async (req: AuthRequest, res: Response) => {
     const { modelId } = req.params;
     const { format, targetDevice } = req.body;
     const tenantId = req.tenantId!;
@@ -341,7 +341,7 @@ router.post(
       [modelId, tenantId]
     );
 
-    if (modelCheck.rows.length === 0) {
+    if (modelCheck.length === 0) {
       return sendError(res, "Model not found", 404);
     }
 
@@ -382,7 +382,7 @@ router.post(
 router.get(
   "/models",
   requirePermission(Permission.EDGE_MODELS_READ),
-  handleRouteError(async (req: AuthRequest, res: Response) => {
+  asyncHandler(async (req: AuthRequest, res: Response) => {
     const tenantId = req.tenantId!;
     const { page = "1", limit = "100" } = req.query;
     const offset = (Number(page) - 1) * Number(limit);
@@ -410,11 +410,11 @@ router.get(
     );
 
     sendSuccess(res, {
-      models: result.rows,
+      models: result,
       pagination: {
         page: Number(page),
         limit: Number(limit),
-        total: Number(countResult.rows[0].count),
+        total: Number(countResult[0].count),
       },
     });
   })
@@ -430,7 +430,7 @@ router.get(
     params: z.object({ modelId: z.string().uuid() }),
   })),
   requirePermission(Permission.EDGE_MODELS_READ),
-  handleRouteError(async (req: AuthRequest, res: Response) => {
+  asyncHandler(async (req: AuthRequest, res: Response) => {
     const { modelId } = req.params;
     const tenantId = req.tenantId!;
 
@@ -487,7 +487,7 @@ async function getAIASModelId(modelVersionId: string): Promise<string> {
     throw new Error('Model not found');
   }
 
-  const metadata = JSON.parse(result.rows[0].metadata || '{}');
+  const metadata = JSON.parse(result[0].metadata || '{}');
   return metadata.aiasModelId || modelVersionId; // Fallback to model version ID
 }
 

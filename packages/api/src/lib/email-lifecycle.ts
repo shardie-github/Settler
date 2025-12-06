@@ -99,7 +99,7 @@ export async function sendTrialValueEmail(
       },
       trial: {
         days_remaining: trialData.daysRemaining,
-      } as EmailTemplateData['trial'],
+      },
       reconciliation: {
         platform_name: reconciliationData.platformName,
         matched_count: reconciliationData.matchedCount,
@@ -144,7 +144,7 @@ export async function sendTrialGatedFeaturesEmail(
       },
       trial: {
         days_remaining: trialData.daysRemaining,
-      } as EmailTemplateData['trial'],
+      },
       product: urls,
       urls: urls,
     };
@@ -187,7 +187,7 @@ export async function sendTrialCaseStudyEmail(
       },
       trial: {
         days_remaining: trialData.daysRemaining,
-      } as EmailTemplateData['trial'],
+      },
       case_study: {
         similar_company: caseStudy.companyName,
         case_study_url: caseStudy.caseStudyUrl,
@@ -230,7 +230,7 @@ export async function sendTrialComparisonEmail(
       },
       trial: {
         days_remaining: trialData.daysRemaining,
-      } as EmailTemplateData['trial'],
+      },
       product: urls,
       urls: urls,
     };
@@ -271,7 +271,7 @@ export async function sendTrialUrgencyEmail(
         trial_end_date: trialData.trialEndDate,
         days_remaining: trialData.daysRemaining,
         charge_date: new Date(new Date(trialData.trialEndDate).getTime() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-      } as EmailTemplateData['trial'],
+      },
       product: urls,
       urls: urls,
     };

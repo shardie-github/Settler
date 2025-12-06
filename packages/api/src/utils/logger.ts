@@ -32,7 +32,7 @@ const traceContextFormat = winston.format((info: any) => {
 });
 
 const logFormat = winston.format.combine(
-  traceContextFormat,
+  traceContextFormat(),
   winston.format.timestamp(),
   winston.format.errors({ stack: true }),
   winston.format.json()

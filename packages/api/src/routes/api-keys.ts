@@ -373,7 +373,7 @@ router.post(
           [
             'api_key_regenerated',
             userId,
-            JSON.stringify({ oldApiKeyId: id, newApiKeyId: result.rows[0]?.id || '' }),
+            JSON.stringify({ oldApiKeyId: id, newApiKeyId: result[0]?.id || '' }),
           ]
         );
 
@@ -386,20 +386,20 @@ router.post(
             'APIKeyRegenerated',
             JSON.stringify({
               oldApiKeyId: id,
-              newApiKeyId: result.rows[0]?.id || '',
+              newApiKeyId: result[0]?.id || '',
             }),
           ]
         ).catch(() => {
           // Events table might not exist yet, ignore
         });
 
-        if (!result.rows[0]) {
+        if (!result[0]) {
           throw new Error('Failed to regenerate API key');
         }
-        logInfo('API key regenerated', { userId, oldApiKeyId: id, newApiKeyId: result.rows[0].id });
+        logInfo('API key regenerated', { userId, oldApiKeyId: id, newApiKeyId: result[0].id });
         res.status(201).json({
           data: {
-            id: result.rows[0].id,
+            id: result[0].id,
             key, // Only returned on regeneration
             name: oldKey.name,
             scopes: oldKey.scopes,

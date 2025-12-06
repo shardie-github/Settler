@@ -3,7 +3,7 @@
  * Provides type-safe error extraction and handling
  */
 
-import { Response } from 'express';
+import { Response, NextFunction } from 'express';
 import { sendError } from './api-response';
 import { logError } from './logger';
 import { isApiError, toApiError } from './typed-errors';
@@ -71,4 +71,19 @@ export function handleRouteError(
   const traceId = (res.req as any).traceId;
 
   sendError(res, statusCode, errorCode, message, details, traceId);
+}
+
+/**
+ * Wrapper for async route handlers that automatically handles errors
+ */
+export function asyncHandler(
+  handler: (req: any, res: Response) => Promise<void>
+) {
+  return async (req: any, res: Response, next: NextFunction): Promise<void> => {
+    try {
+      await handler(req, res);
+    } catch (error) {
+      handleRouteError(res, error, 'An error occurred', 500);
+    }
+  };
 }

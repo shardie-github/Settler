@@ -153,7 +153,7 @@ export function getFeatureFlagService(): FeatureFlagService {
  * Feature flag middleware
  */
 export function featureFlagsMiddleware() {
-  return async (req: FeatureFlagRequest, res: Response, next: NextFunction) => {
+  return async (req: FeatureFlagRequest, _res: Response, next: NextFunction) => {
     try {
       const context: FeatureFlagContext = {
         tenantId: (req as any).tenantId || (req as any).user?.tenantId,
@@ -203,9 +203,9 @@ export function getFeatureVariant(req: FeatureFlagRequest, key: string): string 
  * Require feature flag middleware (fails request if flag not enabled)
  */
 export function requireFeatureFlag(key: string) {
-  return (req: FeatureFlagRequest, res: Response, next: NextFunction) => {
+  return (req: FeatureFlagRequest, res: Response, next: NextFunction): void => {
     if (!isFeatureEnabled(req, key)) {
-      return res.status(403).json({
+      res.status(403).json({
         error: 'Feature Not Available',
         message: `Feature flag '${key}' is not enabled for your account`,
       });

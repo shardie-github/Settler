@@ -51,7 +51,7 @@ export class TenantConnectionPool {
     const client = await this.getConnection(tenantId);
     try {
       const result = await client.query(text, params);
-      return result.rows;
+      return result;
     } finally {
       await TenantContext.clearTenantContext(client);
       client.release();

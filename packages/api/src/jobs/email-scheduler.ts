@@ -20,6 +20,8 @@ import {
   TrialData,
 } from '../lib/email-lifecycle';
 
+// Note: These imports are used in the scheduled job functions
+
 /**
  * Calculate days remaining in trial
  */
@@ -34,7 +36,8 @@ function calculateDaysRemaining(trialEndDate: string): number {
 /**
  * Check if trial email should be sent based on days remaining
  */
-function shouldSendTrialEmail(trialEndDate: string, targetDays: number): boolean {
+// Note: shouldSendTrialEmail is kept for future use in email scheduling logic
+function _shouldSendTrialEmail(trialEndDate: string, targetDays: number): boolean {
   const daysRemaining = calculateDaysRemaining(trialEndDate);
   return daysRemaining === targetDays;
 }
