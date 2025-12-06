@@ -41,6 +41,9 @@ import { v4 as uuidv4 } from "uuid";
 import { startDataRetentionJob } from "./jobs/data-retention";
 import { startMaterializedViewRefreshJob } from "./jobs/materialized-view-refresh";
 import { processPendingWebhooks } from "./utils/webhook-queue";
+import { initializeScheduledJobs, shutdownScheduler } from "./infrastructure/jobs/scheduler";
+import { processOnboardingEmails } from "./services/email/onboarding-sequence";
+import { checkSystemHealth } from "./services/alerts/manager";
 import { versionMiddleware } from "./middleware/versioning";
 import { v1Router } from "./routes/v1";
 import { v2Router } from "./routes/v2";
@@ -369,11 +372,18 @@ async function startServer() {
     await initDatabase();
     logInfo("Database initialized");
 
-    // Start background jobs
-    startDataRetentionJob();
-    startMaterializedViewRefreshJob();
+    // Initialize BullMQ scheduled jobs (replaces setTimeout/setInterval)
+    try {
+      await initializeScheduledJobs();
+      logInfo("Scheduled jobs initialized");
+    } catch (error) {
+      logError("Failed to initialize scheduled jobs", error);
+      // Fallback to old system if BullMQ fails
+      startDataRetentionJob();
+      startMaterializedViewRefreshJob();
+    }
 
-    // Process pending webhooks every minute
+    // Process pending webhooks (now handled by BullMQ, but keep as fallback)
     const webhookInterval = setInterval(() => {
       processPendingWebhooks().catch((error) => {
         logError("Failed to process pending webhooks", error);
@@ -384,6 +394,11 @@ async function startServer() {
     registerShutdownHandler(async () => {
       clearInterval(webhookInterval);
       logInfo("Webhook processing stopped");
+    });
+    
+    // Register scheduler shutdown
+    registerShutdownHandler(async () => {
+      await shutdownScheduler();
     });
 
     const httpServer = createServer(app);
