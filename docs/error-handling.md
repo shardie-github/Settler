@@ -537,4 +537,129 @@ try {
 
 ---
 
+## Complete Error Handling Example
+
+Here's a complete example showing error handling in a production application:
+
+```typescript
+import Settler from '@settler/sdk';
+
+const settler = new Settler({ apiKey: process.env.SETTLER_API_KEY });
+
+async function createJobWithErrorHandling(jobConfig: any) {
+  const maxRetries = 3;
+  let lastError: any = null;
+
+  for (let attempt = 0; attempt < maxRetries; attempt++) {
+    try {
+      const job = await settler.jobs.create(jobConfig);
+      return { success: true, job };
+    } catch (error: any) {
+      lastError = error;
+
+      // Don't retry client errors (4xx)
+      if (error.status >= 400 && error.status < 500) {
+        return handleClientError(error);
+      }
+
+      // Retry server errors (5xx) with exponential backoff
+      if (attempt < maxRetries - 1) {
+        const delay = Math.pow(2, attempt) * 1000; // 1s, 2s, 4s
+        console.log(`Retry attempt ${attempt + 1} after ${delay}ms`);
+        await new Promise(resolve => setTimeout(resolve, delay));
+        continue;
+      }
+    }
+  }
+
+  return { success: false, error: lastError };
+}
+
+function handleClientError(error: any) {
+  switch (error.error) {
+    case 'UNAUTHORIZED':
+      console.error('Invalid API key. Please check your SETTLER_API_KEY.');
+      // Alert user to fix API key
+      return { success: false, error, action: 'fix_api_key' };
+    
+    case 'QUOTA_EXCEEDED':
+      console.error('Plan limit reached:', error.details);
+      // Show upgrade prompt
+      return { success: false, error, action: 'upgrade_plan' };
+    
+    case 'RATE_LIMIT_EXCEEDED':
+      const resetAt = new Date(error.details.resetAt);
+      const waitTime = resetAt.getTime() - Date.now();
+      console.log(`Rate limit exceeded. Wait ${waitTime}ms`);
+      // Queue request for later
+      return { success: false, error, action: 'retry_later', waitTime };
+    
+    case 'BAD_REQUEST':
+      console.error('Invalid request:', error.message);
+      // Show validation errors to user
+      return { success: false, error, action: 'fix_request' };
+    
+    default:
+      console.error('Client error:', error);
+      return { success: false, error, action: 'contact_support' };
+  }
+}
+```
+
+---
+
+## Error Monitoring & Alerting
+
+### Recommended Setup
+
+1. **Error Tracking Service** (Sentry, Rollbar, etc.)
+```typescript
+import * as Sentry from '@sentry/node';
+
+Sentry.init({
+  dsn: process.env.SENTRY_DSN,
+  environment: process.env.NODE_ENV,
+});
+
+// Capture errors
+try {
+  await settler.jobs.create(config);
+} catch (error) {
+  Sentry.captureException(error, {
+    tags: { component: 'reconciliation' },
+    extra: { jobConfig: config }
+  });
+  throw error;
+}
+```
+
+2. **Logging**
+```typescript
+import { logError } from './logger';
+
+try {
+  await settler.jobs.create(config);
+} catch (error) {
+  logError('Job creation failed', error, {
+    userId: req.userId,
+    jobConfig: config,
+    traceId: error.details?.traceId
+  });
+}
+```
+
+3. **Alerting**
+```typescript
+// Alert on critical errors
+if (error.error === 'INTERNAL_ERROR' || error.status >= 500) {
+  await sendAlert({
+    severity: 'critical',
+    message: `Settler API error: ${error.message}`,
+    traceId: error.details?.traceId
+  });
+}
+```
+
+---
+
 **Last Updated:** January 2026

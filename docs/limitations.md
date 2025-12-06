@@ -62,33 +62,59 @@ We're actively adding new adapters. Coming soon:
 
 ### PDF Export
 
-**Status:** Currently in development
+**Status:** ✅ Fully implemented
 
 **Current Behavior:**
 - CSV export: ✅ Fully functional
 - JSON export: ✅ Fully functional
-- PDF export: ⚠️ Placeholder (returns JSON response)
+- PDF export: ✅ Fully functional (includes summary, matches, unmatched, errors)
 
-**Workaround:** Use CSV export and convert to PDF using external tools if needed.
+**Features:**
+- Professional PDF reports with summary
+- Matched transactions table
+- Unmatched transactions table
+- Error logs
+- Automatic pagination for large datasets
 
-**ETA:** Q1 2026
+**Usage:**
+```typescript
+const exportResult = await settler.exports.create({
+  jobId: "job_123",
+  format: "pdf"
+});
+// Returns PDF file stream
+```
 
 ---
 
 ### Multi-Currency
 
-**Status:** Functional but requires FX rate setup
+**Status:** ✅ Fully functional with automatic FX rate provider
 
 **Current Behavior:**
 - Currency conversion logic: ✅ Implemented
 - FX rate storage: ✅ Implemented
-- Automatic FX rate fetching: ⚠️ Not yet integrated
+- Automatic FX rate fetching: ✅ Implemented (ECB provider)
 
-**Workaround:** 
-- Manually enter FX rates via API
-- Or use external FX rate provider and sync rates
+**Features:**
+- Automatic FX rate fetching from ECB (European Central Bank)
+- Manual rate entry support
+- Historical rate support
+- Rate syncing for common currencies
 
-**ETA:** Q2 2026 (automatic FX rate provider integration)
+**Usage:**
+```typescript
+// Automatic: Rates fetched automatically when needed
+const rate = await settler.currency.getFXRate({
+  fromCurrency: "EUR",
+  toCurrency: "USD"
+});
+
+// Manual sync: Sync rates for common currencies
+await settler.currency.syncRates({
+  baseCurrency: "USD"
+});
+```
 
 ---
 
@@ -253,27 +279,30 @@ We're actively adding new adapters. Coming soon:
 
 ## Known Issues
 
-### Issue #1: PDF Export Placeholder
+### Issue #1: XLSX Export Not Implemented
 
-**Description:** PDF export endpoint returns JSON instead of actual PDF file.
+**Description:** XLSX export endpoint returns "not implemented" error.
 
-**Impact:** PDF export feature not functional.
+**Impact:** Excel export not available.
 
-**Workaround:** Use CSV export and convert externally.
+**Workaround:** Use CSV export and open in Excel, or use PDF export.
 
-**Status:** In development (ETA: Q1 2026)
+**Status:** Planned (ETA: Q2 2026)
 
 ---
 
-### Issue #2: FX Rate Provider Not Integrated
+### Issue #2: Large PDF Exports May Timeout
 
-**Description:** Multi-currency requires manual FX rate entry.
+**Description:** Very large reconciliation reports (>10,000 transactions) may timeout during PDF generation.
 
-**Impact:** Multi-currency reconciliation requires additional setup.
+**Impact:** Large exports may fail.
 
-**Workaround:** Manually enter FX rates or use external provider.
+**Workaround:** 
+- Use CSV export for large datasets
+- Export in smaller date ranges
+- Use pagination to process in batches
 
-**Status:** In development (ETA: Q2 2026)
+**Status:** Known limitation (will optimize in future)
 
 ---
 
