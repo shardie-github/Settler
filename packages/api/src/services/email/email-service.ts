@@ -127,7 +127,7 @@ async function sendViaSendGrid(options: EmailOptions): Promise<boolean> {
       to: options.to,
       from: options.from!,
       subject: options.subject,
-      text: options.text,
+      text: options.text || "",
       html: options.html,
       replyTo: options.replyTo,
     };
