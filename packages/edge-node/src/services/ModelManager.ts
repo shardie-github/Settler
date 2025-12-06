@@ -38,7 +38,7 @@ export class ModelManager {
 
   async runInference(
     modelName: string,
-    input: unknown
+    _input: unknown
   ): Promise<unknown> {
     const model = await this.getModel(modelName);
     if (!model) {

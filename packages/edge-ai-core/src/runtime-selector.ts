@@ -3,7 +3,7 @@
  * Automatically selects optimal runtime based on device capabilities
  */
 
-import { DeviceProfile, DeviceCapabilities } from './device-profiling';
+import { DeviceProfile } from './device-profiling';
 
 export type RuntimeType = 'onnx' | 'tensorrt' | 'executorch' | 'webgpu' | 'wasm' | 'cpu';
 

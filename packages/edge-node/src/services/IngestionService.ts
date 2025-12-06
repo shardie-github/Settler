@@ -23,7 +23,8 @@ export interface IngestionResult {
 
 export class IngestionService {
   constructor(
-    private db: Database.Database,
+    // @ts-expect-error - Reserved for future use
+    private _db: Database.Database,
     private piiRedaction: PIIRedactionService
   ) {}
 
@@ -85,11 +86,16 @@ export class IngestionService {
       const type = hint || this.inferType(value);
       const piiType = this.detectPII(key, value);
 
-      fields.push({
+      const field: InferredSchema['fields'][number] = {
         name: key,
         type: type as 'string' | 'number' | 'date' | 'boolean' | 'unknown',
-        piiType,
-      });
+      };
+      
+      if (piiType) {
+        field.piiType = piiType;
+      }
+      
+      fields.push(field);
     }
 
     return { fields };
@@ -118,7 +124,6 @@ export class IngestionService {
     }
 
     const lowerName = fieldName.toLowerCase();
-    const lowerValue = value.toLowerCase();
 
     // Email detection
     if (lowerName.includes('email') || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {

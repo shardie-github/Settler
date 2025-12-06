@@ -365,16 +365,20 @@ export class EdgeNodeService {
   }
 
   async getStatus(): Promise<NodeStatus> {
-    const nodeInfo = this.db.prepare('SELECT * FROM local_jobs LIMIT 1').get();
     const jobCount = this.db.prepare('SELECT COUNT(*) as count FROM local_jobs').get() as { count: number };
     
-    return {
-      nodeId: this.nodeId,
+    const status: NodeStatus = {
       status: this.isRunning ? 'running' : 'stopped',
       lastHeartbeat: new Date().toISOString(), // TODO: Track actual last heartbeat
       jobsProcessed: jobCount?.count || 0,
       localStorageUsed: this.getStorageSize(),
     };
+    
+    if (this.nodeId) {
+      status.nodeId = this.nodeId;
+    }
+    
+    return status;
   }
 
   private getStorageSize(): number {

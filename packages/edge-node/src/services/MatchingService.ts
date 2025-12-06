@@ -17,8 +17,10 @@ export interface Candidate {
 
 export class MatchingService {
   constructor(
-    private db: Database.Database,
-    private modelManager: ModelManager
+    // @ts-expect-error - Reserved for future use
+    private _db: Database.Database,
+    // @ts-expect-error - Reserved for future use
+    private _modelManager: ModelManager
   ) {}
 
   async findCandidates(
@@ -189,7 +191,6 @@ export class MatchingService {
 
     // Calculate simple similarity
     const longer = sourceValue.length > targetValue.length ? sourceValue : targetValue;
-    const shorter = sourceValue.length > targetValue.length ? targetValue : sourceValue;
     
     if (longer.length === 0) {
       return 1.0;
@@ -207,23 +208,39 @@ export class MatchingService {
     }
 
     for (let j = 0; j <= str1.length; j++) {
+      if (!matrix[0]) {
+        matrix[0] = [];
+      }
       matrix[0][j] = j;
     }
 
     for (let i = 1; i <= str2.length; i++) {
+      if (!matrix[i]) {
+        matrix[i] = [];
+      }
       for (let j = 1; j <= str1.length; j++) {
-        if (str2.charAt(i - 1) === str1.charAt(j - 1)) {
-          matrix[i][j] = matrix[i - 1][j - 1];
+        const prevI = i - 1;
+        const prevJ = j - 1;
+        const prevRow = matrix[prevI];
+        const currRow = matrix[i];
+        
+        if (!prevRow || !currRow) {
+          throw new Error('Matrix initialization error');
+        }
+        
+        if (str2.charAt(prevI) === str1.charAt(prevJ)) {
+          currRow[j] = prevRow[prevJ] ?? 0;
         } else {
-          matrix[i][j] = Math.min(
-            matrix[i - 1][j - 1] + 1,
-            matrix[i][j - 1] + 1,
-            matrix[i - 1][j] + 1
+          currRow[j] = Math.min(
+            (prevRow[prevJ] ?? 0) + 1,
+            (currRow[prevJ] ?? 0) + 1,
+            (prevRow[j] ?? 0) + 1
           );
         }
       }
     }
 
-    return matrix[str2.length][str1.length];
+    const finalRow = matrix[str2.length];
+    return finalRow?.[str1.length] ?? 0;
   }
 }

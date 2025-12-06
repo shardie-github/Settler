@@ -42,6 +42,9 @@ export function encrypt(data: string, key: string): string {
  */
 export function decrypt(encrypted: string, key: string): string {
   const parts = encrypted.split(':');
+  if (parts.length < 2 || !parts[0] || !parts[1]) {
+    throw new Error('Invalid encrypted data format');
+  }
   const iv = Buffer.from(parts[0], 'hex');
   const encryptedData = parts[1];
   const decipher = crypto.createDecipheriv('aes-256-cbc', Buffer.from(key, 'hex'), iv);

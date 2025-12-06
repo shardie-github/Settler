@@ -11,6 +11,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.StripeEnhancedAdapter = void 0;
 const crypto_1 = __importDefault(require("crypto"));
+const stripe_1 = __importDefault(require("stripe"));
 class StripeEnhancedAdapter {
     name = 'stripe';
     version = '1.0.0';
@@ -95,42 +96,42 @@ class StripeEnhancedAdapter {
     /**
      * Poll transactions from Stripe API
      */
-    async pollTransactions(config, _dateRange) {
+    async pollTransactions(config, dateRange) {
         const apiKey = config.apiKey;
         if (!apiKey) {
             throw new Error('Stripe API key is required');
         }
-        // In production, use Stripe SDK
-        // const stripe = new Stripe(apiKey);
-        // const charges = await stripe.charges.list({
-        //   created: {
-        //     gte: Math.floor(dateRange.start.getTime() / 1000),
-        //     lte: Math.floor(dateRange.end.getTime() / 1000),
-        //   },
-        //   limit: 100,
-        // });
-        // Mock implementation for now
-        return [];
+        const stripe = new stripe_1.default(apiKey, {
+            apiVersion: '2023-10-16',
+        });
+        const charges = await stripe.charges.list({
+            created: {
+                gte: Math.floor(dateRange.start.getTime() / 1000),
+                lte: Math.floor(dateRange.end.getTime() / 1000),
+            },
+            limit: 100,
+        });
+        return charges.data.map((charge) => this.normalizeTransaction(charge, config.tenantId || 'default'));
     }
     /**
      * Poll settlements from Stripe API
      */
-    async pollSettlements(config, _dateRange) {
+    async pollSettlements(config, dateRange) {
         const apiKey = config.apiKey;
         if (!apiKey) {
             throw new Error('Stripe API key is required');
         }
-        // In production, use Stripe SDK
-        // const stripe = new Stripe(apiKey);
-        // const payouts = await stripe.payouts.list({
-        //   created: {
-        //     gte: Math.floor(dateRange.start.getTime() / 1000),
-        //     lte: Math.floor(dateRange.end.getTime() / 1000),
-        //   },
-        //   limit: 100,
-        // });
-        // Mock implementation for now
-        return [];
+        const stripe = new stripe_1.default(apiKey, {
+            apiVersion: '2023-10-16',
+        });
+        const payouts = await stripe.payouts.list({
+            created: {
+                gte: Math.floor(dateRange.start.getTime() / 1000),
+                lte: Math.floor(dateRange.end.getTime() / 1000),
+            },
+            limit: 100,
+        });
+        return payouts.data.map((payout) => this.normalizeSettlement(payout, config.tenantId || 'default'));
     }
     /**
      * Extract fees from transaction payload

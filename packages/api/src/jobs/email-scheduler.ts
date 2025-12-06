@@ -34,7 +34,7 @@ function calculateDaysRemaining(trialEndDate: string): number {
 /**
  * Check if trial email should be sent based on days remaining
  */
-function shouldSendTrialEmail(trialEndDate: string, targetDays: number): boolean {
+function _shouldSendTrialEmail(trialEndDate: string, targetDays: number): boolean {
   const daysRemaining = calculateDaysRemaining(trialEndDate);
   return daysRemaining === targetDays;
 }

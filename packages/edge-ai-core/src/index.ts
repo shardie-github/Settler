@@ -11,14 +11,14 @@
 // Device Profiling
 export * from './device-profiling';
 
-// Model Optimization
+// Quantization (export first to avoid duplicate type exports)
+export * from './quantization';
+
+// Model Optimization (imports QuantizationType from quantization)
 export * from './model-optimization';
 
 // Inference Engines
 export * from './inference';
-
-// Quantization
-export * from './quantization';
 
 // Runtime Selection
 export * from './runtime-selector';

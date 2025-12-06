@@ -17,7 +17,8 @@ export interface Anomaly {
 export class AnomalyDetectionService {
   constructor(
     private db: Database.Database,
-    private modelManager: ModelManager
+    // @ts-expect-error - Reserved for future use
+    private _modelManager: ModelManager
   ) {}
 
   async detect(data: unknown[]): Promise<Anomaly[]> {
