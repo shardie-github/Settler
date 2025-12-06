@@ -9,6 +9,7 @@
 
 import { ReactNode } from "react";
 import { Loader2, AlertCircle, Inbox } from "lucide-react";
+import { SkeletonCard } from "./skeleton";
 
 export interface DataLoaderProps<T> {
   /**
@@ -62,9 +63,10 @@ export function DataLoader<T>({
   if (isLoading || (showRefetching && isFetching && !data)) {
     return (
       loadingComponent || (
-        <div className="flex flex-col items-center justify-center py-12">
-          <Loader2 className="w-8 h-8 animate-spin text-blue-600 dark:text-electric-cyan mb-4" />
-          <p className="text-slate-600 dark:text-slate-400">Loading...</p>
+        <div className="space-y-4 py-12">
+          <SkeletonCard showFooter={false} />
+          <SkeletonCard showFooter={false} />
+          <SkeletonCard showFooter={false} />
         </div>
       )
     );

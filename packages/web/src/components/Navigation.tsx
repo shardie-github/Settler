@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { DarkModeToggle } from "@/components/DarkModeToggle";
 import { cn } from "@/lib/utils";
@@ -19,6 +19,62 @@ const navigationItems = [
 
 export function Navigation() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const mobileMenuRef = useRef<HTMLDivElement>(null);
+  const firstMenuItemRef = useRef<HTMLAnchorElement>(null);
+
+  // Handle escape key to close mobile menu
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && mobileMenuOpen) {
+        setMobileMenuOpen(false);
+      }
+    };
+
+    if (mobileMenuOpen) {
+      document.addEventListener("keydown", handleEscape);
+      // Focus first menu item when menu opens
+      setTimeout(() => {
+        firstMenuItemRef.current?.focus();
+      }, 100);
+    }
+
+    return () => {
+      document.removeEventListener("keydown", handleEscape);
+    };
+  }, [mobileMenuOpen]);
+
+  // Trap focus within mobile menu when open
+  useEffect(() => {
+    if (!mobileMenuOpen || !mobileMenuRef.current) return;
+
+    const menu = mobileMenuRef.current;
+    const focusableElements = menu.querySelectorAll<HTMLElement>(
+      'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'
+    );
+    const firstElement = focusableElements[0];
+    const lastElement = focusableElements[focusableElements.length - 1];
+
+    const handleTab = (e: KeyboardEvent) => {
+      if (e.key !== "Tab") return;
+
+      if (e.shiftKey) {
+        if (document.activeElement === firstElement) {
+          e.preventDefault();
+          lastElement?.focus();
+        }
+      } else {
+        if (document.activeElement === lastElement) {
+          e.preventDefault();
+          firstElement?.focus();
+        }
+      }
+    };
+
+    menu.addEventListener("keydown", handleTab);
+    return () => {
+      menu.removeEventListener("keydown", handleTab);
+    };
+  }, [mobileMenuOpen]);
 
   return (
     <nav
@@ -117,6 +173,7 @@ export function Navigation() {
         {/* Mobile Menu */}
         {mobileMenuOpen && (
           <div
+            ref={mobileMenuRef}
             id="mobile-menu"
             className={cn(
               "md:hidden py-4 border-t border-border",
@@ -127,9 +184,10 @@ export function Navigation() {
             aria-label="Mobile navigation menu"
           >
             <nav className="flex flex-col space-y-4" aria-label="Mobile navigation">
-              {navigationItems.map((item) => (
+              {navigationItems.map((item, index) => (
                 <Link
                   key={item.href}
+                  ref={index === 0 ? firstMenuItemRef : undefined}
                   href={item.href}
                   className={cn(
                     "text-muted-foreground hover:text-primary-600 dark:hover:text-primary-400",
@@ -140,11 +198,12 @@ export function Navigation() {
                     "motion-reduce:transition-none"
                   )}
                   onClick={() => setMobileMenuOpen(false)}
+                  role="menuitem"
                 >
                   {item.label}
                 </Link>
               ))}
-              <Button asChild variant="default" size="default" className="w-full">
+              <Button asChild variant="default" size="default" className="w-full" role="menuitem">
                 <Link href="/playground" aria-label="Get started with Settler">
                   Get Started
                 </Link>

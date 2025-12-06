@@ -146,9 +146,11 @@ const report = await client.jobs.run(job.id);
   return (
     <>
       <div
+        id="main-content"
         className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-slate-900 dark:via-slate-800 dark:to-black"
         role="main"
         aria-label="Settler homepage"
+        tabIndex={-1}
       >
         <Navigation />
 

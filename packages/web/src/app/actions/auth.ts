@@ -9,6 +9,8 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
+import { logger } from "@/lib/logging/logger";
+import { getAuthErrorMessage } from "@/lib/utils/error-messages";
 
 export interface SignUpResult {
   success: boolean;
@@ -43,14 +45,14 @@ export async function signUpUser(
     if (authError) {
       return {
         success: false,
-        error: authError.message,
+        error: getAuthErrorMessage(authError),
       };
     }
 
     if (!authData.user) {
       return {
         success: false,
-        error: "Failed to create user",
+        error: getAuthErrorMessage("Failed to create user"),
       };
     }
 
@@ -75,7 +77,10 @@ export async function signUpUser(
     if (profileError) {
       // If profile creation fails, we should handle it gracefully
       // The user is created in auth, but profile might already exist
-      console.error("Profile creation error:", profileError);
+      logger.error("Profile creation error", profileError as Error, {
+        userId: authData.user.id,
+        email: authData.user.email,
+      });
     }
 
     // 3. Log sign-up activity
@@ -91,7 +96,7 @@ export async function signUpUser(
     } as any);
 
     if (activityError) {
-      console.error("Activity log error:", activityError);
+      logger.warn("Activity log error", { error: activityError.message });
       // Don't fail the sign-up if activity logging fails
     }
 
@@ -111,7 +116,10 @@ export async function signUpUser(
         }
       );
     } catch (emailError) {
-      console.error("Failed to send welcome email:", emailError);
+      logger.error("Failed to send welcome email", emailError as Error, {
+        userId: authData.user.id,
+        email: authData.user.email,
+      });
       // Don't fail signup if email fails
     }
 
@@ -124,10 +132,10 @@ export async function signUpUser(
       userId: authData.user.id,
     };
   } catch (error) {
-    console.error("Sign-up error:", error);
+    logger.error("Sign-up error", error as Error, { email });
     return {
       success: false,
-      error: error instanceof Error ? error.message : "An unexpected error occurred",
+      error: getAuthErrorMessage(error instanceof Error ? error : new Error("An unexpected error occurred")),
     };
   }
 }
@@ -158,13 +166,21 @@ export async function logActivity(
     } as any);
 
     if (error) {
-      console.error("Activity log error:", error);
+      logger.error("Activity log error", error as Error, {
+        activityType,
+        entityType,
+        entityId,
+      });
       return { success: false, error: error.message };
     }
 
     return { success: true };
   } catch (error) {
-    console.error("Log activity error:", error);
+    logger.error("Log activity error", error as Error, {
+      activityType,
+      entityType,
+      entityId,
+    });
     return {
       success: false,
       error: error instanceof Error ? error.message : "Failed to log activity",
