@@ -4,14 +4,20 @@
  */
 
 import { Router } from "express";
+import { validateRequest } from "../middleware/validation";
 import { AdminService } from "../application/admin/AdminService";
 import { handleRouteError } from "../utils/error-handler";
+import {
+  adminSagaParamSchema,
+  adminAggregateParamSchema,
+  adminCorrelationParamSchema,
+} from "../middleware/validation-routes";
 
 export function createAdminRouter(adminService: AdminService): Router {
   const router = Router();
 
   // Get saga status
-  router.get("/sagas/:sagaType/:sagaId", async (req, res) => {
+  router.get("/sagas/:sagaType/:sagaId", validateRequest(adminSagaParamSchema), async (req, res) => {
     try {
       const { sagaType, sagaId } = req.params;
       const status = await adminService.getSagaStatus(sagaId, sagaType);
@@ -26,7 +32,7 @@ export function createAdminRouter(adminService: AdminService): Router {
   });
 
   // List events for aggregate
-  router.get("/events/:aggregateType/:aggregateId", async (req, res) => {
+  router.get("/events/:aggregateType/:aggregateId", validateRequest(adminAggregateParamSchema), async (req, res) => {
     try {
       const { aggregateType, aggregateId } = req.params;
       const events = await adminService.listEventsForAggregate(aggregateId, aggregateType);
@@ -37,7 +43,7 @@ export function createAdminRouter(adminService: AdminService): Router {
   });
 
   // List events by correlation ID
-  router.get("/events/correlation/:correlationId", async (req, res) => {
+  router.get("/events/correlation/:correlationId", validateRequest(adminCorrelationParamSchema), async (req, res) => {
     try {
       const { correlationId } = req.params;
       const events = await adminService.listEventsByCorrelationId(correlationId);
@@ -48,7 +54,7 @@ export function createAdminRouter(adminService: AdminService): Router {
   });
 
   // Resume saga
-  router.post("/sagas/:sagaType/:sagaId/resume", async (req, res) => {
+  router.post("/sagas/:sagaType/:sagaId/resume", validateRequest(adminSagaParamSchema), async (req, res) => {
     try {
       const { sagaType, sagaId } = req.params;
       await adminService.resumeSaga(sagaId, sagaType);
@@ -59,7 +65,7 @@ export function createAdminRouter(adminService: AdminService): Router {
   });
 
   // Retry saga
-  router.post("/sagas/:sagaType/:sagaId/retry", async (req, res) => {
+  router.post("/sagas/:sagaType/:sagaId/retry", validateRequest(adminSagaParamSchema), async (req, res) => {
     try {
       const { sagaType, sagaId } = req.params;
       await adminService.retrySaga(sagaId, sagaType);
@@ -70,7 +76,7 @@ export function createAdminRouter(adminService: AdminService): Router {
   });
 
   // Cancel saga
-  router.post("/sagas/:sagaType/:sagaId/cancel", async (req, res) => {
+  router.post("/sagas/:sagaType/:sagaId/cancel", validateRequest(adminSagaParamSchema), async (req, res) => {
     try {
       const { sagaType, sagaId } = req.params;
       await adminService.cancelSaga(sagaId, sagaType);
