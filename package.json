@@ -54,6 +54,7 @@
   },
   "devDependencies": {
     "@playwright/test": "^1.40.0",
+    "@prisma/client": "^7.1.0",
     "@types/node": "^20.10.0",
     "@upstash/redis": "^1.35.7",
     "dotenv": "^17.2.3",
@@ -62,6 +63,7 @@
     "lint-staged": "^15.2.0",
     "pg": "^8.16.3",
     "prettier": "^3.1.1",
+    "prisma": "^7.1.0",
     "tsx": "^4.7.0",
     "turbo": "^2.6.2",
     "typescript": "^5.7.2"

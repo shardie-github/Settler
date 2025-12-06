@@ -792,8 +792,26 @@ async function main() {
 
     // Step 2: Test DB connectivity
     console.log("🔌 Step 2: Testing database connectivity...");
-    await testDatabaseConnection(url);
-    console.log("   ✅ Database connection successful\n");
+    try {
+      await testDatabaseConnection(url);
+      console.log("   ✅ Database connection successful\n");
+    } catch (error: any) {
+      // Check if it's a placeholder password issue
+      if (url.includes("[YOUR_PASSWORD]") || url.includes("YOUR_PASSWORD")) {
+        run.errors.push(
+          "DATABASE_URL contains placeholder password [YOUR_PASSWORD]. Please set a real password in GitHub secrets or .env file."
+        );
+        run.warnings.push(
+          "For GitHub Actions: Set DATABASE_URL secret in repository settings (Settings → Secrets → Actions)"
+        );
+        console.log("   ⚠️  Database URL contains placeholder password\n");
+        console.log("   💡 To fix:");
+        console.log("      - Set DATABASE_URL in GitHub repository secrets, OR");
+        console.log("      - Update .env.connection with real password\n");
+      } else {
+        throw error; // Re-throw if it's a different error
+      }
+    }
 
     // Step 3: Detect Prisma
     console.log("🔍 Step 3: Detecting Prisma setup...");
