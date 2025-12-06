@@ -16,7 +16,7 @@ import { Navigation } from "@/components/Navigation";
 import { Footer } from "@/components/Footer";
 import { UserPlus, AlertCircle, CheckCircle2 } from "lucide-react";
 import Link from "next/link";
-import { useActionState, useState } from "react";
+import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { validateEmail, validatePassword } from "@/lib/utils/error-messages";
 import { cn } from "@/lib/utils";
@@ -29,34 +29,36 @@ function SignUpForm() {
   const [passwordError, setPasswordError] = useState<string | null>(null);
   const [passwordStrength, setPasswordStrength] = useState<"weak" | "medium" | "strong" | null>(null);
   const [touched, setTouched] = useState({ email: false, password: false });
+  const [error, setError] = useState<string | null>(null);
+  const [isPending, startTransition] = useTransition();
 
-  const [state, formAction, isPending] = useActionState(
-    async (_prevState: { error?: string } | null, formData: FormData) => {
-      const emailValue = formData.get("email") as string;
-      const passwordValue = formData.get("password") as string;
-      const name = formData.get("name") as string;
+  const handleSubmit = async (formData: FormData) => {
+    const emailValue = formData.get("email") as string;
+    const passwordValue = formData.get("password") as string;
+    const name = formData.get("name") as string;
 
-      // Client-side validation
-      const emailValidation = validateEmail(emailValue);
-      const passwordValidation = validatePassword(passwordValue);
+    // Reset error
+    setError(null);
 
-      if (!emailValidation.valid || !passwordValidation.valid) {
-        return {
-          error: emailValidation.error || passwordValidation.error || "Please fix the errors above",
-        };
-      }
+    // Client-side validation
+    const emailValidation = validateEmail(emailValue);
+    const passwordValidation = validatePassword(passwordValue);
 
+    if (!emailValidation.valid || !passwordValidation.valid) {
+      setError(emailValidation.error || passwordValidation.error || "Please fix the errors above");
+      return;
+    }
+
+    startTransition(async () => {
       const result = await signUpUser(emailValue, passwordValue, name);
 
       if (result.success) {
         router.push("/dashboard");
-        return null;
+      } else {
+        setError(result.error || "Failed to create account");
       }
-
-      return { error: result.error || "Failed to create account" };
-    },
-    null
-  );
+    });
+  };
 
   // Real-time email validation
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -92,7 +94,7 @@ function SignUpForm() {
   };
 
   return (
-    <form action={formAction} className="space-y-6" noValidate method="POST">
+    <form action={handleSubmit} className="space-y-6" noValidate method="POST">
       <div>
         <Label htmlFor="name" className="mb-2 block">
           Name (Optional)
@@ -212,7 +214,7 @@ function SignUpForm() {
         )}
       </div>
 
-      {state?.error && (
+      {error && (
         <div
           id="form-error"
           className="flex items-center gap-2 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-md"
@@ -221,7 +223,7 @@ function SignUpForm() {
         >
           <AlertCircle className="w-5 h-5 text-red-600 dark:text-red-400 flex-shrink-0" aria-hidden="true" />
           <p id="password-error" className="text-sm text-red-800 dark:text-red-200">
-            {state.error}
+            {error}
           </p>
         </div>
       )}
