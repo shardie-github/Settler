@@ -3,7 +3,8 @@
  * Brand-neutral model optimization utilities
  */
 
-export type QuantizationType = 'int4' | 'int8' | 'fp16' | 'fp32';
+import type { QuantizationType } from './quantization';
+
 export type OptimizationLevel = 'speed' | 'balanced' | 'accuracy';
 export type ModelFormat = 'onnx' | 'tensorrt' | 'executorch' | 'tflite' | 'pytorch';
 

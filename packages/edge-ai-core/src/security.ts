@@ -31,7 +31,11 @@ export function generateEnrollmentKey(): string {
  */
 export function encrypt(data: string, key: string): string {
   const iv = crypto.randomBytes(16);
-  const cipher = crypto.createCipheriv('aes-256-cbc', Buffer.from(key, 'hex'), iv);
+  const keyBuffer = Buffer.from(key, 'hex');
+  if (keyBuffer.length !== 32) {
+    throw new Error('Invalid key length. Key must be 32 bytes (64 hex characters)');
+  }
+  const cipher = crypto.createCipheriv('aes-256-cbc', keyBuffer, iv);
   let encrypted = cipher.update(data, 'utf8', 'hex');
   encrypted += cipher.final('hex');
   return iv.toString('hex') + ':' + encrypted;
@@ -42,10 +46,17 @@ export function encrypt(data: string, key: string): string {
  */
 export function decrypt(encrypted: string, key: string): string {
   const parts = encrypted.split(':');
+  if (parts.length !== 2 || !parts[0] || !parts[1]) {
+    throw new Error('Invalid encrypted data format');
+  }
   const iv = Buffer.from(parts[0], 'hex');
   const encryptedData = parts[1];
-  const decipher = crypto.createDecipheriv('aes-256-cbc', Buffer.from(key, 'hex'), iv);
-  let decrypted = decipher.update(encryptedData, 'hex', 'utf8');
+  const keyBuffer = Buffer.from(key, 'hex');
+  if (keyBuffer.length !== 32) {
+    throw new Error('Invalid key length. Key must be 32 bytes (64 hex characters)');
+  }
+  const decipher = crypto.createDecipheriv('aes-256-cbc', keyBuffer, iv);
+  let decrypted: string = decipher.update(encryptedData, 'hex', 'utf8');
   decrypted += decipher.final('utf8');
   return decrypted;
 }

@@ -55,13 +55,14 @@ export function generateDeviceProfile(deviceType?: string): DeviceProfile {
   const arch = os.arch();
   const capabilities = detectDeviceCapabilities();
 
+  const cpuModel = os.cpus()[0]?.model;
   return {
     deviceType: deviceType || inferDeviceType(platform),
     os: platform,
     arch: arch,
     capabilities,
     specs: {
-      cpuModel: os.cpus()[0]?.model,
+      ...(cpuModel !== undefined && { cpuModel }),
       ramGb: Math.round(os.totalmem() / 1024 / 1024 / 1024),
     },
   };
@@ -88,7 +89,7 @@ function inferDeviceType(platform: string): string {
 /**
  * Check if a runtime is available
  */
-function checkRuntimeAvailable(runtime: string): boolean {
+function checkRuntimeAvailable(_runtime: string): boolean {
   // Placeholder - would check actual runtime availability
   // This would involve checking for installed libraries, environment variables, etc.
   try {
