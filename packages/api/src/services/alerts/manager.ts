@@ -130,7 +130,7 @@ export async function getUnresolvedAlerts(
       resolved: boolean;
       created_at: Date;
       resolved_at: Date | null;
-    }>(queryStr, params);
+    }>(queryStr, params as (string | number | boolean | Date | null)[]);
 
     return results.map((r) => {
       const alert: Alert = {

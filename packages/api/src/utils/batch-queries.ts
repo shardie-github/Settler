@@ -130,7 +130,11 @@ export async function batchInsert<T extends Record<string, unknown>>(
   }
 
   try {
-    const columns = Object.keys(records[0]);
+    if (records.length === 0) return;
+    const firstRecord = records[0];
+    if (!firstRecord) return;
+    
+    const columns = Object.keys(firstRecord);
     const placeholders = records
       .map(
         (_, index) =>
@@ -140,6 +144,7 @@ export async function batchInsert<T extends Record<string, unknown>>(
 
     const values: (string | number | boolean | Date | null)[] = records.flatMap((record) =>
       columns.map((col) => {
+        if (!record) return null;
         const value = record[col];
         return value === undefined ? null : (value as string | number | boolean | Date | null);
       })

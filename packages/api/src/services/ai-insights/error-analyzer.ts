@@ -143,7 +143,7 @@ export async function analyzeErrorPatterns(
         relatedErrors.push(...related.map((r) => r.error_message));
       }
 
-      if (error.first_seen && error.last_seen) {
+      if (error.first_seen && error.last_seen && error.error_message) {
         patterns.push({
           pattern,
           count,

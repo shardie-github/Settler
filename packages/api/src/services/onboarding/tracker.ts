@@ -108,8 +108,11 @@ export async function getOnboardingProgress(
       completionPercentage,
     };
     
-    if (completionPercentage === 100 && results.length > 0 && results[results.length - 1]?.updated_at) {
-      result.completedAt = results[results.length - 1].updated_at;
+    if (completionPercentage === 100 && results.length > 0) {
+      const lastResult = results[results.length - 1];
+      if (lastResult && lastResult.updated_at) {
+        result.completedAt = lastResult.updated_at;
+      }
     }
 
     return result;

@@ -4,7 +4,6 @@
  */
 
 import { logInfo, logError } from "../../utils/logger";
-import { config } from "../../config";
 
 export interface EmailOptions {
   to: string;
@@ -71,9 +70,9 @@ async function sendViaResend(options: EmailOptions): Promise<boolean> {
       from: options.from!,
       to: options.to,
       subject: options.subject,
+      text: options.text || "",
     };
     if (options.html) emailData.html = options.html;
-    if (options.text) emailData.text = options.text;
     if (options.replyTo) emailData.reply_to = options.replyTo;
 
     const result = await resend.emails.send(emailData);

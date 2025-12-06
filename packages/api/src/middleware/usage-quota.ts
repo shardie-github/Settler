@@ -6,7 +6,7 @@
 import { Request, Response, NextFunction } from "express";
 import { AuthRequest } from "./auth";
 import { query } from "../db";
-import { getPlanLimits, getPlanFeatures } from "../../config/plans";
+import { getPlanLimits, getPlanFeatures } from "../config/plans";
 import { sendError } from "../utils/api-response";
 import { logInfo } from "../utils/logger";
 import { checkQuotaExceeded, trackReconciliationExecution } from "../services/usage/tracker";
@@ -151,11 +151,14 @@ export async function trackUsageAfterOperation(
           });
         }
 
-        // Track export creation
+        // Track export creation (fire and forget)
         if (req.path.includes("/exports") && req.method === "POST") {
-          const { trackExportCreation } = await import("../services/usage/tracker");
-          trackExportCreation(userId, tenantId).catch(() => {
-            // Silent fail
+          import("../services/usage/tracker").then(({ trackExportCreation }) => {
+            trackExportCreation(userId, tenantId).catch(() => {
+              // Silent fail
+            });
+          }).catch(() => {
+            // Silent fail on import
           });
         }
       }

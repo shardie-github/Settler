@@ -101,64 +101,64 @@ async function analyzeOnboardingDropOff(
     // Get users who completed previous step (or total started for first step)
     let usersAtStep = totalStarted;
     if (prevStep) {
-      if (prevStep) {
-        const prevResult = await query<{ count: string }>(
-          `SELECT COUNT(DISTINCT user_id) as count
-           FROM onboarding_progress
-           WHERE step = $1
-             AND completed = true
-             AND created_at > NOW() - INTERVAL '${days} days'`,
-          [prevStep]
-        );
-        usersAtStep = parseInt(prevResult[0]?.count || "0");
-      }
-    }
-
-    // Calculate average time spent (if we have timestamps)
-      const timeResult = await query<{
-        avg_seconds: string | null;
-      }>(
-        `SELECT AVG(EXTRACT(EPOCH FROM (updated_at - created_at))) as avg_seconds
+      const prevResult = await query<{ count: string }>(
+        `SELECT COUNT(DISTINCT user_id) as count
          FROM onboarding_progress
          WHERE step = $1
            AND completed = true
            AND created_at > NOW() - INTERVAL '${days} days'`,
-        [step]
+        [prevStep]
       );
-      const avgTimeSpent = timeResult[0]?.avg_seconds ? parseFloat(timeResult[0].avg_seconds) : 0;
+      usersAtStep = parseInt(prevResult[0]?.count || "0");
+    }
+
+    // Calculate average time spent (if we have timestamps)
+    const timeResult = await query<{
+      avg_seconds: string | null;
+    }>(
+      `SELECT AVG(EXTRACT(EPOCH FROM (updated_at - created_at))) as avg_seconds
+       FROM onboarding_progress
+       WHERE step = $1
+         AND completed = true
+         AND created_at > NOW() - INTERVAL '${days} days'`,
+      [step]
+    );
+    const avgTimeSpent = timeResult[0]?.avg_seconds ? parseFloat(timeResult[0].avg_seconds) : 0;
 
     const completionRate = usersAtStep > 0 ? (completedUsers / usersAtStep) * 100 : 0;
     const dropOffRate = usersAtStep > 0 ? ((usersAtStep - completedUsers) / usersAtStep) * 100 : 0;
 
-    steps.push({
-      step,
-      completionRate: Math.round(completionRate * 100) / 100,
-      dropOffRate: Math.round(dropOffRate * 100) / 100,
-      avgTimeSpent: Math.round(avgTimeSpent),
-      totalUsers: usersAtStep,
-      completedUsers,
-      droppedUsers: usersAtStep - completedUsers,
-    });
+    if (step) {
+      steps.push({
+        step,
+        completionRate: Math.round(completionRate * 100) / 100,
+        dropOffRate: Math.round(dropOffRate * 100) / 100,
+        avgTimeSpent: Math.round(avgTimeSpent),
+        totalUsers: usersAtStep,
+        completedUsers,
+        droppedUsers: usersAtStep - completedUsers,
+      });
+    }
 
     if (i === onboardingSteps.length - 1) {
       totalCompleted = completedUsers;
     }
   }
 
-    const overallCompletionRate =
-      totalStarted > 0 ? (totalCompleted / totalStarted) * 100 : 0;
+  const overallCompletionRate =
+    totalStarted > 0 ? (totalCompleted / totalStarted) * 100 : 0;
 
-    // Find biggest drop-off
-    const biggestDropOff: DropOffStep | null =
-      steps.length > 0
-        ? steps.reduce((max, step) =>
-            step.dropOffRate > max.dropOffRate ? step : max
-          )
-        : null;
+  // Find biggest drop-off
+  const biggestDropOff: DropOffStep | null =
+    steps.length > 0
+      ? steps.reduce((max, step) =>
+          step.dropOffRate > max.dropOffRate ? step : max
+        )
+      : null;
 
   // Generate suggestions
   const suggestions: string[] = [];
-  if (biggestDropOff && biggestDropOff.dropOffRate > 30) {
+  if (biggestDropOff && biggestDropOff.dropOffRate > 30 && biggestDropOff.step) {
     suggestions.push(
       `${Math.round(biggestDropOff.dropOffRate)}% of users drop off at "${biggestDropOff.step}". Consider: simplifying this step, adding help text, or providing a demo mode.`
     );
@@ -282,12 +282,12 @@ async function analyzeReconciliationDropOff(
           )
         : null;
 
-  const suggestions: string[] = [];
-  if (biggestDropOff.dropOffRate > 30) {
-    suggestions.push(
-      `${Math.round(biggestDropOff.dropOffRate)}% drop-off at "${biggestDropOff.step}". Consider: adding progress indicators, error handling improvements, or automated retries.`
-    );
-  }
+    const suggestions: string[] = [];
+    if (biggestDropOff && biggestDropOff.dropOffRate > 30 && biggestDropOff.step) {
+      suggestions.push(
+        `${Math.round(biggestDropOff.dropOffRate)}% drop-off at "${biggestDropOff.step}". Consider: adding progress indicators, error handling improvements, or automated retries.`
+      );
+    }
 
   if (steps.find((s) => s.step === "job_executed")?.dropOffRate > 25) {
     suggestions.push(
@@ -349,7 +349,8 @@ async function analyzeExportDropOff(days: number): Promise<DropOffAnalysis> {
     },
   ];
 
-    const biggestDropOff: DropOffStep | null = steps.find((s) => s.step === "export_created") || null;
+    const exportStep = steps.find((s) => s.step === "export_created");
+    const biggestDropOff: DropOffStep | null = exportStep || null;
   const suggestions: string[] = [];
 
   if (exportRate < 50) {

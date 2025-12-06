@@ -113,6 +113,7 @@ async function parseRouteFile(filePath: string): Promise<RouteDoc[]> {
     let match;
 
     while ((match = routePattern.exec(content)) !== null) {
+      if (!match[1] || !match[2]) continue;
       const method = match[1].toUpperCase();
       const routePath = match[2];
       const lineNumber = content.substring(0, match.index).split("\n").length;
@@ -140,19 +141,24 @@ async function parseRouteFile(filePath: string): Promise<RouteDoc[]> {
       const permissionPattern = /Permission\.(\w+)/g;
       let permMatch;
       while ((permMatch = permissionPattern.exec(content)) !== null) {
-        permissions.push(permMatch[1]);
+        if (permMatch[1]) {
+          permissions.push(permMatch[1]);
+        }
       }
 
       const relativePath = path.relative(path.join(__dirname, "../../"), filePath);
-      routes.push({
-        path: routePath || "",
+      const routeDoc: RouteDoc = {
+        path: routePath,
         method,
         auth: hasAuth,
-        permissions: permissions.length > 0 ? permissions : undefined,
         description,
         file: relativePath,
         line: lineNumber,
-      });
+      };
+      if (permissions.length > 0) {
+        routeDoc.permissions = permissions;
+      }
+      routes.push(routeDoc);
     }
 
     return routes;
@@ -183,6 +189,7 @@ export async function generateMarkdownDocs(
   // Group by method
   const byMethod: Record<string, RouteDoc[]> = {};
   for (const route of report.routes) {
+    if (!route) continue;
     if (!byMethod[route.method]) {
       byMethod[route.method] = [];
     }
@@ -196,6 +203,7 @@ export async function generateMarkdownDocs(
     outputLines.push("");
 
     for (const route of byMethod[method]) {
+      if (!route) continue;
       outputLines.push(`### ${route.path}`);
       outputLines.push("");
 

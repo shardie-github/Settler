@@ -181,9 +181,9 @@ router.post("/", authMiddleware, async (req: AuthRequest, res: Response) => {
  * Note: For PDF/CSV/JSON, files are streamed directly in POST /exports
  * This endpoint is kept for future use with file storage
  */
-router.get("/:exportId/download", authMiddleware, async (req: AuthRequest, res: Response) => {
+router.get("/:exportId/download", authMiddleware, async (_req: AuthRequest, res: Response) => {
   try {
-    // const { exportId } = req.params; // Unused for now
+    // const { exportId } = _req.params; // Unused for now
 
     // Future: Fetch from file storage (S3, R2, etc.)
     // For now, exports are streamed directly in POST /exports
