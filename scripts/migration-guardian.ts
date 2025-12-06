@@ -78,6 +78,7 @@ function discoverEnvFiles(): string[] {
     ".env.development",
     ".env",
     ".env.production",
+    ".env.connection", // Also check .env.connection
   ];
   return envFiles.filter((file) => fs.existsSync(file));
 }
@@ -100,7 +101,35 @@ function loadEnvFile(file: string): Record<string, string> {
 }
 
 function selectDatabaseUrl(envFiles: string[]): { file: string; url: string; mode: "LIVE/PROD" | "STAGING/DEV" } {
-  // Priority order: .env.local, .env.development, .env, .env.production
+  // Priority 1: GitHub Actions / CI environment variables (secrets)
+  // These take precedence over .env files
+  const ciEnvVars = [
+    process.env.DATABASE_URL,
+    process.env.SUPABASE_DB_URL,
+    process.env.SUPABASE_DATABASE_URL,
+  ].filter(Boolean) as string[];
+
+  if (ciEnvVars.length > 0) {
+    const url = ciEnvVars[0];
+    const mode = determineMode("GitHub Actions / CI", url);
+    console.log("   ℹ️  Using GitHub Actions / CI environment variable (secret)");
+    return { file: "GitHub Actions / CI", url, mode };
+  }
+
+  // Priority 2: Check if SUPABASE_URL + SUPABASE_DB_PASSWORD are in env (from GitHub secrets)
+  if (process.env.SUPABASE_URL && (process.env.SUPABASE_DB_PASSWORD || process.env.DATABASE_PASSWORD)) {
+    const constructed = constructSupabaseUrl({
+      SUPABASE_URL: process.env.SUPABASE_URL,
+      SUPABASE_DB_PASSWORD: process.env.SUPABASE_DB_PASSWORD || process.env.DATABASE_PASSWORD || "",
+    });
+    if (constructed) {
+      const mode = determineMode("GitHub Actions / CI", constructed);
+      console.log("   ℹ️  Constructed URL from GitHub Actions / CI environment variables (secrets)");
+      return { file: "GitHub Actions / CI", url: constructed, mode };
+    }
+  }
+
+  // Priority 3: .env files (for local development)
   for (const file of envFiles) {
     const env = loadEnvFile(file);
     const candidates = [
@@ -117,8 +146,10 @@ function selectDatabaseUrl(envFiles: string[]): { file: string; url: string; mod
   }
 
   throw new Error(
-    "No DATABASE_URL or SUPABASE_DB_URL found in any env file. Checked: " +
-      envFiles.join(", ")
+    "No DATABASE_URL or SUPABASE_DB_URL found in:\n" +
+    "  - GitHub Actions / CI environment variables (secrets)\n" +
+    "  - Env files: " + envFiles.join(", ") + "\n\n" +
+    "For GitHub Actions, ensure DATABASE_URL or SUPABASE_DB_URL is set as a repository secret."
   );
 }
 
@@ -175,13 +206,14 @@ function maskDatabaseUrl(url: string): string {
 function extractDbInfo(url: string): { host: string; dbName: string } {
   try {
     const urlObj = new URL(url);
-    const host = urlObj.host;
-    const dbName = urlObj.pathname.replace(/^\//, "") || "postgres";
+    const host = urlObj.hostname || urlObj.host;
+    const dbName = urlObj.pathname.replace(/^\//, "").split("?")[0] || "postgres";
     return { host, dbName };
   } catch {
-    const match = url.match(/@([^:]+):\d+\/([^?]+)/);
+    // Fallback regex parsing
+    const match = url.match(/@([^:/]+)(?::(\d+))?\/([^?]+)/);
     if (match) {
-      return { host: match[1], dbName: match[2] };
+      return { host: match[1], dbName: match[3] || "postgres" };
     }
     return { host: "unknown", dbName: "unknown" };
   }
@@ -727,7 +759,7 @@ async function main() {
     }
     console.log(`   Found: ${envFiles.join(", ")}\n`);
 
-    // Load the selected env file
+    // Select database URL (prioritizes GitHub Actions secrets)
     const { file, url, mode } = selectDatabaseUrl(envFiles);
     run.env = {
       file,
@@ -736,8 +768,17 @@ async function main() {
       mode,
     };
 
-    // Load env vars into process.env
-    dotenv.config({ path: file });
+    // Load env vars from files only if not using GitHub Actions/CI
+    // (GitHub Actions secrets are already in process.env)
+    if (!file.includes("GitHub Actions") && !file.includes("CI")) {
+      dotenv.config({ path: file });
+    } else {
+      // Still load .env files for other variables (like Redis, etc.)
+      // but DATABASE_URL from env takes precedence
+      for (const envFile of envFiles) {
+        dotenv.config({ path: envFile, override: false });
+      }
+    }
 
     console.log(`   Selected: ${file}`);
     console.log(`   DB Host: ${run.env.dbHost}`);
