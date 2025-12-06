@@ -93,7 +93,7 @@ export function TrialCountdownBanner({
     <Banner variant="info" className="mb-6">
       <div className="flex items-center gap-2">
         <span className="font-semibold">Trial ends in:</span>
-        <span>{formatDistanceToNow(endDate, { addSuffix: false })}</span>
+        <span>{formatDistanceToNow(endDate)}</span>
       </div>
     </Banner>
   );
