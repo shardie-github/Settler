@@ -99,13 +99,21 @@ export default function HomePage() {
                 </UiLink>
               </Button>
               <Button variant="outline" size="lg" asChild>
-                <UiLink href="/demo/console" data-cta="hero_demo" data-analytics="hero_demo_click">
-                  Explore operator console
+                <UiLink
+                  href="/realtime-dashboard"
+                  data-cta="hero_telemetry"
+                  data-analytics="hero_telemetry_click"
+                >
+                  Live Telemetry Radar
                 </UiLink>
               </Button>
               <Button variant="outline" size="lg" asChild>
-                <UiLink href="/signup" data-cta="hero_signup" data-analytics="hero_signup_click">
-                  Start evaluating today
+                <UiLink
+                  href="/revenue-recovery"
+                  data-cta="hero_revenue_recovery"
+                  data-analytics="hero_revenue_recovery_click"
+                >
+                  Revenue Recovery
                 </UiLink>
               </Button>
             </>

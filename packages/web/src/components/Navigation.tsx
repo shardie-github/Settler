@@ -25,6 +25,7 @@ const primaryNavigationItems = [
 // Feature pages exposed in a dropdown
 const featureNavigationItems = [
   { href: "/revenue-recovery", label: "Revenue Recovery" },
+  { href: "/realtime-dashboard", label: "Realtime Telemetry" },
   { href: "/architecture", label: "Architecture" },
   { href: "/security-and-audit", label: "Security & Audit" },
   { href: "/open-source", label: "Open Source" },
