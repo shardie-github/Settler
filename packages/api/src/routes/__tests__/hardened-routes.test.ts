@@ -21,17 +21,22 @@ jest.mock("../../middleware/auth", () => ({
 jest.mock("../../infrastructure/db/prisma", () => ({
   prisma: {
     reconciliationRun: {
-      findMany: jest
-        .fn()
-        .mockResolvedValue([
-          { id: "run-01", status: "completed", totalRecords: 100, matchedRecords: 98 },
-        ]),
+      findMany: jest.fn().mockResolvedValue([
+        {
+          id: "run-01",
+          status: "completed",
+          sourceCount: 100,
+          targetCount: 100,
+          matchedCount: 98,
+        },
+      ]),
       findFirst: jest.fn().mockResolvedValue({
         id: "run-01",
         status: "completed",
-        totalRecords: 100,
-        matchedRecords: 98,
-        unmatchedRecords: 2,
+        sourceCount: 100,
+        targetCount: 100,
+        matchedCount: 98,
+        unmatchedSourceCount: 2,
       }),
     },
     reconciliationMatch: {

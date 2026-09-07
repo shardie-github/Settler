@@ -31,7 +31,13 @@ router.post(
       const runs = await prisma.reconciliationRun
         .findMany({
           where: { tenantId },
-          select: { id: true, status: true, totalRecords: true, matchedRecords: true },
+          select: {
+            id: true,
+            status: true,
+            sourceCount: true,
+            targetCount: true,
+            matchedCount: true,
+          },
           take: 100,
         })
         .catch(() => []);

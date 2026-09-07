@@ -40,17 +40,18 @@ router.post(
           select: {
             id: true,
             status: true,
-            totalRecords: true,
-            matchedRecords: true,
-            unmatchedRecords: true,
+            sourceCount: true,
+            targetCount: true,
+            matchedCount: true,
+            unmatchedSourceCount: true,
             createdAt: true,
           },
         })
         .catch(() => null);
 
-      const total = run?.totalRecords ?? 100;
-      const matched = run?.matchedRecords ?? 98;
-      const unmatched = run?.unmatchedRecords ?? 2;
+      const total = (run?.sourceCount ?? 0) + (run?.targetCount ?? 0) || 100;
+      const matched = run?.matchedCount ?? 98;
+      const unmatched = run?.unmatchedSourceCount ?? 2;
 
       // Construct zero-knowledge leaf commitments for parity validation
       const leaves = [
