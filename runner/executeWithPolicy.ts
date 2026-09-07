@@ -11,7 +11,7 @@ import type { ExecutionPlan } from "./plan";
 import { FileEventBackbone } from "./eventBackbone";
 
 const requestSchema = z.object({
-  tenantId: z.string().min(1),
+  tenantId: z.string().min(1, "String must contain at least 1 character"),
   actor: z.object({
     role: z.string().optional(),
     scopes: z.array(z.string()).default([]),

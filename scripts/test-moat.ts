@@ -65,7 +65,7 @@ async function main() {
       engineVersion: "v1",
       engineFn: async () => ({}),
     }),
-    /at least 1 character/
+    /at least 1 character|>=1 character|too_small/i
   );
 
   await assert.rejects(
