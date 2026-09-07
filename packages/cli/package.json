@@ -32,6 +32,7 @@
   "dependencies": {
     "@ai-sdk/openai": "^4.0.52",
     "@jobforge/sdk-ts": "workspace:*",
+    "@settler/protocol": "workspace:*",
     "@settler/sdk": "workspace:*",
     "ai": "^7.0.85",
     "chalk": "^6.0.0",

@@ -38,24 +38,24 @@ exports.serverEnvSchema = zod_1.z.object({
     // Optional - graceful fallback to Postgres if not configured
     TIGERBEETLE_ENABLED: zod_1.z
         .string()
-        .transform((val) => val === "true")
         .default("false")
+        .transform((val) => val === "true")
         .pipe(zod_1.z.boolean()),
     TIGERBEETLE_ADDRESS: zod_1.z.string().default("localhost:4300"),
     TIGERBEETLE_CLUSTER_ID: zod_1.z
         .string()
-        .transform((val) => parseInt(val, 10))
         .default("0")
+        .transform((val) => parseInt(val, 10))
         .pipe(zod_1.z.number().int().min(0)),
     TIGERBEETLE_TIMEOUT_MS: zod_1.z
         .string()
-        .transform((val) => parseInt(val, 10))
         .default("5000")
+        .transform((val) => parseInt(val, 10))
         .pipe(zod_1.z.number().int().positive()),
     TIGERBEETLE_MAX_RETRIES: zod_1.z
         .string()
-        .transform((val) => parseInt(val, 10))
         .default("3")
+        .transform((val) => parseInt(val, 10))
         .pipe(zod_1.z.number().int().min(0).max(10)),
 });
 /**

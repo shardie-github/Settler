@@ -45,3 +45,12 @@ tests/
 .DS_Store
 *.log
 coverage/
+target/
+crates/
+evidence/
+pilot-data/
+artifacts/
+qa-artifacts/
+bench/
+benchmarks/
+launch/

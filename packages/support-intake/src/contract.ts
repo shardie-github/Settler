@@ -7,7 +7,9 @@
 import {
   SUPPORT_ISSUE_CATEGORY,
   SUPPORT_ISSUE_CATEGORY_LABELS,
+  supportIntakeRequestSchema,
   supportIntakeSubmissionSchema,
+  type SupportIntakeRequest,
   type SupportIntakeSubmission,
   type SupportIssueCategory,
 } from "@settler/types";
@@ -15,7 +17,9 @@ import {
 export {
   SUPPORT_ISSUE_CATEGORY,
   SUPPORT_ISSUE_CATEGORY_LABELS,
+  supportIntakeRequestSchema,
   supportIntakeSubmissionSchema,
+  type SupportIntakeRequest,
   type SupportIntakeSubmission,
   type SupportIssueCategory,
 };

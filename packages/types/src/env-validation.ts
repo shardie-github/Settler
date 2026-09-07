@@ -41,24 +41,24 @@ export const serverEnvSchema = z.object({
   // Optional - graceful fallback to Postgres if not configured
   TIGERBEETLE_ENABLED: z
     .string()
-    .transform((val) => val === "true")
     .default("false")
+    .transform((val) => val === "true")
     .pipe(z.boolean()),
   TIGERBEETLE_ADDRESS: z.string().default("localhost:4300"),
   TIGERBEETLE_CLUSTER_ID: z
     .string()
-    .transform((val) => parseInt(val, 10))
     .default("0")
+    .transform((val) => parseInt(val, 10))
     .pipe(z.number().int().min(0)),
   TIGERBEETLE_TIMEOUT_MS: z
     .string()
-    .transform((val) => parseInt(val, 10))
     .default("5000")
+    .transform((val) => parseInt(val, 10))
     .pipe(z.number().int().positive()),
   TIGERBEETLE_MAX_RETRIES: z
     .string()
-    .transform((val) => parseInt(val, 10))
     .default("3")
+    .transform((val) => parseInt(val, 10))
     .pipe(z.number().int().min(0).max(10)),
 });
 

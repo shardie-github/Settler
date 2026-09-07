@@ -19,8 +19,8 @@ export const uuidParamSchema = z.object({
  */
 export const paginationSchema = z.object({
   query: z.object({
-    page: z.string().regex(/^\d+$/).transform(Number).optional().default("1"),
-    limit: z.string().regex(/^\d+$/).transform(Number).optional().default("100"),
+    page: z.string().regex(/^\d+$/).default("1").transform(Number),
+    limit: z.string().regex(/^\d+$/).default("100").transform(Number),
     offset: z.string().regex(/^\d+$/).transform(Number).optional(),
   }),
 });

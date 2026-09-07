@@ -39,15 +39,18 @@ const createExportSchema = z.object({
     idempotencyKey: z.string().max(255).optional(),
     options: z
       .object({
-        includeMatched: z.boolean().optional().default(true),
-        includeUnmatched: z.boolean().optional().default(true),
-        includeExceptions: z.boolean().optional().default(true),
+        includeMatched: z.boolean().default(true),
+        includeUnmatched: z.boolean().default(true),
+        includeExceptions: z.boolean().default(true),
         startDate: z.string().datetime().optional(),
         endDate: z.string().datetime().optional(),
         fields: z.array(z.string()).optional(),
       })
-      .optional()
-      .default({}),
+      .default({
+        includeMatched: true,
+        includeUnmatched: true,
+        includeExceptions: true,
+      }),
   }),
 });
 
@@ -55,7 +58,7 @@ const listExportsSchema = z.object({
   query: z.object({
     status: z.enum(["pending", "processing", "completed", "failed"]).optional(),
     type: z.string().optional(),
-    limit: z.string().regex(/^\d+$/).transform(Number).optional().default("20"),
+    limit: z.string().regex(/^\d+$/).default("20").transform(Number),
     cursor: z.string().optional(),
   }),
 });

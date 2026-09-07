@@ -1,6 +1,11 @@
 # Build artifacts
 **/dist/
+!packages/jobforge-errors/dist/
+!packages/jobforge-fetch/dist/
 !packages/jobforge-sdk-ts/dist/
+!packages/jobforge-shared/dist/
+!packages/protocol/dist/
+!packages/types/dist/
 build/
 *.tsbuildinfo
 .next/

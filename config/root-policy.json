@@ -93,6 +93,7 @@
     "agents",
     "app",
     "archive",
+    "assets",
     "archiver.py",
     "artifacts",
     "bench",

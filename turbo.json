@@ -91,7 +91,7 @@
     },
     "test": {
       "dependsOn": ["^build"],
-      "outputs": ["coverage/**"],
+      "outputs": [],
       "inputs": [
         "src/**",
         "app/**",
@@ -118,7 +118,7 @@
     },
     "typecheck": {
       "dependsOn": ["^build"],
-      "outputs": [".next/tsconfig.tsbuildinfo", "tsconfig.tsbuildinfo"],
+      "outputs": [],
       "cache": true,
       "inputs": [
         "src/**/*.ts",

@@ -233,16 +233,16 @@ export function safeParse<T extends z.ZodType>(
  * Parse or throw typed error
  * @deprecated Use zod's native parse/parseAsync with try-catch
  */
-export function parseOrThrow<T extends z.ZodType>(
+export function parseOrThrow<T extends z.ZodTypeAny>(
   schema: T,
   data: unknown,
   errorMessage?: string
 ): z.infer<T> {
   const result = schema.safeParse(data);
   if (!result.success) {
-    const error = new z.ZodError(result.error.errors);
+    const error = new z.ZodError(result.error.issues);
     if (errorMessage) {
-      const customError = new z.ZodError(result.error.errors);
+      const customError = new z.ZodError(result.error.issues);
       Object.defineProperty(customError, "message", {
         value: errorMessage,
         writable: true,
@@ -259,13 +259,13 @@ export function parseOrThrow<T extends z.ZodType>(
  * Validate and transform a value
  */
 export function validateAndTransform<TInput, TOutput>(
-  schema: z.ZodType<TInput, z.ZodTypeDef, TInput>,
+  schema: z.ZodType<TInput, any, any>,
   data: unknown,
   transformer: (input: TInput) => TOutput
 ): TOutput {
   const result = schema.safeParse(data);
   if (!result.success) {
-    throw new z.ZodError(result.error.errors);
+    throw new z.ZodError(result.error.issues);
   }
   return transformer(result.data);
 }

@@ -1,8 +1,10 @@
 export {
   SUPPORT_ISSUE_CATEGORY,
   SUPPORT_CATEGORY_LABELS,
+  supportIntakeRequestSchema,
   supportIntakeSubmissionSchema,
   type SupportIssueCategory,
+  type SupportIntakeRequest,
   type SupportIntakeSubmission,
 } from "./contract";
 

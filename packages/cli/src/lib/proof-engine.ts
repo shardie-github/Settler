@@ -1,7 +1,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { createHash } from "node:crypto";
-import { canonicalHash } from "../../../../packages/hash/canonical_hash";
+import { canonicalHash } from "./canonical-hash";
 
 export interface RecordedStep {
   stepId: string;

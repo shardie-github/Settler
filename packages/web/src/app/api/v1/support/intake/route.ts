@@ -8,7 +8,7 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
-import { supportIntakeSubmissionSchema, SUPPORT_ISSUE_CATEGORY_LABELS } from "@settler/types";
+import { supportIntakeRequestSchema, SUPPORT_ISSUE_CATEGORY_LABELS } from "@settler/types";
 import { withUniversalBillingGate } from "@/middleware/billing-gate-universal";
 import { withSecurity } from "@/lib/middleware/api-security";
 import { prisma } from "@/shared/db/prismaClient";
@@ -26,7 +26,7 @@ import { getCorrelationId, addCorrelationHeaders } from "@/lib/monitoring/correl
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
-const bodySchema = supportIntakeSubmissionSchema.omit({ tenant_id: true });
+const bodySchema = supportIntakeRequestSchema;
 
 export const POST = withSecurity(
   withUniversalBillingGate(

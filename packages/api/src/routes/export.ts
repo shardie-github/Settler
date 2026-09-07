@@ -13,17 +13,15 @@ const querySchema = z.object({
   limit: z
     .string()
     .regex(/^\d+$/)
+    .default("1000")
     .transform(Number)
-    .refine((n) => n > 0 && n <= 10000, "limit must be between 1 and 10000")
-    .optional()
-    .default("1000"),
+    .refine((n) => n > 0 && n <= 10000, "limit must be between 1 and 10000"),
   offset: z
     .string()
     .regex(/^\d+$/)
+    .default("0")
     .transform(Number)
-    .refine((n) => n >= 0, "offset must be >= 0")
-    .optional()
-    .default("0"),
+    .refine((n) => n >= 0, "offset must be >= 0"),
 });
 
 router.get(

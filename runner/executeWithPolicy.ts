@@ -23,7 +23,7 @@ const requestSchema = z.object({
   inputs: z.unknown(),
   config: z.unknown(),
   engineVersion: z.string().min(1),
-  engineFn: z.function().args(z.any()).returns(z.promise(z.any())),
+  engineFn: z.custom<(arg: any) => Promise<any>>((fn) => typeof fn === "function"),
 });
 
 function stableObject(value: unknown): string {

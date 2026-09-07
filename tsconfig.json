@@ -28,7 +28,8 @@
     "declarationMap": true,
     "sourceMap": true,
     "composite": true,
-    "incremental": true,
+    "types": ["node", "jest"],
+    "ignoreDeprecations": "6.0",
     "baseUrl": ".",
     "paths": {
       "@settler/sdk": ["./packages/sdk/src"],

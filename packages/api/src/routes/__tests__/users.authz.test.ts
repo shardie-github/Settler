@@ -32,7 +32,7 @@ describe("users authz hardening", () => {
   app.use(express.json());
   app.use((req, _res, next) => {
     (req as any).tenantId = "tenant-1";
-    (req as any).userId = "11111111-1111-1111-1111-111111111111";
+    (req as any).userId = "11111111-1111-4111-8111-111111111111";
     (req as any).traceId = "trace-1";
     next();
   });
@@ -58,7 +58,7 @@ describe("users authz hardening", () => {
     });
 
     const response = await request(app).get(
-      "/api/v1/users/11111111-1111-1111-1111-111111111111/data-export"
+      "/api/v1/users/11111111-1111-4111-8111-111111111111/data-export"
     );
 
     expect(response.status).toBe(403);
@@ -67,7 +67,7 @@ describe("users authz hardening", () => {
 
   it("returns explicit 403 reason for cross-user export", async () => {
     const response = await request(app).get(
-      "/api/v1/users/22222222-2222-2222-2222-222222222222/data-export"
+      "/api/v1/users/22222222-2222-4222-8222-222222222222/data-export"
     );
 
     expect(response.status).toBe(403);

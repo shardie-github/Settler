@@ -29,8 +29,7 @@ export const SUPPORT_ISSUE_CATEGORY_LABELS: Record<SupportIssueCategory, string>
   [SUPPORT_ISSUE_CATEGORY.DOCS_OTHER]: "Docs / product question / other",
 };
 
-export const supportIntakeSubmissionSchema = z.object({
-  tenant_id: z.string().min(1),
+export const supportIntakeRequestSchema = z.object({
   run_id: z.string().min(1).optional(),
   /**
    * Optional canonical exception reference. Non-UUID values are allowed so operators can still
@@ -61,4 +60,9 @@ export const supportIntakeSubmissionSchema = z.object({
   operator_triage_priority: z.enum(["low", "medium", "high", "urgent"]).optional(),
 });
 
+export const supportIntakeSubmissionSchema = supportIntakeRequestSchema.extend({
+  tenant_id: z.string().min(1),
+});
+
+export type SupportIntakeRequest = z.infer<typeof supportIntakeRequestSchema>;
 export type SupportIntakeSubmission = z.infer<typeof supportIntakeSubmissionSchema>;

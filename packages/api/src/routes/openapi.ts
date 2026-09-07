@@ -42,12 +42,23 @@ registry.registerPath({
       description: "Service is healthy",
       content: {
         "application/json": {
-          schema: z.object({
-            status: z.string().openapi({ example: "healthy" }),
-            timestamp: z.string().datetime(),
-            service: z.string().openapi({ example: "settler-api" }),
-            version: z.string().openapi({ example: "1.0.0" }),
-          }),
+          schema: z
+            .object({
+              status: z.string(),
+              timestamp: z.string(),
+              service: z.string(),
+              version: z.string(),
+            })
+            .openapi({
+              type: "object",
+              properties: {
+                status: { type: "string", example: "healthy" },
+                timestamp: { type: "string", format: "date-time" },
+                service: { type: "string", example: "settler-api" },
+                version: { type: "string", example: "1.0.0" },
+              },
+              required: ["status", "timestamp", "service", "version"],
+            }),
         },
       },
     },

@@ -5,7 +5,7 @@
   "description": "Settler - Open Source Reconciliation Engine",
   "packageManager": "pnpm@10.13.1",
   "engines": {
-    "node": ">=24.15.0",
+    "node": ">=24.15.0 <25.0.0",
     "pnpm": ">=10.13.1"
   },
   "workspaces": [

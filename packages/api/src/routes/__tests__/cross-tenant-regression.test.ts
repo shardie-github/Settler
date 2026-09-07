@@ -40,7 +40,7 @@ describe("Cross-tenant Data Access Regression Tests", () => {
       mockQueryWithTenant.mockResolvedValueOnce([]);
 
       const response = await request(app)
-        .get("/api/v1/jobs/00000000-0000-0000-0000-000000000001/export?format=csv")
+        .get("/api/v1/jobs/00000000-0000-4000-8000-000000000001/export?format=csv")
         .set("Accept", "text/csv");
 
       expect(response.status).toBe(404);
@@ -58,7 +58,7 @@ describe("Cross-tenant Data Access Regression Tests", () => {
       mockQueryWithTenant.mockResolvedValueOnce([]);
 
       await request(app).get(
-        "/api/v1/jobs/00000000-0000-0000-0000-000000000001/export?format=quickbooks"
+        "/api/v1/jobs/00000000-0000-4000-8000-000000000001/export?format=quickbooks"
       );
 
       const matchesQuery = mockQueryWithTenant.mock.calls[2];

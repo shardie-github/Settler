@@ -5,7 +5,14 @@ module.exports = {
   // kernel operation timeout plus process teardown overhead.
   testTimeout: 20000,
   transform: {
-    "^.+.tsx?$": "ts-jest",
+    "^.+.tsx?$": [
+      "ts-jest",
+      {
+        tsconfig: {
+          rootDir: ".",
+        },
+      },
+    ],
   },
   moduleNameMapper: {
     "^chalk$": "<rootDir>/test-support/chalk.ts",

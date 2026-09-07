@@ -4,11 +4,9 @@ import { AuthRequest } from "../../middleware/auth";
 import { sendError } from "../../utils/api-response";
 import { handleRouteError } from "../../utils/error-handler";
 import { submitSupportIntake } from "../../services/support/support-intake-service";
-import { supportIntakeSubmissionSchema } from "@settler/support-intake";
+import { supportIntakeRequestSchema } from "@settler/support-intake";
 
 const router: Router = Router();
-
-const supportIntakeRequestSchema = supportIntakeSubmissionSchema.omit({ tenant_id: true });
 
 router.post("/intake", tenantMiddleware, async (req: AuthRequest, res) => {
   try {

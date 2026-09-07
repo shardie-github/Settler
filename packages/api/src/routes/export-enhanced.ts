@@ -29,16 +29,16 @@ const exportReportSchema = z.object({
     endDate: z.string().datetime().optional(),
     includeMatched: z
       .string()
-      .transform((v) => v === "true")
-      .default("true"),
+      .default("true")
+      .transform((v) => v === "true"),
     includeUnmatched: z
       .string()
-      .transform((v) => v === "true")
-      .default("true"),
+      .default("true")
+      .transform((v) => v === "true"),
     includeExceptions: z
       .string()
-      .transform((v) => v === "true")
-      .default("true"),
+      .default("true")
+      .transform((v) => v === "true"),
   }),
 });
 
@@ -49,7 +49,7 @@ const scheduleExportSchema = z.object({
     schedule: z.string(), // Cron expression
     destination: z.object({
       type: z.enum(["email", "s3", "webhook", "accounting"]),
-      config: z.record(z.unknown()),
+      config: z.record(z.string(), z.unknown()),
     }),
   }),
 });
