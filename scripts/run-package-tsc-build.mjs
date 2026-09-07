@@ -34,7 +34,8 @@ if (existsSync(distDir)) {
 }
 
 const tscBin = require.resolve("typescript/bin/tsc");
-const result = spawnSync(process.execPath, [tscBin, ...process.argv.slice(2)], {
+const tscArgs = ["--ignoreDeprecations", "6.0", ...process.argv.slice(2)];
+const result = spawnSync(process.execPath, [tscBin, ...tscArgs], {
   cwd,
   env: process.env,
   stdio: "inherit",
