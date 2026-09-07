@@ -20,7 +20,7 @@ export interface TrialData {
   daysRemaining: number;
 }
 
-const sendEmail = async (to: string, subject: string, html: string) => {
+const sendEmail = async (to: string, subject: string, html: string): Promise<any> => {
   if (!process.env.RESEND_API_KEY) {
     console.info(
       "[Email Lifecycle] Simulation mode (No API key). Email to:",
@@ -44,7 +44,10 @@ const sendEmail = async (to: string, subject: string, html: string) => {
   }
 };
 
-export async function sendTrialWelcomeEmail(user: LifecycleUser, trialData: TrialData) {
+export async function sendTrialWelcomeEmail(
+  user: LifecycleUser,
+  trialData: TrialData
+): Promise<any> {
   const html = `
     <h1>Welcome to Settler, ${user.firstName || "there"}!</h1>
     <p>Your trial starts on ${trialData.trialStartDate} and ends on ${trialData.trialEndDate}. You have ${trialData.daysRemaining} days remaining.</p>
@@ -57,7 +60,7 @@ export async function sendTrialValueEmail(
   user: LifecycleUser,
   _trialData: TrialData,
   _reconciliationData: any
-) {
+): Promise<any> {
   const html = `
     <h1>Hi ${user.firstName || "there"}, see the value of Settler!</h1>
     <p>We noticed you've been reconciling data. Did you know you can automate this?</p>
@@ -65,7 +68,10 @@ export async function sendTrialValueEmail(
   return sendEmail(user.email, "Get the most out of your Settler Trial", html);
 }
 
-export async function sendTrialGatedFeaturesEmail(user: LifecycleUser, _trialData: TrialData) {
+export async function sendTrialGatedFeaturesEmail(
+  user: LifecycleUser,
+  _trialData: TrialData
+): Promise<any> {
   const html = `
     <h1>Unlock Premium Features</h1>
     <p>Upgrade to access advanced reconciliation features!</p>
@@ -77,7 +83,7 @@ export async function sendTrialCaseStudyEmail(
   user: LifecycleUser,
   _trialData: TrialData,
   _caseStudy: any
-) {
+): Promise<any> {
   const html = `
     <h1>See how others succeed with Settler</h1>
     <p>Read our latest case study.</p>
@@ -85,7 +91,10 @@ export async function sendTrialCaseStudyEmail(
   return sendEmail(user.email, "Customer Success with Settler", html);
 }
 
-export async function sendTrialComparisonEmail(user: LifecycleUser, _trialData: TrialData) {
+export async function sendTrialComparisonEmail(
+  user: LifecycleUser,
+  _trialData: TrialData
+): Promise<any> {
   const html = `
     <h1>Settler vs Spreadsheets</h1>
     <p>Why automated reconciliation wins every time.</p>
@@ -97,7 +106,7 @@ export async function sendTrialUrgencyEmail(
   user: LifecycleUser,
   trialData: TrialData,
   _day: 27 | 28 | 29
-) {
+): Promise<any> {
   const html = `
     <h1>Your trial is ending soon!</h1>
     <p>You only have ${trialData.daysRemaining} days left.</p>
@@ -105,7 +114,7 @@ export async function sendTrialUrgencyEmail(
   return sendEmail(user.email, "Action Required: Your Settler Trial is Ending", html);
 }
 
-export async function sendTrialEndedEmail(user: LifecycleUser) {
+export async function sendTrialEndedEmail(user: LifecycleUser): Promise<any> {
   const html = `
     <h1>Your trial has ended</h1>
     <p>Upgrade now to keep your data.</p>
@@ -113,7 +122,7 @@ export async function sendTrialEndedEmail(user: LifecycleUser) {
   return sendEmail(user.email, "Your Settler Trial has ended", html);
 }
 
-export async function sendPaidWelcomeEmail(user: LifecycleUser) {
+export async function sendPaidWelcomeEmail(user: LifecycleUser): Promise<any> {
   const html = `
     <h1>Welcome to Settler Premium!</h1>
     <p>Thank you for upgrading.</p>
@@ -121,7 +130,7 @@ export async function sendPaidWelcomeEmail(user: LifecycleUser) {
   return sendEmail(user.email, "Welcome to Settler Premium", html);
 }
 
-export async function sendMonthlySummaryEmail(user: LifecycleUser, _metrics: any) {
+export async function sendMonthlySummaryEmail(user: LifecycleUser, _metrics: any): Promise<any> {
   const html = `
     <h1>Your Monthly Summary</h1>
     <p>Here is your reconciliation summary for the month.</p>
@@ -129,7 +138,7 @@ export async function sendMonthlySummaryEmail(user: LifecycleUser, _metrics: any
   return sendEmail(user.email, "Your Settler Monthly Summary", html);
 }
 
-export async function sendLowActivityEmail(user: LifecycleUser) {
+export async function sendLowActivityEmail(user: LifecycleUser): Promise<any> {
   const html = `
     <h1>We miss you!</h1>
     <p>Log in to see what's new.</p>
