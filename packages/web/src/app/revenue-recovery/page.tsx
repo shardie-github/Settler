@@ -19,7 +19,6 @@ import {
   ArrowRight,
   FileCheck,
 } from "lucide-react";
-import { motion } from "framer-motion";
 import { BatchSettlementEngine, BatchSettlementInput } from "@settler/reconciliation-core";
 
 interface IndustryScenario {

@@ -9,22 +9,16 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
   Activity,
-  Zap,
   ShieldCheck,
   AlertTriangle,
   Play,
   Pause,
-  RefreshCw,
   Download,
   Terminal,
   Lock,
-  ArrowUpRight,
   Database,
   Layers,
-  Sparkles,
-  CheckCircle2,
   Sliders,
-  Cpu,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -184,7 +178,7 @@ function RealtimeDashboardContent() {
   }, [isStreaming, streamSpeed, mode]);
 
   // Anomaly Injection Handler
-  const handleInjectAnomaly = (type: "slippage" | "duplicate" | "timing", label: string) => {
+  const handleInjectAnomaly = (type: "slippage" | "duplicate" | "timing", _label: string) => {
     const randomHex = Math.random().toString(16).substring(2, 18);
     let anomalyEvent: StreamEvent;
 
