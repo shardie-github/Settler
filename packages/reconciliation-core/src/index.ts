@@ -33,3 +33,4 @@ export * from "./policy-tolerance-merge.js";
 export * from "./operator-api-envelope.js";
 export * from "./billing-entitlements.js";
 export * from "./structured-run-delta.js";
+export * from "./batch-settlement-engine.js";
