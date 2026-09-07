@@ -1,5 +1,6 @@
 # Build artifacts
 **/dist/
+**/dist-test/
 !packages/jobforge-errors/dist/
 !packages/jobforge-fetch/dist/
 !packages/jobforge-sdk-ts/dist/
@@ -47,7 +48,9 @@ __pycache__/
 terraform.tfvars
 
 # IDE
-.vscode/
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
 .idea/
 
 # OS
