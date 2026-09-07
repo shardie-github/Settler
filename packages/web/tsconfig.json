@@ -32,7 +32,6 @@
     "jsx": "preserve",
     "incremental": true,
     "tsBuildInfoFile": ".next/tsconfig.tsbuildinfo",
-    "baseUrl": ".",
     "plugins": [
       {
         "name": "next"

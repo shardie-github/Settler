@@ -4,7 +4,7 @@
     "target": "ES2022",
     "lib": ["ES2022"],
     "module": "commonjs",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "esModuleInterop": true,
     "strict": true,
     "strictNullChecks": true,
@@ -29,8 +29,6 @@
     "sourceMap": true,
     "composite": true,
     "types": ["node", "jest"],
-    "ignoreDeprecations": "6.0",
-    "baseUrl": ".",
     "paths": {
       "@settler/sdk": ["./packages/sdk/src"],
       "@settler/api": ["./packages/api/src"],
